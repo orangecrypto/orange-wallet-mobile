@@ -1,10 +1,11 @@
 import { Image, StyleSheet, Text, View } from "react-native";
-import { black, orangeButton, white } from "../../resources/values/color";
-import { Responsive } from "../../utils/Responsive";
-import { strings } from "../../resources/locale/i18n";
-import { localAssets } from "../../resources/assets/assets";
+import { black, orangeButton, white } from "@values/color";
+import { Responsive } from '@utils/Responsive';
+import { strings } from "@strings/i18n";
+import { localAssets } from "@assets/assets";
 import { useState } from "react";
-import CustomTextInput from "../../components/CustomTextInput";
+import CustomTextInput from "@components/CustomTextInput";
+import { Fonts } from '@values/fonts';
 
 const ConfirmPassword = () => {
     const [password, setPassword] = useState('');
@@ -38,7 +39,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: Responsive.size22,
         color: orangeButton,
-        fontWeight: '600',
+       fontFamily:Fonts.bold,
 
     },
 
@@ -53,7 +54,8 @@ const styles = StyleSheet.create({
         marginTop: Responsive.size10,
         fontSize: Responsive.size18,
         color: white,
-        fontWeight: '400',
+        fontFamily:Fonts.semibold,
+        lineHeight: Responsive.size22,
     },
     topIcon: {
         height: Responsive.size140,

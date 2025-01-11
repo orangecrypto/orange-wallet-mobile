@@ -1,11 +1,12 @@
 import { Image, StyleSheet, Text, View } from "react-native";
-import CommonButton from "../../components/CommonButton";
-import { localAssets } from "../../resources/assets/assets";
-import { strings } from "../../resources/locale/i18n";
-import { black, blackBorder, orangeBorder, orangeButton, white } from "../../resources/values/color";
-import { push } from "../../routes/Navigator";
-import { SEEDPHRASE } from "../../routes/RouteType";
-import { Responsive } from "../../utils/Responsive";
+import CommonButton from "@components/CommonButton";
+import { localAssets } from "@assets/assets";
+import { strings } from "@strings/i18n";
+import { black, blackBorder, orangeBorder, orangeButton, white } from "@values/color";
+import { push } from "@routes/Navigator";
+import { SEEDPHRASE } from "@routes/RouteType";
+import { Responsive } from '@utils/Responsive';
+import { Fonts } from '@values/fonts';
 
 const BackupWallet = () => {
     return (
@@ -73,16 +74,17 @@ const styles = StyleSheet.create({
 
     topText: {
         fontSize: Responsive.size22,
-        fontWeight: 'bold',
+        fontFamily:Fonts.bold,
         color: orangeButton,
     },
 
     reviewText: {
        fontSize: Responsive.size18,
         color: white,
-        fontWeight: '400',
+        fontFamily:Fonts.semibold,
         marginTop: Responsive.size20,
-        textAlign:'center'
+        textAlign:'center',
+        lineHeight: Responsive.size24,
     },
 });
 

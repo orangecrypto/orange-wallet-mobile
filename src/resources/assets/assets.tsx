@@ -17,6 +17,12 @@ const localAssets = {
   eye: require('./images/eye.png'),
   eyeoff: require('./images/eyeoff.png'),
 
+  congratulation: require('./images/congratulation.png'),
+  selfcustody: require('./images/selfcustody.png'),
+  anonymus: require('./images/anonymus.png'),
+  private: require('./images/private.png'),
+  decentralized: require('./images/decentralized.png'),
+
 
   // Icons
 };

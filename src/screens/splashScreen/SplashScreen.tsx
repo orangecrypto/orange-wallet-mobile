@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Text, View } from 'react-native';
-import { resetNavigation } from '../../routes/Navigator';
-import { HOME_SCREEN } from '../../routes/RouteType';
+import { resetNavigation } from '@routes/Navigator';
+import { HOME_SCREEN } from '@routes/RouteType';
 
 const SplashScreen = () => {
 

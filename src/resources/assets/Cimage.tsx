@@ -1,6 +1,6 @@
 import React from 'react';
 import { SvgXml } from 'react-native-svg';
-import { Responsive } from '../../utils/Responsive';
+import { Responsive } from '@utils/Responsive';
 import SVG from './SVG';
 
 

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import AppStack from '../../routes/Router';
+import AppStack from '@routes/Router';
 
 const AppContainer = () => {
   return (

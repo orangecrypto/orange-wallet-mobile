@@ -1,11 +1,12 @@
 import { Image, StyleSheet, Text, View } from "react-native";
-import { Responsive } from "../../utils/Responsive";
-import CommonButton from "../../components/CommonButton";
-import { black, blackBorder, orangeBorder, orangeButton, white } from "../../resources/values/color";
-import { strings } from "../../resources/locale/i18n";
-import { localAssets } from "../../resources/assets/assets";
-import { push } from "../../routes/Navigator";
-import { LEGAL } from "../../routes/RouteType";
+import { Responsive } from '@utils/Responsive';
+import CommonButton from "@components/CommonButton";
+import { black, blackBorder, orangeBorder, orangeButton, white } from "@values/color";
+import { strings } from "@strings/i18n";
+import { localAssets } from "@assets/assets";
+import { push } from "@routes/Navigator";
+import { LEGAL } from "@routes/RouteType";
+import { Fonts } from '@values/fonts';
 
 const HomeScreen = () => {
     return (
@@ -55,14 +56,14 @@ const styles = StyleSheet.create({
 
     topText: {
         fontSize: Responsive.size22,
-        fontWeight: 'bold',
+        fontFamily:Fonts.bold,
         color: orangeButton,
         marginTop: Responsive.size22,
     },
 
     versionText: {
         fontSize: Responsive.size12,
-        fontWeight: '300',
+        fontFamily:Fonts.regular,
         color: orangeButton,
     },
 

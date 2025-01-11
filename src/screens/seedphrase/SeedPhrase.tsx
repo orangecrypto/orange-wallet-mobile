@@ -8,16 +8,16 @@ import {
     KeyboardAvoidingView,
     Platform
 } from "react-native";
-import CommonButton from "../../components/CommonButton";
-import { strings } from "../../resources/locale/i18n";
-import { black, grey, orangeBorder, orangeButton, white } from "../../resources/values/color";
-import { Responsive } from "../../utils/Responsive";
-import SeedPhraseView from "./SeedPhraseView";
-import SeedPhraseVerification from "./SeedPhraseVerification";
-import EnterPassword from "./EnterPassword";
-import ConfirmPassword from "./ConfirmPassword";
-import { goBack, push } from "../../routes/Navigator";
-import { SUCCESS } from "../../routes/RouteType";
+import CommonButton from "@components/CommonButton";
+import { strings } from "@strings/i18n";
+import { black, grey, orangeBorder, orangeButton, white } from "@values/color";
+import { Responsive } from '@utils/Responsive';
+import SeedPhraseView from "@screens/seedphrase/SeedPhraseView";
+import SeedPhraseVerification from "@screens/seedphrase/SeedPhraseVerification";
+import EnterPassword from "@screens/seedphrase/EnterPassword";
+import ConfirmPassword from "@screens/seedphrase/ConfirmPassword";
+import { goBack, push } from "@routes/Navigator";
+import { SUCCESS } from "@routes/RouteType";
 
 const SeedPhrase = () => {
     const [currentStep, setCurrentStep] = useState(1);
@@ -44,8 +44,7 @@ const SeedPhrase = () => {
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
-            style={styles.container}
-        >
+            style={styles.container} >
             <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps="handled">
                 <View style={styles.contentContainer}>
                     <View style={styles.stepContainer}>

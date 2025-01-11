@@ -15,6 +15,10 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		7699B88040F8A987B510C191 /* libPods-orangewallet-orangewalletTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-orangewallet-orangewalletTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		A2A86179DA0745C5B9C8F8B8 /* Mont-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = BE8A59E02A7E42F5A68486E1 /* Mont-Light.otf */; };
+		A70F267A27BD4F709DFA979E /* Mont-SemiBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 4FA8F4C6912443B78C647D21 /* Mont-SemiBold.otf */; };
+		B4F997B0D6094BB4AF126366 /* Mont-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 24255201EFE9415EA5CFD9B3 /* Mont-Regular.otf */; };
+		FEC95435D36940EF87D12484 /* Mont-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = E2F28C85573946ADB9E3CA16 /* Mont-Bold.otf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -39,12 +43,16 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = orangewallet/main.m; sourceTree = "<group>"; };
 		13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = orangewallet/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		19F6CBCC0A4E27FBF8BF4A61 /* libPods-orangewallet-orangewalletTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-orangewallet-orangewalletTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		24255201EFE9415EA5CFD9B3 /* Mont-Regular.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Mont-Regular.otf"; path = "../src/resources/assets/fonts/Mont-Regular.otf"; sourceTree = "<group>"; };
 		3B4392A12AC88292D35C810B /* Pods-orangewallet.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-orangewallet.debug.xcconfig"; path = "Target Support Files/Pods-orangewallet/Pods-orangewallet.debug.xcconfig"; sourceTree = "<group>"; };
+		4FA8F4C6912443B78C647D21 /* Mont-SemiBold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Mont-SemiBold.otf"; path = "../src/resources/assets/fonts/Mont-SemiBold.otf"; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-orangewallet.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-orangewallet.release.xcconfig"; path = "Target Support Files/Pods-orangewallet/Pods-orangewallet.release.xcconfig"; sourceTree = "<group>"; };
 		5B7EB9410499542E8C5724F5 /* Pods-orangewallet-orangewalletTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-orangewallet-orangewalletTests.debug.xcconfig"; path = "Target Support Files/Pods-orangewallet-orangewalletTests/Pods-orangewallet-orangewalletTests.debug.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-orangewallet.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-orangewallet.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = orangewallet/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-orangewallet-orangewalletTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-orangewallet-orangewalletTests.release.xcconfig"; path = "Target Support Files/Pods-orangewallet-orangewalletTests/Pods-orangewallet-orangewalletTests.release.xcconfig"; sourceTree = "<group>"; };
+		BE8A59E02A7E42F5A68486E1 /* Mont-Light.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Mont-Light.otf"; path = "../src/resources/assets/fonts/Mont-Light.otf"; sourceTree = "<group>"; };
+		E2F28C85573946ADB9E3CA16 /* Mont-Bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Mont-Bold.otf"; path = "../src/resources/assets/fonts/Mont-Bold.otf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -125,6 +133,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
+				A68AFAC94EAC4C8A99EC4DAF /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -138,6 +147,18 @@
 				00E356EE1AD99517003FC87E /* orangewalletTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		A68AFAC94EAC4C8A99EC4DAF /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				E2F28C85573946ADB9E3CA16 /* Mont-Bold.otf */,
+				BE8A59E02A7E42F5A68486E1 /* Mont-Light.otf */,
+				24255201EFE9415EA5CFD9B3 /* Mont-Regular.otf */,
+				4FA8F4C6912443B78C647D21 /* Mont-SemiBold.otf */,
+			);
+			name = Resources;
+			path = "";
 			sourceTree = "<group>";
 		};
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
@@ -247,6 +268,10 @@
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				01F46F9601EDCBEC0DC98ED6 /* PrivacyInfo.xcprivacy in Resources */,
+				FEC95435D36940EF87D12484 /* Mont-Bold.otf in Resources */,
+				A2A86179DA0745C5B9C8F8B8 /* Mont-Light.otf in Resources */,
+				B4F997B0D6094BB4AF126366 /* Mont-Regular.otf in Resources */,
+				A70F267A27BD4F709DFA979E /* Mont-SemiBold.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

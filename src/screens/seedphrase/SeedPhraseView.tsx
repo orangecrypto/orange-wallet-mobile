@@ -1,7 +1,8 @@
 import { FlatList, StyleSheet, Text, View } from "react-native";
-import { black, orangeButton, white } from "../../resources/values/color";
-import { Responsive } from "../../utils/Responsive";
-import { strings } from "../../resources/locale/i18n";
+import { black, orangeButton, white } from "@values/color";
+import { Responsive } from '@utils/Responsive';
+import { strings } from "@strings/i18n";
+import { Fonts } from '@values/fonts';
 
 const SeedPhraseView = () => {
 
@@ -53,7 +54,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: Responsive.size22,
         color: orangeButton,
-        fontWeight: '600',
+        fontFamily:Fonts.bold,
 
     },
     contentContainer: {
@@ -67,13 +68,14 @@ const styles = StyleSheet.create({
         marginTop: Responsive.size10,
         fontSize: Responsive.size18,
         color: white,
-        fontWeight: '400',
+        fontFamily:Fonts.semibold,
+        lineHeight: Responsive.size22,
     },
 
     orangeText: {
         fontSize: Responsive.size18,
         color: orangeButton,
-        fontWeight: '400',
+        fontFamily:Fonts.semibold,
     },
     flatListContainer: {
         paddingHorizontal: 16,
@@ -95,7 +97,7 @@ const styles = StyleSheet.create({
     itemText: {
         color: '#ffffff',
         fontSize: 16,
-        fontWeight: '500',
+        fontFamily:Fonts.semibold,
     },
 
 

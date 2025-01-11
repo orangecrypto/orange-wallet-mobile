@@ -1,6 +1,7 @@
+import { Responsive } from '@utils/Responsive';
+import { Fonts } from '@values/fonts';
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, ViewStyle, StyleProp, Dimensions } from 'react-native';
-import { Responsive } from '../utils/Responsive';
+import { StyleProp, StyleSheet, Text, TouchableOpacity, ViewStyle } from 'react-native';
 
 interface CommonButtonProps {
   title: string;
@@ -57,7 +58,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: Responsive.size16,
-    fontWeight: '600',
+    fontFamily:Fonts.semibold
   },
   disabledButton: {
     backgroundColor: '#999999',

@@ -1,0 +1,21 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "src/resources/assets/fonts/Mont-Bold.otf",
+      "sha1": "a1643a5bf3b79f81ca42d4111fedb44a7ec1be77"
+    },
+    {
+      "path": "src/resources/assets/fonts/Mont-Light.otf",
+      "sha1": "904f70efc5687c33845b56068880efecc0de2d76"
+    },
+    {
+      "path": "src/resources/assets/fonts/Mont-Regular.otf",
+      "sha1": "7cb2bad470c0b027cd6fd1fab7393155df505059"
+    },
+    {
+      "path": "src/resources/assets/fonts/Mont-SemiBold.otf",
+      "sha1": "b39fcdb36d60aac09c729eccf9b8bab534fbbd56"
+    }
+  ]
+}

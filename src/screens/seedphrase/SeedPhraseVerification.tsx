@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { FlatList, StyleSheet, TextInput, View, Text } from 'react-native';
-import { black, orangeButton, white } from "../../resources/values/color";
-import { Responsive } from "../../utils/Responsive";
-import { strings } from "../../resources/locale/i18n";
+import { black, orangeButton, white } from "@values/color";
+import { Responsive } from '@utils/Responsive';
+import { strings } from "@strings/i18n";
+import { Fonts } from '@values/fonts';
 
 const SeedPhraseVerification = () => {
     // Initialize the data state
@@ -67,7 +68,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: Responsive.size22,
         color: orangeButton,
-        fontWeight: '600',
+        fontFamily:Fonts.bold,
     },
     contentContainer: {
         flex: 1,
@@ -77,7 +78,8 @@ const styles = StyleSheet.create({
         marginTop: Responsive.size10,
         fontSize: Responsive.size18,
         color: white,
-        fontWeight: '400',
+        fontFamily:Fonts.semibold,
+        lineHeight: Responsive.size24,
     },
     flatListContainer: {
         paddingHorizontal: 16,
@@ -102,7 +104,7 @@ const styles = StyleSheet.create({
     itemInput: {
         color: '#FFFFFF',
         fontSize: 16,
-        fontWeight: '500',
+        fontFamily:Fonts.semibold,
         textAlign: 'center',
         width: '100%',
     },

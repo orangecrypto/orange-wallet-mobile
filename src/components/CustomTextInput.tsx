@@ -1,6 +1,7 @@
+import { orangeButton } from '@values/color';
 import React, { useState } from 'react';
 import { TextInput, View, TouchableOpacity, StyleSheet, Image } from 'react-native';
-import { orangeButton } from '../resources/values/color';
+
 
 const CustomTextInput = ({
   placeholder,

@@ -23,5 +23,21 @@ export default {
     enterPassword:'Enter Password',
     enterPasswordDec:'Enter the password you would like to set for your wallet.',
     confirmPassword:'Confirm Password',
-    confirmPasswordDec:'Re-enter the password to confirm the password for your wallet.'
-}
+    confirmPasswordDec:'Re-enter the password to confirm the password for your wallet.',
+
+    congratulations:'Congratulations!',
+    congratulationsDescription: 'Your new Bitcoin wallet has successfully been created.Swipe to learn more.',
+    selfCustody: 'Self Custody',
+    selfCustodyDescription: 'Your assets are securely stored on the blockchain and only you have access to your encrypted keys.',
+    private:'Private',
+    privateDescription: 'No personal information is ever collected and no data is stored on any servers.',
+    anonymous:'Anonymous',
+    anonymousDescription:'Your identity is completely anonymous with no personal information linked to your wallet..',
+    decentralized :'Decentralized',
+    decentralizedDescription: 'Your transactions are completely decentralized and peer-to-peer. No 3rd parties allowed.',
+    unlock:'Unlock',
+    complete:'Complete',
+    password:'Password',
+    forgotPassword:'Forgot Password?'
+
+}   
