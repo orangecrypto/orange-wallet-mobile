@@ -1,14 +1,14 @@
-import { Image, StyleSheet, Text, View } from "react-native";
-import CommonButton from "@components/CommonButton";
-import { strings } from "@strings/i18n";
-import { black, orangeBorder, orangeButton, white } from "@values/color"
-import { push } from "@routes/Navigator";
-import { BACKUPWALLET } from "@routes/RouteType";
-import { Responsive } from '@utils/Responsive';
 import { localAssets } from "@assets/assets";
+import CommonButton from "@components/CommonButton";
 import CustomTextInput from "@components/CustomTextInput";
-import { useState } from "react";
+import { push } from "@routes/Navigator";
+import { WALLETBALANCE } from "@routes/RouteType";
+import { strings } from "@strings/i18n";
+import { Responsive } from '@utils/Responsive';
+import { black, orangeBorder, orangeButton, white } from "@values/color";
 import { Fonts } from '@values/fonts';
+import { useState } from "react";
+import { Image, StyleSheet, Text, View } from "react-native";
 
 const Login = () => {
 
@@ -33,7 +33,7 @@ const Login = () => {
             <View style={styles.buttonContainer}>
                 <CommonButton
                     title={strings.unlock}
-                    onPress={() => push(BACKUPWALLET)}
+                    onPress={() => push(WALLETBALANCE)}
                     backgroundColor={orangeButton}
                     textColor={white}
                     borderColor={orangeBorder}

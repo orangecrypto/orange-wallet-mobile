@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
     ScrollView,
     StyleSheet,
@@ -19,8 +19,8 @@ import ConfirmPassword from "@screens/seedphrase/ConfirmPassword";
 import { goBack, push } from "@routes/Navigator";
 import { SUCCESS } from "@routes/RouteType";
 
-const SeedPhrase = () => {
-    const [currentStep, setCurrentStep] = useState(1);
+const SeedPhrase = ({ route }) => {
+    const [currentStep, setCurrentStep] = useState(route?.params?.backupLatter ? 3:1);
     const totalSteps = 4;
 
     const handleNextStep = () => {
@@ -40,6 +40,10 @@ const SeedPhrase = () => {
             goBack();
         }
     };
+
+    useEffect(()=>{
+        console.log('Useeffect', route?.params?.backupLatter)
+    })
 
     return (
         <KeyboardAvoidingView

@@ -23,6 +23,16 @@ const localAssets = {
   private: require('./images/private.png'),
   decentralized: require('./images/decentralized.png'),
 
+  bottomwallet: require('./images/bottomwallet.png'),
+  marketbottom: require('./images/marketbottom.png'),
+  bottomnft: require('./images/bottomnft.png'),
+  bottomassitant: require('./images/bottomassitant.png'),
+
+  copy: require('./images/copy.png'),
+  qr: require('./images/qr.png'),
+  settings: require('./images/settings.png'),
+
+
 
   // Icons
 };

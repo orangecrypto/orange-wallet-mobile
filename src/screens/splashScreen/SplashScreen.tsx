@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Text, View } from 'react-native';
 import { resetNavigation } from '@routes/Navigator';
-import { HOME_SCREEN } from '@routes/RouteType';
+import { HOME_SCREEN, LOGIN } from '@routes/RouteType';
 
 const SplashScreen = () => {
 
@@ -13,7 +13,7 @@ const SplashScreen = () => {
 
 
   useEffect(() => {  
-      startTimer(HOME_SCREEN)
+      startTimer(LOGIN)
   }, []);
 
 
