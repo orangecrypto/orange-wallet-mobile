@@ -32,6 +32,13 @@ const localAssets = {
   qr: require('./images/qr.png'),
   settings: require('./images/settings.png'),
 
+  walletbg: require('./images/walletbg.png'),
+  walletbalance: require('./images/balancewallet.png'),
+  orangetransaction: require('./images/orangetransaction.png'),
+  addcoin: require('./images/addcoin.png'),
+
+  downarrow: require('./images/downarrow.png'),
+
 
 
   // Icons

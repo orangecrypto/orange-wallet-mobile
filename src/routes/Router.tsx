@@ -2,7 +2,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 import { navigationRef } from '@routes/Navigator';  
-import { BACKUPWALLET, HOME_SCREEN, LEGAL, LOGIN, SEEDPHRASE, SPLASH, SUCCESS, WALLETBALANCE } from '@routes/RouteType';
+import { BACKUPWALLET, HOME_SCREEN, LEGAL, LOGIN, QR, SEEDPHRASE, SETTINGS, SPLASH, SUCCESS, WALLETBALANCE } from '@routes/RouteType';
 import SplashScreen from '@screens/splashScreen/SplashScreen';
 import HomeScreen from '@screens/homeScreen/HomeScreen';
 import Legal from '@screens/legal/Legal';
@@ -11,6 +11,8 @@ import SeedPhrase from '@screens/seedphrase/SeedPhrase';
 import Success from '@screens/success/Success';
 import Login from '@screens/login/Login';
 import MainWallet from '@screens/mainwallet/MainWallet';
+import Settings from '@screens/settings/Settings';
+import Qr from '@screens/qr/Qr';
 
 const Stack = createNativeStackNavigator();
 
@@ -27,6 +29,8 @@ export default () => {
                 <Stack.Screen component={Success} name={SUCCESS} />
                 <Stack.Screen component={Login} name={LOGIN} />
                 <Stack.Screen component={MainWallet} name={WALLETBALANCE}/>
+                <Stack.Screen component={Settings} name= {SETTINGS}/>
+                <Stack.Screen component={Qr} name= {QR}/>
             </Stack.Navigator>
         </NavigationContainer>
     );

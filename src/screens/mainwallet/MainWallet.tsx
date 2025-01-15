@@ -3,34 +3,51 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Responsive } from '@utils/Responsive';
 import { black, gray, grey, orangeButton, white } from '@values/color';
 import React from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import Assistant from './assistant/Assistant';
 import Market from './market/Market';
 import Nft from './nft/Nft';
 import Wallet from './wallet/Wallet';
+import { push } from '@routes/Navigator';
+import { QR, SETTINGS } from '@routes/RouteType';
 
 const MainWallet = () => {
     const Tab = createBottomTabNavigator();
 
+    const handleCopyPress = () => {
+        console.log('Copy pressed');
+    };
+
+    const handleQrPress = () => {
+        push(QR)
+    };
+
+    const handleSettingsPress = () => {
+        push(SETTINGS)
+    };
+
     return (
         <View style={styles.container}>
-          <View style={styles.header}>
+            <View style={styles.header}>
                 <Text style={styles.headerText}>3Lq8...JVK4</Text>
                 <View style={styles.iconsContainer}>
-                    <Image
-                        source={localAssets.copy}  
-                        style={styles.headerIcon}
-                    />
-                    <Image
-                        source={localAssets.qr}  
-                        style={styles.headerIcon}
-                    />
-                    <Image
-                        source={localAssets.settings}  
-                        style={styles.headerIcon}
-                    />
+                    {/* Copy Icon */}
+                    <TouchableOpacity onPress={handleCopyPress}>
+                        <Image source={localAssets.copy} style={styles.headerIcon} />
+                    </TouchableOpacity>
+
+                    {/* QR Icon */}
+                    <TouchableOpacity onPress={handleQrPress}>
+                        <Image source={localAssets.qr} style={styles.headerIcon} />
+                    </TouchableOpacity>
+
+                    {/* Settings Icon */}
+                    <TouchableOpacity onPress={handleSettingsPress}>
+                        <Image source={localAssets.settings} style={styles.headerIcon} />
+                    </TouchableOpacity>
                 </View>
             </View>
+
             <Tab.Navigator
                 screenOptions={({ route }) => ({
                     tabBarStyle: {
@@ -38,8 +55,8 @@ const MainWallet = () => {
                         borderRadius: Responsive.size10,
                         borderWidth: Responsive.size1,
                         borderColor: gray,
-                        height: Responsive.size62, 
-                        justifyContent: 'center',   
+                        height: Responsive.size62,
+                        justifyContent: 'center',
                         alignItems: 'center',
                         position: 'absolute',
                         bottom: 0,
@@ -47,7 +64,6 @@ const MainWallet = () => {
                     tabBarIcon: ({ focused, color, size }) => {
                         let iconSource;
 
-                        // Choose the appropriate icon based on the route
                         switch (route.name) {
                             case 'Wallet':
                                 iconSource = localAssets.bottomwallet;
@@ -82,9 +98,9 @@ const MainWallet = () => {
                     headerShown: false,
                     tabBarIconStyle: {
                         flex: 1,
-                        justifyContent: 'center', 
-                        alignItems: 'center', 
-                        padding: 0,  
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        padding: 0,
                     },
                 })}
             >
@@ -101,11 +117,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: black,
-        padding: Responsive.size16,
-    },
-    password: {
-        fontSize: Responsive.size22,
-        color: orangeButton,
     },
     icon: {
         width: Responsive.size24,
@@ -123,7 +134,8 @@ const styles = StyleSheet.create({
         borderWidth: Responsive.size1,
         borderColor: grey,
         padding: Responsive.size16,
-        borderRadius: Responsive.size10
+        borderRadius: Responsive.size10,
+        marginHorizontal: Responsive.size16,
     },
     headerText: {
         fontSize: Responsive.size20,
@@ -133,13 +145,13 @@ const styles = StyleSheet.create({
     headerIcon: {
         width: Responsive.size20,
         height: Responsive.size20,
-        marginLeft: Responsive.size12, 
+        marginLeft: Responsive.size12,
     },
     iconsContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        width: '30%', 
+        width: '30%',
     },
 });
 

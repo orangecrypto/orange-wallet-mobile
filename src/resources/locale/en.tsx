@@ -38,6 +38,7 @@ export default {
     unlock:'Unlock',
     complete:'Complete',
     password:'Password',
-    forgotPassword:'Forgot Password?'
+    forgotPassword:'Forgot Password?',
+    addCoin:'Add Coin',
 
 }   

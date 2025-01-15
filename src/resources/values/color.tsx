@@ -32,5 +32,9 @@ export const orangeButton = '#D74320';
 export const orangeBorder= '#D74320';
 export const blackBorder= '#333333';
 
+export const viewbutton= '#390E02CC';
+
+export const orangeOpacityBg= '#D2340333';
+
 
 

@@ -1,14 +1,27 @@
-import { Image, StyleSheet, Text, View } from "react-native";
-import { black, orangeButton, white } from "@values/color";
-import { Responsive } from '@utils/Responsive';
-import { strings } from "@strings/i18n";
 import { localAssets } from "@assets/assets";
-import { useState } from "react";
 import CustomTextInput from "@components/CustomTextInput";
+import { Dispatch } from "@reduxjs/toolkit";
+import { strings } from "@strings/i18n";
+import { Responsive } from '@utils/Responsive';
+import { validatePasswordStrength } from "@utils/Validations";
+import { black, green, orangeButton, red, white } from "@values/color";
 import { Fonts } from '@values/fonts';
+import { Image, StyleSheet, Text, View } from "react-native";
+import { useSelector } from "react-redux";
+import { useAppDispatch } from "../../redux/store";
+import { seedPhraseReducerType, setConfirmPassword, setConfirmPasswordError, setPasswordFeedback } from "./SeedPhraseReducer";
 
 const ConfirmPassword = () => {
-    const [password, setPassword] = useState('');
+    const { confirmPassword, confirmPasswordError, passwordFeedback } = useSelector((state: { seedPhraseReducer: seedPhraseReducerType }) => state.seedPhraseReducer)
+    const dispatch: Dispatch = useAppDispatch()
+    const handlePasswordChange = (inputPassword : any) => {
+        dispatch(setPasswordFeedback(''))
+        dispatch(setConfirmPasswordError(''))
+        const { strengthMessage, feedback } = validatePasswordStrength(inputPassword);
+        console.log(strengthMessage)
+        dispatch(setConfirmPasswordError(strengthMessage))
+        dispatch(setPasswordFeedback(feedback))
+    };
     return (
         <View style={styles.container}>
             <Image source={localAssets.lock} style={styles.topIcon} />
@@ -17,14 +30,21 @@ const ConfirmPassword = () => {
                 <Text style={styles.reviewText}>{strings.confirmPasswordDec} </Text>
                 <CustomTextInput
                     placeholder="Confirm your password"
-                    value={password}
-                    onChangeText={(text) => setPassword(text)}
+                    value={confirmPassword}
+                    onChangeText={(text) => {
+                        dispatch(setConfirmPassword(text))
+                        handlePasswordChange(text)
+                    }
+                    }
                     secureTextEntry={true}
                     showPasswordToggle={true}
                     passwordIconVisible={localAssets.eye}
                     passwordIconHidden={localAssets.eyeoff}
-                    style={styles.input}
-                />
+                    style={styles.input}/>
+
+                  <Text style={[styles.passwordError,{color:confirmPasswordError === 'Strong password' ? green :red }]}>{confirmPasswordError}</Text>
+                    <Text style={styles.passwordError}>{passwordFeedback}</Text>  {/* Show any additional feedback */}
+                             
             </View>
         </View>
     );
@@ -39,7 +59,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: Responsive.size22,
         color: orangeButton,
-       fontFamily:Fonts.bold,
+        fontFamily: Fonts.bold,
 
     },
 
@@ -54,7 +74,7 @@ const styles = StyleSheet.create({
         marginTop: Responsive.size10,
         fontSize: Responsive.size18,
         color: white,
-        fontFamily:Fonts.semibold,
+        fontFamily: Fonts.semibold,
         lineHeight: Responsive.size22,
     },
     topIcon: {
@@ -66,6 +86,12 @@ const styles = StyleSheet.create({
         marginTop: Responsive.size20,
         marginBottom: Responsive.size20,
     },
+    passwordError:{
+        fontSize: Responsive.size12,
+        fontFamily: Fonts.regular,
+        color:red,
+        lineHeight: Responsive.size18
+    }
 
 });
 
