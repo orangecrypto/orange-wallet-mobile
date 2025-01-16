@@ -40,6 +40,7 @@ export default {
     password:'Password',
     forgotPassword:'Forgot Password?',
     addCoin:'Add Coin',
+    addCoinMessage:'Select the tokens you would like to display in your Orange Wallet.',
     assets: "Assets",
     quantity: "Quantity",
     transfer: "Transfer",
@@ -52,5 +53,11 @@ export default {
     marketCap:'Market Cap',
     info:'Info',
     passwordNotMatch:'Password does not match',
+    close:'Close',
+
+    addAddress:'Add Address',
+    addAddressMessage:'Add new wallet addresses by simply tapping the add button below.',
+    addNewAddress:'Add New Address',
+    back:'Back'
 
 }   

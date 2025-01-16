@@ -66,7 +66,6 @@ const Wallet = () => {
                 data={cryptoArray}
                 horizontal
                 style={styles.flatList}
-           
                 pagingEnabled
                 showsHorizontalScrollIndicator={false}
                 onScroll={handleScroll}

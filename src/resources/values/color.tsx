@@ -40,6 +40,8 @@ export const selectedCategory= '#D23403';
 export const grayText= '#8E8E93';
 export const transactionListBackground='#0E1015';
 export const nftcategoryText='#626A82';
+export const disableSwitch='#D2340380';
+
 export const backgroundbg='#A8B9F41A';
 export const seedPhrasePlaceholder="#8E8E93";
 export const listBordercolor="#0D0E1233";

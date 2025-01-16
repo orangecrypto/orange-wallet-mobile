@@ -9,13 +9,18 @@ import Market from './market/Market';
 import Nft from './nft/Nft';
 import Wallet from './wallet/Wallet';
 import { push } from '@routes/Navigator';
-import { QR, SETTINGS } from '@routes/RouteType';
+import { ADDADDRESS, QR, SETTINGS } from '@routes/RouteType';
 
 const MainWallet = () => {
     const Tab = createBottomTabNavigator();
 
     const handleCopyPress = () => {
         console.log('Copy pressed');
+    };
+
+    const handleAddAddress = () => {
+        console.log('Add Address');
+        push(ADDADDRESS)
     };
 
     const handleQrPress = () => {
@@ -29,7 +34,9 @@ const MainWallet = () => {
     return (
         <View style={styles.container}>
             <View style={styles.header}>
+                <TouchableOpacity onPress={handleAddAddress} style={styles.headerClickableText}>
                 <Text style={styles.headerText}>3Lq8...JVK4</Text>
+                </TouchableOpacity>
                 <View style={styles.iconsContainer}>
                     {/* Copy Icon */}
                     <TouchableOpacity onPress={handleCopyPress}>
@@ -123,7 +130,7 @@ const styles = StyleSheet.create({
         height: Responsive.size24,
     },
     iconFocused: {
-        borderRadius: 15,
+        borderRadius: Responsive.size15,
     },
     header: {
         flexDirection: 'row',
@@ -139,8 +146,10 @@ const styles = StyleSheet.create({
     },
     headerText: {
         fontSize: Responsive.size20,
-        color: white,
-        flex: 1,
+        color: white
+    },
+    headerClickableText: {  
+        padding:Responsive.size2
     },
     headerIcon: {
         width: Responsive.size20,

@@ -108,7 +108,7 @@ const SeedPhrase = ({ route }) => {
                         <TouchableOpacity
                             style={[styles.button, currentStep === 1 && styles.disabledButton]}
                             onPress={handlePreviousStep} >
-                            <Text style={styles.buttonText}>Back</Text>
+                            <Text style={styles.buttonText}>{strings.back}</Text>
                         </TouchableOpacity>
                     </View>
 

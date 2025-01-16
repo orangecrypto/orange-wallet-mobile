@@ -8,3 +8,5 @@ export const LOGIN= 'login';
 export const WALLETBALANCE= 'walletbalance';
 export const QR= 'qr';
 export const SETTINGS= 'settings';
+export const ADDADDRESS= 'addAddress';
+export const ADDCOIN= 'addCoin';
