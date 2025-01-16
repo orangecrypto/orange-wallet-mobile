@@ -1,10 +1,11 @@
 import { Responsive } from '@utils/Responsive';
-import { black, blackBorder, gray, grayText, grey, orangeButton, orangeOpacityBg, selectedCategory, transactionListBackground, white } from "@values/color";
+import { black, blackBorder, gray, grayText, grey, listBordercolor, nftcategoryText, orangeButton, orangeOpacityBg, selectedCategory, transactionListBackground, white } from "@values/color";
 import { Fonts } from '@values/fonts';
 import { useState } from 'react';
 import { Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import RenderCardItem from './RenderCardItem';
 import RenderTransactions from './RenderTransactions';
+import { strings } from '@strings/i18n';
 
 
 const Wallet = () => {
@@ -81,7 +82,10 @@ const Wallet = () => {
                 <View style={styles.categoryContainer}>
                     {categories.map((category) => renderCategory(category))}
                 </View>
-                
+                <View style={styles.headerTitleContainer}>
+                        <Text style={styles.headerTitle}>{strings.assets}</Text>
+                        <Text style={styles.headerTitle}>{strings.quantity}</Text>
+                </View>
                 <FlatList
                     data={filteredCryptoArray}
                     keyExtractor={(item) => item.id.toString()}
@@ -170,7 +174,7 @@ const styles = StyleSheet.create({
     },
     listContainer: {
         paddingBottom: Responsive.size16,
-        marginTop:Responsive.size10
+       
     },
     listItem: {
         width: '100%',
@@ -186,15 +190,32 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        marginBottom: Responsive.size8,
+        marginBottom: Responsive.size10,
         paddingHorizontal: Responsive.size8,
-        width: '100%'
+        width: '100%',
+        marginTop:Responsive.size8,
+        
     },
     headerText: {
         color: grayText,
         fontSize: Responsive.size14,
-        fontFamily: Fonts.bold
+        fontFamily: Fonts.bold,
     },
+
+    headerTitleContainer :{
+        width: '100%',
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        borderWidth: Responsive.size1,
+        borderColor:transactionListBackground
+    },
+
+    headerTitle:{
+        color: nftcategoryText,
+        fontFamily: Fonts.semibold,
+        fontSize: Responsive.size14
+    }
 });
 
 export default Wallet;
