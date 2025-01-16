@@ -1,7 +1,7 @@
 import { Image, StyleSheet, Text, View } from "react-native";
 import CommonButton from "@components/CommonButton";
 import { strings } from "@strings/i18n";
-import { black, blackBorder, orangeBorder, orangeButton, white } from "@values/color";
+import { black, blackBorder, orangeBorder, orangeButton, orangeOpacityBg, white } from "@values/color";
 import { push } from "@routes/Navigator";
 import { BACKUPWALLET } from "@routes/RouteType";
 import { Responsive } from '@utils/Responsive';
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
         height: Responsive.size32,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#D2340333',
+        backgroundColor: orangeOpacityBg,
         borderRadius: Responsive.size16
 
     },

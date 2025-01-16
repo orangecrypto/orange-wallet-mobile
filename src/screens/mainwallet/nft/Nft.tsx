@@ -148,8 +148,8 @@ const styles = StyleSheet.create({
     },
     itemContainer: {
         width: (width - 30) / numColumns, 
-        marginBottom: Responsive.size10, // Space between rows
-        marginRight: Responsive.size10, // Horizontal space between columns (adjust this)
+        marginBottom: Responsive.size10, 
+        marginRight: Responsive.size10, 
         padding: Responsive.size15,
         borderRadius: Responsive.size8,
         borderWidth: Responsive.size1,

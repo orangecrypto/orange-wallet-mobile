@@ -1,4 +1,3 @@
-import Cimage from '@assets/Cimage';
 import { Responsive } from '@utils/Responsive';
 import { black, orangeButton } from "@values/color";
 import { Fonts } from '@values/fonts';

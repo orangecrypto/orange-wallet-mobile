@@ -25,15 +25,7 @@ const EnterPassword = () => {
         console.log(feedback)
     };
 
-    // const handleSubmit = () => {
-    //     const { strengthMessage } = validatePasswordStrength(password);
-    //     if (strengthMessage === 'Weak password' || strengthMessage === 'Moderate password') {
-    //         dispatch(setPasswordError('Please use a stronger password!'))
-    //     } else {
-           
-    //         push(WALLETBALANCE)
-    //     }
-    // };
+  
 
     useEffect(() => {
         const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
@@ -67,7 +59,7 @@ const EnterPassword = () => {
                     style={styles.input}
                 />
 
-                   <Text style={[styles.passwordError,{color:passwordError === 'Strong password' ? green :red }]}>{passwordError}</Text>
+                   <Text style={[styles.passwordError,{color:passwordError === strings.strongPassword ? green :red }]}>{passwordError}</Text>
                                         <Text style={styles.passwordError}>{passwordFeedback}</Text>  {/* Show any additional feedback */}
                                     
             </View>

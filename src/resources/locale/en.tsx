@@ -45,4 +45,12 @@ export default {
     transfer: "Transfer",
     receive: "Receive",
 
+    strongPassword:'Strong password',
+    weakPassword:'Weak password',
+    moderatePassword:'Moderate password',
+    useStrongPassword:'Please use a stronger password!',
+    marketCap:'Market Cap',
+    info:'Info',
+    passwordNotMatch:'Password does not match',
+
 }   

@@ -29,7 +29,7 @@ const ConfirmPassword = () => {
                 <Text style={styles.title}>{strings.confirmPassword}</Text>
                 <Text style={styles.reviewText}>{strings.confirmPasswordDec} </Text>
                 <CustomTextInput
-                    placeholder="Confirm your password"
+                    placeholder={strings.confirmPassword}
                     value={confirmPassword}
                     onChangeText={(text) => {
                         dispatch(setConfirmPassword(text))
@@ -42,7 +42,7 @@ const ConfirmPassword = () => {
                     passwordIconHidden={localAssets.eyeoff}
                     style={styles.input}/>
 
-                  <Text style={[styles.passwordError,{color:confirmPasswordError === 'Strong password' ? green :red }]}>{confirmPasswordError}</Text>
+                  <Text style={[styles.passwordError,{color:confirmPasswordError === strings.strongPassword ? green :red }]}>{confirmPasswordError}</Text>
                     <Text style={styles.passwordError}>{passwordFeedback}</Text>  {/* Show any additional feedback */}
                              
             </View>

@@ -1,4 +1,5 @@
 import { localAssets } from '@assets/assets';
+import { strings } from '@strings/i18n';
 import { Responsive } from '@utils/Responsive';
 import { black, gray, orangeButton, orangeOpacityBg, white } from "@values/color";
 import { Fonts } from '@values/fonts';
@@ -10,17 +11,14 @@ const Market = () => {
 
   return (
     <View style={styles.container}>
-      {/* Graph Card */}
       <View style={styles.graphContainer}>
-        {/* Top Info Section */}
         <View style={styles.infoSection}>
-          <Text style={styles.title}>Market Cap</Text>
+          <Text style={styles.title}>{strings.marketCap}</Text>
           <View style={styles.infoBadge}>
-            <Text style={styles.infoText}>Info</Text>
+            <Text style={styles.infoText}>{strings.info}</Text>
           </View>
         </View>
 
-        {/* Line Chart with Overlay Balance Section */}
         <View style={styles.chartWrapper}>
           <LineChart
             data={{

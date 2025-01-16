@@ -1,5 +1,5 @@
 import { FlatList, StyleSheet, Text, View } from "react-native";
-import { black, orangeButton, white } from "@values/color";
+import { black, listBordercolor, orangeButton, white } from "@values/color";
 import { Responsive } from '@utils/Responsive';
 import { strings } from "@strings/i18n";
 import { Fonts } from '@values/fonts';
@@ -78,25 +78,24 @@ const styles = StyleSheet.create({
         fontFamily:Fonts.semibold,
     },
     flatListContainer: {
-        paddingHorizontal: 16,
+        paddingHorizontal: Responsive.size16,
         marginTop: Responsive.size20,
         backgroundColor: black,
-        borderRadius: 10,
+        borderRadius: Responsive.size10,
         borderWidth: Responsive.size2,
-        borderColor: '#0D0E1233',
+        borderColor: listBordercolor,
     },
     itemContainer: {
         flex: 1,
-        margin: 8,
-
-        paddingVertical: 16,
+        margin: Responsive.size8,
+        paddingVertical: Responsive.size16,
         alignItems: 'center',
         justifyContent: 'center',
 
     },
     itemText: {
-        color: '#ffffff',
-        fontSize: 16,
+        color: white,
+        fontSize: Responsive.size16,
         fontFamily:Fonts.semibold,
     },
 

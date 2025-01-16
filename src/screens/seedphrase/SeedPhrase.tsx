@@ -9,7 +9,7 @@ import SeedPhraseView from "@screens/seedphrase/SeedPhraseView";
 import { strings } from "@strings/i18n";
 import { Responsive } from '@utils/Responsive';
 import { validatePasswordStrength } from "@utils/Validations";
-import { black, grey, orangeBorder, orangeButton, white } from "@values/color";
+import { backgroundbg, black, grey, orangeBorder, orangeButton, white } from "@values/color";
 import { useEffect, useState } from "react";
 import {
     KeyboardAvoidingView,
@@ -32,13 +32,13 @@ const SeedPhrase = ({ route }) => {
 
     const handleSubmit = (password : string) => {
         const { strengthMessage } = validatePasswordStrength(password);
-        if (strengthMessage === 'Weak password' || strengthMessage === 'Moderate password') {
+        if (strengthMessage === strings.weakPassword || strengthMessage === strings.moderatePassword) {
            
             if(currentStep ==3 ){
-                dispatch(setPasswordError('Please use a stronger password!'))
+                dispatch(setPasswordError(strings.useStrongPassword))
             }
             if(currentStep ==4 ) {
-                dispatch(setConfirmPasswordError('Please use a stronger password!'))
+                dispatch(setConfirmPasswordError(strings.useStrongPassword))
             }
             return false
         } 
@@ -70,7 +70,7 @@ const SeedPhrase = ({ route }) => {
                 push(SUCCESS)
                 dispatch(clearSeedPhraseReducer())
                 }else {
-                    dispatch(setConfirmPasswordError('Password does not match'))
+                    dispatch(setConfirmPasswordError(strings.passwordNotMatch))
                 }
             }
         }      
@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
     stepContainer: {
         flexDirection: "row",
         alignContent: "center",
-        backgroundColor: "#A8B9F41A",
+        backgroundColor: backgroundbg,
         width: "100%",
         paddingHorizontal: Responsive.size10,
         paddingVertical: Responsive.size8,

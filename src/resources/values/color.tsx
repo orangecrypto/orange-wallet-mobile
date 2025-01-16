@@ -35,9 +35,16 @@ export const blackBorder= '#333333';
 export const viewbutton= '#390E02CC';
 
 export const orangeOpacityBg= '#D2340333';
+export const selectedCategory= '#E4572E';
 
 export const grayText= '#8E8E93';
 export const transactionListBackground='#0E1015';
 export const nftcategoryText='#626A82';
+export const backgroundbg='#A8B9F41A';
+export const seedPhrasePlaceholder="#8E8E93";
+export const listBordercolor="#0D0E1233";
+export const seedPhraseItemBackground="#1C1C1E";
+export const seedPhraseItemBorder='#3A3A3C';
+
 
 

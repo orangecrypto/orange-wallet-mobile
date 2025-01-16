@@ -6,19 +6,18 @@ import { push } from "@routes/Navigator";
 import { WALLETBALANCE } from "@routes/RouteType";
 import { strings } from "@strings/i18n";
 import { Responsive } from '@utils/Responsive';
-import { black, green, orangeBorder, orangeButton, red, white } from "@values/color";
+import { validatePasswordStrength } from "@utils/Validations";
+import { black, green, orangeButton, red, white } from "@values/color";
 import { Fonts } from '@values/fonts';
-import { Image, StyleSheet, Text, View, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, ScrollView, Platform } from "react-native";
+import { useEffect, useState } from "react";
+import { Image, Keyboard, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from "react-native";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "../../redux/store";
 import { clearLoginReducer, loginReducerType, setPassword, setPasswordError, setPasswordFeedback } from "./LoginReducer";
-import { useState, useEffect } from "react";
-import { validatePasswordStrength } from "@utils/Validations";
 
 const Login = () => {
     const { password, passwordError, passwordFeedback } = useSelector((state: { loginReducer: loginReducerType }) => state.loginReducer)
     const dispatch: Dispatch = useAppDispatch()
-   
     const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
 
     const handlePasswordChange = (inputPassword) => {
@@ -31,8 +30,8 @@ const Login = () => {
 
     const handleSubmit = () => {
         const { strengthMessage } = validatePasswordStrength(password);
-        if (strengthMessage === 'Weak password' || strengthMessage === 'Moderate password') {
-            dispatch(setPasswordError('Please use a stronger password!'))
+        if (strengthMessage === strings.weakPassword || strengthMessage === strings.moderatePassword) {
+            dispatch(setPasswordError(strings.useStrongPassword))
         } else {
             dispatch(clearLoginReducer())
             push(WALLETBALANCE)
@@ -63,7 +62,7 @@ const Login = () => {
                         <Image source={localAssets.pill} style={styles.topIcon} />
                         <Text style={styles.password}>{strings.password}</Text>
                         <CustomTextInput
-                            placeholder="Enter your password"
+                            placeholder={strings.enterPassword}
                             value={password}
                             onChangeText={(text) => {
                                 dispatch(setPassword(text))
@@ -74,14 +73,13 @@ const Login = () => {
                             passwordIconVisible={localAssets.eye}
                             passwordIconHidden={localAssets.eyeoff}
                             style={styles.input}/>
-                        <Text style={[styles.passwordError,{color:passwordError === 'Strong password' ? green :red }]}>{passwordError}</Text>
-                        <Text style={styles.passwordError}>{passwordFeedback}</Text>  {/* Show any additional feedback */}
+                        <Text style={[styles.passwordError,{color:passwordError ===  strings.strongPassword ? green :red }]}>{passwordError}</Text>
+                        <Text style={styles.passwordError}>{passwordFeedback}</Text>  
                         <Text style={styles.forgotPassword}>{strings.forgotPassword}</Text>
                     </View>
                 </TouchableWithoutFeedback>
             </ScrollView>
 
-            {/* Conditionally render the button only when the keyboard is hidden */}
             {!isKeyboardVisible && (
                 <View style={styles.buttonContainer}>
                     <CommonButton
@@ -89,7 +87,7 @@ const Login = () => {
                         onPress={() => handleSubmit()}
                         backgroundColor={orangeButton}
                         textColor={white}
-                        disabled={passwordError === 'Strong password'? false: true}
+                        disabled={passwordError === strings.strongPassword? false: true}
                         width={'100%'}
                         height={Responsive.size45}
                     />
