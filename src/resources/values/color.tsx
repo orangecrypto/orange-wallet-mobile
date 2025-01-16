@@ -35,7 +35,7 @@ export const blackBorder= '#333333';
 export const viewbutton= '#390E02CC';
 
 export const orangeOpacityBg= '#D2340333';
-export const selectedCategory= '#E4572E';
+export const selectedCategory= '#D23403';
 
 export const grayText= '#8E8E93';
 export const transactionListBackground='#0E1015';

@@ -1,5 +1,5 @@
 import { Responsive } from '@utils/Responsive';
-import { black, blackBorder, gray, grayText, grey, orangeButton, transactionListBackground, white } from "@values/color";
+import { black, blackBorder, gray, grayText, grey, orangeButton, orangeOpacityBg, selectedCategory, transactionListBackground, white } from "@values/color";
 import { Fonts } from '@values/fonts';
 import { useState } from 'react';
 import { Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -152,21 +152,21 @@ const styles = StyleSheet.create({
     categoryButton: {
         paddingHorizontal: Responsive.size12,
         paddingVertical: Responsive.size8,
-        backgroundColor: blackBorder,
+        backgroundColor: orangeOpacityBg,
         borderRadius: Responsive.size16,
         marginRight: Responsive.size8,
     },
     selectedCategory: {
-        backgroundColor: "#E4572E",
+        backgroundColor: selectedCategory,
     },
     categoryText: {
-        color: white,
+        color: orangeButton,
         fontSize: Responsive.size14,
         fontFamily: Fonts.regular
     },
     selectedCategoryText: {
         color: white,
-        fontFamily: Fonts.bold
+        fontFamily: Fonts.semibold
     },
     listContainer: {
         paddingBottom: Responsive.size16,
