@@ -19,12 +19,10 @@ const BackupWallet = () => {
             </Text>
             </View>
 
-          
-
             <View style={styles.buttonContainer}>
             <CommonButton
                     title={strings.backupLater}
-                    onPress={() => console.log('Backup Latter Wallet pressed')}
+                    onPress={() => push(SEEDPHRASE,{backupLatter : true})}
                     backgroundColor={black}
                     textColor={white}
                     borderColor={blackBorder}

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Dimensions, Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import CommonButton from "@components/CommonButton";
 import { strings } from "@strings/i18n";
-import { black, orangeBorder, orangeButton, white } from "@values/color";
+import { black, grey, orangeBorder, orangeButton, white } from "@values/color";
 import { push } from "@routes/Navigator";
 import { LOGIN } from "@routes/RouteType";
 import { Responsive } from '@utils/Responsive';
@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
     progressBarContainer: {
         height: Responsive.size5,
         width: "40%",
-        backgroundColor: "grey",
+        backgroundColor: grey,
         borderRadius: Responsive.size5,
         overflow: "hidden",
         alignSelf: "center",

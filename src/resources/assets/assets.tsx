@@ -23,6 +23,29 @@ const localAssets = {
   private: require('./images/private.png'),
   decentralized: require('./images/decentralized.png'),
 
+  bottomwallet: require('./images/bottomwallet.png'),
+  marketbottom: require('./images/marketbottom.png'),
+  bottomnft: require('./images/bottomnft.png'),
+  bottomassitant: require('./images/bottomassitant.png'),
+
+  copy: require('./images/copy.png'),
+  qr: require('./images/qr.png'),
+  settings: require('./images/settings.png'),
+
+  walletbg: require('./images/walletbg.png'),
+  walletbalance: require('./images/balancewallet.png'),
+  orangetransaction: require('./images/orangetransaction.png'),
+  addcoin: require('./images/addcoin.png'),
+
+  downarrow: require('./images/downarrow.png'),
+  nftwallet: require('./images/nftwallet.png'),
+
+  transferarrow: require('./images/transferarrow.png'),
+  transactionarrow: require('./images/transactionarrow.png'),
+  samplenft: require('./images/samplenft.png'),
+  bitcoinicon: require('./images/bitcoinicon.png'),
+
+
 
   // Icons
 };

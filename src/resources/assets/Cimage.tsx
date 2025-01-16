@@ -29,10 +29,18 @@ const addIcon = React.memo(() => <SvgXml
 />
 );
 
+const walletIcon = React.memo(() => <SvgXml
+  width={Responsive.size24}
+  height={Responsive.size24}
+  xml={SVG.walletIcon}
+/>
+);
+
 
 export default {
   addIcon,
   caretDown,
   caretUp,
   logout,
+  walletIcon
 }

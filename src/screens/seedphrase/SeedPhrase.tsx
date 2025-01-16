@@ -1,36 +1,79 @@
-import { useState } from "react";
+import CommonButton from "@components/CommonButton";
+import { Dispatch } from "@reduxjs/toolkit";
+import { goBack, push } from "@routes/Navigator";
+import { SUCCESS } from "@routes/RouteType";
+import ConfirmPassword from "@screens/seedphrase/ConfirmPassword";
+import EnterPassword from "@screens/seedphrase/EnterPassword";
+import SeedPhraseVerification from "@screens/seedphrase/SeedPhraseVerification";
+import SeedPhraseView from "@screens/seedphrase/SeedPhraseView";
+import { strings } from "@strings/i18n";
+import { Responsive } from '@utils/Responsive';
+import { validatePasswordStrength } from "@utils/Validations";
+import { backgroundbg, black, grey, orangeBorder, orangeButton, white } from "@values/color";
+import { useEffect, useState } from "react";
 import {
+    KeyboardAvoidingView,
+    Platform,
     ScrollView,
     StyleSheet,
     Text,
     TouchableOpacity,
-    View,
-    KeyboardAvoidingView,
-    Platform
+    View
 } from "react-native";
-import CommonButton from "@components/CommonButton";
-import { strings } from "@strings/i18n";
-import { black, grey, orangeBorder, orangeButton, white } from "@values/color";
-import { Responsive } from '@utils/Responsive';
-import SeedPhraseView from "@screens/seedphrase/SeedPhraseView";
-import SeedPhraseVerification from "@screens/seedphrase/SeedPhraseVerification";
-import EnterPassword from "@screens/seedphrase/EnterPassword";
-import ConfirmPassword from "@screens/seedphrase/ConfirmPassword";
-import { goBack, push } from "@routes/Navigator";
-import { SUCCESS } from "@routes/RouteType";
-
-const SeedPhrase = () => {
-    const [currentStep, setCurrentStep] = useState(1);
+import { useSelector } from "react-redux";
+import { useAppDispatch } from "../../redux/store";
+import { clearSeedPhraseReducer, seedPhraseReducerType, setConfirmPasswordError, setPasswordError } from "./SeedPhraseReducer";
+const SeedPhrase = ({ route }) => {
+    const { password, confirmPassword} = useSelector((state: { seedPhraseReducer: seedPhraseReducerType }) => state.seedPhraseReducer)
+   
+    const [currentStep, setCurrentStep] = useState(route?.params?.backupLatter ? 3:1);
     const totalSteps = 4;
+    const dispatch: Dispatch = useAppDispatch()
 
-    const handleNextStep = () => {
-        if (currentStep < totalSteps) {
-            setCurrentStep(currentStep + 1);
-        }
-        if(currentStep ==4 ){
-            push(SUCCESS)
-        }
+    const handleSubmit = (password : string) => {
+        const { strengthMessage } = validatePasswordStrength(password);
+        if (strengthMessage === strings.weakPassword || strengthMessage === strings.moderatePassword) {
+           
+            if(currentStep ==3 ){
+                dispatch(setPasswordError(strings.useStrongPassword))
+            }
+            if(currentStep ==4 ) {
+                dispatch(setConfirmPasswordError(strings.useStrongPassword))
+            }
+            return false
+        } 
         
+        else {
+           
+            return true
+        }
+    };
+    const handleNextStep = () => {
+        
+        if (currentStep < totalSteps) {
+          
+           
+            if(currentStep == 3) {
+                if(handleSubmit(password)){
+                    setCurrentStep(currentStep + 1);
+                }
+            }
+            else {
+                setCurrentStep(currentStep + 1);
+            }
+            
+        }
+
+        if(currentStep ==4 ){
+            if(handleSubmit(confirmPassword)){
+                if( password === confirmPassword ){
+                push(SUCCESS)
+                dispatch(clearSeedPhraseReducer())
+                }else {
+                    dispatch(setConfirmPasswordError(strings.passwordNotMatch))
+                }
+            }
+        }      
     };
 
     const handlePreviousStep = () => {
@@ -40,6 +83,11 @@ const SeedPhrase = () => {
             goBack();
         }
     };
+
+    useEffect(()=>{
+        console.log('Useeffect', route?.params?.backupLatter)
+      
+    },[])
 
     return (
         <KeyboardAvoidingView
@@ -59,8 +107,7 @@ const SeedPhrase = () => {
                     <View style={styles.buttonContainer}>
                         <TouchableOpacity
                             style={[styles.button, currentStep === 1 && styles.disabledButton]}
-                            onPress={handlePreviousStep}
-                        >
+                            onPress={handlePreviousStep} >
                             <Text style={styles.buttonText}>Back</Text>
                         </TouchableOpacity>
                     </View>
@@ -109,7 +156,7 @@ const styles = StyleSheet.create({
     stepContainer: {
         flexDirection: "row",
         alignContent: "center",
-        backgroundColor: "#A8B9F41A",
+        backgroundColor: backgroundbg,
         width: "100%",
         paddingHorizontal: Responsive.size10,
         paddingVertical: Responsive.size8,

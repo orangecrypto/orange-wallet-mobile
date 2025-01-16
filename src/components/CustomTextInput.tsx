@@ -1,7 +1,7 @@
-import { orangeButton } from '@values/color';
+import { Responsive } from '@utils/Responsive';
+import { gray, orangeButton, white } from '@values/color';
 import React, { useState } from 'react';
 import { TextInput, View, TouchableOpacity, StyleSheet, Image } from 'react-native';
-
 
 const CustomTextInput = ({
   placeholder,
@@ -14,6 +14,7 @@ const CustomTextInput = ({
   style,
 }) => {
   const [isSecure, setIsSecure] = useState(secureTextEntry);
+  const [focused, setFocused] = useState(false); // State to track focus
 
   // Function to toggle secure text entry
   const toggleSecureEntry = () => {
@@ -21,7 +22,13 @@ const CustomTextInput = ({
   };
 
   return (
-    <View style={[styles.inputContainer, style]}>
+    <View
+      style={[
+        styles.inputContainer,
+        { borderColor: focused ? orangeButton : gray }, // Dynamic border color
+        style,
+      ]}
+    >
       <TextInput
         style={styles.textInput}
         placeholder={placeholder}
@@ -29,6 +36,8 @@ const CustomTextInput = ({
         value={value}
         onChangeText={onChangeText}
         secureTextEntry={isSecure}
+        onFocus={() => setFocused(true)} // Set focus state
+        onBlur={() => setFocused(false)} // Reset focus state
       />
       {showPasswordToggle && (
         <TouchableOpacity onPress={toggleSecureEntry}>
@@ -46,21 +55,20 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderWidth: 2,
-    borderColor: orangeButton, // Orange border
-    borderRadius: 12,
-    paddingHorizontal: 10,
-    height: 50,
+    borderWidth: Responsive.size1,
+    borderRadius: Responsive.size12,
+    paddingHorizontal: Responsive.size10,
+    height: Responsive.size50,
     backgroundColor: '#1A1A1A', // Dark background
   },
   textInput: {
     flex: 1,
-    color: '#fff', // White text color
-    fontSize: 16,
+    color: white, 
+    fontSize: Responsive.size16,
   },
   icon: {
-    width: 24,
-    height: 24,
+    width: Responsive.size24,
+    height: Responsive.size24,
   },
 });
 

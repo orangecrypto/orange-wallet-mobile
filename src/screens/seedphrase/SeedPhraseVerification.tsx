@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { FlatList, StyleSheet, TextInput, View, Text } from 'react-native';
-import { black, orangeButton, white } from "@values/color";
+import { black, listBordercolor, orangeButton, seedPhraseItemBackground, seedPhrasePlaceholder, white } from "@values/color";
 import { Responsive } from '@utils/Responsive';
 import { strings } from "@strings/i18n";
 import { Fonts } from '@values/fonts';
@@ -37,7 +37,7 @@ const SeedPhraseVerification = () => {
                 style={styles.itemInput}
                 value={item.word}
                 onChangeText={(text) => handleTextChange(text, item.id)}
-                placeholderTextColor="#8E8E93"
+                placeholderTextColor={seedPhrasePlaceholder}
             />
         </View>
     );
@@ -82,28 +82,28 @@ const styles = StyleSheet.create({
         lineHeight: Responsive.size24,
     },
     flatListContainer: {
-        paddingHorizontal: 16,
+        paddingHorizontal: Responsive.size16,
         marginTop: Responsive.size20,
         backgroundColor: black,
-        borderRadius: 10,
+        borderRadius: Responsive.size10,
         borderWidth: Responsive.size2,
-        borderColor: '#0D0E1233',
+        borderColor: listBordercolor,
     },
     itemContainer: {
         flex: 1,
-        margin: 8,
-        width: Responsive.size100, // Fixed width
-        height: Responsive.size50, // Fixed height
-        backgroundColor: '#1C1C1E',
-        borderRadius: 12,
+        margin: Responsive.size8,
+        width: Responsive.size100, 
+        height: Responsive.size50, 
+        backgroundColor: seedPhraseItemBackground,
+        borderRadius: Responsive.size12,
         alignItems: 'center',
         justifyContent: 'center',
-        borderColor: '#3A3A3C',
+        borderColor: seedPhraseItemBackground,
         borderWidth: 1,
     },
     itemInput: {
-        color: '#FFFFFF',
-        fontSize: 16,
+        color: white,
+        fontSize: Responsive.size16,
         fontFamily:Fonts.semibold,
         textAlign: 'center',
         width: '100%',

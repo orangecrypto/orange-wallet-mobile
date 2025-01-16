@@ -1,7 +1,7 @@
 import { Image, StyleSheet, Text, View } from "react-native";
 import { Responsive } from '@utils/Responsive';
 import CommonButton from "@components/CommonButton";
-import { black, blackBorder, orangeBorder, orangeButton, white } from "@values/color";
+import { black, blackBorder, orangeBorder, orangeButton, orangeOpacityBg, white } from "@values/color";
 import { strings } from "@strings/i18n";
 import { localAssets } from "@assets/assets";
 import { push } from "@routes/Navigator";
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     },
 
     versionView: {
-        backgroundColor: '#D2340333',
+        backgroundColor: orangeOpacityBg,
         borderColor: orangeButton,
         borderWidth: Responsive.size1,
         paddingHorizontal: Responsive.size8,

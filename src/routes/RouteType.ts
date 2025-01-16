@@ -5,3 +5,6 @@ export const BACKUPWALLET= 'backupwallet';
 export const SEEDPHRASE= 'seedphrase';
 export const SUCCESS= 'success';
 export const LOGIN= 'login';
+export const WALLETBALANCE= 'walletbalance';
+export const QR= 'qr';
+export const SETTINGS= 'settings';

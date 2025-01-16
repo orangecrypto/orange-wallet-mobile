@@ -38,6 +38,19 @@ export default {
     unlock:'Unlock',
     complete:'Complete',
     password:'Password',
-    forgotPassword:'Forgot Password?'
+    forgotPassword:'Forgot Password?',
+    addCoin:'Add Coin',
+    assets: "Assets",
+    quantity: "Quantity",
+    transfer: "Transfer",
+    receive: "Receive",
+
+    strongPassword:'Strong password',
+    weakPassword:'Weak password',
+    moderatePassword:'Moderate password',
+    useStrongPassword:'Please use a stronger password!',
+    marketCap:'Market Cap',
+    info:'Info',
+    passwordNotMatch:'Password does not match',
 
 }   
