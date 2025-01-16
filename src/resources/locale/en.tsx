@@ -40,5 +40,7 @@ export default {
     password:'Password',
     forgotPassword:'Forgot Password?',
     addCoin:'Add Coin',
+    assets: "Assets",
+    quantity: "Quantity",
 
 }   

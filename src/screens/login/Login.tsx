@@ -27,7 +27,6 @@ const Login = () => {
         dispatch(setPasswordError(strengthMessage))
         dispatch(setPasswordFeedback(feedback))
 
-        console.log(feedback)
     };
 
     const handleSubmit = () => {

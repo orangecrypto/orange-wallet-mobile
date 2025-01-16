@@ -36,5 +36,7 @@ export const viewbutton= '#390E02CC';
 
 export const orangeOpacityBg= '#D2340333';
 
+export const grayText= '#8E8E93';
+export const transactionListBackground='#0E1015';
 
 
