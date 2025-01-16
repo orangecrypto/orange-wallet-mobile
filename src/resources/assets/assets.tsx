@@ -38,6 +38,11 @@ const localAssets = {
   addcoin: require('./images/addcoin.png'),
 
   downarrow: require('./images/downarrow.png'),
+  nftwallet: require('./images/nftwallet.png'),
+
+  transferarrow: require('./images/transferarrow.png'),
+  transactionarrow: require('./images/transactionarrow.png'),
+  samplenft: require('./images/samplenft.png'),
 
 
 

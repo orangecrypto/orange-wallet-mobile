@@ -38,5 +38,6 @@ export const orangeOpacityBg= '#D2340333';
 
 export const grayText= '#8E8E93';
 export const transactionListBackground='#0E1015';
+export const nftcategoryText='#626A82';
 
 

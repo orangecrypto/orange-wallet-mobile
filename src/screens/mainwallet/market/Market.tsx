@@ -1,6 +1,6 @@
 import { localAssets } from '@assets/assets';
 import { Responsive } from '@utils/Responsive';
-import { backgroundColor, black, gray, orangeOpacityBg, orangeButton, white } from "@values/color";
+import { black, gray, orangeButton, orangeOpacityBg, white } from "@values/color";
 import { Fonts } from '@values/fonts';
 import { Dimensions, Image, StyleSheet, Text, View } from "react-native";
 import { LineChart } from 'react-native-chart-kit';
@@ -55,9 +55,7 @@ const Market = () => {
               yLabelsOffset: -50,
             }}
             bezier
-           
-            style={styles.chart}
-          />
+            style={styles.chart} />
 
           {/* Balance Section (Overlay) */}
           <View style={styles.overlayBalanceSection}>

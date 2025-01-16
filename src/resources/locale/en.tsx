@@ -42,5 +42,7 @@ export default {
     addCoin:'Add Coin',
     assets: "Assets",
     quantity: "Quantity",
+    transfer: "Transfer",
+    receive: "Receive",
 
 }   

@@ -33,7 +33,6 @@ const RenderCardItem = ({ item, selectedItem }) => {
 
 const styles = StyleSheet.create({
     walletBackground: {
-        height: Responsive.size170,
         width: Dimensions.get('window').width - 40,
         marginHorizontal: Responsive.size16,
         padding: Responsive.size24,
