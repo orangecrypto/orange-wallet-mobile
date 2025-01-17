@@ -140,7 +140,8 @@ const styles = StyleSheet.create({
         marginBottom: Responsive.size24,
         borderWidth: Responsive.size1,
         borderColor: grey,
-        padding: Responsive.size16,
+        paddingHorizontal: Responsive.size16,
+        paddingVertical: Responsive.size16,
         borderRadius: Responsive.size10,
         marginHorizontal: Responsive.size16,
     },
@@ -154,7 +155,7 @@ const styles = StyleSheet.create({
     headerIcon: {
         width: Responsive.size20,
         height: Responsive.size20,
-        marginLeft: Responsive.size12,
+       
     },
     iconsContainer: {
         flexDirection: 'row',

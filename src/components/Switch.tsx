@@ -1,3 +1,4 @@
+import { Responsive } from '@utils/Responsive';
 import { disableSwitch, gray, orangeButton, orangeOpacityBg, white } from '@values/color';
 import React from 'react';
 import { View, TouchableWithoutFeedback, StyleSheet } from 'react-native';
@@ -24,10 +25,13 @@ const Switch = ({ isEnable, height, width, onToggle }) => {
             {
 
              backgroundColor: isEnable ?orangeButton :disableSwitch,
+             marginLeft:isEnable ? 0 :Responsive.size2,
               width: handleSize,
               height: handleSize,
               borderRadius: handleSize / 2,
               transform: [{ translateX: handlePosition }],
+             
+              
             },
           ]}
         />
@@ -38,9 +42,9 @@ const Switch = ({ isEnable, height, width, onToggle }) => {
 
 const styles = StyleSheet.create({
   container: {
-    borderRadius: 50,
+    borderRadius: Responsive.size50,
     justifyContent: 'center',
-    padding: 2,
+    padding: Responsive.size2,
     borderColor:orangeButton,
     borderWidth:1
   },

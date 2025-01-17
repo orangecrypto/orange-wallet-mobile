@@ -44,7 +44,7 @@ const localAssets = {
   transactionarrow: require('./images/transactionarrow.png'),
   samplenft: require('./images/samplenft.png'),
   bitcoinicon: require('./images/bitcoinicon.png'),
-
+  assetbitcoin: require('./images/assetbitcoin.png'),
 
 
   // Icons

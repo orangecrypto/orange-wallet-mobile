@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
     },
     contentTitle: {
         fontSize: Responsive.size24,
-        fontFamily:Fonts.bold,
+        fontFamily:Fonts.semibold,
         color: orangeButton,
         textAlign: "center",
         marginBottom: Responsive.size10,

@@ -1,4 +1,5 @@
 import { Responsive } from '@utils/Responsive';
+import { orangeButton, white } from '@values/color';
 import { Fonts } from '@values/fonts';
 import React from 'react';
 import { StyleProp, StyleSheet, Text, TouchableOpacity, ViewStyle } from 'react-native';
@@ -19,11 +20,11 @@ const CommonButton: React.FC<CommonButtonProps> = ({
   title,
   onPress,
   style,
-  backgroundColor = '#D74320',
-  textColor = '#FFFFFF',
+  backgroundColor = orangeButton,
+  textColor = white,
   borderColor = 'transparent',
   width = '100%',
-  height = 50,
+  height = Responsive.size50,
   disabled = false,
 }) => {
   return (
@@ -61,7 +62,7 @@ const styles = StyleSheet.create({
     fontFamily:Fonts.semibold
   },
   disabledButton: {
-    backgroundColor: '#999999',
+    opacity:0.5
   },
 });
 

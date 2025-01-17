@@ -2,7 +2,7 @@ import CommonButton from '@components/CommonButton';
 import { goBack } from '@routes/Navigator';
 import { strings } from '@strings/i18n';
 import { Responsive } from '@utils/Responsive';
-import { backgroundbg, black, grey, nftcategoryText, orangeButton, orangeOpacityBg, white } from "@values/color";
+import { backbackgroundbg, backgroundbg, black, grey, nftcategoryText, orangeButton, orangeOpacityBg, white } from "@values/color";
 import { Fonts } from '@values/fonts';
 import { useState } from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -56,15 +56,7 @@ const AddAddress = () => {
                 </TouchableOpacity>
             </View>
 
-            <View style={styles.buttonContainer}>
-                <CommonButton
-                    title={strings.close}
-                    onPress={() => goBack()}
-                    backgroundColor={orangeButton}
-                    textColor={white}
-                    height={Responsive.size45}
-                />
-            </View>
+          
         </View>
     );
 };
@@ -87,7 +79,7 @@ const styles = StyleSheet.create({
         marginBottom: Responsive.size20,
     },
     button: {
-        backgroundColor: backgroundbg,
+        backgroundColor: backbackgroundbg,
         width: Responsive.size70,
         justifyContent: 'center',
         alignItems: 'center',
@@ -102,7 +94,7 @@ const styles = StyleSheet.create({
     },
     addAddress: {
         color: orangeButton,
-        fontSize: Responsive.size22,
+        fontSize: Responsive.size24,
         fontFamily: Fonts.bold,
         marginTop: Responsive.size20
     },

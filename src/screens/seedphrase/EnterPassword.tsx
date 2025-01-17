@@ -26,19 +26,6 @@ const EnterPassword = () => {
     };
 
   
-
-    useEffect(() => {
-        const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
-            setIsKeyboardVisible(true);
-        });
-        const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
-            setIsKeyboardVisible(false);
-        });
-        return () => {
-            keyboardDidHideListener.remove();
-            keyboardDidShowListener.remove();
-        };
-    }, []);
     return (
         <View style={styles.container}>
             <Image source={localAssets.lock} style={styles.topIcon} />
@@ -56,11 +43,10 @@ const EnterPassword = () => {
                     showPasswordToggle={true}
                     passwordIconVisible={localAssets.eye}
                     passwordIconHidden={localAssets.eyeoff}
-                    style={styles.input}
-                />
+                    style={styles.input} />
 
                    <Text style={[styles.passwordError,{color:passwordError === strings.strongPassword ? green :red }]}>{passwordError}</Text>
-                                        <Text style={styles.passwordError}>{passwordFeedback}</Text>  {/* Show any additional feedback */}
+                    <Text style={styles.passwordError}>{passwordFeedback}</Text>  {/* Show any additional feedback */}
                                     
             </View>
         </View>
@@ -76,7 +62,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: Responsive.size22,
         color: orangeButton,
-       fontFamily:Fonts.bold,
+       fontFamily:Fonts.semibold,
 
     },
 
@@ -94,7 +80,7 @@ const styles = StyleSheet.create({
         marginTop: Responsive.size10,
         fontSize: Responsive.size18,
         color: white,
-        fontFamily:Fonts.semibold,
+        fontFamily:Fonts.regular,
         lineHeight: Responsive.size22,
     },
     topIcon: {

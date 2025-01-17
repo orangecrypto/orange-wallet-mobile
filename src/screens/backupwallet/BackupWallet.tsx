@@ -1,12 +1,12 @@
-import { Image, StyleSheet, Text, View } from "react-native";
-import CommonButton from "@components/CommonButton";
 import { localAssets } from "@assets/assets";
-import { strings } from "@strings/i18n";
-import { black, blackBorder, orangeBorder, orangeButton, white } from "@values/color";
+import CommonButton from "@components/CommonButton";
 import { push } from "@routes/Navigator";
 import { SEEDPHRASE } from "@routes/RouteType";
+import { strings } from "@strings/i18n";
 import { Responsive } from '@utils/Responsive';
+import { black, blackBorder, orangeBorder, orangeButton, white } from "@values/color";
 import { Fonts } from '@values/fonts';
+import { Image, StyleSheet, Text, View } from "react-native";
 
 const BackupWallet = () => {
     return (

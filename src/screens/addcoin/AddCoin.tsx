@@ -4,7 +4,7 @@ import Switch from "@components/Switch";
 import { goBack } from "@routes/Navigator";
 import { strings } from "@strings/i18n";
 import { Responsive } from "@utils/Responsive";
-import { backgroundbg, black, grey, orangeButton, orangeOpacityBg, selectedCategory, white } from "@values/color";
+import { backbackgroundbg, backgroundbg, black, borderLineSeedphrase, grey, orangeButton, orangeOpacityBg, selectedCategory, white } from "@values/color";
 import { Fonts } from "@values/fonts";
 
 const AddCoin = () => {
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: Responsive.size18,
   },
   button: {
-    backgroundColor: backgroundbg,
+    backgroundColor: backbackgroundbg,
     width: Responsive.size70,
     justifyContent: "center",
     alignItems: "center",
@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
   },
   addAddress: {
     color: orangeButton,
-    fontSize: Responsive.size22,
+    fontSize: Responsive.size24,
     fontFamily: Fonts.bold,
     marginTop: Responsive.size20,
   },
@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
     marginTop: Responsive.size18,
     justifyContent: "space-between",
     borderWidth: Responsive.size1,
-    borderColor: grey,
+    borderColor: borderLineSeedphrase,
   },
   text: {
     fontSize: Responsive.size16,
