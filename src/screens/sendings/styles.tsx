@@ -1,0 +1,242 @@
+import { StyleSheet } from "react-native";
+import { Responsive } from "@utils/Responsive";
+import { backbackgroundbg, black, borderLineSeedphrase, erroryellow, grayText, listBordercolor, nftcategoryText, orangeButton, orangeOpacityBg, red, selectedCategory, viewbutton, white } from "@values/color";
+import { Fonts } from "@values/fonts";
+
+export const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: black,
+    },
+    contentContainer: {
+        flex: 1,
+        justifyContent: "flex-start",
+        paddingHorizontal: Responsive.size18,
+    },
+
+    topContainer: {
+        flexDirection:'row',
+        justifyContent:'space-between',
+        alignItems:'center',
+        alignContent:'center',
+        marginTop: Responsive.size20
+    },
+    button: {
+        backgroundColor: backbackgroundbg,
+        width: Responsive.size70,
+        justifyContent: "center",
+        alignItems: "center",
+        padding: Responsive.size10,
+        borderRadius: Responsive.size8,
+        marginTop: Responsive.size50,
+    },
+    buttonText: {
+        color: white,
+        fontSize: Responsive.size16,
+        fontFamily: Fonts.regular,
+    },
+    title: {
+        color: orangeButton,
+        fontSize: Responsive.size32,
+        fontFamily: Fonts.bold,
+        marginTop: Responsive.size15,
+    },
+    subTitle: {
+        color: orangeButton,
+        fontSize: Responsive.size18,
+        fontFamily: Fonts.bold,
+        marginTop: Responsive.size15,
+    },
+    description: {
+        color: white,
+        fontSize: Responsive.size18,
+        fontFamily: Fonts.regular,
+        lineHeight: Responsive.size20,
+        marginTop: Responsive.size10
+    },
+    item: {
+        flexDirection: "row",
+        padding: Responsive.size16,
+        backgroundColor: listBordercolor,
+        borderRadius: Responsive.size10,
+        marginTop: Responsive.size18,
+        justifyContent: "space-between",
+        borderWidth: Responsive.size2,
+        borderColor: borderLineSeedphrase,
+    },
+    assetItem: {
+        flexDirection: "row",
+        padding: Responsive.size10,
+        marginTop: Responsive.size14,
+        backgroundColor: listBordercolor,
+        borderRadius: Responsive.size10,
+        justifyContent: "space-between",
+        borderWidth: Responsive.size2,
+        borderColor: borderLineSeedphrase,
+    },
+    text: {
+        fontSize: Responsive.size18,
+        fontFamily: Fonts.regular,
+        color: white,
+    },
+    loader: {
+
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    value: {
+        fontSize: Responsive.size12,
+        fontFamily: Fonts.regular,
+        color: white,
+    },
+    subValue: {
+        fontSize: Responsive.size12,
+        fontFamily: Fonts.regular,
+        color: nftcategoryText,
+    },
+    valueContainer: {
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+
+    input: {
+        marginTop: Responsive.size10,
+        marginBottom: Responsive.size10,
+    },
+    inputContainer:{
+        marginTop:Responsive.size10
+    },
+
+    buttonContainer: {
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+        marginBottom: Responsive.size20,
+        padding: Responsive.size18
+    },
+
+    itemContainer: {
+        flex: 1,
+        margin: Responsive.size12,
+        width: '30%',
+        height: Responsive.size45,
+        backgroundColor: black,
+        borderRadius: Responsive.size12,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderColor: borderLineSeedphrase,
+        borderWidth: Responsive.size1,
+
+    },
+    itemText: {
+        color: white,
+        fontSize: Responsive.size14,
+        fontFamily: Fonts.semibold,
+        textAlign: 'center',
+        width: '100%',
+    },
+    flatListContainer: {
+        marginTop: Responsive.size20,
+        backgroundColor: black,
+        borderRadius: Responsive.size10,
+        borderWidth: Responsive.size2,
+        borderColor: listBordercolor,
+    },
+    horizontalButtonContainer: {
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        flexDirection: 'row',
+        marginBottom: Responsive.size20,
+        marginHorizontal: Responsive.size18
+    },
+
+    sendIconBakcground:{
+        height: Responsive.size40,
+        width: Responsive.size40,
+        borderRadius: Responsive.size20,
+        backgroundColor:orangeOpacityBg,
+        justifyContent:'center',
+        alignItems:'center'
+    },
+    sendIcon:{
+        height: Responsive.size24,
+        width: Responsive.size24,
+    },
+    warningText:{
+        fontFamily: Fonts.semibold,
+        fontSize: Responsive.size12,
+        color: orangeButton,
+        margin:Responsive.size18,
+        lineHeight: Responsive.size14
+    },
+    warningMessage:{
+        fontFamily: Fonts.regular,
+        fontSize: Responsive.size12,
+        color: nftcategoryText
+    },
+    sendingHeader:{
+        flexDirection:'row',
+        justifyContent:'space-between',
+        backgroundColor:orangeButton,     
+        padding: Responsive.size16,
+        alignContent:'center',
+        borderTopLeftRadius:Responsive.size16,
+        borderTopRightRadius: Responsive.size16
+    },
+    headerIcon :{
+        height:Responsive.size36,
+        width: Responsive.size36
+    },
+    headerTitle:{
+        fontFamily:Fonts.regular,
+        color:white,
+        fontSize: Responsive.size24
+    },
+   
+    headerTopTextView:{
+        flexDirection:'row',
+    },
+    categoryTextBackground:{
+        fontFamily: Fonts.regular,
+        fontSize: Responsive.size12,
+        color:white,
+        borderRadius:Responsive.size8,
+        backgroundColor:viewbutton,
+        paddingHorizontal: Responsive.size4,
+        marginLeft: Responsive.size8
+       
+    },
+    tokenContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: 'transparent',
+      },
+      pasteText:{
+        fontSize: Responsive.size14,
+        color:orangeButton,
+        fontFamily: Fonts.regular,
+        backgroundColor: orangeOpacityBg,
+        borderRadius: Responsive.size15,
+        padding: Responsive.size8
+      },
+
+      errorContainer:{
+        justifyContent:'space-between',
+        flexDirection:'row',
+
+      },
+      errorMessage:{
+        fontFamily: Fonts.regular,
+        fontSize: Responsive.size12,
+        color: erroryellow
+      },
+      balanceText:{
+        borderRadius: Responsive.size5,
+        borderWidth: Responsive.size1,
+        borderColor:borderLineSeedphrase,
+        backgroundColor: listBordercolor,
+        fontSize: Responsive.size12,
+        color: white,
+        padding: Responsive.size4
+      }
+
+});

@@ -50,6 +50,7 @@ export const seedPhraseItemBackground="#1C1C1E";
 export const seedPhraseItemBorder='#3A3A3C';
 export const stepIndigatorBackground='#2D3242';
 export const borderLineSeedphrase='#A8B9F426';
+export const erroryellow='#FFC700';
 
 
 
