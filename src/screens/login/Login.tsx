@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
     },
     password: {
         fontSize: Responsive.size22,
-        fontFamily: Fonts.bold,
+        fontFamily: Fonts.semibold,
         color: orangeButton,
         marginTop: Responsive.size22,
     },

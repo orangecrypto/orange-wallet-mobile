@@ -59,22 +59,20 @@ const styles = StyleSheet.create({
     title: {
         fontSize: Responsive.size22,
         color: orangeButton,
-        fontFamily: Fonts.bold,
+        fontFamily: Fonts.semibold,
 
     },
 
     contentContainer: {
         flex: 1,
-        justifyContent: 'flex-start',
+        justifyContent: 'flex-start'
 
     },
-
-
     reviewText: {
         marginTop: Responsive.size10,
         fontSize: Responsive.size18,
         color: white,
-        fontFamily: Fonts.semibold,
+        fontFamily: Fonts.regular,
         lineHeight: Responsive.size22,
     },
     topIcon: {

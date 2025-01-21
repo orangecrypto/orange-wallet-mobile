@@ -23,7 +23,7 @@ const HomeScreen = () => {
                     backgroundColor={orangeButton}
                     textColor={white}
                     borderColor={orangeBorder}
-                    width={'90%'}
+                    width={'100%'}
                     height={Responsive.size45}
                 />
                 <CommonButton
@@ -32,7 +32,7 @@ const HomeScreen = () => {
                     backgroundColor={black}
                     textColor={white}
                     borderColor={blackBorder}
-                    width={'90%'}
+                    width={'100%'}
                     height={Responsive.size45}
                 />
             </View>

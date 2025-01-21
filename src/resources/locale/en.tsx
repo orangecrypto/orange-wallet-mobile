@@ -1,3 +1,5 @@
+
+
 export default {
     appName: 'Demo App',
     orangeWallet:'Orange Wallet',
@@ -40,6 +42,7 @@ export default {
     password:'Password',
     forgotPassword:'Forgot Password?',
     addCoin:'Add Coin',
+    addCoinMessage:'Select the tokens you would like to display in your Orange Wallet.',
     assets: "Assets",
     quantity: "Quantity",
     transfer: "Transfer",
@@ -52,5 +55,30 @@ export default {
     marketCap:'Market Cap',
     info:'Info',
     passwordNotMatch:'Password does not match',
+    close:'Close',
+
+    addAddress:'Add Address',
+    addAddressMessage:'Add new wallet addresses by simply tapping the add button below.',
+    addNewAddress:'Add New Address',
+    back:'Back',
+    settings:'Settings',
+    settingsMessage:'Adjust your wallet settings for a more personalized experience below.',
+    network :'Network',
+    networkMessage:'Easily switch between MainNet and Testnet by selecting the below.',
+    currency :'Currency',
+    currencyMessage:'Easily switch between various fiat currencies by selecting the currency below.',
+    updatePassword:'Update Your Password',
+    enterCurrentPassword:'Enter your current password.',
+    enterNewPassword :'Enter the password you would like to set for your wallet.',
+    backupWallet:'Backup Wallet',
+    seedPhraseMessage:'Write down, safely store, and keep your seed phrase private. This is the unique key to your wallet.',
+    restoreAssets:'Restore Assets',
+    restoreAssetsMessage:'If you accidentally sent Ordinals to your Bitcoin address or vice-versa sent Bitcoin to your Ordinals address, press the button below to restore them.',
+    selectAsset:'Select the assets you would like to restore and transfer back to the correct wallet address.',
+    RESETWALLET:'RESET WALLET',
+    resetWallet:'Reset Wallet',
+    resetWalletMessage:'Resetting you wallet will erase all of your data associated with this wallet address. After resetting your wallet, you will have to create a new wallet or restore your wallet from an existing seed phrase.',
+    noAssetFound:'No assets found.',
+
 
 }   

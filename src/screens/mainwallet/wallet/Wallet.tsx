@@ -66,7 +66,6 @@ const Wallet = () => {
                 data={cryptoArray}
                 horizontal
                 style={styles.flatList}
-           
                 pagingEnabled
                 showsHorizontalScrollIndicator={false}
                 onScroll={handleScroll}
@@ -126,12 +125,16 @@ const styles = StyleSheet.create({
         backgroundColor: orangeButton,
     },
     contentArea: {
-        marginTop: Responsive.size20,
+        marginTop: Responsive.size15,
         justifyContent: 'flex-start',
         alignItems: 'center',
         paddingHorizontal: Responsive.size20,
         height: '60%',
-        width: '100%'
+        width: '100%',
+        paddingTop: Responsive.size16,
+        backgroundColor: transactionListBackground,
+        borderTopLeftRadius:Responsive.size20,
+        borderTopRightRadius: Responsive.size20
     },
     contentText: {
         fontSize: Responsive.size18,

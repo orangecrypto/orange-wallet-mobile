@@ -1,4 +1,6 @@
 import { localAssets } from '@assets/assets';
+import { push } from '@routes/Navigator';
+import { ADDCOIN } from '@routes/RouteType';
 import { strings } from '@strings/i18n';
 import { Responsive } from '@utils/Responsive';
 import { white, viewbutton } from '@values/color';
@@ -22,7 +24,7 @@ const RenderCardItem = ({ item, selectedItem }) => {
                 </View>
             </View>
 
-            <TouchableOpacity style={styles.addCoinView} onPress={() => { console.log('Open') }}>
+            <TouchableOpacity style={styles.addCoinView} onPress={() => { push(ADDCOIN)}}>
                 <Image style={styles.addCoinIcon} source={localAssets.addcoin} />
                 <Text style={styles.addCoinText}>{strings.addCoin}</Text>
             </TouchableOpacity>

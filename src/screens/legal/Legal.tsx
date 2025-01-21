@@ -59,9 +59,9 @@ const styles = StyleSheet.create({
         marginTop: Responsive.size20
     },
     title: {
-        fontSize: Responsive.size22,
+        fontSize: Responsive.size32,
         color: orangeButton,
-         fontFamily:Fonts.bold,
+        fontFamily: Fonts.bold,
 
     },
 
@@ -69,13 +69,14 @@ const styles = StyleSheet.create({
         marginTop: Responsive.size10,
         fontSize: Responsive.size18,
         color: white,
-        fontFamily:Fonts.semibold,
+        fontFamily: Fonts.regular,
+        lineHeight: Responsive.size24
     },
 
     orangeText: {
         fontSize: Responsive.size18,
         color: orangeButton,
-        fontFamily:Fonts.semibold,
+        fontFamily: Fonts.semibold,
     },
 
     buttonContainer: {
@@ -98,7 +99,7 @@ const styles = StyleSheet.create({
     roundedViewtext: {
         fontSize: Responsive.size18,
         color: white,
-        fontFamily:Fonts.semibold,
+        fontFamily: Fonts.semibold,
 
     },
 

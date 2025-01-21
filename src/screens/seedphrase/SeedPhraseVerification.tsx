@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { FlatList, StyleSheet, TextInput, View, Text } from 'react-native';
-import { black, listBordercolor, orangeButton, seedPhraseItemBackground, seedPhrasePlaceholder, white } from "@values/color";
+import { black, borderLineSeedphrase, listBordercolor, orangeButton, seedPhraseItemBackground, seedPhrasePlaceholder, white } from "@values/color";
 import { Responsive } from '@utils/Responsive';
 import { strings } from "@strings/i18n";
 import { Fonts } from '@values/fonts';
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: Responsive.size22,
         color: orangeButton,
-        fontFamily:Fonts.bold,
+        fontFamily:Fonts.semibold,
     },
     contentContainer: {
         flex: 1,
@@ -78,11 +78,11 @@ const styles = StyleSheet.create({
         marginTop: Responsive.size10,
         fontSize: Responsive.size18,
         color: white,
-        fontFamily:Fonts.semibold,
+        fontFamily:Fonts.regular,
         lineHeight: Responsive.size24,
     },
     flatListContainer: {
-        paddingHorizontal: Responsive.size16,
+       
         marginTop: Responsive.size20,
         backgroundColor: black,
         borderRadius: Responsive.size10,
@@ -91,15 +91,16 @@ const styles = StyleSheet.create({
     },
     itemContainer: {
         flex: 1,
-        margin: Responsive.size8,
-        width: Responsive.size100, 
-        height: Responsive.size50, 
-        backgroundColor: seedPhraseItemBackground,
+        margin: Responsive.size12,
+        width: '30%', 
+        height: Responsive.size45, 
+        backgroundColor: black,
         borderRadius: Responsive.size12,
         alignItems: 'center',
         justifyContent: 'center',
-        borderColor: seedPhraseItemBackground,
-        borderWidth: 1,
+        borderColor: borderLineSeedphrase,
+        borderWidth: Responsive.size1,
+        
     },
     itemInput: {
         color: white,

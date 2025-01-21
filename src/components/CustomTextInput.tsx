@@ -1,5 +1,5 @@
 import { Responsive } from '@utils/Responsive';
-import { gray, orangeButton, white } from '@values/color';
+import { black, gray, orangeButton, white } from '@values/color';
 import React, { useState } from 'react';
 import { TextInput, View, TouchableOpacity, StyleSheet, Image } from 'react-native';
 
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     borderRadius: Responsive.size12,
     paddingHorizontal: Responsive.size10,
     height: Responsive.size50,
-    backgroundColor: '#1A1A1A', // Dark background
+    backgroundColor: black, // Dark background
   },
   textInput: {
     flex: 1,

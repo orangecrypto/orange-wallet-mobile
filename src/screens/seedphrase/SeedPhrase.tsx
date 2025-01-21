@@ -9,9 +9,10 @@ import SeedPhraseView from "@screens/seedphrase/SeedPhraseView";
 import { strings } from "@strings/i18n";
 import { Responsive } from '@utils/Responsive';
 import { validatePasswordStrength } from "@utils/Validations";
-import { backgroundbg, black, grey, orangeBorder, orangeButton, white } from "@values/color";
+import { backbackgroundbg, black, grey, orangeBorder, orangeButton, white } from "@values/color";
 import { useEffect, useState } from "react";
 import {
+    Keyboard,
     KeyboardAvoidingView,
     Platform,
     ScrollView,
@@ -23,145 +24,127 @@ import {
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "../../redux/store";
 import { clearSeedPhraseReducer, seedPhraseReducerType, setConfirmPasswordError, setPasswordError } from "./SeedPhraseReducer";
+
 const SeedPhrase = ({ route }) => {
-    const { password, confirmPassword} = useSelector((state: { seedPhraseReducer: seedPhraseReducerType }) => state.seedPhraseReducer)
-   
-    const [currentStep, setCurrentStep] = useState(route?.params?.backupLatter ? 3:1);
-    const totalSteps = 4;
-    const dispatch: Dispatch = useAppDispatch()
-
-    const handleSubmit = (password : string) => {
+    const steps = [
+        { id: 1, component: SeedPhraseView },
+        { id: 2, component: SeedPhraseVerification },
+        { id: 3, component: EnterPassword },
+        { id: 4, component: ConfirmPassword },
+    ];
+    
+    const { password, confirmPassword } = useSelector((state: { seedPhraseReducer: seedPhraseReducerType }) => state.seedPhraseReducer);
+    const [currentStepIndex, setCurrentStepIndex] = useState(route?.params?.backupLatter ? 2 : 0); 
+    const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
+    const dispatch: Dispatch = useAppDispatch();
+    
+    const validatePassword = (password, step) => {
         const { strengthMessage } = validatePasswordStrength(password);
-        if (strengthMessage === strings.weakPassword || strengthMessage === strings.moderatePassword) {
-           
-            if(currentStep ==3 ){
-                dispatch(setPasswordError(strings.useStrongPassword))
-            }
-            if(currentStep ==4 ) {
-                dispatch(setConfirmPasswordError(strings.useStrongPassword))
-            }
-            return false
-        } 
-        
-        else {
-           
-            return true
+        if ([strings.weakPassword, strings.moderatePassword].includes(strengthMessage)) {
+            const errorAction = step === 2 ? setPasswordError : setConfirmPasswordError; 
+            dispatch(errorAction(strings.useStrongPassword));
+            return false;
         }
+        return true;
     };
+    
     const handleNextStep = () => {
-        
-        if (currentStep < totalSteps) {
-          
-           
-            if(currentStep == 3) {
-                if(handleSubmit(password)){
-                    setCurrentStep(currentStep + 1);
-                }
+        if (currentStepIndex === 2 && !validatePassword(password, currentStepIndex)) return; 
+        if (currentStepIndex === 3) { 
+            if (!validatePassword(confirmPassword, currentStepIndex)) return;
+            if (password === confirmPassword) {
+                push(SUCCESS);
+                dispatch(clearSeedPhraseReducer());
+            } else {
+                dispatch(setConfirmPasswordError(strings.passwordNotMatch));
             }
-            else {
-                setCurrentStep(currentStep + 1);
-            }
-            
+            return;
         }
-
-        if(currentStep ==4 ){
-            if(handleSubmit(confirmPassword)){
-                if( password === confirmPassword ){
-                push(SUCCESS)
-                dispatch(clearSeedPhraseReducer())
-                }else {
-                    dispatch(setConfirmPasswordError(strings.passwordNotMatch))
-                }
-            }
-        }      
+    
+        if (currentStepIndex < steps.length - 1) {
+            setCurrentStepIndex((prevIndex) => prevIndex + 1);
+        }
     };
-
+    
     const handlePreviousStep = () => {
-        if (currentStep > 1) {
-            setCurrentStep(currentStep - 1);
-        } else {
-            goBack();
-        }
+        setCurrentStepIndex((prevIndex) => (prevIndex > 0 ? prevIndex - 1 : goBack()));
     };
-
-    useEffect(()=>{
-        console.log('Useeffect', route?.params?.backupLatter)
-      
-    },[])
-
+    
+    useEffect(() => {
+        const handleKeyboardVisibility = (isVisible) => setIsKeyboardVisible(isVisible);
+        const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => handleKeyboardVisibility(true));
+        const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => handleKeyboardVisibility(false));
+        return () => {
+            keyboardDidShowListener.remove();
+            keyboardDidHideListener.remove();
+        };
+    }, []);
+    
+    const CurrentStepComponent = steps[currentStepIndex]?.component;
+    
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
-            style={styles.container} >
-            <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps="handled">
+            style={styles.container}>
+            <ScrollView
+                contentContainerStyle={{ flexGrow: 1 }}
+                keyboardShouldPersistTaps="handled"
+                showsVerticalScrollIndicator={false}>
                 <View style={styles.contentContainer}>
-                    <View style={styles.stepContainer}>
-                        <Text style={styles.stepText}>Step {currentStep}</Text>
-                        <View style={styles.progressBarContainer}>
-                            <View
-                                style={[styles.progressBar, { width: `${(currentStep / totalSteps) * 100}%` }]}
-                            />
-                        </View>
-                    </View>
-
                     <View style={styles.buttonContainer}>
                         <TouchableOpacity
-                            style={[styles.button, currentStep === 1 && styles.disabledButton]}
-                            onPress={handlePreviousStep} >
-                            <Text style={styles.buttonText}>Back</Text>
+                            style={[styles.button, currentStepIndex === 0 && styles.disabledButton]}
+                            onPress={handlePreviousStep}>
+                            <Text style={styles.buttonText}>{strings.back}</Text>
                         </TouchableOpacity>
                     </View>
-
-                    {currentStep == 1 ? (
-                        <SeedPhraseView />
-                    ) : currentStep == 2 ? (
-                        <SeedPhraseVerification />
-                    ) : currentStep == 3 ? (
-                        <EnterPassword />
-                    ) : currentStep == 4 ? (
-                        <ConfirmPassword />
-                    ) : null}
+                    <View style={styles.stepContainer}>
+                        <Text style={styles.stepText}>Step {currentStepIndex + 1}</Text>
+                        <View style={styles.progressBarContainer}>
+                            <View style={[styles.progressBar, { width: `${((currentStepIndex + 1) / steps.length) * 100}%` }]} />
+                        </View>
+                    </View>
+                    {CurrentStepComponent && <CurrentStepComponent />}
                 </View>
             </ScrollView>
-            <View style={styles.buttonContainerConitnue}>
-                <CommonButton
-                    title={strings.continue}
-                    onPress={handleNextStep}
-                    backgroundColor={orangeButton}
-                    textColor={white}
-                    borderColor={orangeBorder}
-                    width={"100%"}
-                    height={Responsive.size45}
-                />
-            </View>
+            {!isKeyboardVisible && (
+                <View style={styles.buttonContainerConitnue}>
+                    <CommonButton
+                        title={strings.continue}
+                        onPress={handleNextStep}
+                        backgroundColor={orangeButton}
+                        textColor={white}
+                        borderColor={orangeBorder}
+                        width={"100%"}
+                        height={Responsive.size45}
+                    />
+                </View>
+            )}
         </KeyboardAvoidingView>
     );
+    
 };
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: black,
-        padding: Responsive.size20,
+        padding: Responsive.size18,
     },
     contentContainer: {
         flex: 1,
         justifyContent: "flex-start",
     },
-    title: {
-        fontSize: Responsive.size18,
-        color: white,
-        textAlign: "center",
-    },
     stepContainer: {
         flexDirection: "row",
         alignContent: "center",
-        backgroundColor: backgroundbg,
+        backgroundColor: backbackgroundbg,
         width: "100%",
-        paddingHorizontal: Responsive.size10,
-        paddingVertical: Responsive.size8,
+        paddingHorizontal: Responsive.size16,
+        paddingVertical: Responsive.size12,
         borderRadius: Responsive.size10,
         justifyContent: "space-between",
+        marginVertical: Responsive.size18
     },
     stepText: {
         fontSize: Responsive.size16,
@@ -170,7 +153,7 @@ const styles = StyleSheet.create({
     progressBarContainer: {
         height: Responsive.size8,
         width: "20%",
-        backgroundColor: grey,
+        backgroundColor: black,
         borderRadius: Responsive.size5,
         overflow: "hidden",
         alignSelf: "center",
@@ -183,7 +166,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         width: "60%",
-        marginTop: 50,
+        marginTop: Responsive.size20,
     },
     button: {
         paddingVertical: Responsive.size5,
