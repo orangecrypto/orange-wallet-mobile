@@ -101,6 +101,20 @@ export default {
     warningMessage:'Please confirm the wallet address as transactions are irreversible and funds can not be recovered.',
     paste:'Paste',
     enterNonce:'Enter the nonce amount.',
+    enterFeesAmount:'Enter the fee amount.',
+    incriptionDetails:'Inscription Details',
+    incription:'Inscription',
+    owner:'Owner',
+    ordinals:'Ordinals',
+    sendOrdinals:'Send Ordinal',
+    important:'Important',
+    importantMessage:'Please ensure that the address starts with bc1p and supports Ordinals. Sending BRC20 tokens and Ordinals to the wrong address can result in lost funds.',
+    transferMessage:'Please carefully review the details of your send request.',
+    sendingTransaction:'Sending Transaction',
+    transactionSend:'Transaction Sent',
+    sendingTransactionMessage:'Please wait while your transaction is being broadcasted to the network...',
+    transactionSendMessage:'Your transaction has been successfully sent to the blockchain.'
+
     
 
 

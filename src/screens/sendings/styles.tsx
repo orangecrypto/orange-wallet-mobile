@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 import { Responsive } from "@utils/Responsive";
-import { backbackgroundbg, black, borderLineSeedphrase, erroryellow, grayText, listBordercolor, nftcategoryText, orangeButton, orangeOpacityBg, red, selectedCategory, viewbutton, white } from "@values/color";
+import { backbackgroundbg, black, borderLineSeedphrase, erroryellow, grayText, listBordercolor, nftcategoryText, orangeButton, orangeOpacityBg, red, selectedCategory, unselectedcategory, viewbutton, white, yellowopacity } from "@values/color";
 import { Fonts } from "@values/fonts";
 
 export const styles = StyleSheet.create({
@@ -61,6 +61,7 @@ export const styles = StyleSheet.create({
         borderRadius: Responsive.size10,
         marginTop: Responsive.size18,
         justifyContent: "space-between",
+        alignContent:'center',
         borderWidth: Responsive.size2,
         borderColor: borderLineSeedphrase,
     },
@@ -78,6 +79,7 @@ export const styles = StyleSheet.create({
         fontSize: Responsive.size18,
         fontFamily: Fonts.regular,
         color: white,
+         alignSelf:'center'
     },
     loader: {
 
@@ -88,15 +90,18 @@ export const styles = StyleSheet.create({
         fontSize: Responsive.size12,
         fontFamily: Fonts.regular,
         color: white,
+       
     },
     subValue: {
         fontSize: Responsive.size12,
         fontFamily: Fonts.regular,
         color: nftcategoryText,
+        marginLeft: Responsive.size4
     },
     valueContainer: {
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        alignSelf:'center'
     },
 
     input: {
@@ -237,6 +242,160 @@ export const styles = StyleSheet.create({
         fontSize: Responsive.size12,
         color: white,
         padding: Responsive.size4
-      }
+      },
+      rightFeestext1:{
+        fontFamily: Fonts.regular,
+        fontSize: Responsive.size12,
+        color: white
+      },
+
+      rightFeestext2:{
+        fontFamily: Fonts.regular,
+        fontSize: Responsive.size12,
+        color: nftcategoryText
+      },
+      categoryButton: {
+        paddingHorizontal: Responsive.size12,
+        paddingVertical: Responsive.size8,
+        backgroundColor: unselectedcategory,
+        borderRadius: Responsive.size16,
+        marginRight: Responsive.size8,
+      },
+      selectedCategory: {
+        backgroundColor: orangeOpacityBg,
+      },
+      categoryText: {
+        color: nftcategoryText,
+        fontSize: Responsive.size14,
+        fontFamily: Fonts.regular,
+      },
+      selectedCategoryText: {
+        color: orangeButton,
+        fontFamily: Fonts.semibold,
+      },
+
+      categoryContainer: {
+        flexDirection: "row",
+        marginVertical: Responsive.size16,
+        width: "100%",
+      },
+
+      incriptionImage:{
+        height: Responsive.size200,
+        width:Responsive.size200,
+        marginTop: Responsive.size10,
+        borderRadius: Responsive.size18,
+        alignSelf:'center'
+      },
+    ordinalsContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: yellowopacity,
+        borderRadius:Responsive.size15,
+        borderWidth: Responsive.size1,
+        borderColor: erroryellow,
+        padding: Responsive.size6
+    },
+    ordinalsText: {
+        fontFamily: Fonts.semibold,
+        fontSize: Responsive.size12,
+        color: erroryellow
+    },
+    ownerContainer: {
+
+        flexDirection:'row',
+        justifyContent: 'center',
+        alignContent:'center',
+       
+    },
+   addressText: {
+        fontFamily: Fonts.regular,
+        color:orangeButton,
+        fontSize: Responsive.size12,
+        alignSelf:'center',
+        textDecorationLine: 'underline',
+    },
+    copyIcon:{
+        height:Responsive.size11,
+        width: Responsive.size11,
+        marginLeft: Responsive.size5,
+         alignSelf:'center'
+    },
+    importantText:{
+        fontFamily: Fonts.semibold,
+        fontSize: Responsive.size12,
+        color: orangeButton,
+        margin:Responsive.size18,
+        lineHeight: Responsive.size14
+    },
+    importantMessage:{
+        fontFamily: Fonts.regular,
+        fontSize: Responsive.size12,
+        color: orangeButton
+    },
+    transactionIcon :{
+        height: Responsive.size40,
+        width: Responsive.size40,
+    },
+    transactionItem: {
+        flexDirection: "row",
+        padding: Responsive.size16,
+        backgroundColor: listBordercolor,
+        borderRadius: Responsive.size10,
+        marginTop: Responsive.size18,
+        alignContent:'center',
+        justifyContent:'space-between',
+        borderWidth: Responsive.size2,
+        borderColor: borderLineSeedphrase,
+    },
+    transactionTitleContainer: {
+        flexDirection:'row',
+        alignContent:'center',
+        justifyContent:'center',
+        alignSelf:'center'
+    },
+    transactionValueContainer: {
+        flexDirection:'row',
+        alignContent:'center',
+        justifyContent:'center',
+        alignSelf:'center'
+    },
+    transactionProgressContainer:{
+        flex:1,
+        justifyContent:'center',
+        alignItems:'center'
+    },
+    transactionVectorBackground:{
+        height: Responsive.size156,
+        width:Responsive.size156,
+       justifyContent:'center',
+        alignItems:'center',
+    },
+    transactionVectorIcon:{
+        height: Responsive.size48,
+        width:Responsive.size48,
+        marginBottom:Responsive.size50
+       
+    },
+    transactionVectorIconDone:{
+        height: Responsive.size40,
+        width:Responsive.size56,
+        marginBottom:Responsive.size50
+       
+    },
+    transactionTitle: {
+        color: orangeButton,
+        fontSize: Responsive.size24,
+        fontFamily: Fonts.bold,
+        marginTop: Responsive.size15,
+    },
+    transactionDescription: {
+        color: white,
+        fontSize: Responsive.size18,
+        fontFamily: Fonts.regular,
+        lineHeight: Responsive.size24,
+        marginTop: Responsive.size10,
+        textAlign:'center'
+    },
 
 });

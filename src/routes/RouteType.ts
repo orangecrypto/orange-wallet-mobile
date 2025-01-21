@@ -28,3 +28,7 @@ export const CONFIRMATION= 'Confirmation';
 export const EDITNONCE= 'Edit Nonce';
 export const EDITFEES= 'Edit Fees';
 export const BUY= 'Buy';
+export const INCRIPTIONDETAILS= 'InscriptionDetails';
+export const SENDORDINALS= 'SendOrdinals';
+export const TRANSFER= 'Transfer';
+

@@ -4,11 +4,34 @@ import { SENDCONFIRMATION } from "@routes/RouteType";
 import { strings } from "@strings/i18n";
 import { Responsive } from "@utils/Responsive";
 import { orangeButton, white } from "@values/color";
-import React from "react";
+import React, { useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { styles } from "./styles";
+import FeesTextInput from "@components/FeesTextInput";
 
 const EditFees = () => {
+    const [value, setValue] = useState('');
+    const [selectedCategory, setSelectedCategory] = useState("All");
+    const categories = ["Regular", "Fast", "Custom"];
+    const renderCategory = (category) => (
+        <TouchableOpacity
+            key={category}
+            onPress={() => setSelectedCategory(category)} // Update the selected category
+            style={[
+                styles.categoryButton,
+                selectedCategory === category && styles.selectedCategory,
+            ]}
+        >
+            <Text
+                style={[
+                    styles.categoryText,
+                    selectedCategory === category && styles.selectedCategoryText,
+                ]}
+            >
+                {category}
+            </Text>
+        </TouchableOpacity>
+    );
 
     return (
         <View style={styles.container}>
@@ -18,8 +41,23 @@ const EditFees = () => {
                 </TouchableOpacity>
                 <Text style={styles.title}>{strings.editFees}</Text>
                 <Text style={styles.description}>{strings.editFeesMessage}</Text>
-            </View>
+                <View style={[styles.inputContainer, { marginTop: Responsive.size50 }]}>
+                    <Text style={styles.description}>{strings.enterFeesAmount}</Text>
+                    <FeesTextInput
+                        placeholder='0'
+                        value={value}
+                        onChangeText={setValue}
+                        rightText1='8.232 Sats'
+                        rightText2="~ $ 2.84 USD"
+                        rightTextStyle1={styles.rightFeestext1}
+                        rightTextStyle2={styles.rightFeestext2}
+                        style={styles.input} />
+                </View>
 
+                <View style={styles.categoryContainer}>
+                    {categories.map((category) => renderCategory(category))}
+                </View>
+            </View>
             <View style={styles.buttonContainer}>
                 <CommonButton
                     title={strings.apply}
