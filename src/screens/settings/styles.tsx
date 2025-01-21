@@ -51,7 +51,7 @@ export const styles = StyleSheet.create({
         padding: Responsive.size16,
         backgroundColor: listBordercolor,
         borderRadius: Responsive.size10,
-        marginTop: Responsive.size18,
+        marginVertical: Responsive.size10,
         justifyContent: "space-between",
         borderWidth: Responsive.size2,
         borderColor: borderLineSeedphrase,

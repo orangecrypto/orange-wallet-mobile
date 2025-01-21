@@ -68,7 +68,7 @@ const RestoreAssets = () => {
                     textColor={white}
                     disabled={!isAnySelected} 
                     width={"100%"}
-                    height={Responsive.size45}
+                    height={Responsive.size50}
                 />
             </View>
         </View>

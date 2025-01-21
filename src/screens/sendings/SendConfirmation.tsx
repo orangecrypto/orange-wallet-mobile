@@ -23,7 +23,7 @@ const SendConfirmation = () => {
             <Text style={styles.text}>{item.name}</Text>
             <View style={styles.valueContainer}>
                 <Text style={styles.value}>{'     '+item.value}</Text>
-                <Text style={styles.subValue}>{item.subvalue}</Text> 
+               {item.subvalue != '' &&<Text style={styles.subValue}>{item.subvalue}</Text> }
             </View>
         </View>
     );

@@ -41,7 +41,7 @@ const ResetWallet = () => {
                     textColor={white}
                     disabled={!isSwitchEnabled}
                     width={'100%'}
-                    height={Responsive.size45} />
+                    height={Responsive.size50} />
             </View>
         </View>
     );

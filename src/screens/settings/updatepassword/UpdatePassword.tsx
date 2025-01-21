@@ -64,6 +64,7 @@ const UpdatePassword = () => {
                             setPassword(text); // Update local password state
                             handlePasswordChange(text); // Validate password
                         }}
+                        keyboardType={'default'}
                         secureTextEntry={true}
                         showPasswordToggle={true}
                         passwordIconVisible={localAssets.eye}
@@ -84,7 +85,7 @@ const UpdatePassword = () => {
                         textColor={white}
                         disabled={passwordError === strings.strongPassword? false: true}
                         width={'100%'}
-                        height={Responsive.size45}
+                        height={Responsive.size50}
                         />
                 </View>
             )}

@@ -11,25 +11,24 @@ const CustomTextInput = ({
   showPasswordToggle = false,
   passwordIconVisible,
   passwordIconHidden,
-  dropdownOptions = [], // Dropdown options for the left dropdown
-  onDropdownSelect, // Callback for dropdown selection
-  selectedDropdownValue, // Current selected value for dropdown
+  dropdownOptions = [],
+  onDropdownSelect,
+  selectedDropdownValue,
+  keyboardType = 'default', 
   style,
-  dropdownIcon, // Icon for dropdown
-  rightText, // Optional right clickable text
-  rightTextStyle, // Optional custom style for right text
-  onRightTextPress, // Callback for right text click
+  dropdownIcon,
+  rightText,
+  rightTextStyle,
+  onRightTextPress,
 }) => {
   const [isSecure, setIsSecure] = useState(secureTextEntry);
-  const [focused, setFocused] = useState(false); // State to track focus
-  const [showDropdown, setShowDropdown] = useState(false); // State to control dropdown visibility
+  const [focused, setFocused] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
 
-  // Function to toggle secure text entry
   const toggleSecureEntry = () => {
     setIsSecure(!isSecure);
   };
 
-  // Function to handle dropdown selection
   const handleDropdownSelect = (item) => {
     onDropdownSelect(item);
     setShowDropdown(false);
@@ -40,11 +39,10 @@ const CustomTextInput = ({
       <View
         style={[
           styles.inputContainer,
-          { borderColor: focused ? orangeButton : gray }, // Dynamic border color
+          { borderColor: focused ? orangeButton : gray },
           style,
         ]}
       >
-        {/* Left Text Input */}
         <TextInput
           style={styles.textInput}
           placeholder={placeholder}
@@ -52,11 +50,11 @@ const CustomTextInput = ({
           value={value}
           onChangeText={onChangeText}
           secureTextEntry={isSecure}
-          onFocus={() => setFocused(true)} // Set focus state
-          onBlur={() => setFocused(false)} // Reset focus state
+          keyboardType={keyboardType} // Set the input type
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
         />
 
-        {/* Optional Password Toggle */}
         {showPasswordToggle && (
           <TouchableOpacity onPress={toggleSecureEntry}>
             <Image
@@ -66,7 +64,6 @@ const CustomTextInput = ({
           </TouchableOpacity>
         )}
 
-        {/* Right Dropdown (Optional) */}
         {dropdownIcon && (
           <TouchableOpacity
             style={styles.dropdownContainer}
@@ -74,13 +71,12 @@ const CustomTextInput = ({
           >
             <Text style={styles.dropdownText}>{selectedDropdownValue}</Text>
             <Image
-              source={dropdownIcon} // The icon passed as a prop for the dropdown
+              source={dropdownIcon}
               style={styles.dropdownIcon}
             />
           </TouchableOpacity>
         )}
 
-        {/* Optional Right Clickable Text */}
         {rightText && (
           <TouchableOpacity onPress={onRightTextPress} style={styles.rightTextContainer}>
             <Text style={[styles.rightText, rightTextStyle]}>{rightText}</Text>
@@ -119,7 +115,7 @@ const styles = StyleSheet.create({
     borderRadius: Responsive.size12,
     paddingHorizontal: Responsive.size10,
     height: Responsive.size50,
-    backgroundColor: black, // Dark background
+    backgroundColor: black,
   },
   textInput: {
     flex: 1,
@@ -144,12 +140,12 @@ const styles = StyleSheet.create({
   dropdownIcon: {
     width: Responsive.size18,
     height: Responsive.size18,
-    marginLeft: Responsive.size5, // Space between text and icon
+    marginLeft: Responsive.size5,
   },
   dropdownList: {
     position: 'absolute',
     top: Responsive.size50 + 5,
-    right: 0, // Position dropdown at the right
+    right: 0,
     backgroundColor: black,
     borderRadius: Responsive.size10,
     borderColor: gray,
@@ -167,7 +163,7 @@ const styles = StyleSheet.create({
     paddingLeft: Responsive.size10,
   },
   rightText: {
-    color: orangeButton, // Default color for the clickable text
+    color: orangeButton,
     fontSize: Responsive.size16,
   },
 });

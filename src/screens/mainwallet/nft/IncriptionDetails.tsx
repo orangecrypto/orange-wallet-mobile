@@ -43,7 +43,7 @@ const IncriptionDetails = () => {
                     backgroundColor={orangeButton}
                     textColor={white}
                     width={'100%'}
-                    height={Responsive.size45} />
+                    height={Responsive.size50} />
             </View>
         </View>
     );

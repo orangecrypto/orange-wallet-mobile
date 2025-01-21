@@ -113,7 +113,8 @@ export default {
     sendingTransaction:'Sending Transaction',
     transactionSend:'Transaction Sent',
     sendingTransactionMessage:'Please wait while your transaction is being broadcasted to the network...',
-    transactionSendMessage:'Your transaction has been successfully sent to the blockchain.'
+    transactionSendMessage:'Your transaction has been successfully sent to the blockchain.',
+    progress:'Progress'
 
     
 

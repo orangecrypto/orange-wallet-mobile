@@ -24,7 +24,7 @@ const HomeScreen = () => {
                     textColor={white}
                     borderColor={orangeBorder}
                     width={'100%'}
-                    height={Responsive.size45}
+                    height={Responsive.size50}
                 />
                 <CommonButton
                     title={strings.restoreWallet}
@@ -33,7 +33,7 @@ const HomeScreen = () => {
                     textColor={white}
                     borderColor={blackBorder}
                     width={'100%'}
-                    height={Responsive.size45}
+                    height={Responsive.size50}
                 />
             </View>
         </View>

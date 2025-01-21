@@ -23,8 +23,8 @@ const Transfer = () => {
                 <Text style={[styles.text,{marginLeft: Responsive.size10}]}>{item.name}</Text>
                 </View>
                 <View style={styles.transactionValueContainer}>
-                <Text style={styles.value}>{item.value}</Text>
-                <Text style={styles.subValue}>{item.category}</Text>
+                <Text style={styles.text}>{item.value}</Text>
+                <Text style={[styles.subValue,{fontSize: Responsive.size18}]}>{item.category}</Text>
                 </View>
            
         </View>

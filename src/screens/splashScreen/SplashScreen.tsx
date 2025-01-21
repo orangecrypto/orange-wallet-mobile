@@ -16,11 +16,9 @@ const SplashScreen = () => {
     }, 1500);
   };
 
-
   useEffect(() => {  
-      startTimer(HOME_SCREEN)
+      startTimer(WALLETBALANCE)
   }, []);
-
 
   return (
     <View style={styles.container}>

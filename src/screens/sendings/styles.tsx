@@ -366,21 +366,20 @@ export const styles = StyleSheet.create({
         alignItems:'center'
     },
     transactionVectorBackground:{
-        height: Responsive.size156,
-        width:Responsive.size156,
+        height: Responsive.size100,
+        width:Responsive.size100,
        justifyContent:'center',
         alignItems:'center',
     },
     transactionVectorIcon:{
         height: Responsive.size48,
         width:Responsive.size48,
-        marginBottom:Responsive.size50
        
     },
     transactionVectorIconDone:{
         height: Responsive.size40,
         width:Responsive.size56,
-        marginBottom:Responsive.size50
+      
        
     },
     transactionTitle: {
@@ -397,5 +396,38 @@ export const styles = StyleSheet.create({
         marginTop: Responsive.size10,
         textAlign:'center'
     },
-
+    stepContainer: {
+        flexDirection: "row",
+        alignContent: "center",
+        backgroundColor: backbackgroundbg,
+        width: "90%",
+        paddingHorizontal: Responsive.size16,
+        paddingVertical: Responsive.size12,
+        borderRadius: Responsive.size8,
+        justifyContent: "space-between",
+        marginVertical: Responsive.size18,
+        alignSelf:'center'
+    },
+    stepText: {
+        fontFamily: Fonts.regular,
+        fontSize: Responsive.size14,
+        color: white,
+    },
+    progressBarContainer: {
+        height: Responsive.size5,
+        width: "40%",
+        backgroundColor: black,
+        borderRadius: Responsive.size5,
+        overflow: "hidden",
+        alignSelf: "center",
+    },
+    progressBar: {
+        height: "100%",
+        backgroundColor: orangeButton,
+    },
+    scrollContainer: {
+        flexGrow: 1,
+        justifyContent: 'flex-start',
+        paddingBottom: Responsive.size20,
+    },
 });

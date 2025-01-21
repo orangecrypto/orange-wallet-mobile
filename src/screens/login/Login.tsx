@@ -54,8 +54,7 @@ const Login = () => {
     return (
         <KeyboardAvoidingView
             style={styles.container}
-            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        >
+            behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
             <ScrollView contentContainerStyle={styles.scrollContainer}>
                 <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
                     <View style={styles.contentContainer}>
@@ -70,6 +69,7 @@ const Login = () => {
                             }}
                             secureTextEntry={true}
                             showPasswordToggle={true}
+                            keyboardType={'default'}
                             passwordIconVisible={localAssets.eye}
                             passwordIconHidden={localAssets.eyeoff}
                             style={styles.input}/>
@@ -89,7 +89,7 @@ const Login = () => {
                         textColor={white}
                         disabled={passwordError === strings.strongPassword? false: true}
                         width={'100%'}
-                        height={Responsive.size45}
+                        height={Responsive.size50}
                     />
                 </View>
             )}
