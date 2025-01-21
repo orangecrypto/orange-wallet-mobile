@@ -1,12 +1,8 @@
-import CommonButton from "@components/CommonButton";
-import { goBack, push } from "@routes/Navigator";
+import { goBack } from "@routes/Navigator";
 import { strings } from "@strings/i18n";
-import { Responsive } from "@utils/Responsive";
-import { black, blackBorder, orangeButton, white } from "@values/color";
 import React, { useState } from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import { styles } from "./styles";
-import { EDITCONFIRMATION } from "@routes/RouteType";
 
 const Buy = () => {
     const [gatewayArray, setGatewayArray] = useState([
@@ -15,7 +11,6 @@ const Buy = () => {
         { id: 3, name: "Transak", }
 
     ]);
-
 
     const renderItem = ({ item }) => (
         <TouchableOpacity style={styles.item} onPress={()=>console.log('Open gateway')}>

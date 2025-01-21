@@ -1,6 +1,6 @@
 import { localAssets } from '@assets/assets';
 import { push } from '@routes/Navigator';
-import { ADDCOIN, BUY, SEND } from '@routes/RouteType';
+import { ADDCOIN, BUY, SEND, VIEWQR } from '@routes/RouteType';
 import { strings } from '@strings/i18n';
 import { Responsive } from '@utils/Responsive';
 import { white, viewbutton } from '@values/color';
@@ -30,7 +30,7 @@ const RenderCardItem = ({ item, selectedItem }) => {
                 <TouchableOpacity style={styles.actionButtonBg} onPress={ () => push(SEND)}>
                         <Image source={localAssets.send} style={styles.actionButtonIcon}/>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.actionButtonBg}>
+                <TouchableOpacity style={styles.actionButtonBg} onPress={()=>push(VIEWQR)}>
                         <Image source={localAssets.receive} style={styles.actionButtonIcon}/>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.actionButtonBg} onPress={ () => push(BUY)}>

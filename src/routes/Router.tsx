@@ -1,41 +1,43 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import React from 'react';
-import { navigationRef } from '@routes/Navigator';  
-import { ADDADDRESS, ADDCOIN, ASSETDETAILS, BACKUPWALLET, BACKUPYOURWALLET, BUY, CMS, CONFIRMATION, CONFIRMNEWPASSWORD, COPYSEEDPHRASE, CURRENCY, EDITCONFIRMATION, EDITFEES, EDITNONCE, HOME_SCREEN, INCRIPTIONDETAILS, LEGAL, LOGIN, NETWORK, NEWPASSWORD, QR, RESETWALLET, RESTOREASSETS, SEEDPHRASE, SEND, SENDCONFIRMATION, SENDORDINALS, SETTINGS, SPLASH, SUCCESS, TRANSFER, UPDATEPASSWORD, WALLETBALANCE } from '@routes/RouteType';
-import SplashScreen from '@screens/splashScreen/SplashScreen';
+import { navigationRef } from '@routes/Navigator';
+import { ADDADDRESS, ADDCOIN, ASSETDETAILS, BACKUPWALLET, BACKUPYOURWALLET, BUY, CMS, CONFIRMATION, CONFIRMNEWPASSWORD, COPYSEEDPHRASE, CURRENCY, EDITCONFIRMATION, EDITFEES, EDITNONCE, FORGOTPASSWORD, HOME_SCREEN, INCRIPTIONDETAILS, LEGAL, LOGIN, NETWORK, NEWPASSWORD, RECEIVE, RESETWALLET, RESTOREASSETS, SEEDPHRASE, SEND, SENDCONFIRMATION, SENDORDINALS, SETTINGS, SPLASH, SUCCESS, TRANSFER, UPDATEPASSWORD, VIEWQR, WALLETBALANCE } from '@routes/RouteType';
+import AddCoin from '@screens/addcoin/AddCoin';
+import AddAddress from '@screens/address/AddAddress';
+import BackupWallet from '@screens/backupwallet/BackupWallet';
+import ForgotPassword from '@screens/forgotpassword/ForgotPassword';
 import HomeScreen from '@screens/homeScreen/HomeScreen';
 import Legal from '@screens/legal/Legal';
-import BackupWallet from '@screens/backupwallet/BackupWallet';
-import SeedPhrase from '@screens/seedphrase/SeedPhrase';
-import Success from '@screens/success/Success';
 import Login from '@screens/login/Login';
 import MainWallet from '@screens/mainwallet/MainWallet';
-import Settings from '@screens/settings/Settings';
-import Qr from '@screens/qr/Qr';
-import AddAddress from '@screens/address/AddAddress';
-import AddCoin from '@screens/addcoin/AddCoin';
-import Network from '@screens/settings/Network';
-import Currency from '@screens/settings/Currency';
-import Cms from '@screens/settings/Cms';
-import UpdatePassword from '@screens/settings/updatepassword/UpdatePassword';
-import EnterNewPassword from '@screens/settings/updatepassword/EnterNewPassword';
-import ConfirmNewPassword from '@screens/settings/updatepassword/ConfirmNewPassword';
-import BackupYourWallet from '@screens/settings/backupwallet/BackupYourWallet';
-import CopySeedPhrase from '@screens/settings/backupwallet/CopySeedPhrase';
-import RestoreAssets from '@screens/settings/restoreassets/RestoreAssets';
-import RestoreDetails from '@screens/settings/restoreassets/RestoreDetails';
-import ResetWallet from '@screens/settings/ResetWallet';
-import Send from '@screens/sendings/Send';
-import SendConfirmation from '@screens/sendings/SendConfirmation';
-import EditConfirmation from '@screens/sendings/EditConfirmation';
+import IncriptionDetails from '@screens/mainwallet/nft/IncriptionDetails';
+import Transfer from '@screens/mainwallet/nft/Transfer';
+import Receive from '@screens/receive/Receive';
+import ViewQr from '@screens/receive/ViewQr';
+import SeedPhrase from '@screens/seedphrase/SeedPhrase';
+import Buy from '@screens/sendings/Buy';
 import Confirmation from '@screens/sendings/Confirmation';
+import EditConfirmation from '@screens/sendings/EditConfirmation';
 import EditFees from '@screens/sendings/EditFees';
 import EditNonce from '@screens/sendings/EditNonce';
-import Buy from '@screens/sendings/Buy';
-import IncriptionDetails from '@screens/mainwallet/nft/IncriptionDetails';
+import Send from '@screens/sendings/Send';
+import SendConfirmation from '@screens/sendings/SendConfirmation';
 import SendOrdinals from '@screens/sendings/SendOrdinals';
-import Transfer from '@screens/mainwallet/nft/Transfer';
+import BackupYourWallet from '@screens/settings/backupwallet/BackupYourWallet';
+import CopySeedPhrase from '@screens/settings/backupwallet/CopySeedPhrase';
+import Cms from '@screens/settings/Cms';
+import Currency from '@screens/settings/Currency';
+import Network from '@screens/settings/Network';
+import ResetWallet from '@screens/settings/ResetWallet';
+import RestoreAssets from '@screens/settings/restoreassets/RestoreAssets';
+import RestoreDetails from '@screens/settings/restoreassets/RestoreDetails';
+import Settings from '@screens/settings/Settings';
+import ConfirmNewPassword from '@screens/settings/updatepassword/ConfirmNewPassword';
+import EnterNewPassword from '@screens/settings/updatepassword/EnterNewPassword';
+import UpdatePassword from '@screens/settings/updatepassword/UpdatePassword';
+import SplashScreen from '@screens/splashScreen/SplashScreen';
+import Success from '@screens/success/Success';
+import React from 'react';
 
 const Stack = createNativeStackNavigator();
 
@@ -53,7 +55,6 @@ export default () => {
                 <Stack.Screen component={Login} name={LOGIN} />
                 <Stack.Screen component={MainWallet} name={WALLETBALANCE}/>
                 <Stack.Screen component={Settings} name= {SETTINGS}/>
-                <Stack.Screen component={Qr} name= {QR}/>
                 <Stack.Screen component={AddAddress} name={ADDADDRESS}/>
                 <Stack.Screen component={AddCoin} name={ADDCOIN}/>
                 <Stack.Screen component={Network} name={NETWORK}/>
@@ -77,6 +78,9 @@ export default () => {
                 <Stack.Screen component={IncriptionDetails} name={INCRIPTIONDETAILS}/>
                 <Stack.Screen component={SendOrdinals} name={SENDORDINALS}/>
                 <Stack.Screen component={Transfer} name={TRANSFER}/>
+                <Stack.Screen component={ForgotPassword} name={FORGOTPASSWORD}/>
+                <Stack.Screen component={Receive} name={RECEIVE}/>
+                <Stack.Screen component={ViewQr} name={VIEWQR}/>
             </Stack.Navigator>
         </NavigationContainer>
     );

@@ -3,14 +3,14 @@ import CommonButton from "@components/CommonButton";
 import CustomTextInput from "@components/CustomTextInput";
 import { Dispatch } from "@reduxjs/toolkit";
 import { push } from "@routes/Navigator";
-import { WALLETBALANCE } from "@routes/RouteType";
+import { FORGOTPASSWORD, WALLETBALANCE } from "@routes/RouteType";
 import { strings } from "@strings/i18n";
 import { Responsive } from '@utils/Responsive';
 import { validatePasswordStrength } from "@utils/Validations";
 import { black, green, orangeButton, red, white } from "@values/color";
 import { Fonts } from '@values/fonts';
 import { useEffect, useState } from "react";
-import { Image, Keyboard, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from "react-native";
+import { Image, Keyboard, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "../../redux/store";
 import { clearLoginReducer, loginReducerType, setPassword, setPasswordError, setPasswordFeedback } from "./LoginReducer";
@@ -75,7 +75,9 @@ const Login = () => {
                             style={styles.input}/>
                         <Text style={[styles.passwordError,{color:passwordError ===  strings.strongPassword ? green :red }]}>{passwordError}</Text>
                         <Text style={styles.passwordError}>{passwordFeedback}</Text>  
+                        <TouchableOpacity onPress={()=>push(FORGOTPASSWORD)}>
                         <Text style={styles.forgotPassword}>{strings.forgotPassword}</Text>
+                        </TouchableOpacity>
                     </View>
                 </TouchableWithoutFeedback>
             </ScrollView>
