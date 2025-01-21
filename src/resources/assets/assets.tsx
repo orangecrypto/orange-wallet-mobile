@@ -45,7 +45,19 @@ const localAssets = {
   samplenft: require('./images/samplenft.png'),
   bitcoinicon: require('./images/bitcoinicon.png'),
   assetbitcoin: require('./images/assetbitcoin.png'),
-
+  receive: require('./images/receive.png'),
+  sell: require('./images/sell.png'),
+  buy: require('./images/buy.png'),
+  send: require('./images/send.png'),
+  bitcoincard: require('./images/bitcoincard.png'),
+  dropdownarrow: require('./images/dropdownarrow.png'),
+  incriptionsample: require('./images/incriptionsample.png'),
+  nftordinals: require('./images/nftordinals.png'),
+  transactioncrypto1: require('./images/transactioncrypto1.png'),
+  transactioncrypto2: require('./images/transactioncrypto2.png'),
+  transactionvector: require('./images/transactionvector.png'),
+  transactionsending: require('./images/sending.png'),
+  transactiondone: require('./images/done.png'),
 
   // Icons
 };

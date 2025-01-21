@@ -84,7 +84,7 @@ const BackupYourWallet = () => {
                         textColor={white}
                         disabled={passwordError === strings.strongPassword? false: true}
                         width={'100%'}
-                        height={Responsive.size45}
+                        height={Responsive.size50}
                         />
                 </View>
             )}

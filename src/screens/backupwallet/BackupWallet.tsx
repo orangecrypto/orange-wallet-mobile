@@ -27,7 +27,7 @@ const BackupWallet = () => {
                     textColor={white}
                     borderColor={blackBorder}
                     width={'40%'}
-                    height={Responsive.size45} />
+                    height={Responsive.size50} />
                 <CommonButton
                     title={strings.backupNow}
                     onPress={() => push(SEEDPHRASE)}
@@ -35,7 +35,7 @@ const BackupWallet = () => {
                     textColor={white}
                     borderColor={orangeBorder}
                     width={'40%'}
-                    height={Responsive.size45} />
+                    height={Responsive.size50} />
               
             </View>
         </View>

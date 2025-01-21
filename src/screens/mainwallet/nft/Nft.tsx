@@ -1,7 +1,9 @@
 import { localAssets } from '@assets/assets';
+import { push } from '@routes/Navigator';
+import { INCRIPTIONDETAILS, TRANSFER } from '@routes/RouteType';
 import { strings } from '@strings/i18n';
 import { Responsive } from '@utils/Responsive';
-import { black, grey, nftcategoryText, orangeButton, viewbutton, white } from "@values/color";
+import { black, grey, nftcategoryText, orangeButton, transactionListBackground, viewbutton, white } from "@values/color";
 import { Fonts } from '@values/fonts';
 import { Dimensions, FlatList, Image, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 const { width } = Dimensions.get('window');
@@ -16,11 +18,11 @@ const Nft = () => {
     ];
 
     const renderItem = ({ item }) => (
-        <View style={styles.itemContainer}>
+        <TouchableOpacity style={styles.itemContainer} onPress={() => push(INCRIPTIONDETAILS)}>
             <Image source={item.image} style={styles.image} />
             <Text style={styles.title}>{item.title}</Text>
             <Text style={styles.subtype}>{item.subtype}</Text>
-        </View>
+        </TouchableOpacity>
     );
     return (
         <View style={styles.container}>
@@ -41,7 +43,7 @@ const Nft = () => {
                     </View>
 
                     <View style={styles.horizontalButtons}>
-                        <TouchableOpacity style={styles.addCoinView} onPress={() => { console.log('Open') }}>
+                        <TouchableOpacity style={styles.addCoinView} onPress={() => { push(TRANSFER) }}>
                             <Image style={styles.addCoinIcon} source={localAssets.transferarrow} />
                             <Text style={styles.addCoinText}>{strings.transfer}</Text>
                         </TouchableOpacity>
@@ -53,13 +55,15 @@ const Nft = () => {
                 </ImageBackground>
 
             </View>
-            <FlatList
-                data={data}
-                renderItem={renderItem}
-                keyExtractor={(item) => item.id}
-                numColumns={numColumns}
-                columnWrapperStyle={styles.columnWrapper}
-            />
+           
+                <FlatList
+                    data={data}
+                    renderItem={renderItem}
+                    keyExtractor={(item) => item.id}
+                    numColumns={numColumns}
+                    style={styles.listConatiner}
+                    columnWrapperStyle={styles.columnWrapper} />
+          
         </View>
     );
 };
@@ -143,13 +147,13 @@ const styles = StyleSheet.create({
     columnWrapper: {
         justifyContent: 'space-between',
         marginHorizontal: Responsive.size5,
-        marginTop:Responsive.size25
-        
+        marginTop: Responsive.size25
+
     },
     itemContainer: {
-        width: (width - 30) / numColumns, 
-        marginBottom: Responsive.size10, 
-        marginRight: Responsive.size10, 
+        width: (width - 30) / numColumns,
+        marginBottom: Responsive.size10,
+        marginRight: Responsive.size10,
         padding: Responsive.size15,
         borderRadius: Responsive.size8,
         borderWidth: Responsive.size1,
@@ -162,16 +166,24 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: Responsive.size16,
-        fontFamily:Fonts.regular,
+        fontFamily: Fonts.regular,
         marginTop: Responsive.size10,
-        color:white
+        color: white
     },
     subtype: {
         fontSize: Responsive.size12,
-        fontFamily:Fonts.regular,
+        fontFamily: Fonts.regular,
         marginTop: Responsive.size4,
-        color:nftcategoryText
+        color: nftcategoryText
     },
+
+    listConatiner: {
+        paddingTop: Responsive.size6,
+        backgroundColor: transactionListBackground,
+        borderTopLeftRadius: Responsive.size20,
+        borderTopRightRadius: Responsive.size20,
+        marginTop: Responsive.size15,
+    }
 });
 
 export default Nft;

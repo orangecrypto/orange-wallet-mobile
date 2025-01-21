@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
         flex:1
     },
     flatList: {
-        marginTop: Responsive.size20,
+        marginTop: Responsive.size10,
         alignContent:'center'
     },
     contentContainer: {

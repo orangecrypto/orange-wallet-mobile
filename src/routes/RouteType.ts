@@ -21,3 +21,14 @@ export const COPYSEEDPHRASE= 'CopySeedPhrase';
 export const RESTOREASSETS= 'Restore Assets';
 export const ASSETDETAILS= 'AssetDetails';
 export const RESETWALLET= 'Reset Wallet';
+export const SEND= 'Send';
+export const SENDCONFIRMATION= 'SendConfirmation';
+export const EDITCONFIRMATION= 'EditConfirmation';
+export const CONFIRMATION= 'Confirmation';
+export const EDITNONCE= 'Edit Nonce';
+export const EDITFEES= 'Edit Fees';
+export const BUY= 'Buy';
+export const INCRIPTIONDETAILS= 'InscriptionDetails';
+export const SENDORDINALS= 'SendOrdinals';
+export const TRANSFER= 'Transfer';
+

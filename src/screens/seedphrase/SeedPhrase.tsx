@@ -116,7 +116,7 @@ const SeedPhrase = ({ route }) => {
                         textColor={white}
                         borderColor={orangeBorder}
                         width={"100%"}
-                        height={Responsive.size45}
+                        height={Responsive.size50}
                     />
                 </View>
             )}

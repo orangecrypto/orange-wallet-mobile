@@ -72,7 +72,7 @@ const RestoreDetails = () => {
                     textColor={white}
                     disabled={!isAnySelected}
                     width={"100%"}
-                    height={Responsive.size45}
+                    height={Responsive.size50}
                 />
             </View> :
                 <View style={styles.buttonContainer}>
@@ -81,7 +81,7 @@ const RestoreDetails = () => {
                         onPress={() => push(WALLETBALANCE)}
                         textColor={white}
                         width={"100%"}
-                        height={Responsive.size45}
+                        height={Responsive.size50}
                     />
                 </View>}
 

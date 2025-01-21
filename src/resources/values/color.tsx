@@ -41,6 +41,7 @@ export const grayText= '#8E8E93';
 export const transactionListBackground='#0E1015';
 export const nftcategoryText='#626A82';
 export const disableSwitch='#D2340380';
+export const unselectedcategory='#626A8233';
 
 export const backgroundbg='#383C4E3';
 export const backbackgroundbg='#A8B9F41A';
@@ -50,6 +51,10 @@ export const seedPhraseItemBackground="#1C1C1E";
 export const seedPhraseItemBorder='#3A3A3C';
 export const stepIndigatorBackground='#2D3242';
 export const borderLineSeedphrase='#A8B9F426';
+export const erroryellow='#FFC700';
+export const yellowopacity='#FFC70033';
+export const copytint='#6C779D';
+
 export const progressBackground='#A8B9F426';
 
 
