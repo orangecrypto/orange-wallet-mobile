@@ -9,7 +9,7 @@ import SeedPhraseView from "@screens/seedphrase/SeedPhraseView";
 import { strings } from "@strings/i18n";
 import { Responsive } from '@utils/Responsive';
 import { validatePasswordStrength } from "@utils/Validations";
-import { backgroundbg, black, grey, orangeBorder, orangeButton, seedPhraseItemBorder, stepIndigatorBackground, white } from "@values/color";
+import { backbackgroundbg, black, grey, orangeBorder, orangeButton, white } from "@values/color";
 import { useEffect, useState } from "react";
 import {
     Keyboard,
@@ -26,71 +26,62 @@ import { useAppDispatch } from "../../redux/store";
 import { clearSeedPhraseReducer, seedPhraseReducerType, setConfirmPasswordError, setPasswordError } from "./SeedPhraseReducer";
 
 const SeedPhrase = ({ route }) => {
+    const steps = [
+        { id: 1, component: SeedPhraseView },
+        { id: 2, component: SeedPhraseVerification },
+        { id: 3, component: EnterPassword },
+        { id: 4, component: ConfirmPassword },
+    ];
+    
     const { password, confirmPassword } = useSelector((state: { seedPhraseReducer: seedPhraseReducerType }) => state.seedPhraseReducer);
-    const [currentStep, setCurrentStep] = useState(route?.params?.backupLatter ? 3 : 1);
+    const [currentStepIndex, setCurrentStepIndex] = useState(route?.params?.backupLatter ? 2 : 0); 
     const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
-    const totalSteps = 4;
     const dispatch: Dispatch = useAppDispatch();
-
-    const handleSubmit = (password) => {
+    
+    const validatePassword = (password, step) => {
         const { strengthMessage } = validatePasswordStrength(password);
-        if (strengthMessage === strings.weakPassword || strengthMessage === strings.moderatePassword) {
-            if (currentStep === 3) {
-                dispatch(setPasswordError(strings.useStrongPassword));
-            }
-            if (currentStep === 4) {
-                dispatch(setConfirmPasswordError(strings.useStrongPassword));
-            }
+        if ([strings.weakPassword, strings.moderatePassword].includes(strengthMessage)) {
+            const errorAction = step === 2 ? setPasswordError : setConfirmPasswordError; 
+            dispatch(errorAction(strings.useStrongPassword));
             return false;
-        } else {
-            return true;
         }
+        return true;
     };
-
+    
     const handleNextStep = () => {
-        if (currentStep < totalSteps) {
-            if (currentStep === 3) {
-                if (handleSubmit(password)) {
-                    setCurrentStep(currentStep + 1);
-                }
+        if (currentStepIndex === 2 && !validatePassword(password, currentStepIndex)) return; 
+        if (currentStepIndex === 3) { 
+            if (!validatePassword(confirmPassword, currentStepIndex)) return;
+            if (password === confirmPassword) {
+                push(SUCCESS);
+                dispatch(clearSeedPhraseReducer());
             } else {
-                setCurrentStep(currentStep + 1);
+                dispatch(setConfirmPasswordError(strings.passwordNotMatch));
             }
+            return;
         }
-
-        if (currentStep === 4) {
-            if (handleSubmit(confirmPassword)) {
-                if (password === confirmPassword) {
-                    push(SUCCESS);
-                    dispatch(clearSeedPhraseReducer());
-                } else {
-                    dispatch(setConfirmPasswordError(strings.passwordNotMatch));
-                }
-            }
+    
+        if (currentStepIndex < steps.length - 1) {
+            setCurrentStepIndex((prevIndex) => prevIndex + 1);
         }
     };
-
+    
     const handlePreviousStep = () => {
-        if (currentStep > 1) {
-            setCurrentStep(currentStep - 1);
-        } else {
-            goBack();
-        }
+        setCurrentStepIndex((prevIndex) => (prevIndex > 0 ? prevIndex - 1 : goBack()));
     };
-
+    
     useEffect(() => {
-        const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
-            setIsKeyboardVisible(true);
-        });
-        const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
-            setIsKeyboardVisible(false);
-        });
+        const handleKeyboardVisibility = (isVisible) => setIsKeyboardVisible(isVisible);
+        const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => handleKeyboardVisibility(true));
+        const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => handleKeyboardVisibility(false));
         return () => {
-            keyboardDidHideListener.remove();
             keyboardDidShowListener.remove();
+            keyboardDidHideListener.remove();
         };
     }, []);
-
+    
+    const CurrentStepComponent = steps[currentStepIndex]?.component;
+    
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -102,36 +93,18 @@ const SeedPhrase = ({ route }) => {
                 <View style={styles.contentContainer}>
                     <View style={styles.buttonContainer}>
                         <TouchableOpacity
-                            style={[styles.button, currentStep === 1 && styles.disabledButton]}
+                            style={[styles.button, currentStepIndex === 0 && styles.disabledButton]}
                             onPress={handlePreviousStep}>
                             <Text style={styles.buttonText}>{strings.back}</Text>
                         </TouchableOpacity>
                     </View>
                     <View style={styles.stepContainer}>
-                        <Text style={styles.stepText}>Step {currentStep}</Text>
+                        <Text style={styles.stepText}>Step {currentStepIndex + 1}</Text>
                         <View style={styles.progressBarContainer}>
-                            <View style={[styles.progressBar, { width: `${(currentStep / totalSteps) * 100}%` }]} />
+                            <View style={[styles.progressBar, { width: `${((currentStepIndex + 1) / steps.length) * 100}%` }]} />
                         </View>
                     </View>
-                    {currentStep === 1 ? (
-                        <SeedPhraseView />
-                    ) : currentStep === 2 ? (
-                        <SeedPhraseVerification />
-                    ) : currentStep === 3 ? (
-
-                        <ScrollView
-                            contentContainerStyle={{ flexGrow: 1, paddingBottom: isKeyboardVisible ? Responsive.size50 : Responsive.size20 }}
-                            keyboardShouldPersistTaps="handled">
-                            <EnterPassword />
-                        </ScrollView>
-
-                    ) : currentStep === 4 ? (
-                        <ScrollView
-                        contentContainerStyle={{ flexGrow: 1, paddingBottom: isKeyboardVisible ? Responsive.size50 : Responsive.size20 }}
-                        keyboardShouldPersistTaps="handled">
-                        <ConfirmPassword />
-                        </ScrollView>
-                    ) : null}
+                    {CurrentStepComponent && <CurrentStepComponent />}
                 </View>
             </ScrollView>
             {!isKeyboardVisible && (
@@ -148,8 +121,8 @@ const SeedPhrase = ({ route }) => {
                 </View>
             )}
         </KeyboardAvoidingView>
-
     );
+    
 };
 
 const styles = StyleSheet.create({
@@ -165,7 +138,7 @@ const styles = StyleSheet.create({
     stepContainer: {
         flexDirection: "row",
         alignContent: "center",
-        backgroundColor: backgroundbg,
+        backgroundColor: backbackgroundbg,
         width: "100%",
         paddingHorizontal: Responsive.size16,
         paddingVertical: Responsive.size12,

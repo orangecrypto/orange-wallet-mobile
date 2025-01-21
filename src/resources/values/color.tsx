@@ -55,6 +55,7 @@ export const erroryellow='#FFC700';
 export const yellowopacity='#FFC70033';
 export const copytint='#6C779D';
 
+export const progressBackground='#A8B9F426';
 
 
 
