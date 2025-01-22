@@ -430,4 +430,15 @@ export const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         paddingBottom: Responsive.size20,
     },
+    feesTextRight:{
+        fontSize: Responsive.size12,
+        color:white,
+        fontFamily: Fonts.regular,
+      },
+
+    feesTextRight1:{
+        fontSize: Responsive.size12,
+        color:nftcategoryText,
+        fontFamily: Fonts.regular,
+      },
 });

@@ -98,7 +98,8 @@ const Send = () => {
                         style={[styles.input, {}]}
                         keyboardType={'numeric'}
                         rightTextStyle={styles.pasteText}
-                        onRightTextPress={() => console.log('Text clicked')} />
+                        onRightTextPress={() => console.log('Text clicked')} 
+                        />
                     <View style={styles.errorContainer}>
                         <Text style={styles.errorMessage}>{strings.invalidAddress}</Text>
                     </View>

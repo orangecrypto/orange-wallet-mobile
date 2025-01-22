@@ -1,13 +1,12 @@
 import CommonButton from "@components/CommonButton";
-import { goBack, push } from "@routes/Navigator";
-import { SENDCONFIRMATION } from "@routes/RouteType";
+import CustomTextInput from "@components/CustomTextInput";
+import { goBack } from "@routes/Navigator";
 import { strings } from "@strings/i18n";
 import { Responsive } from "@utils/Responsive";
 import { orangeButton, white } from "@values/color";
 import React, { useEffect, useState } from "react";
 import { Keyboard, Text, TouchableOpacity, View } from "react-native";
 import { styles } from "./styles";
-import FeesTextInput from "@components/FeesTextInput";
 
 const EditFees = () => {
     const [value, setValue] = useState('');
@@ -59,15 +58,17 @@ const EditFees = () => {
                 <Text style={styles.description}>{strings.editFeesMessage}</Text>
                 <View style={[styles.inputContainer, { marginTop: Responsive.size50 }]}>
                     <Text style={styles.description}>{strings.enterFeesAmount}</Text>
-                    <FeesTextInput
-                        placeholder='0'
+                    <CustomTextInput
+                        placeholder={'0'}
                         value={value}
                         onChangeText={setValue}
-                        rightText1='8.232 Sats'
-                        rightText2="~ $ 2.84 USD"
-                        rightTextStyle1={styles.rightFeestext1}
-                        rightTextStyle2={styles.rightFeestext2}
-                        style={styles.input} />
+                        rightText={'8.232 Sats'}
+                        rightText1={'~ $ 2.84 USD'}
+                        style={[styles.input, {}]}
+                        keyboardType={'numeric'}
+                        rightTextStyle={styles.feesTextRight}
+                        rightTextStyle1={styles.feesTextRight1}
+                        />
                 </View>
 
                 <View style={styles.categoryContainer}>

@@ -1,7 +1,7 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { navigationRef } from '@routes/Navigator';
-import { ADDADDRESS, ADDCOIN, ASSETDETAILS, BACKUPWALLET, BACKUPYOURWALLET, BUY, CMS, CONFIRMATION, CONFIRMNEWPASSWORD, COPYSEEDPHRASE, CURRENCY, EDITCONFIRMATION, EDITFEES, EDITNONCE, FORGOTPASSWORD, HOME_SCREEN, INCRIPTIONDETAILS, LEGAL, LOGIN, NETWORK, NEWPASSWORD, RECEIVE, RESETWALLET, RESTOREASSETS, SEEDPHRASE, SEND, SENDCONFIRMATION, SENDORDINALS, SETTINGS, SPLASH, SUCCESS, TRANSFER, UPDATEPASSWORD, VIEWQR, WALLETBALANCE } from '@routes/RouteType';
+import { ADDADDRESS, ADDCOIN, ASSETDETAILS, BACKUPWALLET, BACKUPYOURWALLET, BUY, CMS, CONFIRMATION, CONFIRMNEWPASSWORD, COPYSEEDPHRASE, CURRENCY, EDITCONFIRMATION, EDITFEES, EDITNONCE, FORGOTPASSWORD, HOME_SCREEN, INCRIPTIONDETAILS, LEGAL, LOGIN, NETWORK, NEWPASSWORD, RECEIVE, RESETWALLET, RESTOREASSETS, SEEDPHRASE, SEND, SENDCONFIRMATION, SENDORDINALS, SETTINGS, SPLASH, SUCCESS, TRANSFER, UPDATEPASSWORD, VIEWQR, WALLETBALANCE, WARNING } from '@routes/RouteType';
 import AddCoin from '@screens/addcoin/AddCoin';
 import AddAddress from '@screens/address/AddAddress';
 import BackupWallet from '@screens/backupwallet/BackupWallet';
@@ -37,6 +37,7 @@ import EnterNewPassword from '@screens/settings/updatepassword/EnterNewPassword'
 import UpdatePassword from '@screens/settings/updatepassword/UpdatePassword';
 import SplashScreen from '@screens/splashScreen/SplashScreen';
 import Success from '@screens/success/Success';
+import Warning from '@screens/warnings/Warning';
 import React from 'react';
 
 const Stack = createNativeStackNavigator();
@@ -81,6 +82,7 @@ export default () => {
                 <Stack.Screen component={ForgotPassword} name={FORGOTPASSWORD}/>
                 <Stack.Screen component={Receive} name={RECEIVE}/>
                 <Stack.Screen component={ViewQr} name={VIEWQR}/>
+                <Stack.Screen component={Warning} name={WARNING}/>
             </Stack.Navigator>
         </NavigationContainer>
     );

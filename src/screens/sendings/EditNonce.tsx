@@ -1,13 +1,12 @@
 import CommonButton from "@components/CommonButton";
-import { goBack, push } from "@routes/Navigator";
-import { SENDCONFIRMATION } from "@routes/RouteType";
+import CustomTextInput from "@components/CustomTextInput";
+import { goBack } from "@routes/Navigator";
 import { strings } from "@strings/i18n";
 import { Responsive } from "@utils/Responsive";
 import { orangeButton, white } from "@values/color";
 import React, { useEffect, useState } from "react";
 import { Keyboard, Text, TouchableOpacity, View } from "react-native";
 import { styles } from "./styles";
-import CustomTextInput from "@components/CustomTextInput";
 
 const EditNonce = () => {
     const [value, setValue] = useState('');

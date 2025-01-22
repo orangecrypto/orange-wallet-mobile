@@ -33,4 +33,5 @@ export const TRANSFER= 'Transfer';
 export const FORGOTPASSWORD= 'ForgotPassword';
 export const RECEIVE= 'Receive';
 export const VIEWQR= 'ViewQr';
+export const WARNING= 'Warning';
 

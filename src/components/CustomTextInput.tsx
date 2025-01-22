@@ -14,12 +14,15 @@ const CustomTextInput = ({
   dropdownOptions = [],
   onDropdownSelect,
   selectedDropdownValue,
-  keyboardType = 'default', 
+  keyboardType = 'default',
   style,
   dropdownIcon,
   rightText,
   rightTextStyle,
   onRightTextPress,
+  rightText1,
+  rightTextStyle1,
+  onRightTextPress1,
 }) => {
   const [isSecure, setIsSecure] = useState(secureTextEntry);
   const [focused, setFocused] = useState(false);
@@ -50,7 +53,7 @@ const CustomTextInput = ({
           value={value}
           onChangeText={onChangeText}
           secureTextEntry={isSecure}
-          keyboardType={keyboardType} // Set the input type
+          keyboardType={keyboardType}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
         />
@@ -77,11 +80,19 @@ const CustomTextInput = ({
           </TouchableOpacity>
         )}
 
-        {rightText && (
-          <TouchableOpacity onPress={onRightTextPress} style={styles.rightTextContainer}>
-            <Text style={[styles.rightText, rightTextStyle]}>{rightText}</Text>
-          </TouchableOpacity>
-        )}
+        {/* Right Texts */}
+        <View style={styles.rightTextsContainer}>
+          {rightText && (
+            <TouchableOpacity onPress={onRightTextPress}>
+              <Text style={[styles.rightText, rightTextStyle]}>{rightText}</Text>
+            </TouchableOpacity>
+          )}
+          {rightText1 && (
+            <TouchableOpacity onPress={onRightTextPress1}>
+              <Text style={[styles.rightText, rightTextStyle1]}>{rightText1}</Text>
+            </TouchableOpacity>
+          )}
+        </View>
       </View>
 
       {/* Dropdown List */}
@@ -159,13 +170,17 @@ const styles = StyleSheet.create({
     color: white,
     fontSize: Responsive.size16,
   },
-  rightTextContainer: {
-    paddingLeft: Responsive.size10,
+  rightTextsContainer: {
+    flexDirection: 'column',
+    alignItems: 'flex-end', // Align texts to the right
+    justifyContent: 'center', // Center them vertically within the parent container
   },
   rightText: {
     color: orangeButton,
     fontSize: Responsive.size16,
+    marginVertical: Responsive.size2, // Add spacing between texts
   },
 });
 
 export default CustomTextInput;
+
