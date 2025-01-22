@@ -9,6 +9,7 @@ import { Image, Text, View } from "react-native";
 import { styles } from "./styles";
 import { localAssets } from "@assets/assets";
 import CustomTextInput from "@components/CustomTextInput";
+import SendingHeader from "@components/SendingHeader";
 
 const SendOrdinals = () => {
     const [textValue, setTextValue] = useState('');
@@ -16,18 +17,12 @@ const SendOrdinals = () => {
     return (
         <View style={styles.container}>
 
-            <View style={styles.sendingHeader}>
-                <View>
-                    <View style={styles.headerTopTextView}>
-                        <Text style={styles.headerTitle}>0.02832</Text>
-                        <View style={styles.tokenContainer}>
-                            <Text style={styles.categoryTextBackground}>Ordinals</Text>
-                        </View>
-                    </View>
-                    <Text style={[styles.headerTitle, { fontSize: Responsive.size14 }]}>0.02832</Text>
-                </View>
-                <Image source={localAssets.nftordinals} style={styles.headerIcon} />
-            </View>
+            <SendingHeader
+                title="0.02832"
+                subtitle="0.02832"
+                tokens={['Ordinals']}
+                iconSource={localAssets.assetbitcoin}
+                containerStyle={styles.sendingHeader} />
 
             <View style={styles.contentContainer}>
                 <View style={styles.topContainer}>

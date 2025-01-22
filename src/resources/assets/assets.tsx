@@ -58,6 +58,8 @@ const localAssets = {
   transactionvector: require('./images/transactionvector.png'),
   transactionsending: require('./images/sending.png'),
   transactiondone: require('./images/done.png'),
+  qrcodesample: require('./images/qrcodesample.png'),
+  whitecross: require('./images/whitecross.png'),
 
   // Icons
 };

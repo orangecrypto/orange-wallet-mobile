@@ -1,7 +1,7 @@
 import { gray, grayText, transactionListBackground, white } from "@values/color";
 import { Fonts } from '@values/fonts';
 import { Responsive } from '@utils/Responsive';
-import { Text, TouchableOpacity, View, StyleSheet, Image } from "react-native";
+import { Text, TouchableOpacity, View, StyleSheet, Image, Platform } from "react-native";
 import { localAssets } from "@assets/assets";
 
 const RenderTransactions = ({ item, selectedItem, handleItemClick }) => {
@@ -54,7 +54,8 @@ const styles = StyleSheet.create({
     assetCategory: {
         color: grayText,
         fontSize: Responsive.size14,
-        fontFamily: Fonts.regular
+        fontFamily: Fonts.regular,
+        marginTop: Platform.OS ==='ios' ? Responsive.size4:0
     },
     assetValues: {
         flexDirection: "column",

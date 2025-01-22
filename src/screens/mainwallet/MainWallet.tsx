@@ -9,7 +9,7 @@ import Market from './market/Market';
 import Nft from './nft/Nft';
 import Wallet from './wallet/Wallet';
 import { push } from '@routes/Navigator';
-import { ADDADDRESS, QR, SETTINGS } from '@routes/RouteType';
+import { ADDADDRESS, QR, RECEIVE, SETTINGS } from '@routes/RouteType';
 
 const MainWallet = () => {
     const Tab = createBottomTabNavigator();
@@ -24,7 +24,7 @@ const MainWallet = () => {
     };
 
     const handleQrPress = () => {
-        push(QR)
+        push(RECEIVE)
     };
 
     const handleSettingsPress = () => {
@@ -38,17 +38,15 @@ const MainWallet = () => {
                 <Text style={styles.headerText}>3Lq8...JVK4</Text>
                 </TouchableOpacity>
                 <View style={styles.iconsContainer}>
-                    {/* Copy Icon */}
+
                     <TouchableOpacity onPress={handleCopyPress}>
                         <Image source={localAssets.copy} style={styles.headerIcon} />
                     </TouchableOpacity>
 
-                    {/* QR Icon */}
                     <TouchableOpacity onPress={handleQrPress}>
                         <Image source={localAssets.qr} style={styles.headerIcon} />
                     </TouchableOpacity>
 
-                    {/* Settings Icon */}
                     <TouchableOpacity onPress={handleSettingsPress}>
                         <Image source={localAssets.settings} style={styles.headerIcon} />
                     </TouchableOpacity>

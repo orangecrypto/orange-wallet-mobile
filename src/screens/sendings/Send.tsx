@@ -9,6 +9,7 @@ import { Image, Keyboard, KeyboardAvoidingView, Platform, ScrollView, Text, View
 import { styles } from "./styles";
 import { localAssets } from "@assets/assets";
 import CustomTextInput from "@components/CustomTextInput";
+import SendingHeader from "@components/SendingHeader";
 
 const Send = () => {
 
@@ -42,68 +43,62 @@ const Send = () => {
     ];
 
     return (
-       <KeyboardAvoidingView
-                  style={styles.container}
-                  behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-                  <ScrollView contentContainerStyle={styles.scrollContainer}>
-            <View style={styles.sendingHeader}>
-                <View>
-                    <View style={styles.headerTopTextView}>
-                        <Text style={styles.headerTitle}>0.02832</Text>
-                        <View style={styles.tokenContainer}>
-                            <Text style={styles.categoryTextBackground}>ORNJ</Text>
-                            <Text style={styles.categoryTextBackground}>BRC-20</Text>
+        <KeyboardAvoidingView
+            style={styles.container}
+            behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+            <ScrollView contentContainerStyle={styles.scrollContainer}>
+                <SendingHeader
+                    title="0.02832"
+                    subtitle="0.02832"
+                    tokens={['ORNJ', 'BRC-20']}
+                    iconSource={localAssets.assetbitcoin}
+                    containerStyle={styles.sendingHeader} />
+
+                <View style={styles.contentContainer}>
+                    <View style={styles.topContainer}>
+                        <Text style={styles.title}>{strings.send}</Text>
+                        <View style={styles.sendIconBakcground}>
+                            <Image style={styles.sendIcon} source={localAssets.send} tintColor={orangeButton} />
                         </View>
                     </View>
-                    <Text style={[styles.headerTitle, { fontSize: Responsive.size14 }]}>0.02832</Text>
-                </View>
-                <Image source={localAssets.assetbitcoin} style={styles.headerIcon} />
-            </View>
 
-            <View style={styles.contentContainer}>
-                <View style={styles.topContainer}>
-                    <Text style={styles.title}>{strings.send}</Text>
-                    <View style={styles.sendIconBakcground}>
-                        <Image style={styles.sendIcon} source={localAssets.send} tintColor={orangeButton} />
+                    <View style={styles.inputContainer}>
+                        <Text style={styles.description}>{strings.enterAmount}</Text>
+
+                        <CustomTextInput
+                            placeholder={strings.enterAmount}
+                            value={textValue}
+                            onChangeText={setTextValue}
+                            dropdownOptions={coinOptions}
+                            keyboardType={'numeric'}
+                            selectedDropdownValue={selectedCoin}
+                            onDropdownSelect={setSelectedCoin}
+                            showPasswordToggle={false}
+                            style={styles.input}
+                            dropdownIcon={localAssets.dropdownarrow} />
+                        <View style={styles.errorContainer}>
+                            <Text style={styles.errorMessage}>{strings.insufficientfunds}</Text>
+                            <Text style={styles.balanceText} >$14.21 USD</Text>
+                        </View>
+                    </View>
+
+                    <View style={[styles.inputContainer, { marginTop: Responsive.size50 }]}>
+                        <Text style={styles.description}>{strings.enterwalletAddress}</Text>
+                        <CustomTextInput
+                            placeholder={strings.enterBitcoinAddress}
+                            value={value}
+                            onChangeText={setValue}
+                            rightText={strings.paste}
+                            style={[styles.input, {}]}
+                            keyboardType={'numeric'}
+                            rightTextStyle={styles.pasteText}
+                            onRightTextPress={() => console.log('Text clicked')}
+                        />
+                        <View style={styles.errorContainer}>
+                            <Text style={styles.errorMessage}>{strings.invalidAddress}</Text>
+                        </View>
                     </View>
                 </View>
-
-                <View style={styles.inputContainer}>
-                    <Text style={styles.description}>{strings.enterAmount}</Text>
-
-                    <CustomTextInput
-                        placeholder={strings.enterAmount}
-                        value={textValue}
-                        onChangeText={setTextValue}
-                        dropdownOptions={coinOptions}
-                        keyboardType={'numeric'}
-                        selectedDropdownValue={selectedCoin}
-                        onDropdownSelect={setSelectedCoin}
-                        showPasswordToggle={false}
-                        style={styles.input}
-                        dropdownIcon={localAssets.dropdownarrow} />
-                    <View style={styles.errorContainer}>
-                        <Text style={styles.errorMessage}>{strings.insufficientfunds}</Text>
-                        <Text style={styles.balanceText} >$14.21 USD</Text>
-                    </View>
-                </View>
-
-                <View style={[styles.inputContainer, { marginTop: Responsive.size50 }]}>
-                    <Text style={styles.description}>{strings.enterwalletAddress}</Text>
-                    <CustomTextInput
-                        placeholder={strings.enterBitcoinAddress}
-                        value={value}
-                        onChangeText={setValue}
-                        rightText={strings.paste}
-                        style={[styles.input, {}]}
-                        keyboardType={'numeric'}
-                        rightTextStyle={styles.pasteText}
-                        onRightTextPress={() => console.log('Text clicked')} />
-                    <View style={styles.errorContainer}>
-                        <Text style={styles.errorMessage}>{strings.invalidAddress}</Text>
-                    </View>
-                </View>
-            </View>
             </ScrollView>
             {!isKeyboardVisible && (<View>  <Text style={styles.warningText}>{strings.warning}:
                 <Text style={styles.warningMessage}> {strings.warningMessage}</Text>

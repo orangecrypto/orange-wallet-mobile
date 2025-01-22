@@ -1,6 +1,6 @@
 import { localAssets } from '@assets/assets';
 import { push } from '@routes/Navigator';
-import { ADDCOIN, BUY, SEND } from '@routes/RouteType';
+import { ADDCOIN, BUY, SEND, VIEWQR, WARNING } from '@routes/RouteType';
 import { strings } from '@strings/i18n';
 import { Responsive } from '@utils/Responsive';
 import { white, viewbutton } from '@values/color';
@@ -30,13 +30,13 @@ const RenderCardItem = ({ item, selectedItem }) => {
                 <TouchableOpacity style={styles.actionButtonBg} onPress={ () => push(SEND)}>
                         <Image source={localAssets.send} style={styles.actionButtonIcon}/>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.actionButtonBg}>
+                <TouchableOpacity style={styles.actionButtonBg} onPress={()=>push(VIEWQR)}>
                         <Image source={localAssets.receive} style={styles.actionButtonIcon}/>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.actionButtonBg} onPress={ () => push(BUY)}>
                         <Image source={localAssets.buy} style={styles.actionButtonIcon}/>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.actionButtonBg}>
+                <TouchableOpacity style={styles.actionButtonBg} onPress={ () => push(WARNING)}> 
                         <Image source={localAssets.sell} style={styles.actionButtonIcon}/>
                 </TouchableOpacity>
 
@@ -100,6 +100,7 @@ const styles = StyleSheet.create({
         backgroundColor: viewbutton,
         borderRadius: Responsive.size20,
         alignContent: 'center',
+        alignItems:'center',
         justifyContent: 'center',
         paddingVertical: Responsive.size10,
         width: Responsive.size147,

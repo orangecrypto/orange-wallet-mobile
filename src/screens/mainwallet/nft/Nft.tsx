@@ -1,6 +1,6 @@
 import { localAssets } from '@assets/assets';
 import { push } from '@routes/Navigator';
-import { INCRIPTIONDETAILS, TRANSFER } from '@routes/RouteType';
+import { INCRIPTIONDETAILS, TRANSFER, VIEWQR } from '@routes/RouteType';
 import { strings } from '@strings/i18n';
 import { Responsive } from '@utils/Responsive';
 import { black, grey, nftcategoryText, orangeButton, transactionListBackground, viewbutton, white } from "@values/color";
@@ -47,7 +47,7 @@ const Nft = () => {
                             <Image style={styles.addCoinIcon} source={localAssets.transferarrow} />
                             <Text style={styles.addCoinText}>{strings.transfer}</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.addCoinView} onPress={() => { console.log('Open') }}>
+                        <TouchableOpacity style={styles.addCoinView} onPress={() => { push(VIEWQR) }}>
                             <Image style={styles.addCoinIcon} source={localAssets.transactionarrow} />
                             <Text style={styles.addCoinText}>{strings.receive}</Text>
                         </TouchableOpacity>
@@ -55,15 +55,15 @@ const Nft = () => {
                 </ImageBackground>
 
             </View>
-           
-                <FlatList
-                    data={data}
-                    renderItem={renderItem}
-                    keyExtractor={(item) => item.id}
-                    numColumns={numColumns}
-                    style={styles.listConatiner}
-                    columnWrapperStyle={styles.columnWrapper} />
-          
+
+            <FlatList
+                data={data}
+                renderItem={renderItem}
+                keyExtractor={(item) => item.id}
+                numColumns={numColumns}
+                style={styles.listConatiner}
+                columnWrapperStyle={styles.columnWrapper} />
+
         </View>
     );
 };
@@ -119,6 +119,7 @@ const styles = StyleSheet.create({
 
     horizontalButtons: {
         flexDirection: 'row',
+        alignContent:'center',
         justifyContent: 'space-between',
         marginHorizontal: Responsive.size20,
         marginTop: Responsive.size28,
@@ -128,6 +129,7 @@ const styles = StyleSheet.create({
         borderRadius: Responsive.size20,
         alignContent: 'center',
         justifyContent: 'center',
+        alignItems: 'center',
         paddingVertical: Responsive.size10,
         width: Responsive.size110,
         flexDirection: 'row',

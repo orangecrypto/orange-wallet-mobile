@@ -114,9 +114,15 @@ export default {
     transactionSend:'Transaction Sent',
     sendingTransactionMessage:'Please wait while your transaction is being broadcasted to the network...',
     transactionSendMessage:'Your transaction has been successfully sent to the blockchain.',
-    progress:'Progress'
-
+    progress:'Progress',
+    forgotPasswordTitle:'Forgot Password',
+    forgotPasswordDescription:'Orange Wallet does not store any passwords, seed phrases, or any user data. If you have forgotten your password, you will need reset your wallet and re-enter your seed phrase to recover your Bitcoin wallet. Always have your seed phrase backed up and stored in a safe location.',
+    receiveMessage:'Below are the addresses for all of the protocols supported by the Orange wallet.',
+    receiveWarningMessage:'Do not sent Bitcoin and SIP-010 tokens to this address. Only send Ordinals adn BRC20 tokens to this wallet address.',
     
-
+    connectionFailed:'Connection Failed',
+    connectionFailedMessage:'The DAPP requesting your wallet address is expecting a different network. Please switch your network to Mainnet to proceed. Disconnect and reconnect your wallet from the DAPP if needed.',
+    trasnsactionFailed:'Transaction Failed',
+    trasnsactionFailedMessage:'The transaction can not proceed as there are not enough funds in your wallet to proceed.'
 
 }   

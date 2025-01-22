@@ -6,7 +6,6 @@ export const SEEDPHRASE= 'seedphrase';
 export const SUCCESS= 'success';
 export const LOGIN= 'login';
 export const WALLETBALANCE= 'walletbalance';
-export const QR= 'qr';
 export const SETTINGS= 'settings';
 export const ADDADDRESS= 'addAddress';
 export const ADDCOIN= 'addCoin';
@@ -31,4 +30,8 @@ export const BUY= 'Buy';
 export const INCRIPTIONDETAILS= 'InscriptionDetails';
 export const SENDORDINALS= 'SendOrdinals';
 export const TRANSFER= 'Transfer';
+export const FORGOTPASSWORD= 'ForgotPassword';
+export const RECEIVE= 'Receive';
+export const VIEWQR= 'ViewQr';
+export const WARNING= 'Warning';
 
