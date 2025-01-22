@@ -119,6 +119,7 @@ const styles = StyleSheet.create({
 
     horizontalButtons: {
         flexDirection: 'row',
+        alignContent:'center',
         justifyContent: 'space-between',
         marginHorizontal: Responsive.size20,
         marginTop: Responsive.size28,
@@ -128,6 +129,7 @@ const styles = StyleSheet.create({
         borderRadius: Responsive.size20,
         alignContent: 'center',
         justifyContent: 'center',
+        alignItems: 'center',
         paddingVertical: Responsive.size10,
         width: Responsive.size110,
         flexDirection: 'row',

@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { Platform, StyleSheet } from "react-native";
 import { Responsive } from "@utils/Responsive";
 import { backbackgroundbg, black, borderLineSeedphrase, erroryellow, grayText, listBordercolor, nftcategoryText, orangeButton, orangeOpacityBg, red, selectedCategory, unselectedcategory, viewbutton, white, yellowopacity } from "@values/color";
 import { Fonts } from "@values/fonts";
@@ -96,7 +96,8 @@ export const styles = StyleSheet.create({
         fontSize: Responsive.size12,
         fontFamily: Fonts.regular,
         color: nftcategoryText,
-        marginLeft: Responsive.size4
+        marginLeft: Responsive.size4,
+         marginTop: Platform.OS ==='ios' ? Responsive.size4:0
     },
     valueContainer: {
         justifyContent: 'center',
@@ -187,34 +188,7 @@ export const styles = StyleSheet.create({
         borderTopLeftRadius:Responsive.size16,
         borderTopRightRadius: Responsive.size16
     },
-    headerIcon :{
-        height:Responsive.size36,
-        width: Responsive.size36
-    },
-    headerTitle:{
-        fontFamily:Fonts.regular,
-        color:white,
-        fontSize: Responsive.size24
-    },
    
-    headerTopTextView:{
-        flexDirection:'row',
-    },
-    categoryTextBackground:{
-        fontFamily: Fonts.regular,
-        fontSize: Responsive.size12,
-        color:white,
-        borderRadius:Responsive.size8,
-        backgroundColor:viewbutton,
-        paddingHorizontal: Responsive.size4,
-        marginLeft: Responsive.size8
-       
-    },
-    tokenContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: 'transparent',
-      },
       pasteText:{
         fontSize: Responsive.size14,
         color:orangeButton,

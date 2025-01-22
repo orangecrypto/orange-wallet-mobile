@@ -100,6 +100,7 @@ const styles = StyleSheet.create({
         backgroundColor: viewbutton,
         borderRadius: Responsive.size20,
         alignContent: 'center',
+        alignItems:'center',
         justifyContent: 'center',
         paddingVertical: Responsive.size10,
         width: Responsive.size147,
