@@ -3,11 +3,11 @@ import CommonButton from "@components/CommonButton";
 import CustomTextInput from "@components/CustomTextInput";
 import { Dispatch } from "@reduxjs/toolkit";
 import { push } from "@routes/Navigator";
-import { FORGOTPASSWORD, WALLETBALANCE } from "@routes/RouteType";
+import { RouteType } from "@routes/RouteType";
 import { strings } from "@strings/i18n";
 import { Responsive } from '@utils/Responsive';
 import { validatePasswordStrength } from "@utils/Validations";
-import { black, green, orangeButton, red, white } from "@values/color";
+import { Color } from "@values/color";
 import { Fonts } from '@values/fonts';
 import { useEffect, useState } from "react";
 import { Image, Keyboard, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
@@ -34,7 +34,7 @@ const Login = () => {
             dispatch(setPasswordError(strings.useStrongPassword))
         } else {
             dispatch(clearLoginReducer())
-            push(WALLETBALANCE)
+            push(RouteType.WALLETBALANCE)
         }
     };
 
@@ -73,9 +73,9 @@ const Login = () => {
                             passwordIconVisible={localAssets.eye}
                             passwordIconHidden={localAssets.eyeoff}
                             style={styles.input}/>
-                        <Text style={[styles.passwordError,{color:passwordError ===  strings.strongPassword ? green :red }]}>{passwordError}</Text>
+                        <Text style={[styles.passwordError,{color:passwordError ===  strings.strongPassword ? Color.green :Color.red }]}>{passwordError}</Text>
                         <Text style={styles.passwordError}>{passwordFeedback}</Text>  
-                        <TouchableOpacity onPress={()=>push(FORGOTPASSWORD)}>
+                        <TouchableOpacity onPress={()=>push(RouteType.FORGOTPASSWORD)}>
                         <Text style={styles.forgotPassword}>{strings.forgotPassword}</Text>
                         </TouchableOpacity>
                     </View>
@@ -87,8 +87,8 @@ const Login = () => {
                     <CommonButton
                         title={strings.unlock}
                         onPress={() => handleSubmit()}
-                        backgroundColor={orangeButton}
-                        textColor={white}
+                        backgroundColor={Color.orangeButton}
+                        textColor={Color.white}
                         disabled={passwordError === strings.strongPassword? false: true}
                         width={'100%'}
                         height={Responsive.size50}
@@ -102,7 +102,7 @@ const Login = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: black,
+        backgroundColor: Color.black,
         padding: Responsive.size20,
     },
     scrollContainer: {
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
     password: {
         fontSize: Responsive.size22,
         fontFamily: Fonts.semibold,
-        color: orangeButton,
+        color: Color.orangeButton,
         marginTop: Responsive.size22,
     },
     input: {
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     forgotPassword: {
         fontSize: Responsive.size14,
         fontFamily: Fonts.regular,
-        color: white,
+        color: Color.white,
         marginTop: Responsive.size16,
         textDecorationLine: 'underline',
         alignSelf: 'center'
@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
     passwordError:{
         fontSize: Responsive.size12,
         fontFamily: Fonts.regular,
-        color:red,
+        color:Color.red,
         lineHeight: Responsive.size18
     }
 });

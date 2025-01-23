@@ -1,7 +1,7 @@
 import CommonButton from "@components/CommonButton";
 import { Dispatch } from "@reduxjs/toolkit";
 import { goBack, push } from "@routes/Navigator";
-import { SUCCESS } from "@routes/RouteType";
+import { RouteType } from "@routes/RouteType";
 import ConfirmPassword from "@screens/seedphrase/ConfirmPassword";
 import EnterPassword from "@screens/seedphrase/EnterPassword";
 import SeedPhraseVerification from "@screens/seedphrase/SeedPhraseVerification";
@@ -9,7 +9,7 @@ import SeedPhraseView from "@screens/seedphrase/SeedPhraseView";
 import { strings } from "@strings/i18n";
 import { Responsive } from '@utils/Responsive';
 import { validatePasswordStrength } from "@utils/Validations";
-import { backbackgroundbg, black, grey, orangeBorder, orangeButton, white } from "@values/color";
+import { Color } from "@values/color";
 import { useEffect, useState } from "react";
 import {
     Keyboard,
@@ -53,7 +53,7 @@ const SeedPhrase = ({ route }) => {
         if (currentStepIndex === 3) { 
             if (!validatePassword(confirmPassword, currentStepIndex)) return;
             if (password === confirmPassword) {
-                push(SUCCESS);
+                push(RouteType.SUCCESS);
                 dispatch(clearSeedPhraseReducer());
             } else {
                 dispatch(setConfirmPasswordError(strings.passwordNotMatch));
@@ -112,9 +112,9 @@ const SeedPhrase = ({ route }) => {
                     <CommonButton
                         title={strings.continue}
                         onPress={handleNextStep}
-                        backgroundColor={orangeButton}
-                        textColor={white}
-                        borderColor={orangeBorder}
+                        backgroundColor={Color.orangeButton}
+                        textColor={Color.white}
+                        borderColor={Color.orangeBorder}
                         width={"100%"}
                         height={Responsive.size50}
                     />
@@ -128,7 +128,7 @@ const SeedPhrase = ({ route }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: black,
+        backgroundColor: Color.black,
         padding: Responsive.size18,
     },
     contentContainer: {
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     stepContainer: {
         flexDirection: "row",
         alignContent: "center",
-        backgroundColor: backbackgroundbg,
+        backgroundColor: Color.backbackgroundbg,
         width: "100%",
         paddingHorizontal: Responsive.size16,
         paddingVertical: Responsive.size12,
@@ -148,19 +148,19 @@ const styles = StyleSheet.create({
     },
     stepText: {
         fontSize: Responsive.size16,
-        color: white,
+        color: Color.white,
     },
     progressBarContainer: {
         height: Responsive.size8,
         width: "20%",
-        backgroundColor: black,
+        backgroundColor: Color.black,
         borderRadius: Responsive.size5,
         overflow: "hidden",
         alignSelf: "center",
     },
     progressBar: {
         height: "100%",
-        backgroundColor: orangeButton,
+        backgroundColor: Color.orangeButton,
     },
     buttonContainer: {
         flexDirection: "row",
@@ -171,16 +171,16 @@ const styles = StyleSheet.create({
     button: {
         paddingVertical: Responsive.size5,
         paddingHorizontal: Responsive.size10,
-        backgroundColor: orangeButton,
+        backgroundColor: Color.orangeButton,
         borderRadius: Responsive.size5,
         marginBottom: Responsive.size10,
     },
     buttonText: {
-        color: white,
+        color: Color.white,
         fontSize: Responsive.size16,
     },
     disabledButton: {
-        backgroundColor: grey,
+        backgroundColor: Color.grey,
     },
     buttonContainerConitnue: {
         justifyContent: "flex-end",

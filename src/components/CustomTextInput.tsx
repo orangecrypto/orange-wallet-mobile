@@ -1,5 +1,5 @@
 import { Responsive } from '@utils/Responsive';
-import { black, gray, nftcategoryText, orangeButton, white } from '@values/color';
+import { Color} from '@values/color';
 import React, { useState } from 'react';
 import { TextInput, View, TouchableOpacity, StyleSheet, Text, FlatList, Image } from 'react-native';
 
@@ -42,14 +42,14 @@ const CustomTextInput = ({
       <View
         style={[
           styles.inputContainer,
-          { borderColor: focused ? orangeButton : gray },
+          { borderColor: focused ? Color.orangeButton : Color.gray },
           style,
         ]}
       >
         <TextInput
           style={styles.textInput}
           placeholder={placeholder}
-          placeholderTextColor={nftcategoryText}
+          placeholderTextColor={Color.nftcategoryText}
           value={value}
           onChangeText={onChangeText}
           secureTextEntry={isSecure}
@@ -126,11 +126,11 @@ const styles = StyleSheet.create({
     borderRadius: Responsive.size12,
     paddingHorizontal: Responsive.size10,
     height: Responsive.size50,
-    backgroundColor: black,
+    backgroundColor: Color.black,
   },
   textInput: {
     flex: 1,
-    color: white,
+    color: Color.white,
     fontSize: Responsive.size16,
   },
   icon: {
@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
     marginLeft: Responsive.size10,
   },
   dropdownText: {
-    color: white,
+    color: Color.white,
     fontSize: Responsive.size16,
   },
   dropdownIcon: {
@@ -157,9 +157,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: Responsive.size50 + 5,
     right: 0,
-    backgroundColor: black,
+    backgroundColor: Color.black,
     borderRadius: Responsive.size10,
-    borderColor: gray,
+    borderColor: Color.gray,
     borderWidth: 1,
     zIndex: 10,
   },
@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
     padding: Responsive.size10,
   },
   dropdownItemText: {
-    color: white,
+    color: Color.white,
     fontSize: Responsive.size16,
   },
   rightTextsContainer: {
@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center', // Center them vertically within the parent container
   },
   rightText: {
-    color: orangeButton,
+    color: Color.orangeButton,
     fontSize: Responsive.size16,
     marginVertical: Responsive.size2, // Add spacing between texts
   },

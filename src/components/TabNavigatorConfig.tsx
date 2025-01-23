@@ -1,11 +1,11 @@
-import { Image, StyleSheet } from 'react-native';
-import { black, orangeButton } from '@values/color';
+import { localAssets } from '@assets/assets'; // Make sure this import path is correct
 import { Responsive } from '@utils/Responsive';
-import { localAssets } from '@assets/assets';  // Make sure this import path is correct
+import { Color } from '@values/color';
+import { Image } from 'react-native';
 
 const TabNavigatorConfig = {
     tabBarStyle: {
-        backgroundColor: black,
+        backgroundColor: Color.black,
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
         height: 70,

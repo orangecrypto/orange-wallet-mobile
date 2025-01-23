@@ -3,7 +3,7 @@ import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import { goBack, push, resetNavigation } from "@routes/Navigator";
 import { strings } from "@strings/i18n";
 import { styles } from "./styles";
-import { LOGIN } from "@routes/RouteType";
+import { RouteType } from "@routes/RouteType";
 
 const Settings = () => {
     const [settingsArray, setSettingsArray] = useState([
@@ -41,7 +41,7 @@ const Settings = () => {
                     push("Cms", { title: item.name, url: item.url }); 
                 }
                 else if (item.name === "Lock Wallet") {
-                    resetNavigation(LOGIN)
+                    resetNavigation(RouteType.LOGIN)
                 }
                 else {
                     console.warn(`Route "${item.name}" is not available.`);

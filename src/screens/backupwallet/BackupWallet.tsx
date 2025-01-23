@@ -1,10 +1,10 @@
 import { localAssets } from "@assets/assets";
 import CommonButton from "@components/CommonButton";
 import { push } from "@routes/Navigator";
-import { SEEDPHRASE } from "@routes/RouteType";
+import { RouteType } from "@routes/RouteType";
 import { strings } from "@strings/i18n";
 import { Responsive } from '@utils/Responsive';
-import { black, blackBorder, orangeBorder, orangeButton, white } from "@values/color";
+import { Color } from "@values/color";
 import { Fonts } from '@values/fonts';
 import { Image, StyleSheet, Text, View } from "react-native";
 
@@ -22,18 +22,18 @@ const BackupWallet = () => {
             <View style={styles.buttonContainer}>
             <CommonButton
                     title={strings.backupLater}
-                    onPress={() => push(SEEDPHRASE,{backupLatter : true})}
-                    backgroundColor={black}
-                    textColor={white}
-                    borderColor={blackBorder}
+                    onPress={() => push(RouteType.SEEDPHRASE,{backupLatter : true})}
+                    backgroundColor={Color.black}
+                    textColor={Color.white}
+                    borderColor={Color.blackBorder}
                     width={'40%'}
                     height={Responsive.size50} />
                 <CommonButton
                     title={strings.backupNow}
-                    onPress={() => push(SEEDPHRASE)}
-                    backgroundColor={orangeButton}
-                    textColor={white}
-                    borderColor={orangeBorder}
+                    onPress={() => push(RouteType.SEEDPHRASE)}
+                    backgroundColor={Color.orangeButton}
+                    textColor={Color.white}
+                    borderColor={Color.orangeBorder}
                     width={'40%'}
                     height={Responsive.size50} />
               
@@ -45,7 +45,7 @@ const BackupWallet = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: black,
+        backgroundColor: Color.black,
         padding: Responsive.size20,
     },
     contentContainer: {
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: Responsive.size18,
-        color: white,
+        color: Color.white,
         textAlign: 'center',
     },
     buttonContainer: {
@@ -73,12 +73,12 @@ const styles = StyleSheet.create({
     topText: {
         fontSize: Responsive.size22,
         fontFamily:Fonts.bold,
-        color: orangeButton,
+        color: Color.orangeButton,
     },
 
     reviewText: {
        fontSize: Responsive.size18,
-        color: white,
+        color: Color.white,
         fontFamily:Fonts.semibold,
         marginTop: Responsive.size20,
         textAlign:'center',

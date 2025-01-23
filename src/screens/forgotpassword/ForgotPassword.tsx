@@ -1,10 +1,10 @@
 import CommonButton from "@components/CommonButton";
 import Switch from "@components/Switch";
 import { goBack, resetNavigation } from "@routes/Navigator";
-import { HOME_SCREEN } from "@routes/RouteType";
+import { RouteType } from "@routes/RouteType";
 import { strings } from "@strings/i18n";
 import { Responsive } from "@utils/Responsive";
-import { backgroundbg, black, orangeButton, white } from "@values/color";
+import { Color } from "@values/color";
 import { Fonts } from "@values/fonts";
 import React, { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -36,9 +36,9 @@ const ForgotPassword = () => {
             <View style={styles.buttonContainer}>
                 <CommonButton
                     title={strings.RESETWALLET}
-                    onPress={() => resetNavigation(HOME_SCREEN)}
-                    backgroundColor={orangeButton}
-                    textColor={white}
+                    onPress={() => resetNavigation(RouteType.HOME_SCREEN)}
+                    backgroundColor={Color.orangeButton}
+                    textColor={Color.white}
                     disabled={!isSwitchEnabled}
                     width={'100%'}
                     height={Responsive.size50} />
@@ -50,7 +50,7 @@ const ForgotPassword = () => {
 const styles = StyleSheet.create({
    container: {
            flex: 1,
-           backgroundColor: black,
+           backgroundColor: Color.black,
        },
        contentContainer: {
            flex: 1,
@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
            paddingHorizontal: Responsive.size18,
        },
        button: {
-        backgroundColor: backgroundbg,
+        backgroundColor: Color.backgroundbg,
         width: Responsive.size70,
         justifyContent: "center",
         alignItems: "center",
@@ -67,18 +67,18 @@ const styles = StyleSheet.create({
         marginTop: Responsive.size50,
     },
     buttonText: {
-        color: white,
+        color: Color.white,
         fontSize: Responsive.size16,
         fontFamily: Fonts.regular,
     },
     title: {
-        color: orangeButton,
+        color: Color.orangeButton,
         fontSize: Responsive.size24,
         fontFamily: Fonts.bold,
         marginTop: Responsive.size15,
     },
     description: {
-        color: white,
+        color: Color.white,
         fontSize: Responsive.size18,
         fontFamily: Fonts.regular,
         lineHeight: Responsive.size20,

@@ -3,7 +3,7 @@ import CustomTextInput from "@components/CustomTextInput";
 import { goBack } from "@routes/Navigator";
 import { strings } from "@strings/i18n";
 import { Responsive } from "@utils/Responsive";
-import { orangeButton, white } from "@values/color";
+import { Color } from "@values/color";
 import React, { useEffect, useState } from "react";
 import { Keyboard, Text, TouchableOpacity, View } from "react-native";
 import { styles } from "./styles";
@@ -79,8 +79,8 @@ const EditFees = () => {
                 <CommonButton
                     title={strings.apply}
                     onPress={() => goBack()}
-                    backgroundColor={orangeButton}
-                    textColor={white}
+                    backgroundColor={Color.orangeButton}
+                    textColor={Color.white}
                     width={'100%'}
                     height={Responsive.size50} />
             </View>)}

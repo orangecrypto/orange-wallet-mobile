@@ -2,9 +2,9 @@ import { useState } from "react";
 import { Dimensions, Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import CommonButton from "@components/CommonButton";
 import { strings } from "@strings/i18n";
-import { black, grey, orangeBorder, orangeButton, white } from "@values/color";
+import { Color } from "@values/color";
 import { push } from "@routes/Navigator";
-import { LOGIN } from "@routes/RouteType";
+import { RouteType } from "@routes/RouteType";
 import { Responsive } from '@utils/Responsive';
 import { localAssets } from "@assets/assets";
 import { Fonts } from '@values/fonts';
@@ -79,10 +79,10 @@ const Success = () => {
             <View style={styles.buttonContainer}>
                 <CommonButton
                     title={strings.complete}
-                    onPress={() => push(LOGIN)}
-                    backgroundColor={orangeButton}
-                    textColor={white}
-                    borderColor={orangeBorder}
+                    onPress={() => push(RouteType.LOGIN)}
+                    backgroundColor={Color.orangeButton}
+                    textColor={Color.white}
+                    borderColor={Color.orangeBorder}
                     width={"100%"}
                     height={Responsive.size50}
                 />
@@ -96,7 +96,7 @@ export default Success;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: black,
+        backgroundColor: Color.black,
     },
     scrollViewContainer: {
         flexGrow: 1,
@@ -116,13 +116,13 @@ const styles = StyleSheet.create({
     contentTitle: {
         fontSize: Responsive.size24,
         fontFamily:Fonts.semibold,
-        color: orangeButton,
+        color: Color.orangeButton,
         textAlign: "center",
         marginBottom: Responsive.size10,
     },
     contentDescription: {
         fontSize: Responsive.size16,
-        color: white,
+        color: Color.white,
         textAlign: "center",
         fontFamily: Fonts.regular,
         lineHeight: Responsive.size22,
@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
     progressBarContainer: {
         height: Responsive.size5,
         width: "40%",
-        backgroundColor: grey,
+        backgroundColor: Color.grey,
         borderRadius: Responsive.size5,
         overflow: "hidden",
         alignSelf: "center",
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     },
     progressBar: {
         height: "100%",
-        backgroundColor: orangeButton,
+        backgroundColor: Color.orangeButton,
     },
     buttonContainer: {
         justifyContent: "flex-end",

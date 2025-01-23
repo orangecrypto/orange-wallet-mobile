@@ -1,7 +1,7 @@
 import { localAssets } from '@assets/assets';
 import { strings } from '@strings/i18n';
 import { Responsive } from '@utils/Responsive';
-import { black, gray, orangeButton, orangeOpacityBg, white } from "@values/color";
+import { Color} from "@values/color";
 import { Fonts } from '@values/fonts';
 import { Dimensions, Image, StyleSheet, Text, View } from "react-native";
 import { LineChart } from 'react-native-chart-kit';
@@ -75,12 +75,12 @@ const Market = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: black,
+    backgroundColor: Color.black,
     alignItems: 'center',
   },
   graphContainer: {
     borderWidth: Responsive.size2,
-    borderColor: gray,
+    borderColor: Color.gray,
     borderRadius: Responsive.size10,
     padding: Responsive.size12,
     width: Dimensions.get('window').width - 40,
@@ -91,18 +91,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    color: orangeButton,
+    color: Color.orangeButton,
     fontSize: Responsive.size16,
     fontFamily: Fonts.bold,
   },
   infoBadge: {
-    backgroundColor: orangeOpacityBg,
+    backgroundColor: Color.orangeOpacityBg,
     paddingHorizontal: Responsive.size8,
     paddingVertical: Responsive.size2,
     borderRadius: Responsive.size8,
   },
   infoText: {
-    color: white,
+    color: Color.white,
     fontSize: Responsive.size10,
   },
   chartWrapper: {
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   balanceText: {
-    color: white,
+    color: Color.white,
     fontSize: Responsive.size18,
     fontFamily: Fonts.semibold,
   },
@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   changeText: {
-    color: white,
+    color: Color.white,
     fontSize: Responsive.size14,
   },
   chart: {

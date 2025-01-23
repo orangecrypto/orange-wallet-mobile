@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
 import { goBack, push } from "@routes/Navigator";
 import { strings } from "@strings/i18n";
-import { orangeButton, white } from "@values/color";
+import { Color } from "@values/color";
 import { styles } from "../styles";
 import CommonButton from "@components/CommonButton";
 import { Responsive } from "@utils/Responsive";
 import { localAssets } from "@assets/assets";
 import { useRoute } from "@react-navigation/native";
-import { WALLETBALANCE } from "@routes/RouteType";
+import { RouteType } from "@routes/RouteType";
 
 const RestoreDetails = () => {
     const route = useRoute();
@@ -32,7 +32,7 @@ const RestoreDetails = () => {
         <TouchableOpacity
             style={[
                 styles.assetItem,
-                item.isSelected && { borderColor: orangeButton, borderWidth: 2 },
+                item.isSelected && { borderColor: Color.orangeButton, borderWidth: 2 },
             ]}
             onPress={() => handleSelection(item.id)}>
             <View style={styles.assetContainer}>
@@ -69,7 +69,7 @@ const RestoreDetails = () => {
                 <CommonButton
                     title={strings.transfer}
                     onPress={() => console.log('Ok')}
-                    textColor={white}
+                    textColor={Color.white}
                     disabled={!isAnySelected}
                     width={"100%"}
                     height={Responsive.size50}
@@ -78,8 +78,8 @@ const RestoreDetails = () => {
                 <View style={styles.buttonContainer}>
                     <CommonButton
                         title={strings.close}
-                        onPress={() => push(WALLETBALANCE)}
-                        textColor={white}
+                        onPress={() => push(RouteType.WALLETBALANCE)}
+                        textColor={Color.white}
                         width={"100%"}
                         height={Responsive.size50}
                     />

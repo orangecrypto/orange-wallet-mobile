@@ -1,10 +1,10 @@
 import { localAssets } from "@assets/assets";
 import CommonButton from "@components/CommonButton";
 import { goBack, push } from "@routes/Navigator";
-import { SENDORDINALS } from "@routes/RouteType";
+import { RouteType } from "@routes/RouteType";
 import { strings } from "@strings/i18n";
 import { Responsive } from "@utils/Responsive";
-import { copytint, orangeButton, white } from "@values/color";
+import { Color } from "@values/color";
 import React from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import { styles } from "../../sendings/styles";
@@ -31,7 +31,7 @@ const IncriptionDetails = () => {
                     <Text style={styles.text}>{strings.owner}</Text>
                     <TouchableOpacity style={styles.ownerContainer} onPress={()=>console.log('copy')}>
                         <Text style={styles.addressText}>{'1Lbcfr7s...LK4ZnX71'}</Text>
-                        <Image style={styles.copyIcon} source={localAssets.copy} tintColor={copytint}/>
+                        <Image style={styles.copyIcon} source={localAssets.copy} tintColor={Color.copytint}/>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -39,9 +39,9 @@ const IncriptionDetails = () => {
             <View style={styles.buttonContainer}>
                 <CommonButton
                     title={strings.send}
-                    onPress={() => push(SENDORDINALS)}
-                    backgroundColor={orangeButton}
-                    textColor={white}
+                    onPress={() => push(RouteType.SENDORDINALS)}
+                    backgroundColor={Color.orangeButton}
+                    textColor={Color.white}
                     width={'100%'}
                     height={Responsive.size50} />
             </View>

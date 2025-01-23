@@ -2,11 +2,11 @@ import CommonButton from "@components/CommonButton";
 import { goBack, push } from "@routes/Navigator";
 import { strings } from "@strings/i18n";
 import { Responsive } from "@utils/Responsive";
-import { black, blackBorder, orangeButton, white } from "@values/color";
+import { Color } from "@values/color";
 import React, { useState } from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import { styles } from "./styles";
-import { CONFIRMATION } from "@routes/RouteType";
+import { RouteType } from "@routes/RouteType";
 
 const EditConfirmation = () => {
     const [confirmationArray, setConfirmationArray] = useState([
@@ -57,16 +57,16 @@ const EditConfirmation = () => {
             <CommonButton
                     title={strings.cancel}
                     onPress={() => goBack()}
-                    backgroundColor={black}
-                    textColor={white}
-                    borderColor={blackBorder}
+                    backgroundColor={Color.black}
+                    textColor={Color.white}
+                    borderColor={Color.blackBorder}
                     width={'45%'}
                     height={Responsive.size50} />
                 <CommonButton
                     title={strings.confirm}
-                    onPress={() => push(CONFIRMATION)}
-                    backgroundColor={orangeButton}
-                    textColor={white}
+                    onPress={() => push(RouteType.CONFIRMATION)}
+                    backgroundColor={Color.orangeButton}
+                    textColor={Color.white}
                     width={'45%'}
                     height={Responsive.size50} />
             </View>

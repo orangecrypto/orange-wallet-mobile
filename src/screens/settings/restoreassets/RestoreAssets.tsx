@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import { goBack, push } from "@routes/Navigator";
 import { strings } from "@strings/i18n";
-import { orangeButton, white, gray } from "@values/color";
+import { Color } from "@values/color";
 import { styles } from "../styles";
 import CommonButton from "@components/CommonButton";
 import { Responsive } from "@utils/Responsive";
-import { ASSETDETAILS } from "@routes/RouteType";
+import { RouteType } from "@routes/RouteType";
 
 const RestoreAssets = () => {
     const [assetsArray, setAssetsArray] = useState([
@@ -33,7 +33,7 @@ const RestoreAssets = () => {
             <Text
                 style={[
                     styles.text,
-                    { color: item.isSelected ? orangeButton : white },
+                    { color: item.isSelected ? Color.orangeButton : Color.white },
                 ]}
             >
                 {item.name}
@@ -62,10 +62,10 @@ const RestoreAssets = () => {
                     onPress={() => {
                         const selectedAsset = assetsArray.find((asset) => asset.isSelected);
                         if (selectedAsset) {
-                            push(ASSETDETAILS, { assetName: selectedAsset.name });
+                            push(RouteType.ASSETDETAILS, { assetName: selectedAsset.name });
                         }
                     }}
-                    textColor={white}
+                    textColor={Color.white}
                     disabled={!isAnySelected} 
                     width={"100%"}
                     height={Responsive.size50}

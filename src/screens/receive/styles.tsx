@@ -1,12 +1,12 @@
 import { Responsive } from "@utils/Responsive";
-import { backbackgroundbg, black, borderLineSeedphrase, listBordercolor, nftcategoryText, orangeButton, white } from "@values/color";
+import { Color } from "@values/color";
 import { Fonts } from "@values/fonts";
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: black,
+        backgroundColor: Color.black,
     },
     contentContainer: {
         flex: 1,
@@ -15,7 +15,7 @@ export const styles = StyleSheet.create({
     },
 
     button: {
-        backgroundColor: backbackgroundbg,
+        backgroundColor: Color.backbackgroundbg,
         width: Responsive.size70,
         justifyContent: "center",
         alignItems: "center",
@@ -24,19 +24,19 @@ export const styles = StyleSheet.create({
         marginTop: Responsive.size50,
     },
     buttonText: {
-        color: white,
+        color: Color.white,
         fontSize: Responsive.size16,
         fontFamily: Fonts.regular,
     },
     title: {
-        color: orangeButton,
+        color: Color.orangeButton,
         fontSize: Responsive.size32,
         fontFamily: Fonts.bold,
         marginTop: Responsive.size15,
     },
 
     description: {
-        color: white,
+        color: Color.white,
         fontSize: Responsive.size18,
         fontFamily: Fonts.regular,
         lineHeight: Responsive.size20,
@@ -51,18 +51,18 @@ export const styles = StyleSheet.create({
     item: {
         flexDirection: "row",
         padding: Responsive.size16,
-        backgroundColor: listBordercolor,
+        backgroundColor: Color.listBordercolor,
         borderRadius: Responsive.size10,
         marginTop: Responsive.size18,
         justifyContent: "space-between",
         alignContent: 'center',
         borderWidth: Responsive.size2,
-        borderColor: borderLineSeedphrase,
+        borderColor: Color.borderLineSeedphrase,
     },
     text: {
         fontSize: Responsive.size18,
         fontFamily: Fonts.regular,
-        color: white,
+        color: Color.white,
         alignSelf: 'center'
     },
 
@@ -83,14 +83,14 @@ export const styles = StyleSheet.create({
     warningText: {
         fontFamily: Fonts.semibold,
         fontSize: Responsive.size14,
-        color: orangeButton,
+        color: Color.orangeButton,
         margin: Responsive.size18,
         lineHeight: Responsive.size14
     },
     warningMessage: {
         fontFamily: Fonts.regular,
         fontSize: Responsive.size14,
-        color: nftcategoryText
+        color: Color.nftcategoryText
     },
     qrcodeContainer:{
         height: Responsive.size130,
@@ -102,7 +102,7 @@ export const styles = StyleSheet.create({
         fontFamily: Fonts.semibold,
         fontSize: Responsive.size24,
         textAlign:'center',
-        color:white,
+        color:Color.white,
         marginTop: Responsive.size18,
         lineHeight: Responsive.size32
     }

@@ -1,9 +1,9 @@
 import { localAssets } from '@assets/assets';
 import { push } from '@routes/Navigator';
-import { INCRIPTIONDETAILS, TRANSFER, VIEWQR } from '@routes/RouteType';
+import { RouteType } from '@routes/RouteType';
 import { strings } from '@strings/i18n';
 import { Responsive } from '@utils/Responsive';
-import { black, grey, nftcategoryText, orangeButton, transactionListBackground, viewbutton, white } from "@values/color";
+import { Color } from "@values/color";
 import { Fonts } from '@values/fonts';
 import { Dimensions, FlatList, Image, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 const { width } = Dimensions.get('window');
@@ -18,7 +18,7 @@ const Nft = () => {
     ];
 
     const renderItem = ({ item }) => (
-        <TouchableOpacity style={styles.itemContainer} onPress={() => push(INCRIPTIONDETAILS)}>
+        <TouchableOpacity style={styles.itemContainer} onPress={() => push(RouteType.INCRIPTIONDETAILS)}>
             <Image source={item.image} style={styles.image} />
             <Text style={styles.title}>{item.title}</Text>
             <Text style={styles.subtype}>{item.subtype}</Text>
@@ -43,11 +43,11 @@ const Nft = () => {
                     </View>
 
                     <View style={styles.horizontalButtons}>
-                        <TouchableOpacity style={styles.addCoinView} onPress={() => { push(TRANSFER) }}>
+                        <TouchableOpacity style={styles.addCoinView} onPress={() => { push(RouteType.TRANSFER) }}>
                             <Image style={styles.addCoinIcon} source={localAssets.transferarrow} />
                             <Text style={styles.addCoinText}>{strings.transfer}</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.addCoinView} onPress={() => { push(VIEWQR) }}>
+                        <TouchableOpacity style={styles.addCoinView} onPress={() => { push(RouteType.VIEWQR) }}>
                             <Image style={styles.addCoinIcon} source={localAssets.transactionarrow} />
                             <Text style={styles.addCoinText}>{strings.receive}</Text>
                         </TouchableOpacity>
@@ -71,7 +71,7 @@ const Nft = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: black,
+        backgroundColor: Color.black,
         alignItems: 'center'
     },
     contentContainer: {
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     password: {
         fontSize: Responsive.size22,
         fontFamily: Fonts.bold,
-        color: orangeButton,
+        color: Color.orangeButton,
         marginTop: Responsive.size22,
     },
 
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     },
     walletText: {
         fontSize: Responsive.size22,
-        color: white,
+        color: Color.white,
         fontFamily: Fonts.semibold,
     },
     walletTextView: {
@@ -100,11 +100,11 @@ const styles = StyleSheet.create({
         marginTop: Responsive.size5,
     },
     walletTextCurrencyView: {
-        backgroundColor: viewbutton,
+        backgroundColor: Color.viewbutton,
         borderRadius: Responsive.size20,
         fontFamily: Fonts.regular,
         fontSize: Responsive.size9,
-        color: white,
+        color: Color.white,
         padding: Responsive.size4,
         marginLeft: Responsive.size10,
     },
@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
         marginTop: Responsive.size28,
     },
     addCoinView: {
-        backgroundColor: viewbutton,
+        backgroundColor: Color.viewbutton,
         borderRadius: Responsive.size20,
         alignContent: 'center',
         justifyContent: 'center',
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
     addCoinText: {
         fontFamily: Fonts.light,
         fontSize: Responsive.size14,
-        color: white,
+        color: Color.white,
         marginLeft: Responsive.size5,
     },
     columnWrapper: {
@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
         padding: Responsive.size15,
         borderRadius: Responsive.size8,
         borderWidth: Responsive.size1,
-        borderColor: grey,
+        borderColor: Color.grey,
     },
     image: {
         width: '100%',
@@ -170,18 +170,18 @@ const styles = StyleSheet.create({
         fontSize: Responsive.size16,
         fontFamily: Fonts.regular,
         marginTop: Responsive.size10,
-        color: white
+        color: Color.white
     },
     subtype: {
         fontSize: Responsive.size12,
         fontFamily: Fonts.regular,
         marginTop: Responsive.size4,
-        color: nftcategoryText
+        color: Color.nftcategoryText
     },
 
     listConatiner: {
         paddingTop: Responsive.size6,
-        backgroundColor: transactionListBackground,
+        backgroundColor: Color.transactionListBackground,
         borderTopLeftRadius: Responsive.size20,
         borderTopRightRadius: Responsive.size20,
         marginTop: Responsive.size15,

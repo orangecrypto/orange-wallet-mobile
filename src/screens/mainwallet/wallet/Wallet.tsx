@@ -1,5 +1,5 @@
 import { Responsive } from '@utils/Responsive';
-import { black, blackBorder, gray, grayText, grey, listBordercolor, nftcategoryText, orangeButton, orangeOpacityBg, selectedCategory, transactionListBackground, white } from "@values/color";
+import { Color } from "@values/color";
 import { Fonts } from '@values/fonts';
 import { useState } from 'react';
 import { Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -97,7 +97,7 @@ const Wallet = () => {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: black,
+        backgroundColor: Color.black,
         alignItems: 'center',
         paddingBottom: Responsive.size62,
         flex:1
@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
     progressBarContainer: {
         height: Responsive.size5,
         width: "30%",
-        backgroundColor: grey,
+        backgroundColor: Color.grey,
         borderRadius: Responsive.size5,
         overflow: "hidden",
         alignSelf: "center",
@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
     },
     progressBar: {
         height: "100%",
-        backgroundColor: orangeButton,
+        backgroundColor: Color.orangeButton,
     },
     contentArea: {
         marginTop: Responsive.size15,
@@ -132,14 +132,14 @@ const styles = StyleSheet.create({
         height: '60%',
         width: '100%',
         paddingTop: Responsive.size16,
-        backgroundColor: transactionListBackground,
+        backgroundColor: Color.transactionListBackground,
         borderTopLeftRadius:Responsive.size20,
         borderTopRightRadius: Responsive.size20
     },
     contentText: {
         fontSize: Responsive.size18,
         fontFamily: Fonts.semibold,
-        color: white,
+        color: Color.white,
     },
     balanceView: {
         flexDirection: 'row',
@@ -159,20 +159,22 @@ const styles = StyleSheet.create({
     categoryButton: {
         paddingHorizontal: Responsive.size12,
         paddingVertical: Responsive.size8,
-        backgroundColor: orangeOpacityBg,
+        backgroundColor: Color.orangeOpacityBg,
         borderRadius: Responsive.size16,
         marginRight: Responsive.size8,
+        alignContent:'center',
+        justifyContent:'center'
     },
     selectedCategory: {
-        backgroundColor: selectedCategory,
+        backgroundColor: Color.selectedCategory,
     },
     categoryText: {
-        color: orangeButton,
+        color: Color.orangeButton,
         fontSize: Responsive.size14,
         fontFamily: Fonts.regular
     },
     selectedCategoryText: {
-        color: white,
+        color: Color.white,
         fontFamily: Fonts.semibold
     },
     listContainer: {
@@ -184,8 +186,8 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        backgroundColor: transactionListBackground,
-        borderBottomColor: gray,
+        backgroundColor: Color.transactionListBackground,
+        borderBottomColor: Color.gray,
         borderBottomWidth: Responsive.size1,
         paddingVertical: Responsive.size10
     },
@@ -200,7 +202,7 @@ const styles = StyleSheet.create({
         
     },
     headerText: {
-        color: grayText,
+        color: Color.grayText,
         fontSize: Responsive.size14,
         fontFamily: Fonts.bold,
     },
@@ -211,11 +213,11 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         alignItems: "center",
         borderWidth: Responsive.size1,
-        borderColor:transactionListBackground
+        borderColor: Color.transactionListBackground
     },
 
     headerTitle:{
-        color: nftcategoryText,
+        color: Color.nftcategoryText,
         fontFamily: Fonts.semibold,
         fontSize: Responsive.size14
     }

@@ -1,9 +1,9 @@
 import CommonButton from "@components/CommonButton";
 import { goBack, push } from "@routes/Navigator";
-import { SENDCONFIRMATION } from "@routes/RouteType";
+import { RouteType } from "@routes/RouteType";
 import { strings } from "@strings/i18n";
 import { Responsive } from "@utils/Responsive";
-import { black, blackBorder, orangeButton, white } from "@values/color";
+import { Color } from "@values/color";
 import React, { useEffect, useState } from "react";
 import { Image, Keyboard, KeyboardAvoidingView, Platform, ScrollView, Text, View } from "react-native";
 import { styles } from "./styles";
@@ -58,7 +58,7 @@ const Send = () => {
                     <View style={styles.topContainer}>
                         <Text style={styles.title}>{strings.send}</Text>
                         <View style={styles.sendIconBakcground}>
-                            <Image style={styles.sendIcon} source={localAssets.send} tintColor={orangeButton} />
+                            <Image style={styles.sendIcon} source={localAssets.send} tintColor={Color.orangeButton} />
                         </View>
                     </View>
 
@@ -108,17 +108,17 @@ const Send = () => {
                     <CommonButton
                         title={strings.cancel}
                         onPress={() => goBack()}
-                        backgroundColor={black}
-                        textColor={white}
-                        borderColor={blackBorder}
+                        backgroundColor={Color.black}
+                        textColor={Color.white}
+                        borderColor={Color.blackBorder}
                         width={'45%'}
                         height={Responsive.size50} />
 
                     <CommonButton
                         title={strings.next}
-                        onPress={() => push(SENDCONFIRMATION)}
-                        backgroundColor={orangeButton}
-                        textColor={white}
+                        onPress={() => push(RouteType.SENDCONFIRMATION)}
+                        backgroundColor={Color.orangeButton}
+                        textColor={Color.white}
                         width={'45%'}
                         height={Responsive.size50} />
                 </View> </View>)}

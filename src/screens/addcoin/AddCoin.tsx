@@ -4,7 +4,7 @@ import Switch from "@components/Switch";
 import { goBack } from "@routes/Navigator";
 import { strings } from "@strings/i18n";
 import { Responsive } from "@utils/Responsive";
-import { backbackgroundbg, backgroundbg, black, borderLineSeedphrase, grey, orangeButton, orangeOpacityBg, selectedCategory, white } from "@values/color";
+import { Color } from "@values/color";
 import { Fonts } from "@values/fonts";
 
 const AddCoin = () => {
@@ -85,7 +85,7 @@ const AddCoin = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: black,
+    backgroundColor: Color.black,
   },
   contentContainer: {
     flex: 1,
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: Responsive.size18,
   },
   button: {
-    backgroundColor: backbackgroundbg,
+    backgroundColor: Color.backbackgroundbg,
     width: Responsive.size70,
     justifyContent: "center",
     alignItems: "center",
@@ -102,18 +102,18 @@ const styles = StyleSheet.create({
     marginTop: Responsive.size50,
   },
   buttonText: {
-    color: white,
+    color: Color.white,
     fontSize: Responsive.size16,
     fontFamily: Fonts.regular,
   },
   addAddress: {
-    color: orangeButton,
+    color: Color.orangeButton,
     fontSize: Responsive.size24,
     fontFamily: Fonts.bold,
     marginTop: Responsive.size20,
   },
   addAddressMessage: {
-    color: white,
+    color: Color.white,
     fontSize: Responsive.size18,
     fontFamily: Fonts.regular,
     lineHeight: Responsive.size24,
@@ -127,36 +127,36 @@ const styles = StyleSheet.create({
   categoryButton: {
     paddingHorizontal: Responsive.size12,
     paddingVertical: Responsive.size8,
-    backgroundColor: orangeOpacityBg,
+    backgroundColor: Color.orangeOpacityBg,
     borderRadius: Responsive.size16,
     marginRight: Responsive.size8,
   },
   selectedCategory: {
-    backgroundColor: selectedCategory,
+    backgroundColor: Color.selectedCategory,
   },
   categoryText: {
-    color: orangeButton,
+    color: Color.orangeButton,
     fontSize: Responsive.size14,
     fontFamily: Fonts.regular,
   },
   selectedCategoryText: {
-    color: white,
+    color: Color.white,
     fontFamily: Fonts.semibold,
   },
   item: {
     flexDirection: "row",
     padding: Responsive.size16,
-    backgroundColor: backgroundbg,
+    backgroundColor: Color.backgroundbg,
     borderRadius: Responsive.size10,
     marginTop: Responsive.size18,
     justifyContent: "space-between",
     borderWidth: Responsive.size1,
-    borderColor: borderLineSeedphrase,
+    borderColor: Color.borderLineSeedphrase,
   },
   text: {
     fontSize: Responsive.size16,
     fontFamily: Fonts.regular,
-    color: white,
+    color: Color.white,
   },
 });
 

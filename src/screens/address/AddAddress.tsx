@@ -2,7 +2,7 @@ import CommonButton from '@components/CommonButton';
 import { goBack } from '@routes/Navigator';
 import { strings } from '@strings/i18n';
 import { Responsive } from '@utils/Responsive';
-import { backbackgroundbg, backgroundbg, black, grey, nftcategoryText, orangeButton, orangeOpacityBg, white } from "@values/color";
+import { Color} from "@values/color";
 import { Fonts } from '@values/fonts';
 import { useState } from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -64,7 +64,7 @@ const AddAddress = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: black,
+        backgroundColor: Color.black,
     },
     contentContainer: {
         flex: 1,
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
         marginBottom: Responsive.size20,
     },
     button: {
-        backgroundColor: backbackgroundbg,
+        backgroundColor: Color.backbackgroundbg,
         width: Responsive.size70,
         justifyContent: 'center',
         alignItems: 'center',
@@ -88,18 +88,18 @@ const styles = StyleSheet.create({
         marginTop: Responsive.size50
     },
     buttonText: {
-        color: white,
+        color: Color.white,
         fontSize: Responsive.size16,
         fontFamily: Fonts.regular
     },
     addAddress: {
-        color: orangeButton,
+        color: Color.orangeButton,
         fontSize: Responsive.size24,
         fontFamily: Fonts.bold,
         marginTop: Responsive.size20
     },
     addAddressMessage: {
-        color: white,
+        color: Color.white,
         fontSize: Responsive.size18,
         fontFamily: Fonts.regular,
         lineHeight: Responsive.size24
@@ -107,12 +107,12 @@ const styles = StyleSheet.create({
     addAddressButtonText: {
         fontSize: Responsive.size12,
         fontFamily: Fonts.regular,
-        color: orangeButton,
+        color: Color.orangeButton,
     },
 
     addAddressButton: {
-        backgroundColor: orangeOpacityBg,
-        borderColor: orangeButton,
+        backgroundColor: Color.orangeOpacityBg,
+        borderColor: Color.orangeButton,
         borderWidth: Responsive.size1,
         borderRadius: Responsive.size20,
         alignSelf: 'center',
@@ -124,29 +124,29 @@ const styles = StyleSheet.create({
 
     item: {
         padding: Responsive.size16,
-        backgroundColor: backgroundbg,
+        backgroundColor: Color.backgroundbg,
         borderRadius: Responsive.size10,
         marginTop: Responsive.size18,
         justifyContent: 'center',
         alignItems: 'center',
         borderWidth: Responsive.size1,
-        borderColor: grey
+        borderColor: Color.grey
     },
 
     primaryText: {
         fontSize: Responsive.size16,
         fontFamily: Fonts.regular,
-        color: white
+        color: Color.white
     },
     secondaryText: {
         fontSize: Responsive.size16,
         fontFamily: Fonts.regular,
-        color: nftcategoryText
+        color: Color.nftcategoryText
     },
     text: {
         fontSize: Responsive.size16,
         fontFamily: Fonts.regular,
-        color: white
+        color: Color.white
 
     },
 });

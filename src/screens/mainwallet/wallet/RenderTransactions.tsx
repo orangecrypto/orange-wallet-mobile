@@ -1,4 +1,4 @@
-import { gray, grayText, transactionListBackground, white } from "@values/color";
+import { Color } from "@values/color";
 import { Fonts } from '@values/fonts';
 import { Responsive } from '@utils/Responsive';
 import { Text, TouchableOpacity, View, StyleSheet, Image, Platform } from "react-native";
@@ -8,7 +8,7 @@ const RenderTransactions = ({ item, selectedItem, handleItemClick }) => {
     return (
         <TouchableOpacity onPress={() => handleItemClick(item)} style={[
             styles.listItem,
-            selectedItem?.id === item.id && { backgroundColor: transactionListBackground },
+            selectedItem?.id === item.id && { backgroundColor: Color.transactionListBackground },
         ]}>
             <View style={styles.assetContainer}>
            <Image source={localAssets.bitcoinicon} style={styles.letIcon}/>
@@ -31,8 +31,8 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        backgroundColor: transactionListBackground,
-        borderBottomColor: gray,
+        backgroundColor: Color.transactionListBackground,
+        borderBottomColor: Color.gray,
         borderBottomWidth: Responsive.size1,
         paddingVertical: Responsive.size10
     },
@@ -47,12 +47,12 @@ const styles = StyleSheet.create({
         marginLeft: Responsive.size10
     },
     assetName: {
-        color: white,
+        color: Color.white,
         fontSize: Responsive.size16,
         fontFamily: Fonts.semibold
     },
     assetCategory: {
-        color: grayText,
+        color: Color.grayText,
         fontSize: Responsive.size14,
         fontFamily: Fonts.regular,
         marginTop: Platform.OS ==='ios' ? Responsive.size4:0
@@ -62,12 +62,12 @@ const styles = StyleSheet.create({
         alignItems: "flex-end",
     },
     assetQuantity: {
-        color: white,
+        color: Color.white,
         fontSize: Responsive.size16,
         fontFamily: Fonts.bold
     },
     assetValue: {
-        color: white,
+        color: Color.white,
         fontSize: Responsive.size14,
         fontFamily: Fonts.regular
     },

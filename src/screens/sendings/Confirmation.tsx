@@ -1,10 +1,10 @@
 import { localAssets } from "@assets/assets";
 import CommonButton from "@components/CommonButton";
 import { resetNavigation } from "@routes/Navigator";
-import { WALLETBALANCE } from "@routes/RouteType";
+import { RouteType } from "@routes/RouteType";
 import { strings } from "@strings/i18n";
 import { Responsive } from "@utils/Responsive";
-import { orangeButton, white } from "@values/color";
+import { Color } from "@values/color";
 import React, { useState, useEffect } from "react";
 import { Image, ImageBackground, Text, View } from "react-native";
 import { styles } from "./styles";
@@ -49,9 +49,9 @@ const Confirmation = () => {
             <View style={styles.buttonContainer}>
                 <CommonButton
                     title={strings.close}
-                    onPress={() => resetNavigation(WALLETBALANCE)}
-                    backgroundColor={orangeButton}
-                    textColor={white}
+                    onPress={() => resetNavigation(RouteType.WALLETBALANCE)}
+                    backgroundColor={Color.orangeButton}
+                    textColor={Color.white}
                     width={'100%'}
                     disabled={!progress}
                     height={Responsive.size50} />

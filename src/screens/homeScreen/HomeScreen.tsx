@@ -1,11 +1,11 @@
 import { Image, StyleSheet, Text, View } from "react-native";
 import { Responsive } from '@utils/Responsive';
 import CommonButton from "@components/CommonButton";
-import { black, blackBorder, orangeBorder, orangeButton, orangeOpacityBg, white } from "@values/color";
+import { Color } from "@values/color";
 import { strings } from "@strings/i18n";
 import { localAssets } from "@assets/assets";
 import { push } from "@routes/Navigator";
-import { LEGAL } from "@routes/RouteType";
+import { RouteType } from "@routes/RouteType";
 import { Fonts } from '@values/fonts';
 
 const HomeScreen = () => {
@@ -19,19 +19,19 @@ const HomeScreen = () => {
             <View style={styles.buttonContainer}>
                 <CommonButton
                     title={strings.createWallet}
-                    onPress={() => push(LEGAL)}
-                    backgroundColor={orangeButton}
-                    textColor={white}
-                    borderColor={orangeBorder}
+                    onPress={() => push(RouteType.LEGAL)}
+                    backgroundColor={Color.orangeButton}
+                    textColor={Color.white}
+                    borderColor={Color.orangeBorder}
                     width={'100%'}
                     height={Responsive.size50}
                 />
                 <CommonButton
                     title={strings.restoreWallet}
                     onPress={() => console.log('Restore Wallet pressed')}
-                    backgroundColor={black}
-                    textColor={white}
-                    borderColor={blackBorder}
+                    backgroundColor={Color.black}
+                    textColor={Color.white}
+                    borderColor={Color.blackBorder}
                     width={'100%'}
                     height={Responsive.size50}
                 />
@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: black,
+        backgroundColor: Color.black,
         padding: Responsive.size20,
     },
 
@@ -57,19 +57,19 @@ const styles = StyleSheet.create({
     topText: {
         fontSize: Responsive.size22,
         fontFamily:Fonts.bold,
-        color: orangeButton,
+        color: Color.orangeButton,
         marginTop: Responsive.size22,
     },
 
     versionText: {
         fontSize: Responsive.size12,
         fontFamily:Fonts.regular,
-        color: orangeButton,
+        color: Color.orangeButton,
     },
 
     versionView: {
-        backgroundColor: orangeOpacityBg,
-        borderColor: orangeButton,
+        backgroundColor: Color.orangeOpacityBg,
+        borderColor: Color.orangeButton,
         borderWidth: Responsive.size1,
         paddingHorizontal: Responsive.size8,
         paddingVertical: Responsive.size2,

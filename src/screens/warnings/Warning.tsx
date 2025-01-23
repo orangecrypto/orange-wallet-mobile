@@ -1,13 +1,12 @@
 import { localAssets } from "@assets/assets";
 import CommonButton from "@components/CommonButton";
-import { goBack, resetNavigation } from "@routes/Navigator";
-import { HOME_SCREEN } from "@routes/RouteType";
+import { goBack } from "@routes/Navigator";
 import { strings } from "@strings/i18n";
 import { Responsive } from "@utils/Responsive";
-import { backgroundbg, black, orangeButton, white } from "@values/color";
+import { Color } from "@values/color";
 import { Fonts } from "@values/fonts";
 import React from "react";
-import { Image, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Image, ImageBackground, StyleSheet, Text, View } from "react-native";
 
 const Warning = () => {
 
@@ -25,8 +24,8 @@ const Warning = () => {
                 <CommonButton
                     title={strings.close}
                     onPress={() => goBack()}
-                    backgroundColor={orangeButton}
-                    textColor={white}
+                    backgroundColor={Color.orangeButton}
+                    textColor={Color.white}
                     width={'100%'}
                     height={Responsive.size50} />
             </View>
@@ -37,7 +36,7 @@ const Warning = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: black,
+        backgroundColor: Color.black,
     },
     contentContainer: {
         flex: 1,
@@ -46,13 +45,13 @@ const styles = StyleSheet.create({
         paddingHorizontal: Responsive.size18,
     },
     title: {
-        color: orangeButton,
+        color: Color.orangeButton,
         fontSize: Responsive.size24,
         fontFamily: Fonts.bold,
         marginTop: Responsive.size15,
     },
     description: {
-        color: white,
+        color: Color.white,
         fontSize: Responsive.size18,
         fontFamily: Fonts.regular,
         lineHeight: Responsive.size20,
