@@ -123,6 +123,10 @@ export default {
     connectionFailed:'Connection Failed',
     connectionFailedMessage:'The DAPP requesting your wallet address is expecting a different network. Please switch your network to Mainnet to proceed. Disconnect and reconnect your wallet from the DAPP if needed.',
     trasnsactionFailed:'Transaction Failed',
-    trasnsactionFailedMessage:'The transaction can not proceed as there are not enough funds in your wallet to proceed.'
+    trasnsactionFailedMessage:'The transaction can not proceed as there are not enough funds in your wallet to proceed.',
+    name:'Name',
+    price:'Price',
+    onehr:'1h'
+
 
 }   

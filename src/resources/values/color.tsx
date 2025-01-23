@@ -55,5 +55,6 @@ export enum Color {
     yellowopacity = '#FFC70033',
     copytint = '#6C779D',
     progressBackground = '#A8B9F426',
+    graphfill = '#4E120099',
   }
   
