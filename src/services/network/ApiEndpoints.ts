@@ -1,6 +1,6 @@
 export enum ApiEndpoints {
     
-    MARKETASSETS='v1/market-assets',
-    MARKETDATA = 'market/data',
+    MARKET_ASSETS='market/assets?',
+    MARKET_CHART = 'market/chart?',
     
 }  
