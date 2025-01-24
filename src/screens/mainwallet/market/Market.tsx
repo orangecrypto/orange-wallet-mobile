@@ -5,8 +5,17 @@ import { Dimensions, FlatList, Text, TouchableOpacity, View } from 'react-native
 import GraphSliderItem from './GraphSliderItem';
 import RenderAssets from './RenderAssets';
 import { styles } from './styles';
+import useMarketData from './GetMarketData';
 
 const Market = () => {
+
+  const id = '1'; 
+  const convert = 'USD'; 
+
+  const { data, error, loading } = useMarketData({ id, convert });
+  console.log('API call', data)
+  console.log('ERROR', error)
+  console.log('loading', loading)
 
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedItem, setSelectedItem] = useState(null);
