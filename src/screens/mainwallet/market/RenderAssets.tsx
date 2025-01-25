@@ -17,22 +17,23 @@ const RenderAssets = ({ item, selectedItem, handleItemClick }) => {
                 <Image source={localAssets.bitcoinicon} style={styles.letIcon} />
                 <View style={styles.assetDetails}>
                     <Text 
+                        numberOfLines={1}
                         style={[
                             styles.assetName, 
                             isSelected && { color: Color.orangeButton }]}>{item.name} </Text>
-                    <Text style={styles.assetCategory}>{item.category}</Text>
+                    <Text  numberOfLines={1} style={styles.assetCategory}>{item.symbol}</Text>
                 </View>
             </View>
             <View style={styles.assetValues}>
                 <Text 
                     style={[
                         styles.price, 
-                        isSelected && { color: Color.orangeButton }]}>{'$26,378.67'}</Text>
+                        isSelected && { color: Color.orangeButton }]}>{'$ '+item.price.toFixed(2)}</Text>
                 <Text 
                     style={[
                         styles.price, 
                         isSelected && { color: Color.orangeButton },
-                        { marginLeft: Responsive.size10 }]}>{'0.00%'}</Text>
+                        { marginLeft: Responsive.size10 }]}>{item.percent_change_1h.toFixed(2)+'%'}</Text>
             </View>
         </TouchableOpacity>
     );

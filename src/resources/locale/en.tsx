@@ -126,7 +126,8 @@ export default {
     trasnsactionFailedMessage:'The transaction can not proceed as there are not enough funds in your wallet to proceed.',
     name:'Name',
     price:'Price',
-    onehr:'1h'
+    onehr:'1h',
+    noSymbols:'No symbols available'
 
 
 }   

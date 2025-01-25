@@ -107,8 +107,7 @@ const MainWallet = () => {
                         alignItems: 'center',
                         padding: 0,
                     },
-                })}
-            >
+                })}>
                 <Tab.Screen name="Wallet" component={Wallet} />
                 <Tab.Screen name="Market" component={Market} />
                 <Tab.Screen name="NFT" component={Nft} />

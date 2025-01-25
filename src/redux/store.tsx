@@ -11,7 +11,7 @@ const config = {
   storage: AsyncStorage,
   timeout: 0,
   version: -1,
-  whitelist: ['appReducer']
+  whitelist: ['appReducer', 'coinSettingsSlice']
 };
 
 const persistedReducer = persistReducer(config, rootReducer)

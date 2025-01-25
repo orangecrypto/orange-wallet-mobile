@@ -1,91 +1,105 @@
+import Loader from '@components/Loader';
 import { strings } from '@strings/i18n';
 import { Responsive } from '@utils/Responsive';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Dimensions, FlatList, Text, TouchableOpacity, View } from 'react-native';
+import useMarketData from '../../../hooks/useMarketData';
 import GraphSliderItem from './GraphSliderItem';
 import RenderAssets from './RenderAssets';
 import { styles } from './styles';
-import useMarketData from './GetMarketData';
+import useGraphData from '../../../hooks/useGraphData';
 
 const Market = () => {
+  const currency = 'USD';
+  const count = '108'
+  const interval = '5m'
+  const id = '1'
+  const [graphParams, setGraphParams] = useState({
+    currency: currency,
+    count: count,
+    interval: interval,
+    id: id
+  });
+  const { data: assetList, error, isLoading } = useMarketData({ currency });
+  const { data: graphData } = useGraphData(graphParams);
 
-  const id = '1'; 
-  const convert = 'USD'; 
+  console.log(graphData?.chart)
 
-  const { data, error, loading } = useMarketData({ id, convert });
-  console.log('API call', data)
-  console.log('ERROR', error)
-  console.log('loading', loading)
-
+  const [symbols, setSymbols] = useState(['All', 'BRC20', 'RUNES', 'Stacks']);
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedItem, setSelectedItem] = useState(null);
-  const [selectedGraphData, setSelectedGraphData] = useState([
-    { value: 400, label: '9am' },
-    { value: 420, label: '10am' },
-    { value: 410, label: '11am' },
-    { value: 430, label: '12pm' },
-    { value: 450, label: '1pm' },
-    { value: 440, label: '2pm' },
-    { value: 470, label: '3pm' },
-    { value: 460, label: '4pm' },
-    { value: 490, label: '5pm' },
-    { value: 480, label: '6pm' },
-    { value: 500, label: '7pm' },
-    { value: 530, label: '8pm' },
-    { value: 520, label: '9pm' },
-    { value: 550, label: '10pm' },
-    { value: 540, label: '11pm' }
-  ]);
   const [selectedCategory, setSelectedCategory] = useState("All");
 
-  const categories = ["All", "BRC20", "Runes", "Stacks"];
 
-  const cryptoArray = [
-    { id: 1, category: "BTC", name: "Bitcoin", quantity: "2.9841", value: "$140,298.12" },
-    { id: 2, category: "BRC20", name: "Wrapped BTC", quantity: ".932", value: "$26,452.07" },
-    { id: 3, category: "Stacks", name: "Stacks", quantity: "10", value: "$100.00" },
-    { id: 4, category: "Runes", name: "Stacks", quantity: "10", value: "$100.00" },
-  ];
-
+  useEffect(() => {
+    if (!isLoading && assetList) {
+      setSelectedItem(assetList[0]);
+      setGraphParams({
+        currency: currency,
+        count: count,
+        interval: interval,
+        id: assetList[0].id
+      })
+    }
+  }, [isLoading, assetList]);
   const xAxisLabels = ['9am', '10am', '11am', '12pm', '1pm', '2pm', '3pm', '4pm', '5pm'];
-  const screenWidth = Dimensions.get('window').width - 10;
-  const graphDataList = [
-    {
-      id: Math.random(),
-      name: 'Market Cap',
-      value: '$132,143,546',
-      data: selectedGraphData
-      ,
-      xAxisLabels,
-    },
-    {
-      id: Math.random(),
-      name: 'Trading Volume',
-      value: '$22,109,654,314',
-      data: selectedGraphData,
-      xAxisLabels,
-    },
-  ];
+
+  const [graphDataList, setGraphDataList] = useState([]);
+
+  useEffect(() => {
+    if (selectedItem && graphData) {
+      const newGraphDataList = [
+        {
+          id: 1,
+          name: 'Market Cap',
+          value: selectedItem?.market_cap
+            ? `$ ${selectedItem.market_cap.toFixed(2)}`
+            : '$ 0',
+          data: graphData.chart || [],
+          percent: selectedItem?.percent_change_1h
+            ? `${selectedItem.percent_change_1h.toFixed(2)}%`
+            : '0%',
+          xAxisLabels,
+        },
+        {
+          id: 2,
+          name: 'Trading Volume',
+          value: selectedItem?.volume_24h
+            ? `$ ${selectedItem.volume_24h.toFixed(2)}`
+            : '$ 0',
+          data: graphData.chart || [],
+          percent: selectedItem?.volume_change_24h
+            ? `${selectedItem.volume_change_24h.toFixed(2)}%`
+            : '0%',
+          xAxisLabels,
+        },
+      ];
+      setGraphDataList(newGraphDataList);
+    }
+  }, [selectedItem, graphData]);
+
 
   const progressPercentage = (currentStep / graphDataList.length) * 100;
-
+  const screenWidth = Dimensions.get('window').width - 10;
   const handleScroll = (event) => {
-    const screenWidth = Dimensions.get("window").width;
     const currentIndex = Math.round(event.nativeEvent.contentOffset.x / screenWidth);
     setCurrentStep(currentIndex + 1);
   };
 
   const filteredCryptoArray = selectedCategory === "All"
-    ? cryptoArray
-    : cryptoArray.filter((item) => item.category === selectedCategory);
+    ? assetList
+    : assetList.filter((item) => item.symbol === selectedCategory);
 
   const handleItemClick = (item) => {
     setSelectedItem(item);
-    const generatedGraphData = Array.from({ length: 15 }, (_, index) => ({
-      value: Math.floor(Math.random() * 200) + 400,
-      label: `${9 + index > 12 ? (9 + index - 12) : 9 + index}${index >= 3 ? 'pm' : 'am'}`,
-    }));
-    setSelectedGraphData(generatedGraphData)
+    setGraphParams({
+      currency: currency,
+      count: count,
+      interval: interval,
+      id: item.id
+    })
+
+    // setSelectedGraphData(generatedGraphData)
   };
 
   const renderCategory = (category) => (
@@ -99,18 +113,23 @@ const Market = () => {
         style={[
           styles.categoryText,
           selectedCategory === category && styles.selectedCategoryText]}>
-        {category}
+        {category} {/* Fixed to render actual category */}
       </Text>
     </TouchableOpacity>
   );
 
   return (
     <View style={styles.container}>
+      {isLoading && <Loader loading={isLoading} />} {/* Loader only shown when isLoading is true */}
+
       <FlatList
         data={graphDataList}
         keyExtractor={(item, index) => `${item.id}-${index}`}
         horizontal
         pagingEnabled
+        snapToInterval={screenWidth + 20} // Adjust interval to include spacing
+        decelerationRate="fast" // Smooth scrolling experience
+        snapToAlignment="center" // Align items to the center of the screen
         onScroll={handleScroll}
         renderItem={({ item }) => (
           <View style={{ width: screenWidth }}>
@@ -118,7 +137,11 @@ const Market = () => {
           </View>
         )}
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.flatList}
+        contentContainerStyle={{
+          paddingHorizontal: 10,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
       />
       <View style={styles.progressBarContainer}>
         <View style={[styles.progressBar, { width: `${progressPercentage}%` }]} />
@@ -126,7 +149,7 @@ const Market = () => {
 
       <View style={styles.contentArea}>
         <View style={styles.categoryContainer}>
-          {categories.map((category) => renderCategory(category))}
+          {symbols.map((category) => renderCategory(category))}
         </View>
         <View style={styles.headerTitleContainer}>
           <Text style={styles.headerTitle}>{strings.name}</Text>
@@ -135,11 +158,13 @@ const Market = () => {
             <Text style={[styles.headerTitle, { marginLeft: Responsive.size10 }]}>{strings.onehr}</Text>
           </View>
         </View>
+
         <FlatList
           data={filteredCryptoArray}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => <RenderAssets item={item} selectedItem={selectedItem} handleItemClick={handleItemClick} />}
-          contentContainerStyle={styles.listContainer} />
+          contentContainerStyle={styles.listContainer}
+        />
       </View>
     </View>
   );

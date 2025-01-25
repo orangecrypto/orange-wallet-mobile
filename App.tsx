@@ -8,7 +8,18 @@ import {QueryClient, QueryClientProvider, QueryCache, MutationCache} from '@tans
 
 const App = () => {
 
+
+
   const queryClient = new QueryClient({
+    defaultOptions: {
+      queries:{
+        refetchOnMount:true,
+        refetchOnReconnect:true,
+        staleTime: 10 * 60 * 1000,
+     //  cacheTime: 10 * 60 * 1000,
+        refetchInterval: 10 * 60 * 1000,
+      }
+    },
     queryCache: new QueryCache({
       onError: (error) => {
         console.error('Error in query:', error);
