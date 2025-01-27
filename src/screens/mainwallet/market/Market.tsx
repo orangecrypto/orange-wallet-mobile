@@ -1,35 +1,34 @@
-import Loader from '@components/Loader';
-import { strings } from '@strings/i18n';
-import { Responsive } from '@utils/Responsive';
 import React, { useEffect, useState } from 'react';
-import { Dimensions, FlatList, Text, TouchableOpacity, View } from 'react-native';
+import { Dimensions, FlatList, Text, View } from 'react-native';
 import useMarketData from '../../../hooks/useMarketData';
 import GraphSliderItem from './GraphSliderItem';
 import RenderAssets from './RenderAssets';
+import Loader from '@components/Loader';
+import { strings } from '@strings/i18n';
+import { Responsive } from '@utils/Responsive';
 import { styles } from './styles';
 import useGraphData from '../../../hooks/useGraphData';
+import CategoryButton from './CategoryButton';
+import { categories, categoryMap } from './categoryData';
 
 const Market = () => {
   const currency = 'USD';
-  const count = '108'
-  const interval = '5m'
-  const id = '1'
+  const count = '108';
+  const interval = '5m';
+  const id = '1';
+
   const [graphParams, setGraphParams] = useState({
     currency: currency,
     count: count,
     interval: interval,
     id: id
   });
+
   const { data: assetList, error, isLoading } = useMarketData({ currency });
   const { data: graphData } = useGraphData(graphParams);
-
-  console.log(graphData?.chart)
-
-  const [symbols, setSymbols] = useState(['All', 'BRC20', 'RUNES', 'Stacks']);
+  const [selectedCategory, setSelectedCategory] = useState('All');
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedItem, setSelectedItem] = useState(null);
-  const [selectedCategory, setSelectedCategory] = useState("All");
-
 
   useEffect(() => {
     if (!isLoading && assetList) {
@@ -39,10 +38,9 @@ const Market = () => {
         count: count,
         interval: interval,
         id: assetList[0].id
-      })
+      });
     }
   }, [isLoading, assetList]);
-  const xAxisLabels = ['9am', '10am', '11am', '12pm', '1pm', '2pm', '3pm', '4pm', '5pm'];
 
   const [graphDataList, setGraphDataList] = useState([]);
 
@@ -59,7 +57,6 @@ const Market = () => {
           percent: selectedItem?.percent_change_1h
             ? `${selectedItem.percent_change_1h.toFixed(2)}%`
             : '0%',
-          xAxisLabels,
         },
         {
           id: 2,
@@ -71,24 +68,29 @@ const Market = () => {
           percent: selectedItem?.volume_change_24h
             ? `${selectedItem.volume_change_24h.toFixed(2)}%`
             : '0%',
-          xAxisLabels,
         },
       ];
       setGraphDataList(newGraphDataList);
     }
   }, [selectedItem, graphData]);
 
-
   const progressPercentage = (currentStep / graphDataList.length) * 100;
   const screenWidth = Dimensions.get('window').width - 10;
+
   const handleScroll = (event) => {
     const currentIndex = Math.round(event.nativeEvent.contentOffset.x / screenWidth);
     setCurrentStep(currentIndex + 1);
   };
 
-  const filteredCryptoArray = selectedCategory === "All"
-    ? assetList
-    : assetList.filter((item) => item.symbol === selectedCategory);
+  const filteredCoinsArray =
+    selectedCategory === 'All'
+      ? assetList
+      : assetList.filter((coin) => {
+        const categoriesForCoin = Object.keys(categoryMap).filter((category) =>
+          categoryMap[category].includes(coin.name) || categoryMap[category].includes(coin.symbol)
+        );
+        return categoriesForCoin.includes(selectedCategory);
+      });
 
   const handleItemClick = (item) => {
     setSelectedItem(item);
@@ -97,39 +99,21 @@ const Market = () => {
       count: count,
       interval: interval,
       id: item.id
-    })
-
-    // setSelectedGraphData(generatedGraphData)
+    });
   };
-
-  const renderCategory = (category) => (
-    <TouchableOpacity
-      key={category}
-      onPress={() => setSelectedCategory(category)}
-      style={[
-        styles.categoryButton,
-        selectedCategory === category && styles.selectedCategory]}>
-      <Text
-        style={[
-          styles.categoryText,
-          selectedCategory === category && styles.selectedCategoryText]}>
-        {category} {/* Fixed to render actual category */}
-      </Text>
-    </TouchableOpacity>
-  );
 
   return (
     <View style={styles.container}>
-      {isLoading && <Loader loading={isLoading} />} {/* Loader only shown when isLoading is true */}
+      {isLoading && <Loader loading={isLoading} />}
 
       <FlatList
         data={graphDataList}
         keyExtractor={(item, index) => `${item.id}-${index}`}
         horizontal
         pagingEnabled
-        snapToInterval={screenWidth + 20} // Adjust interval to include spacing
-        decelerationRate="fast" // Smooth scrolling experience
-        snapToAlignment="center" // Align items to the center of the screen
+        snapToInterval={screenWidth + 20}
+        decelerationRate="fast"
+        snapToAlignment="center"
         onScroll={handleScroll}
         renderItem={({ item }) => (
           <View style={{ width: screenWidth }}>
@@ -141,16 +125,22 @@ const Market = () => {
           paddingHorizontal: 10,
           justifyContent: 'center',
           alignItems: 'center',
-        }}
-      />
+        }} />
       <View style={styles.progressBarContainer}>
         <View style={[styles.progressBar, { width: `${progressPercentage}%` }]} />
       </View>
 
       <View style={styles.contentArea}>
         <View style={styles.categoryContainer}>
-          {symbols.map((category) => renderCategory(category))}
+          {categories.map((category) => (
+            <CategoryButton
+              key={category}
+              category={category}
+              selectedCategory={selectedCategory}
+              onSelectCategory={setSelectedCategory} />
+          ))}
         </View>
+
         <View style={styles.headerTitleContainer}>
           <Text style={styles.headerTitle}>{strings.name}</Text>
           <View style={styles.headerPriceContainer}>
@@ -160,11 +150,10 @@ const Market = () => {
         </View>
 
         <FlatList
-          data={filteredCryptoArray}
+          data={filteredCoinsArray}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => <RenderAssets item={item} selectedItem={selectedItem} handleItemClick={handleItemClick} />}
-          contentContainerStyle={styles.listContainer}
-        />
+          contentContainerStyle={styles.listContainer} />
       </View>
     </View>
   );

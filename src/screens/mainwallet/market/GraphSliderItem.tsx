@@ -8,38 +8,36 @@ import { LineChart } from 'react-native-gifted-charts';
 import { styles } from './styles';
 
 const GraphSliderItem = ({ data }) => {
+
   const processedData = data.data.map((item) => ({
     value: item.y,
-    label: moment(item.x).format('h:mm A'), 
+    label: moment(item.x).format('h:mm A'),
   }));
 
-  const maxValue = Math.max(...processedData.map((item) => item.value));
   const minValue = Math.min(...processedData.map((item) => item.value));
-
-  console.log(`minValue ${minValue} maxValue ${maxValue}`)
   const filterTimeData = (data) => {
     const timeSet = new Set();
-    
+
     data.forEach((entry) => {
-      const date = new Date(entry.x); 
+      const date = new Date(entry.x);
       let hour = date.getUTCHours();
       const period = hour >= 12 ? 'pm' : 'am';
-      hour = hour % 12 || 12; 
-       const formattedTime = `${hour}${period}`; 
+      hour = hour % 12 || 12;
+      const formattedTime = `${hour}${period}`;
       timeSet.add(formattedTime);
     });
     const timeArray = [...timeSet];
-    return timeArray.slice(-9);  
+    return timeArray.slice(-9);
   };
-  
+
   const filteredTimeList = filterTimeData(data.data);
- 
+
   return (
     <View style={styles.Graphcontainer}>
       <View style={styles.chartWrapper}>
         <LineChart
           data={processedData}
-       
+
           initialSpacing={0}
           endSpacing={0}
           xAxisLabelsHeight={0}
@@ -54,15 +52,15 @@ const GraphSliderItem = ({ data }) => {
           adjustToWidth={true}
           backgroundColor={Color.black}
           yAxisOffset={minValue}
-         
           yAxisColor="transparent"
           xAxisColor="transparent"
           areaChart
           startFillColor={Color.graphfill}
           endFillColor={Color.graphfill}
           disableScroll
+          overflowBottom={0}
         />
-        
+
         <View style={styles.xAxisLabelsWrapper}>
           {filteredTimeList.map((label, index) => (
             <Text key={index} style={styles.xAxisLabel}>

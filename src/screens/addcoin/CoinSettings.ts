@@ -44,7 +44,7 @@ export const coinSettingsSlice = createSlice({
         const { id, isEnable } = action.payload;
         const token = state.coinSettings.find((item) => item.id === id);
         if (token) {
-          token.isEnable = isEnable; // Update the token's isEnable value directly
+          token.isEnable = isEnable; 
         }
       },
      
@@ -52,7 +52,6 @@ export const coinSettingsSlice = createSlice({
     },
   });
 
-// Action creators are generated for each case reducer function
 export const { updateCoinStatus, clearCoinSettings } =
 coinSettingsSlice.actions;
 
