@@ -7,9 +7,9 @@ import { localAssets } from "@assets/assets";
 import CustomTextInput from "@components/CustomTextInput";
 import { validatePasswordStrength } from "@utils/Validations";
 import CommonButton from "@components/CommonButton";
-import { orangeButton, white } from "@values/color";
+import { Color } from "@values/color";
 import { Responsive } from "@utils/Responsive";
-import { COPYSEEDPHRASE, NEWPASSWORD } from "@routes/RouteType";
+import { RouteType } from "@routes/RouteType";
 
 const BackupYourWallet = () => {
     const [password, setPassword] = useState("");
@@ -22,7 +22,7 @@ const BackupYourWallet = () => {
         if (strengthMessage === strings.weakPassword || strengthMessage === strings.moderatePassword) {
             setPasswordError(strings.useStrongPassword)
         } else {
-           push(COPYSEEDPHRASE)
+           push(RouteType.COPYSEEDPHRASE)
         }
     };
 
@@ -80,8 +80,8 @@ const BackupYourWallet = () => {
                     <CommonButton
                         title={strings.continue}
                         onPress={() => handleSubmit()}
-                        backgroundColor={orangeButton}
-                        textColor={white}
+                        backgroundColor={Color.orangeButton}
+                        textColor={Color.white}
                         disabled={passwordError === strings.strongPassword? false: true}
                         width={'100%'}
                         height={Responsive.size50}

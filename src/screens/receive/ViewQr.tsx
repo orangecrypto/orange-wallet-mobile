@@ -1,13 +1,13 @@
+import { localAssets } from "@assets/assets";
 import CommonButton from "@components/CommonButton";
 import { goBack, resetNavigation } from "@routes/Navigator";
-import { HOME_SCREEN, WALLETBALANCE } from "@routes/RouteType";
+import { RouteType } from "@routes/RouteType";
 import { strings } from "@strings/i18n";
 import { Responsive } from "@utils/Responsive";
-import { orangeButton, white } from "@values/color";
+import { Color } from "@values/color";
 import React from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import { styles } from "./styles";
-import { localAssets } from "@assets/assets";
 
 const ViewQr = () => {
 
@@ -29,9 +29,9 @@ const ViewQr = () => {
             <View style={styles.buttonContainer}>
                 <CommonButton
                     title={strings.close}
-                    onPress={() => resetNavigation(WALLETBALANCE)}
-                    backgroundColor={orangeButton}
-                    textColor={white}
+                    onPress={() => resetNavigation(RouteType.WALLETBALANCE)}
+                    backgroundColor={Color.orangeButton}
+                    textColor={Color.white}
                     width={'100%'}
                     height={Responsive.size50} />
             </View>

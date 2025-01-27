@@ -1,5 +1,5 @@
 import { Responsive } from '@utils/Responsive';
-import { black, orangeButton } from "@values/color";
+import { Color } from "@values/color";
 import { Fonts } from '@values/fonts';
 import { StyleSheet, Text, View } from "react-native";
 
@@ -17,7 +17,7 @@ const Assistant = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: black,
+        backgroundColor: Color.black,
          alignItems:'center'
     },
     contentContainer: {
@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
     password: {
         fontSize: Responsive.size22,
         fontFamily: Fonts.bold,
-        color: orangeButton,
+        color: Color.orangeButton,
         marginTop: Responsive.size22,
     },
 });

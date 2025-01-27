@@ -1,9 +1,9 @@
 import { Image, StyleSheet, Text, View } from "react-native";
 import CommonButton from "@components/CommonButton";
 import { strings } from "@strings/i18n";
-import { black, blackBorder, orangeBorder, orangeButton, orangeOpacityBg, white } from "@values/color";
+import { Color} from "@values/color";
 import { push } from "@routes/Navigator";
-import { BACKUPWALLET } from "@routes/RouteType";
+import { RouteType } from "@routes/RouteType";
 import { Responsive } from '@utils/Responsive';
 import { localAssets } from "@assets/assets";
 import { Fonts } from '@values/fonts';
@@ -35,10 +35,10 @@ const Legal = () => {
             <View style={styles.buttonContainer}>
                 <CommonButton
                     title={strings.accept}
-                    onPress={() => push(BACKUPWALLET)}
-                    backgroundColor={orangeButton}
-                    textColor={white}
-                    borderColor={orangeBorder}
+                    onPress={() => push(RouteType.BACKUPWALLET)}
+                    backgroundColor={Color.orangeButton}
+                    textColor={Color.white}
+                    borderColor={Color.orangeBorder}
                     width={'100%'}
                     height={Responsive.size50}
                 />
@@ -50,7 +50,7 @@ const Legal = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: black,
+        backgroundColor: Color.black,
         padding: Responsive.size20,
     },
     contentContainer: {
@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: Responsive.size32,
-        color: orangeButton,
+        color: Color.orangeButton,
         fontFamily: Fonts.bold,
 
     },
@@ -68,14 +68,14 @@ const styles = StyleSheet.create({
     reviewText: {
         marginTop: Responsive.size10,
         fontSize: Responsive.size18,
-        color: white,
+        color: Color.white,
         fontFamily: Fonts.regular,
         lineHeight: Responsive.size24
     },
 
     orangeText: {
         fontSize: Responsive.size18,
-        color: orangeButton,
+        color: Color.orangeButton,
         fontFamily: Fonts.semibold,
     },
 
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
 
     roundedView: {
         borderRadius: Responsive.size10,
-        borderColor: blackBorder,
+        borderColor: Color.blackBorder,
         borderWidth: Responsive.size1,
         flexDirection: 'row',
         alignItems: 'center',
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
     },
     roundedViewtext: {
         fontSize: Responsive.size18,
-        color: white,
+        color: Color.white,
         fontFamily: Fonts.semibold,
 
     },
@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
         height: Responsive.size32,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: orangeOpacityBg,
+        backgroundColor: Color.orangeOpacityBg,
         borderRadius: Responsive.size16
 
     },

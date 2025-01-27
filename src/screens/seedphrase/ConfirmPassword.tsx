@@ -4,7 +4,7 @@ import { Dispatch } from "@reduxjs/toolkit";
 import { strings } from "@strings/i18n";
 import { Responsive } from '@utils/Responsive';
 import { validatePasswordStrength } from "@utils/Validations";
-import { black, green, orangeButton, red, white } from "@values/color";
+import { Color } from "@values/color";
 import { Fonts } from '@values/fonts';
 import { Image, StyleSheet, Text, View } from "react-native";
 import { useSelector } from "react-redux";
@@ -42,7 +42,7 @@ const ConfirmPassword = () => {
                     passwordIconHidden={localAssets.eyeoff}
                     style={styles.input}/>
 
-                  <Text style={[styles.passwordError,{color:confirmPasswordError === strings.strongPassword ? green :red }]}>{confirmPasswordError}</Text>
+                  <Text style={[styles.passwordError,{color:confirmPasswordError === strings.strongPassword ? Color.green :Color.red }]}>{confirmPasswordError}</Text>
                     <Text style={styles.passwordError}>{passwordFeedback}</Text>  {/* Show any additional feedback */}
                              
             </View>
@@ -53,12 +53,12 @@ const ConfirmPassword = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: black,
+        backgroundColor: Color.black,
     },
 
     title: {
         fontSize: Responsive.size22,
-        color: orangeButton,
+        color: Color.orangeButton,
         fontFamily: Fonts.semibold,
 
     },
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     reviewText: {
         marginTop: Responsive.size10,
         fontSize: Responsive.size18,
-        color: white,
+        color: Color.white,
         fontFamily: Fonts.regular,
         lineHeight: Responsive.size22,
     },
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     passwordError:{
         fontSize: Responsive.size12,
         fontFamily: Fonts.regular,
-        color:red,
+        color:Color.red,
         lineHeight: Responsive.size18
     }
 

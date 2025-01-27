@@ -1,5 +1,5 @@
 import { FlatList, StyleSheet, Text, View } from "react-native";
-import { black, borderLineSeedphrase, listBordercolor, orangeButton, white } from "@values/color";
+import { Color} from "@values/color";
 import { Responsive } from '@utils/Responsive';
 import { strings } from "@strings/i18n";
 import { Fonts } from '@values/fonts';
@@ -48,12 +48,12 @@ const SeedPhraseView = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: black,
+        backgroundColor: Color.black,
     },
 
     title: {
         fontSize: Responsive.size22,
-        color: orangeButton,
+        color: Color.orangeButton,
         fontFamily: Fonts.semibold,
 
     },
@@ -64,39 +64,39 @@ const styles = StyleSheet.create({
     reviewText: {
         marginTop: Responsive.size10,
         fontSize: Responsive.size18,
-        color: white,
+        color: Color.white,
         fontFamily: Fonts.regular,
         lineHeight: Responsive.size22,
     },
 
     orangeText: {
         fontSize: Responsive.size18,
-        color: orangeButton,
+        color: Color.orangeButton,
         fontFamily: Fonts.semibold,
     },
     flatListContainer: {
        
         marginTop: Responsive.size20,
-        backgroundColor: black,
+        backgroundColor: Color.black,
         borderRadius: Responsive.size10,
         borderWidth: Responsive.size2,
-        borderColor: listBordercolor,
+        borderColor: Color.listBordercolor,
     },
     itemContainer: {
         flex: 1,
         margin: Responsive.size12,
         width: '30%', 
         height: Responsive.size45, 
-        backgroundColor: black,
+        backgroundColor: Color.black,
         borderRadius: Responsive.size12,
         alignItems: 'center',
         justifyContent: 'center',
-        borderColor: borderLineSeedphrase,
+        borderColor: Color.borderLineSeedphrase,
         borderWidth: Responsive.size1,
 
     },
     itemText: {
-        color: white,
+        color: Color.white,
         fontSize: Responsive.size14,
         fontFamily: Fonts.semibold,
         textAlign: 'center',

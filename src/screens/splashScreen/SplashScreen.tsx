@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import { resetNavigation } from '@routes/Navigator';
-import { HOME_SCREEN, LOGIN, WALLETBALANCE } from '@routes/RouteType';
-import { black, orangeButton } from '@values/color';
+import { RouteType} from '@routes/RouteType';
+import { Color } from '@values/color';
 import { Responsive } from '@utils/Responsive';
 import { Fonts } from '@values/fonts';
 import { localAssets } from '@assets/assets';
@@ -17,7 +17,7 @@ const SplashScreen = () => {
   };
 
   useEffect(() => {  
-      startTimer(WALLETBALANCE)
+      startTimer(RouteType.WALLETBALANCE)
   }, []);
 
   return (
@@ -30,7 +30,7 @@ const SplashScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: black,
+    backgroundColor: Color.black,
     justifyContent:'center',
     alignItems:'center'
   },
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
 topText: {
     fontSize: Responsive.size22,
     fontFamily:Fonts.bold,
-    color: orangeButton,
+    color: Color.orangeButton,
     marginTop: Responsive.size22,
 },
 });

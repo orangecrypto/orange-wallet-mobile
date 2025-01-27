@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import { goBack, push, resetNavigation } from "@routes/Navigator";
 import { strings } from "@strings/i18n";
-import { orangeButton, white } from "@values/color";
+import { Color} from "@values/color";
 import { styles } from "./styles";
 import CommonButton from "@components/CommonButton";
 import { Responsive } from "@utils/Responsive";
-import { ASSETDETAILS, HOME_SCREEN } from "@routes/RouteType";
+import { RouteType } from "@routes/RouteType";
 import Switch from "@components/Switch";
 
 const ResetWallet = () => {
@@ -36,9 +36,9 @@ const ResetWallet = () => {
             <View style={styles.buttonContainer}>
                 <CommonButton
                     title={strings.RESETWALLET}
-                    onPress={() => resetNavigation(HOME_SCREEN)}
-                    backgroundColor={orangeButton}
-                    textColor={white}
+                    onPress={() => resetNavigation(RouteType.HOME_SCREEN)}
+                    backgroundColor={Color.orangeButton}
+                    textColor={Color.white}
                     disabled={!isSwitchEnabled}
                     width={'100%'}
                     height={Responsive.size50} />

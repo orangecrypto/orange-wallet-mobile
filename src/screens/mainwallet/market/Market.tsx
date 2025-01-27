@@ -1,143 +1,148 @@
-import { localAssets } from '@assets/assets';
 import { strings } from '@strings/i18n';
 import { Responsive } from '@utils/Responsive';
-import { black, gray, orangeButton, orangeOpacityBg, white } from "@values/color";
-import { Fonts } from '@values/fonts';
-import { Dimensions, Image, StyleSheet, Text, View } from "react-native";
-import { LineChart } from 'react-native-chart-kit';
+import React, { useState } from 'react';
+import { Dimensions, FlatList, Text, TouchableOpacity, View } from 'react-native';
+import GraphSliderItem from './GraphSliderItem';
+import RenderAssets from './RenderAssets';
+import { styles } from './styles';
+import useMarketData from './GetMarketData';
 
 const Market = () => {
-  const screenWidth = Dimensions.get('window').width;
+
+  const id = '1'; 
+  const convert = 'USD'; 
+
+  const { data, error, loading } = useMarketData({ id, convert });
+  console.log('API call', data)
+  console.log('ERROR', error)
+  console.log('loading', loading)
+
+  const [currentStep, setCurrentStep] = useState(1);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [selectedGraphData, setSelectedGraphData] = useState([
+    { value: 400, label: '9am' },
+    { value: 420, label: '10am' },
+    { value: 410, label: '11am' },
+    { value: 430, label: '12pm' },
+    { value: 450, label: '1pm' },
+    { value: 440, label: '2pm' },
+    { value: 470, label: '3pm' },
+    { value: 460, label: '4pm' },
+    { value: 490, label: '5pm' },
+    { value: 480, label: '6pm' },
+    { value: 500, label: '7pm' },
+    { value: 530, label: '8pm' },
+    { value: 520, label: '9pm' },
+    { value: 550, label: '10pm' },
+    { value: 540, label: '11pm' }
+  ]);
+  const [selectedCategory, setSelectedCategory] = useState("All");
+
+  const categories = ["All", "BRC20", "Runes", "Stacks"];
+
+  const cryptoArray = [
+    { id: 1, category: "BTC", name: "Bitcoin", quantity: "2.9841", value: "$140,298.12" },
+    { id: 2, category: "BRC20", name: "Wrapped BTC", quantity: ".932", value: "$26,452.07" },
+    { id: 3, category: "Stacks", name: "Stacks", quantity: "10", value: "$100.00" },
+    { id: 4, category: "Runes", name: "Stacks", quantity: "10", value: "$100.00" },
+  ];
+
+  const xAxisLabels = ['9am', '10am', '11am', '12pm', '1pm', '2pm', '3pm', '4pm', '5pm'];
+  const screenWidth = Dimensions.get('window').width - 10;
+  const graphDataList = [
+    {
+      id: Math.random(),
+      name: 'Market Cap',
+      value: '$132,143,546',
+      data: selectedGraphData
+      ,
+      xAxisLabels,
+    },
+    {
+      id: Math.random(),
+      name: 'Trading Volume',
+      value: '$22,109,654,314',
+      data: selectedGraphData,
+      xAxisLabels,
+    },
+  ];
+
+  const progressPercentage = (currentStep / graphDataList.length) * 100;
+
+  const handleScroll = (event) => {
+    const screenWidth = Dimensions.get("window").width;
+    const currentIndex = Math.round(event.nativeEvent.contentOffset.x / screenWidth);
+    setCurrentStep(currentIndex + 1);
+  };
+
+  const filteredCryptoArray = selectedCategory === "All"
+    ? cryptoArray
+    : cryptoArray.filter((item) => item.category === selectedCategory);
+
+  const handleItemClick = (item) => {
+    setSelectedItem(item);
+    const generatedGraphData = Array.from({ length: 15 }, (_, index) => ({
+      value: Math.floor(Math.random() * 200) + 400,
+      label: `${9 + index > 12 ? (9 + index - 12) : 9 + index}${index >= 3 ? 'pm' : 'am'}`,
+    }));
+    setSelectedGraphData(generatedGraphData)
+  };
+
+  const renderCategory = (category) => (
+    <TouchableOpacity
+      key={category}
+      onPress={() => setSelectedCategory(category)}
+      style={[
+        styles.categoryButton,
+        selectedCategory === category && styles.selectedCategory]}>
+      <Text
+        style={[
+          styles.categoryText,
+          selectedCategory === category && styles.selectedCategoryText]}>
+        {category}
+      </Text>
+    </TouchableOpacity>
+  );
 
   return (
     <View style={styles.container}>
-      <View style={styles.graphContainer}>
-        <View style={styles.infoSection}>
-          <Text style={styles.title}>{strings.marketCap}</Text>
-          <View style={styles.infoBadge}>
-            <Text style={styles.infoText}>{strings.info}</Text>
+      <FlatList
+        data={graphDataList}
+        keyExtractor={(item, index) => `${item.id}-${index}`}
+        horizontal
+        pagingEnabled
+        onScroll={handleScroll}
+        renderItem={({ item }) => (
+          <View style={{ width: screenWidth }}>
+            <GraphSliderItem data={item} />
+          </View>
+        )}
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.flatList}
+      />
+      <View style={styles.progressBarContainer}>
+        <View style={[styles.progressBar, { width: `${progressPercentage}%` }]} />
+      </View>
+
+      <View style={styles.contentArea}>
+        <View style={styles.categoryContainer}>
+          {categories.map((category) => renderCategory(category))}
+        </View>
+        <View style={styles.headerTitleContainer}>
+          <Text style={styles.headerTitle}>{strings.name}</Text>
+          <View style={styles.headerPriceContainer}>
+            <Text style={styles.headerTitle}>{strings.price}</Text>
+            <Text style={[styles.headerTitle, { marginLeft: Responsive.size10 }]}>{strings.onehr}</Text>
           </View>
         </View>
-
-        <View style={styles.chartWrapper}>
-          <LineChart
-            data={{
-              labels: ['9am', '10am', '11am', '12pm', '1pm', '2pm', '3pm'],
-              datasets: [
-                {
-                  data: [450, 470, 460, 480, 520, 510, 530],
-                },
-              ],
-            }}
-            width={screenWidth - 60}
-            height={Responsive.size150}
-            withInnerLines={false}
-            withDots={false}
-            
-            
-            chartConfig={{
-              decimalPlaces: 0,
-              color: (opacity = 1) => `rgba(244, 81, 30, ${opacity})`,
-              labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-              strokeWidth: 3,
-              propsForBackgroundLines: {
-                strokeWidth: 0,
-              },
-              propsForLabels: {
-                fontSize: Responsive.size10,
-              },
-              formatYLabel: () => '', // Completely hide Y-axis labels
-              propsForHorizontalLabels: {
-                display: 'none', // Ensure no vertical labels are displayed
-              },
-              yLabelsOffset: -50,
-            }}
-            bezier
-            style={styles.chart} />
-
-          {/* Balance Section (Overlay) */}
-          <View style={styles.overlayBalanceSection}>
-            <Text style={styles.balanceText}>$524,478,026,925</Text>
-            <View style={styles.changeSection}>
-              <Image
-                source={localAssets.downarrow} // Replace with your icon path
-                style={styles.icon}
-              />
-              <Text style={styles.changeText}>2.43%</Text>
-            </View>
-          </View>
-        </View>
+        <FlatList
+          data={filteredCryptoArray}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => <RenderAssets item={item} selectedItem={selectedItem} handleItemClick={handleItemClick} />}
+          contentContainerStyle={styles.listContainer} />
       </View>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: black,
-    alignItems: 'center',
-  },
-  graphContainer: {
-    borderWidth: Responsive.size2,
-    borderColor: gray,
-    borderRadius: Responsive.size10,
-    padding: Responsive.size12,
-    width: Dimensions.get('window').width - 40,
-  },
-  infoSection: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  title: {
-    color: orangeButton,
-    fontSize: Responsive.size16,
-    fontFamily: Fonts.bold,
-  },
-  infoBadge: {
-    backgroundColor: orangeOpacityBg,
-    paddingHorizontal: Responsive.size8,
-    paddingVertical: Responsive.size2,
-    borderRadius: Responsive.size8,
-  },
-  infoText: {
-    color: white,
-    fontSize: Responsive.size10,
-  },
-  chartWrapper: {
-    position: 'relative',
-  },
-  overlayBalanceSection: {
-    position: 'absolute',
-    top: Responsive.size20,
-    left: Responsive.size16,
-    zIndex: 1,
-  },
-  balanceText: {
-    color: white,
-    fontSize: Responsive.size18,
-    fontFamily: Fonts.semibold,
-  },
-  changeSection: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: Responsive.size4,
-  },
-  icon: {
-    width: Responsive.size16,
-    height: Responsive.size16,
-    marginRight: Responsive.size4,
-    resizeMode: 'contain',
-  },
-  changeText: {
-    color: white,
-    fontSize: Responsive.size14,
-  },
-  chart: {
-    marginTop: Responsive.size16,
-    borderRadius: Responsive.size16,
-  },
-});
 
 export default Market;

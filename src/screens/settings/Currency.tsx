@@ -3,7 +3,7 @@ import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import { goBack } from "@routes/Navigator";
 import { strings } from "@strings/i18n";
 import { styles } from "./styles";
-import { orangeButton, white } from "@values/color";
+import { Color } from "@values/color";
 
 const Currency = () => {
     const [currencyArray, setCurrencyArray] = useState([
@@ -31,7 +31,7 @@ const Currency = () => {
             <Text
                 style={[
                     styles.text,
-                    { color: item.isSelected ? orangeButton : white }, 
+                    { color: item.isSelected ? Color.orangeButton : Color.white }, 
                 ]}
             >
                 {item.name}

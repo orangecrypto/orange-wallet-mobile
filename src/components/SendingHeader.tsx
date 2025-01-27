@@ -1,5 +1,5 @@
 import { Responsive } from '@utils/Responsive';
-import { viewbutton } from '@values/color';
+import { Color } from '@values/color';
 import { Fonts } from '@values/fonts';
 import React from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
         fontSize: Responsive.size12,
         color: 'white',
         borderRadius: Responsive.size8,
-        backgroundColor: viewbutton,
+        backgroundColor: Color.viewbutton,
         paddingHorizontal: Responsive.size4,
         marginLeft: Responsive.size8,
     },

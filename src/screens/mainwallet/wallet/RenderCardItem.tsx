@@ -1,9 +1,9 @@
 import { localAssets } from '@assets/assets';
 import { push } from '@routes/Navigator';
-import { ADDCOIN, BUY, SEND, VIEWQR, WARNING } from '@routes/RouteType';
+import { RouteType} from '@routes/RouteType';
 import { strings } from '@strings/i18n';
 import { Responsive } from '@utils/Responsive';
-import { white, viewbutton } from '@values/color';
+import { Color } from '@values/color';
 import { Fonts } from '@values/fonts';
 import { ImageBackground, Image, Text, TouchableOpacity, StyleSheet, View, Dimensions } from "react-native";
 
@@ -27,27 +27,27 @@ const RenderCardItem = ({ item, selectedItem }) => {
 
             {selectedItem ? selectedItem.name === 'Bitcoin' ? 
             <View style={styles.horizontalActions}>
-                <TouchableOpacity style={styles.actionButtonBg} onPress={ () => push(SEND)}>
+                <TouchableOpacity style={styles.actionButtonBg} onPress={ () => push(RouteType.SEND)}>
                         <Image source={localAssets.send} style={styles.actionButtonIcon}/>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.actionButtonBg} onPress={()=>push(VIEWQR)}>
+                <TouchableOpacity style={styles.actionButtonBg} onPress={()=>push(RouteType.VIEWQR)}>
                         <Image source={localAssets.receive} style={styles.actionButtonIcon}/>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.actionButtonBg} onPress={ () => push(BUY)}>
+                <TouchableOpacity style={styles.actionButtonBg} onPress={ () => push(RouteType.BUY)}>
                         <Image source={localAssets.buy} style={styles.actionButtonIcon}/>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.actionButtonBg} onPress={ () => push(WARNING)}> 
+                <TouchableOpacity style={styles.actionButtonBg} onPress={ () => push(RouteType.WARNING)}> 
                         <Image source={localAssets.sell} style={styles.actionButtonIcon}/>
                 </TouchableOpacity>
 
             </View>
             : 
-            <TouchableOpacity style={styles.addCoinView} onPress={() => { push(ADDCOIN)}}>
+            <TouchableOpacity style={styles.addCoinView} onPress={() => { push(RouteType.ADDCOIN)}}>
                 <Image style={styles.addCoinIcon} source={localAssets.addcoin} />
                 <Text style={styles.addCoinText}>{strings.addCoin}</Text>
             </TouchableOpacity>
             :
-             <TouchableOpacity style={styles.addCoinView} onPress={() => { push(ADDCOIN)}}>
+             <TouchableOpacity style={styles.addCoinView} onPress={() => { push(RouteType.ADDCOIN)}}>
              <Image style={styles.addCoinIcon} source={localAssets.addcoin} />
              <Text style={styles.addCoinText}>{strings.addCoin}</Text>
          </TouchableOpacity>}
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
     
     walletText: {
         fontSize: Responsive.size22,
-        color: white,
+        color: Color.white,
         fontFamily: Fonts.semibold,
     },
 
@@ -77,11 +77,11 @@ const styles = StyleSheet.create({
     },
 
     walletTextCurrencyView: {
-        backgroundColor: viewbutton,
+        backgroundColor: Color.viewbutton,
         borderRadius: Responsive.size20,
         fontFamily: Fonts.regular,
         fontSize: Responsive.size9,
-        color: white,
+        color: Color.white,
         padding: Responsive.size4,
         marginLeft: Responsive.size10,
     },
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
     },
 
     addCoinView: {
-        backgroundColor: viewbutton,
+        backgroundColor: Color.viewbutton,
         borderRadius: Responsive.size20,
         alignContent: 'center',
         alignItems:'center',
@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
     addCoinText: {
         fontFamily: Fonts.light,
         fontSize: Responsive.size14,
-        color: white,
+        color: Color.white,
         marginLeft: Responsive.size5,
     },
 
@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
         height: Responsive.size48,
         width: Responsive.size48,
         borderRadius: Responsive.size24,
-        backgroundColor: viewbutton,
+        backgroundColor: Color.viewbutton,
         alignItems:'center',
         justifyContent:'center'
     },

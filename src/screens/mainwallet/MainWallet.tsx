@@ -1,7 +1,7 @@
 import { localAssets } from '@assets/assets';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Responsive } from '@utils/Responsive';
-import { black, gray, grey, orangeButton, white } from '@values/color';
+import { Color } from '@values/color';
 import React from 'react';
 import { Image, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import Assistant from './assistant/Assistant';
@@ -9,7 +9,7 @@ import Market from './market/Market';
 import Nft from './nft/Nft';
 import Wallet from './wallet/Wallet';
 import { push } from '@routes/Navigator';
-import { ADDADDRESS, QR, RECEIVE, SETTINGS } from '@routes/RouteType';
+import { RouteType } from '@routes/RouteType';
 
 const MainWallet = () => {
     const Tab = createBottomTabNavigator();
@@ -20,15 +20,15 @@ const MainWallet = () => {
 
     const handleAddAddress = () => {
         console.log('Add Address');
-        push(ADDADDRESS)
+        push(RouteType.ADDADDRESS)
     };
 
     const handleQrPress = () => {
-        push(RECEIVE)
+        push(RouteType.RECEIVE)
     };
 
     const handleSettingsPress = () => {
-        push(SETTINGS)
+        push(RouteType.SETTINGS)
     };
 
     return (
@@ -56,10 +56,10 @@ const MainWallet = () => {
             <Tab.Navigator
                 screenOptions={({ route }) => ({
                     tabBarStyle: {
-                        backgroundColor: black,
+                        backgroundColor: Color.black,
                         borderRadius: Responsive.size10,
                         borderWidth: Responsive.size1,
-                        borderColor: gray,
+                        borderColor:Color.gray,
                         height: Responsive.size62,
                         justifyContent: 'center',
                         alignItems: 'center',
@@ -92,12 +92,12 @@ const MainWallet = () => {
                                 style={[
                                     styles.icon,
                                     focused && styles.iconFocused,
-                                    { tintColor: focused ? orangeButton : '#2D3242' },
+                                    { tintColor: focused ? Color.orangeButton : '#2D3242' },
                                 ]}
                             />
                         );
                     },
-                    tabBarActiveTintColor: orangeButton,
+                    tabBarActiveTintColor: Color.orangeButton,
                     tabBarInactiveTintColor: 'gray',
                     tabBarShowLabel: false,
                     headerShown: false,
@@ -121,7 +121,7 @@ const MainWallet = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: black,
+        backgroundColor: Color.black,
     },
     icon: {
         width: Responsive.size24,
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
         marginTop: Responsive.size16,
         marginBottom: Responsive.size24,
         borderWidth: Responsive.size1,
-        borderColor: grey,
+        borderColor: Color.grey,
         paddingHorizontal: Responsive.size16,
         paddingVertical: Responsive.size16,
         borderRadius: Responsive.size10,
@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
     },
     headerText: {
         fontSize: Responsive.size20,
-        color: white
+        color: Color.white
     },
     headerClickableText: {  
         padding:Responsive.size2
