@@ -24,6 +24,7 @@ const useGraphData = (options: GraphDataOptions = {}) => {
   return useQuery({
     queryKey: ['graphData', currency, id, count , interval],
     queryFn: () => fetchGraphData({ currency , id, count , interval}),
+    retry: false,
     });
 
  

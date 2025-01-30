@@ -56,5 +56,6 @@ export enum Color {
     copytint = '#6C779D',
     progressBackground = '#A8B9F426',
     graphfill = '#4E120099',
+    successgreen='#42BF23'
   }
   

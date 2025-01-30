@@ -3,9 +3,19 @@ import { Color} from "@values/color";
 import { Responsive } from '@utils/Responsive';
 import { strings } from "@strings/i18n";
 import { Fonts } from '@values/fonts';
+import { useEffect } from "react";
+
+import  {generateMnemonic}  from '@orangecryptohq/orangeseed'
 
 const SeedPhraseView = () => {
 
+
+
+    useEffect(() =>{
+            // const seedPhrase= generateMnemonic()
+            // console.log(seedPhrase)
+       
+    })
 
     const data = [
         { id: '1', word: 'rocket' },

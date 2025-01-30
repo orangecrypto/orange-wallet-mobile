@@ -19,6 +19,7 @@ const useMarketData = (options: MarketDataOptions = {}) => {
   return useQuery({
     queryKey: ['marketData', currency],
     queryFn: () => fetchMarketData({ currency }),
+    retry: false,
     });
 
  
