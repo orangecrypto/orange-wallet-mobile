@@ -1,44 +1,67 @@
-import React, { useState } from 'react';
-import { FlatList, StyleSheet, TextInput, View, Text } from 'react-native';
-import { Color } from "@values/color";
-import { Responsive } from '@utils/Responsive';
 import { strings } from "@strings/i18n";
-import { Fonts } from '@values/fonts';
+import { Color } from "@values/color";
+import React, { useEffect, useState } from 'react';
+import { FlatList, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { styles } from './styles';
+import { useSelector } from "react-redux";
+import { seedPhraseReducerType, setDisabled, setIsSeedPhraseVerified } from "./SeedPhraseReducer";
+import { useAppDispatch } from "../../redux/store";
+import { Dispatch } from "@reduxjs/toolkit";
+import { Responsive } from "@utils/Responsive";
 
 const SeedPhraseVerification = () => {
-    // Initialize the data state
-    const [data, setData] = useState([
-        { id: '1', word: 'rocket' },
-        { id: '2', word: 'asset' },
-        { id: '3', word: 'glimpse' },
-        { id: '4', word: 'harvest' },
-        { id: '5', word: 'warfare' },
-        { id: '6', word: 'swallow' },
-        { id: '7', word: 'code' },
-        { id: '8', word: 'exclude' },
-        { id: '9', word: 'episode' },
-        { id: '10', word: 'proof' },
-        { id: '11', word: 'emerge' },
-        { id: '12', word: 'motion' },
-    ]);
 
-    // Function to handle text change
+    const { words } = useSelector((state: { seedPhraseReducer: seedPhraseReducerType }) => state.seedPhraseReducer);
+    const dispatch: Dispatch = useAppDispatch();
+
+    const [data, setData] = useState(
+        new Array(12).fill(null).map((_, index) => ({ id: index.toString(), word: '' }))
+    );
+    const [isPasted, setIsPasted] = useState(false);
+
+    const handlePaste = () => {
+        const splitWords = words.split(' ');
+        const newData = data.map((item, index) => ({
+            ...item,
+            word: splitWords[index] || ''
+        }));
+        setData(newData);
+        setIsPasted(true);
+    };
+
+    useEffect (()=>{
+        dispatch(setDisabled(true))
+        const allFilled = data.every(item => item.word.trim() !== '');
+        dispatch(setDisabled(!allFilled))
+        const myWords = words.split(" ");
+        const isMatched = data.length === myWords.length &&
+        data.every(item => myWords.includes(item.word)) &&
+        myWords.every(word => data.some(item => item.word === word));
+        
+        dispatch(setIsSeedPhraseVerified(isMatched))
+       
+    },[data])
+
     const handleTextChange = (text, id) => {
-        const newData = data.map(item => 
+        const newData = data.map(item =>
             item.id === id ? { ...item, word: text } : item
         );
         setData(newData);
     };
 
-    // Render each item
+    const clear = () => {
+            setData( new Array(12).fill(null).map((_, index) => ({ id: index.toString(), word: '' })))
+            setIsPasted(false)
+            dispatch(setIsSeedPhraseVerified(false));
+    };
+
     const renderItem = ({ item }) => (
         <View style={styles.itemContainer}>
             <TextInput
                 style={styles.itemInput}
                 value={item.word}
                 onChangeText={(text) => handleTextChange(text, item.id)}
-                placeholderTextColor={Color.seedPhrasePlaceholder}
-            />
+                placeholderTextColor={Color.seedPhrasePlaceholder} />
         </View>
     );
 
@@ -53,62 +76,33 @@ const SeedPhraseVerification = () => {
                     renderItem={renderItem}
                     keyExtractor={(item) => item.id}
                     numColumns={3}
-                    contentContainerStyle={styles.flatListContainer}
-                />
+                    contentContainerStyle={styles.flatListContainer} />
+
+
+                <View style={[styles.buttonContainer, {
+                    alignSelf: 'center',
+                    justifyContent: isPasted ? 'space-between' : 'center'
+                }]}>
+                    {isPasted && <TouchableOpacity style={[styles.copyButton, { marginBottom: Responsive.size60 }]} onPress={clear}>
+                        <Text style={styles.copyText}>{strings.clear}</Text>
+                    </TouchableOpacity>}
+                    <TouchableOpacity
+                        disabled={isPasted}
+                        style={[
+                            styles.copyButton,
+                            {
+                                marginBottom: Responsive.size60,
+                                borderWidth: Responsive.size0,
+                                backgroundColor: isPasted ? Color.pastegreen : Color.orangeOpacityBg
+                            },
+
+                        ]}
+                        onPress={handlePaste}>
+                        <Text style={[styles.copyText, { color: isPasted ? Color.successgreen : Color.orangeButton }]}>{isPasted ? strings.pasted : strings.paste}</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         </View>
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: Color.black,
-    },
-    title: {
-        fontSize: Responsive.size22,
-        color: Color.orangeButton,
-        fontFamily:Fonts.semibold,
-    },
-    contentContainer: {
-        flex: 1,
-        justifyContent: 'flex-start',
-    },
-    reviewText: {
-        marginTop: Responsive.size10,
-        fontSize: Responsive.size18,
-        color: Color.white,
-        fontFamily:Fonts.regular,
-        lineHeight: Responsive.size24,
-    },
-    flatListContainer: {
-       
-        marginTop: Responsive.size20,
-        backgroundColor: Color.black,
-        borderRadius: Responsive.size10,
-        borderWidth: Responsive.size2,
-        borderColor: Color.listBordercolor,
-    },
-    itemContainer: {
-        flex: 1,
-        margin: Responsive.size12,
-        width: '30%', 
-        height: Responsive.size45, 
-        backgroundColor: Color.black,
-        borderRadius: Responsive.size12,
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderColor: Color.borderLineSeedphrase,
-        borderWidth: Responsive.size1,
-        
-    },
-    itemInput: {
-        color: Color.white,
-        fontSize: Responsive.size16,
-        fontFamily:Fonts.semibold,
-        textAlign: 'center',
-        width: '100%',
-    },
-});
-
 export default SeedPhraseVerification;

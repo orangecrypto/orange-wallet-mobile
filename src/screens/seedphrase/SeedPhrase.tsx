@@ -16,7 +16,6 @@ import {
     KeyboardAvoidingView,
     Platform,
     ScrollView,
-    StyleSheet,
     Text,
     TouchableOpacity,
     View
@@ -24,6 +23,9 @@ import {
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "../../redux/store";
 import { clearSeedPhraseReducer, seedPhraseReducerType, setConfirmPasswordError, setPasswordError } from "./SeedPhraseReducer";
+import { styles } from "./styles";
+import Toast from "react-native-toast-message";
+import  { SeedVault}  from "@orangecryptohq/orangeseed";
 
 const SeedPhrase = ({ route }) => {
     const steps = [
@@ -32,44 +34,67 @@ const SeedPhrase = ({ route }) => {
         { id: 3, component: EnterPassword },
         { id: 4, component: ConfirmPassword },
     ];
-    
-    const { password, confirmPassword } = useSelector((state: { seedPhraseReducer: seedPhraseReducerType }) => state.seedPhraseReducer);
-    const [currentStepIndex, setCurrentStepIndex] = useState(route?.params?.backupLatter ? 2 : 0); 
+
+    const { password, confirmPassword, words , isSeedPhraseVerified, disabled} = useSelector((state: { seedPhraseReducer: seedPhraseReducerType }) => state.seedPhraseReducer);
+    const [currentStepIndex, setCurrentStepIndex] = useState(route?.params?.backupLatter ? 2 : 0);
     const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
     const dispatch: Dispatch = useAppDispatch();
-    
+
     const validatePassword = (password, step) => {
         const { strengthMessage } = validatePasswordStrength(password);
-        if ([strings.weakPassword, strings.moderatePassword].includes(strengthMessage)) {
-            const errorAction = step === 2 ? setPasswordError : setConfirmPasswordError; 
+        if (password === '') {
+            Toast.show({
+                type: 'error',
+                text1: strings.enterPassword,
+            });
+            return false;
+        }
+        else if ([strings.weakPassword, strings.moderatePassword].includes(strengthMessage)) {
+            const errorAction = step === 2 ? setPasswordError : setConfirmPasswordError;
             dispatch(errorAction(strings.useStrongPassword));
             return false;
         }
         return true;
     };
-    
+
     const handleNextStep = () => {
-        if (currentStepIndex === 2 && !validatePassword(password, currentStepIndex)) return; 
-        if (currentStepIndex === 3) { 
+        if (currentStepIndex === 0 && words == '') {
+            Toast.show({
+                type: 'error',
+                text1: strings.copySeedphrase,
+            });
+            return false
+        };
+        if (currentStepIndex === 1 && !isSeedPhraseVerified) {
+            Toast.show({
+                type: 'warning',
+                text1: strings.seedPhrasenotMatched,
+            });
+            return false
+        };
+        if (currentStepIndex === 2 && !validatePassword(password, currentStepIndex)) return;
+        if (currentStepIndex === 3) {
             if (!validatePassword(confirmPassword, currentStepIndex)) return;
             if (password === confirmPassword) {
-                push(RouteType.SUCCESS);
-                dispatch(clearSeedPhraseReducer());
+                const myvault=  SeedVault
+                console.log(myvault.toString())
+               // push(RouteType.SUCCESS);
+                //dispatch(clearSeedPhraseReducer());
             } else {
                 dispatch(setConfirmPasswordError(strings.passwordNotMatch));
             }
             return;
         }
-    
+
         if (currentStepIndex < steps.length - 1) {
             setCurrentStepIndex((prevIndex) => prevIndex + 1);
         }
     };
-    
+
     const handlePreviousStep = () => {
         setCurrentStepIndex((prevIndex) => (prevIndex > 0 ? prevIndex - 1 : goBack()));
     };
-    
+
     useEffect(() => {
         const handleKeyboardVisibility = (isVisible) => setIsKeyboardVisible(isVisible);
         const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => handleKeyboardVisibility(true));
@@ -79,13 +104,13 @@ const SeedPhrase = ({ route }) => {
             keyboardDidHideListener.remove();
         };
     }, []);
-    
+
     const CurrentStepComponent = steps[currentStepIndex]?.component;
-    
+
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
-            style={styles.container}>
+            style={styles.seePhrasecontainer}>
             <ScrollView
                 contentContainerStyle={{ flexGrow: 1 }}
                 keyboardShouldPersistTaps="handled"
@@ -116,77 +141,12 @@ const SeedPhrase = ({ route }) => {
                         textColor={Color.white}
                         borderColor={Color.orangeBorder}
                         width={"100%"}
+                        disabled={disabled}
                         height={Responsive.size50}
                     />
                 </View>
             )}
         </KeyboardAvoidingView>
     );
-    
 };
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: Color.black,
-        padding: Responsive.size18,
-    },
-    contentContainer: {
-        flex: 1,
-        justifyContent: "flex-start",
-    },
-    stepContainer: {
-        flexDirection: "row",
-        alignContent: "center",
-        backgroundColor: Color.backbackgroundbg,
-        width: "100%",
-        paddingHorizontal: Responsive.size16,
-        paddingVertical: Responsive.size12,
-        borderRadius: Responsive.size10,
-        justifyContent: "space-between",
-        marginVertical: Responsive.size18
-    },
-    stepText: {
-        fontSize: Responsive.size16,
-        color: Color.white,
-    },
-    progressBarContainer: {
-        height: Responsive.size8,
-        width: "20%",
-        backgroundColor: Color.black,
-        borderRadius: Responsive.size5,
-        overflow: "hidden",
-        alignSelf: "center",
-    },
-    progressBar: {
-        height: "100%",
-        backgroundColor: Color.orangeButton,
-    },
-    buttonContainer: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        width: "60%",
-        marginTop: Responsive.size20,
-    },
-    button: {
-        paddingVertical: Responsive.size5,
-        paddingHorizontal: Responsive.size10,
-        backgroundColor: Color.orangeButton,
-        borderRadius: Responsive.size5,
-        marginBottom: Responsive.size10,
-    },
-    buttonText: {
-        color: Color.white,
-        fontSize: Responsive.size16,
-    },
-    disabledButton: {
-        backgroundColor: Color.grey,
-    },
-    buttonContainerConitnue: {
-        justifyContent: "flex-end",
-        alignItems: "center",
-        marginBottom: Responsive.size20,
-    },
-});
-
 export default SeedPhrase;

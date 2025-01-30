@@ -7,6 +7,15 @@ import { persistor, store } from './src/redux/store';
 import { QueryClient, QueryClientProvider, QueryCache, MutationCache } from '@tanstack/react-query';
 import Toast from 'react-native-toast-message';
 import toastConfig from './src/components/ToastConfig'
+
+import "node-libs-react-native/globals"; // Loads necessary polyfills
+
+global.Buffer = require("buffer").Buffer;
+global.process = require("process");
+
+if (typeof global.stream === "undefined") {
+  global.stream = require("readable-stream");
+}
 const App = () => {
 
 

@@ -1,11 +1,14 @@
-const {getDefaultConfig, mergeConfig} = require('@react-native/metro-config');
+const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config');
 
-/**
- * Metro configuration
- * https://reactnative.dev/docs/metro
- *
- * @type {import('metro-config').MetroConfig}
- */
-const config = {};
+const defaultConfig = getDefaultConfig(__dirname);
 
-module.exports = mergeConfig(getDefaultConfig(__dirname), config);
+const customConfig = {
+  resolver: {
+    extraNodeModules: {
+      ...require("node-libs-react-native"), // Polyfills for Node.js core modules
+      stream: require.resolve("readable-stream"), // Ensure `stream` resolves correctly
+    },
+  },
+};
+
+module.exports = mergeConfig(defaultConfig, customConfig);
