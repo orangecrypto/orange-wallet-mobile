@@ -4,7 +4,8 @@ import { strings } from "@strings/i18n";
 import React, { useState } from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import { styles } from "./styles";
-import Toast from "react-native-toast-message";
+
+import seedVault from "../../services/seedVault/seedVault";
 
 const Settings = () => {
     const [settingsArray, setSettingsArray] = useState([
@@ -32,6 +33,17 @@ const Settings = () => {
 
     const cmsRoutes = ["Terms of Service", "Privacy Policy", "Support"];
 
+    const lockWallet = async () => {
+        try {
+            await seedVault.getInstance().lockVault()
+         
+            
+            resetNavigation(RouteType.LOGIN)
+        }
+        catch (error) {
+            console.log('Lock Wallet', error)
+        }
+    }
 
     const renderItem = ({ item }) => (
         <TouchableOpacity
@@ -43,7 +55,7 @@ const Settings = () => {
                     push("Cms", { title: item.name, url: item.url });
                 }
                 else if (item.name === "Lock Wallet") {
-                    resetNavigation(RouteType.LOGIN)
+                    lockWallet()
                 }
                 else {
                     console.warn(`Route "${item.name}" is not available.`);

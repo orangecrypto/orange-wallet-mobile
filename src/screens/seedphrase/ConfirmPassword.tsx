@@ -7,19 +7,19 @@ import { Color } from "@values/color";
 import { Image, Text, View } from "react-native";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "../../redux/store";
-import { seedPhraseReducerType, setConfirmPassword, setConfirmPasswordError, setDisabled, setPasswordFeedback } from "./SeedPhraseReducer";
+import { seedPhraseReducerType, setConfirmPassword, setConfirmPasswordError, setConfirmPasswordFeedBack, setDisabled } from "./SeedPhraseReducer";
 import { styles } from "./styles";
 import { useEffect } from "react";
 
 const ConfirmPassword = () => {
-    const { confirmPassword, confirmPasswordError, passwordFeedback } = useSelector((state: { seedPhraseReducer: seedPhraseReducerType }) => state.seedPhraseReducer)
+    const { confirmPassword, confirmPasswordError, confirmPasswordFeedback } = useSelector((state: { seedPhraseReducer: seedPhraseReducerType }) => state.seedPhraseReducer)
     const dispatch: Dispatch = useAppDispatch()
     const handlePasswordChange = (inputPassword: any) => {
-        dispatch(setPasswordFeedback(''))
+        dispatch(setConfirmPasswordFeedBack(''))
         dispatch(setConfirmPasswordError(''))
         const { strengthMessage, feedback } = validatePasswordStrength(inputPassword);
         dispatch(setConfirmPasswordError(strengthMessage))
-        dispatch(setPasswordFeedback(feedback))
+        dispatch(setConfirmPasswordFeedBack(feedback))
         if (strengthMessage === strings.strongPassword) {
             dispatch(setDisabled(false))
         } else {
@@ -51,7 +51,7 @@ const ConfirmPassword = () => {
                     style={styles.input} />
 
                 <Text style={[styles.passwordError, { color: confirmPasswordError === strings.strongPassword ? Color.green : Color.red }]}>{confirmPasswordError}</Text>
-                <Text style={styles.passwordError}>{passwordFeedback}</Text>  {/* Show any additional feedback */}
+                <Text style={styles.passwordError}>{confirmPasswordFeedback}</Text>  
 
             </View>
         </View>

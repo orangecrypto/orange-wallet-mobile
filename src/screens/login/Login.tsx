@@ -11,10 +11,11 @@ import { Color } from "@values/color";
 import { Fonts } from '@values/fonts';
 import { useEffect, useState } from "react";
 import { Image, Keyboard, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
+import Toast from "react-native-toast-message";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "../../redux/store";
-import { clearLoginReducer, loginReducerType, setPassword, setPasswordError, setPasswordFeedback } from "./LoginReducer";
-
+import { loginReducerType, setPassword, setPasswordError, setPasswordFeedback } from "./LoginReducer";
+import seedVault from "../../services/seedVault/seedVault";
 const Login = () => {
     const { password, passwordError, passwordFeedback } = useSelector((state: { loginReducer: loginReducerType }) => state.loginReducer)
     const dispatch: Dispatch = useAppDispatch()
@@ -28,13 +29,30 @@ const Login = () => {
 
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         const { strengthMessage } = validatePasswordStrength(password);
         if (strengthMessage === strings.weakPassword || strengthMessage === strings.moderatePassword) {
             dispatch(setPasswordError(strings.useStrongPassword))
         } else {
-            dispatch(clearLoginReducer())
-            push(RouteType.WALLETBALANCE)
+
+            try {
+               
+                const passwordBytes = new TextEncoder().encode(password);
+
+              //  await seedVault.isVaultUnlocked(passwordBytes);
+              console.log("Seed isVaultUnlocked : ", await seedVault.isVaultUnlocked());
+                // dispatch(clearLoginReducer())
+                // push(RouteType.WALLETBALANCE)
+              
+
+            } catch (error) {
+                console.error("Error initializing SeedVault:", error.message);
+                Toast.show({
+                    type: 'error',
+                    text1: error.message,
+                });
+            }
+
         }
     };
 
@@ -72,11 +90,11 @@ const Login = () => {
                             keyboardType={'default'}
                             passwordIconVisible={localAssets.eye}
                             passwordIconHidden={localAssets.eyeoff}
-                            style={styles.input}/>
-                        <Text style={[styles.passwordError,{color:passwordError ===  strings.strongPassword ? Color.green :Color.red }]}>{passwordError}</Text>
-                        <Text style={styles.passwordError}>{passwordFeedback}</Text>  
-                        <TouchableOpacity onPress={()=>push(RouteType.FORGOTPASSWORD)}>
-                        <Text style={styles.forgotPassword}>{strings.forgotPassword}</Text>
+                            style={styles.input} />
+                        <Text style={[styles.passwordError, { color: passwordError === strings.strongPassword ? Color.green : Color.red }]}>{passwordError}</Text>
+                        <Text style={styles.passwordError}>{passwordFeedback}</Text>
+                        <TouchableOpacity onPress={() => push(RouteType.FORGOTPASSWORD)}>
+                            <Text style={styles.forgotPassword}>{strings.forgotPassword}</Text>
                         </TouchableOpacity>
                     </View>
                 </TouchableWithoutFeedback>
@@ -89,7 +107,7 @@ const Login = () => {
                         onPress={() => handleSubmit()}
                         backgroundColor={Color.orangeButton}
                         textColor={Color.white}
-                        disabled={passwordError === strings.strongPassword? false: true}
+                        disabled={passwordError === strings.strongPassword ? false : true}
                         width={'100%'}
                         height={Responsive.size50}
                     />
@@ -143,10 +161,10 @@ const styles = StyleSheet.create({
         textDecorationLine: 'underline',
         alignSelf: 'center'
     },
-    passwordError:{
+    passwordError: {
         fontSize: Responsive.size12,
         fontFamily: Fonts.regular,
-        color:Color.red,
+        color: Color.red,
         lineHeight: Responsive.size18
     }
 });

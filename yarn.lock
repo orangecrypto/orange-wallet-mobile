@@ -4712,6 +4712,11 @@ fast-levenshtein@^2.0.6:
   resolved "https://registry.npmjs.org/fast-levenshtein/-/fast-levenshtein-2.0.6.tgz"
   integrity sha512-DCXu6Ifhqcks7TZKY3Hxp3y6qphY5SJZmrWMDrKcERSOXWQdMhU9Ig/PYrzyw/ul9jOIyh0N4M0tbC5hodg8dw==
 
+fast-text-encoding@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.npmjs.org/fast-text-encoding/-/fast-text-encoding-1.0.6.tgz"
+  integrity sha512-VhXlQgj9ioXCqGstD37E/HBeqEGV/qOD/kmbVG8h5xKBYvM1L3lR1Zn4555cQ8GkYbJa8aJSipLPndE1k6zK2w==
+
 fast-xml-parser@^4.4.1:
   version "4.5.1"
   resolved "https://registry.npmjs.org/fast-xml-parser/-/fast-xml-parser-4.5.1.tgz"
@@ -7340,6 +7345,11 @@ react-is@^17.0.1:
   version "17.0.2"
   resolved "https://registry.npmjs.org/react-is/-/react-is-17.0.2.tgz"
   integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
+
+react-native-aes-crypto@^3.2.1:
+  version "3.2.1"
+  resolved "https://registry.npmjs.org/react-native-aes-crypto/-/react-native-aes-crypto-3.2.1.tgz"
+  integrity sha512-v7KDt1I2UqYwRJRFeJrB8zABQuUsawCyWLK+h5AF2aZqsrsIaR/+DaZrqCetR9QvYRI+oEVsrwBUv9xYXhfCBQ==
 
 react-native-crypto@^2.0.1, react-native-crypto@^2.2.0:
   version "2.2.0"

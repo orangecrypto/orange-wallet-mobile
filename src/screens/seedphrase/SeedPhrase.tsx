@@ -10,6 +10,8 @@ import { strings } from "@strings/i18n";
 import { Responsive } from '@utils/Responsive';
 import { validatePasswordStrength } from "@utils/Validations";
 import { Color } from "@values/color";
+import { decryptSeedPhrase } from "@orangecryptohq/orangeseed";
+import 'fast-text-encoding';
 import { useEffect, useState } from "react";
 import {
     Keyboard,
@@ -20,12 +22,14 @@ import {
     TouchableOpacity,
     View
 } from "react-native";
-import { useSelector } from "react-redux";
-import { useAppDispatch } from "../../redux/store";
-import { clearSeedPhraseReducer, seedPhraseReducerType, setConfirmPasswordError, setPasswordError } from "./SeedPhraseReducer";
-import { styles } from "./styles";
 import Toast from "react-native-toast-message";
-import  { SeedVault}  from "@orangecryptohq/orangeseed";
+import { useSelector } from "react-redux";
+import { setIsWalletCreated } from "../../redux/slice/appReducer";
+import { useAppDispatch } from "../../redux/store";
+
+import { clearSeedPhraseReducer, seedPhraseReducerType, setConfirmPasswordError, setPasswordError } from "./SeedPhraseReducer";
+import { styles } from './styles';
+import seedVault from "../../services/seedVault/seedVault";
 
 const SeedPhrase = ({ route }) => {
     const steps = [
@@ -35,7 +39,7 @@ const SeedPhrase = ({ route }) => {
         { id: 4, component: ConfirmPassword },
     ];
 
-    const { password, confirmPassword, words , isSeedPhraseVerified, disabled} = useSelector((state: { seedPhraseReducer: seedPhraseReducerType }) => state.seedPhraseReducer);
+    const { password, confirmPassword, words, isSeedPhraseVerified, disabled } = useSelector((state: { seedPhraseReducer: seedPhraseReducerType }) => state.seedPhraseReducer);
     const [currentStepIndex, setCurrentStepIndex] = useState(route?.params?.backupLatter ? 2 : 0);
     const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
     const dispatch: Dispatch = useAppDispatch();
@@ -57,7 +61,7 @@ const SeedPhrase = ({ route }) => {
         return true;
     };
 
-    const handleNextStep = () => {
+    const handleNextStep = async () => {
         if (currentStepIndex === 0 && words == '') {
             Toast.show({
                 type: 'error',
@@ -76,10 +80,25 @@ const SeedPhrase = ({ route }) => {
         if (currentStepIndex === 3) {
             if (!validatePassword(confirmPassword, currentStepIndex)) return;
             if (password === confirmPassword) {
-                const myvault=  SeedVault
-                console.log(myvault.toString())
-               // push(RouteType.SUCCESS);
-                //dispatch(clearSeedPhraseReducer());
+
+                try {
+                    const seedVaultService = seedVault.getInstance();
+                    const passwordBytes = new TextEncoder().encode(confirmPassword);
+                    await seedVaultService.init(passwordBytes);
+                    await seedVaultService.storeSeed(words);
+                    //await decryptSeedPhrase(words, confirmPassword)
+                    push(RouteType.WALLETBALANCE);
+                    dispatch(clearSeedPhraseReducer());
+                    dispatch(setIsWalletCreated(true))
+                    console.log("Seed successfully stored!");
+
+                } catch (error) {
+                    console.error("Error initializing SeedVault:", error.message);
+                    Toast.show({
+                        type: 'error',
+                        text1: error.message,
+                    });
+                }
             } else {
                 dispatch(setConfirmPasswordError(strings.passwordNotMatch));
             }

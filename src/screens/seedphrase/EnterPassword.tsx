@@ -27,7 +27,12 @@ const EnterPassword = () => {
         }
     };
     useEffect(()=>{
-        dispatch(setDisabled(true))
+        if(passwordError === strings.strongPassword){
+            dispatch(setDisabled(false))
+        }else {
+            dispatch(setDisabled(true))
+        }
+       
     },[])
   
     return (

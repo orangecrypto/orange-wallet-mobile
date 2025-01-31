@@ -5,6 +5,7 @@ export interface seedPhraseReducerType {
     passwordError: string
     confirmPassword: string
     confirmPasswordError: string
+    confirmPasswordFeedback: string
     passwordFeedback: string;
     words:string;
     isSeedPhraseVerified:boolean;
@@ -17,6 +18,7 @@ const initialState: seedPhraseReducerType = {
     passwordError: '',
     confirmPassword: '',
     confirmPasswordError: '',
+    confirmPasswordFeedback: '',
     passwordFeedback: '',
     words:'',
     isSeedPhraseVerified:false,
@@ -39,6 +41,9 @@ export const seedPhraseReducer = createSlice({
         setConfirmPasswordError: (state, action) => {
             state.confirmPasswordError = action.payload
         },
+        setConfirmPasswordFeedBack: (state, action) => {
+            state.confirmPasswordFeedback = action.payload
+        },
         setPasswordFeedback: (state, action) => {
             state.passwordFeedback = action.payload;
         },
@@ -58,6 +63,6 @@ export const seedPhraseReducer = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { setPassword, setPasswordError, setConfirmPassword, setConfirmPasswordError, setWords ,setPasswordFeedback ,clearSeedPhraseReducer, setDisabled, setIsSeedPhraseVerified } = seedPhraseReducer.actions;
+export const { setPassword, setPasswordError, setConfirmPassword, setConfirmPasswordError, setWords ,setPasswordFeedback ,clearSeedPhraseReducer, setDisabled, setIsSeedPhraseVerified , setConfirmPasswordFeedBack} = seedPhraseReducer.actions;
 
 export default seedPhraseReducer.reducer;
