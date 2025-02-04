@@ -4,12 +4,14 @@ import appReducer from './slice/appReducer';
 import formReducer from './slice/formreducer';
 import loginReducer  from '@screens/login/LoginReducer';
 import  seedPhraseReducer  from '@screens/seedphrase/SeedPhraseReducer';
+import  coinSettingsSlice  from '@screens/addcoin/CoinSettings';
 
 const reducer = combineReducers({
   appReducer,
   formReducer,
   loginReducer,
-  seedPhraseReducer
+  seedPhraseReducer,
+  coinSettingsSlice
 });
 
 const rootReducer = (state: any, action: any) => {

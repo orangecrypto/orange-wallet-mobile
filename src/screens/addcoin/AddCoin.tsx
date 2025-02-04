@@ -1,30 +1,25 @@
-import React, { useState } from "react";
-import { FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Switch from "@components/Switch";
 import { goBack } from "@routes/Navigator";
 import { strings } from "@strings/i18n";
 import { Responsive } from "@utils/Responsive";
 import { Color } from "@values/color";
 import { Fonts } from "@values/fonts";
+import React, { useState } from "react";
+import { FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Dispatch } from "@reduxjs/toolkit";
+import { useSelector } from "react-redux";
+import { useAppDispatch } from "../../redux/store";
+import { updateCoinStatus } from "./CoinSettings";
 
 const AddCoin = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const categories = ["All", "BRC20", "Runes", "Stacks"];
-  const [settingsArray, setSettingsArray] = useState([
-    { id: 1, category: "BTC", name: "Bitcoin", isEnable: false },
-    { id: 2, category: "BRC20", name: "Wrapped BTC", isEnable: false },
-    { id: 3, category: "Stacks", name: "Wrapped USDC", isEnable: false },
-    { id: 4, category: "Runes", name: "Wrapped USDC", isEnable: false },
-    { id: 5, category: "Runes", name: "Wrapped USDC", isEnable: false },
-  ]);
 
-  // Handle toggle for each switch
-  const toggleSwitch = (id) => {
-    const updatedArray = settingsArray.map((item) =>
-      item.id === id ? { ...item, isEnable: !item.isEnable } : item
-    );
-    setSettingsArray(updatedArray);
-    console.log(updatedArray);
+  const coinSettings = useSelector((state) => state.coinSettingsSlice.coinSettings);
+  const dispatch: Dispatch = useAppDispatch();
+ 
+  const toggleSwitch = (id, isEnable) => {
+    dispatch(updateCoinStatus({ id, isEnable }));
   };
 
   const renderItem = ({ item }) => (
@@ -34,7 +29,7 @@ const AddCoin = () => {
         isEnable={item.isEnable}
         height={30}
         width={60}
-        onToggle={() => toggleSwitch(item.id)}
+        onToggle={() => toggleSwitch(item.id, !item.isEnable)} 
       />
     </View>
   );
@@ -42,12 +37,11 @@ const AddCoin = () => {
   const renderCategory = (category) => (
     <TouchableOpacity
       key={category}
-      onPress={() => setSelectedCategory(category)} // Update the selected category
+      onPress={() => setSelectedCategory(category)} 
       style={[
         styles.categoryButton,
         selectedCategory === category && styles.selectedCategory,
-      ]}
-    >
+      ]}>
       <Text
         style={[
           styles.categoryText,
@@ -57,6 +51,11 @@ const AddCoin = () => {
         {category}
       </Text>
     </TouchableOpacity>
+  );
+
+  // Filter the coins based on the selected category
+  const filteredCoinSettings = coinSettings.filter((coin) => 
+    selectedCategory === "All" || coin.category === selectedCategory
   );
 
   return (
@@ -73,7 +72,7 @@ const AddCoin = () => {
         </View>
 
         <FlatList
-          data={settingsArray}
+          data={filteredCoinSettings}
           keyExtractor={(item) => item.id.toString()}
           renderItem={renderItem}
         />

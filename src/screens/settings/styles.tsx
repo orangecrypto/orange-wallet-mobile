@@ -8,6 +8,17 @@ export const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: Color.black,
     },
+    loaderContainer: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        justifyContent: 'center', // Center vertically
+        alignItems: 'center',      // Center horizontally
+        backgroundColor: 'transparent', // Ensure background is transparent
+        zIndex: 9999, // Make sure the loader is on top of other content
+    },
     contentContainer: {
         flex: 1,
         justifyContent: "flex-start",

@@ -10,37 +10,47 @@ export const styles = StyleSheet.create({
         justifyContent: 'flex-start',
       },
       Graphcontainer: {
-        flex: 1,
-        backgroundColor: Color.black,
-        paddingHorizontal: Responsive.size10
+       
+        marginHorizontal:10
       },
       infoSection: {
-        flexDirection: 'row',
-        alignItems: 'center',
+        position: 'absolute',
+        alignContent:'center',
+        alignItems:'center',
+        flexDirection:'row',
+        top: 0,
+        left: Responsive.size16,
+        zIndex: 1,
+
       },
       title: {
         color: Color.orangeButton,
-        fontSize: Responsive.size16,
-        fontFamily: Fonts.bold,
+        fontSize: Responsive.size18,
+        fontFamily: Fonts.regular,
       },
       infoBadge: {
         backgroundColor: Color.orangeOpacityBg,
         paddingHorizontal: Responsive.size8,
         paddingVertical: Responsive.size2,
         borderRadius: Responsive.size8,
+        marginLeft: Responsive.size8
       },
       infoText: {
         color: Color.white,
         fontSize: Responsive.size10,
+        fontFamily: Fonts.semibold,
+        
       },
       chartWrapper: {
         position: 'relative',
         alignItems: 'center',
         justifyContent: 'center',
+      
+       
       },
       xAxisLabelsWrapper: {
         position: 'absolute',
-        bottom: Responsive.size25, // Position the X-axis labels at the bottom of the chart
+        bottom:Responsive.size30,
         flexDirection: 'row',
         width: '90%',
         justifyContent: 'space-between',
@@ -52,7 +62,7 @@ export const styles = StyleSheet.create({
       },
       overlayBalanceSection: {
         position: 'absolute',
-        top: Responsive.size20,
+        top: Responsive.size24,
         left: Responsive.size16,
         zIndex: 1,
       },
@@ -89,7 +99,8 @@ export const styles = StyleSheet.create({
         fontFamily: Fonts.semibold
     },
     listContainer: {
-        paddingBottom: Responsive.size16,
+        paddingBottom: Responsive.size100,
+       
        
     },
     categoryButton: {
@@ -140,7 +151,7 @@ export const styles = StyleSheet.create({
     headerPriceContainer:{
         flexDirection: "row",
         alignSelf:'flex-end',
-        width: '35%',
+        width: '40%',
         justifyContent:'space-between'
     },
     listItem: {
@@ -156,7 +167,8 @@ export const styles = StyleSheet.create({
 
     assetContainer:{
         flexDirection:'row',
-        alignContent:'center'
+        alignContent:'center',
+        width:'60%'
     },
     assetDetails: {
         flexDirection: "column",
@@ -166,21 +178,25 @@ export const styles = StyleSheet.create({
     assetName: {
         color: Color.white,
         fontSize: Responsive.size16,
-        fontFamily: Fonts.regular
+        fontFamily: Fonts.regular,
+        width:Responsive.size120,
+        
     },
     flatList: {
         marginTop: Responsive.size10,
-        alignContent:'center'
+       
     },
     assetCategory: {
         color: Color.grayText,
         fontSize: Responsive.size14,
         fontFamily: Fonts.regular,
-        marginTop: Platform.OS ==='ios' ? Responsive.size4:0
+        marginTop: Platform.OS ==='ios' ? Responsive.size4:0,
+        width:Responsive.size120,
     },
     assetValues: {
-        flexDirection: 'row',
-        alignItems: "flex-end",
+      flexDirection: "row",
+      width: '40%',
+      justifyContent:'space-between'
     },
     assetQuantity: {
         color: Color.white,
@@ -205,12 +221,12 @@ export const styles = StyleSheet.create({
     },
     progressBarContainer: {
         height: Responsive.size5,
-        width: "30%",
+        width: "20%",
         backgroundColor: Color.grey,
         borderRadius: Responsive.size5,
         overflow: "hidden",
         alignSelf: "center",
-        marginTop: Responsive.size20,
+      
     },
     progressBar: {
         height: "100%",

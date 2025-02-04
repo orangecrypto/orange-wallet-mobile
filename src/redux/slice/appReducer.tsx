@@ -2,10 +2,12 @@ import { createSlice } from '@reduxjs/toolkit';
 
 export interface appReducerType {
    deviceId: string,
+   coinSettings: []
 }
 
 const initialState: appReducerType = {
     deviceId: '',
+    coinSettings:[],
 };
 
 export const appReducer = createSlice({
