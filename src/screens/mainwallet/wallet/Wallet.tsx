@@ -1,14 +1,11 @@
+import { strings } from '@strings/i18n';
 import { Responsive } from '@utils/Responsive';
 import { Color } from "@values/color";
 import { Fonts } from '@values/fonts';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import RenderCardItem from './RenderCardItem';
 import RenderTransactions from './RenderTransactions';
-import { strings } from '@strings/i18n';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
-import seedVault from '../../../services/seedVault/seedVault';
 
 
 const Wallet = () => {
@@ -16,29 +13,12 @@ const Wallet = () => {
     const [selectedItem, setSelectedItem] = useState(null);
     const [selectedCategory, setSelectedCategory] = useState("All"); 
 
-
-    const getData = async() =>{
-        console.log('AsyncStorage Keys', await AsyncStorage.getItem('encryptedKey'))
-        console.log('AsyncStorage Keys', await AsyncStorage.getItem('passwordHash'))
-        console.log('AsyncStorage Keys', await AsyncStorage.getItem('passwordSalt'))
-  const seedVaultService = seedVault.getInstance();
-
-  
-        console.log('GetSeed',await  seedVaultService.getSeed())
-    }
-
-    useEffect(()=>{
-        getData()
-    })
-    
-
     const categories = ["All", "BRC20", "Runes", "Stacks"];
 
     const cryptoArray = [
         { id: 1, category: "BTC", name: "Bitcoin", quantity: "2.9841", value: "$140,298.12" },
         { id: 2, category: "BRC20", name: "Wrapped BTC", quantity: ".932", value: "$26,452.07" },
         { id: 3, category: "Stacks", name: "Stacks", quantity: "10", value: "$100.00" },
-        { id: 4, category: "Runes", name: "Stacks", quantity: "10", value: "$100.00" },
     ];
 
     const totalSteps = cryptoArray.length;

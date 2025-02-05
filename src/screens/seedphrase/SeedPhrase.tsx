@@ -11,11 +11,11 @@ import { validatePasswordStrength } from "@utils/Validations";
 import { Color } from "@values/color";
 import 'fast-text-encoding';
 import { useEffect, useState } from "react";
-import {Keyboard,KeyboardAvoidingView,Platform,ScrollView,Text,TouchableOpacity,View} from "react-native";
+import { Keyboard, KeyboardAvoidingView, Platform, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "../../redux/store";
-import { clearSeedPhraseReducer, seedPhraseReducerType, setConfirmPasswordError, setPasswordError } from "./SeedPhraseReducer";
+import { clearSeedPhraseReducer, seedPhraseReducerType, setConfirmPasswordError, setIsRestoreWallet, setPasswordError } from "./SeedPhraseReducer";
 import { styles } from './styles';
 import { createWallet, validateCurrentStep } from "./SeedPhraseUtils";
 import { setAccount, setIsWalletCreated, setWallet } from "../../redux/slice/appReducer";
@@ -23,8 +23,8 @@ import { RouteType } from "@routes/RouteType";
 import seedVault from "../../services/seedVault/seedVault";
 import { str2buf } from "@orangecryptohq/orangeseed";
 const SeedPhrase = ({ route }) => {
- const seeValutInstance = seedVault.getInstance()
-    const { getSeed, changePassword }= seeValutInstance
+    const seeValutInstance = seedVault.getInstance()
+    const { getSeed, changePassword } = seeValutInstance
     const steps = [
         { id: 1, component: SeedPhraseView },
         { id: 2, component: SeedPhraseVerification },
@@ -32,11 +32,13 @@ const SeedPhrase = ({ route }) => {
         { id: 4, component: ConfirmPassword },
     ];
 
-    const { password, confirmPassword,  isSeedPhraseVerified, disabled } = useSelector((state: { seedPhraseReducer: seedPhraseReducerType }) => state.seedPhraseReducer);
-    const [currentStepIndex, setCurrentStepIndex] = useState(route?.params?.backupLatter ? 2 : 0); 
+    const { password, confirmPassword, isSeedPhraseVerified, disabled } = useSelector((state: { seedPhraseReducer: seedPhraseReducerType }) => state.seedPhraseReducer);
+    const [currentStepIndex, setCurrentStepIndex] = useState(
+        route?.params?.backupLatter ? 2 : route?.params?.restoreWallet ? 1 : 0
+    );
     const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
     const dispatch: Dispatch = useAppDispatch();
-
+    dispatch(setIsRestoreWallet(route?.params?.restoreWallet || false))
     const validatePassword = (password, step) => {
         const { strengthMessage } = validatePasswordStrength(password);
         if (password === '') {
@@ -55,12 +57,13 @@ const SeedPhrase = ({ route }) => {
     };
 
     const handleNextStep = async () => {
-
-        const words= await getSeed()
-        if (!validateCurrentStep(currentStepIndex, words, isSeedPhraseVerified, password, confirmPassword, dispatch, strings, validatePassword)) {
+        console.log('handleNextStep ', currentStepIndex)
+       
+       if (!validateCurrentStep(currentStepIndex,  isSeedPhraseVerified, password, confirmPassword, dispatch, strings, validatePassword)) {
             return;
-        }    
+        }
         if (currentStepIndex === 3) {
+            const words = await getSeed()
             console.log("words", words);
             const { account, wallet } = await createWallet(words);
             const encoder = new TextEncoder();
@@ -76,16 +79,20 @@ const SeedPhrase = ({ route }) => {
             setCurrentStepIndex((prevIndex) => prevIndex + 1);
         }
     };
-    
+
     const handlePreviousStep = () => {
         if (route?.params?.backupLatter && currentStepIndex === 2) {
+            goBack();
+        } else if (route?.params?.restoreWallet && currentStepIndex === 1) {
             goBack();
         } else {
             setCurrentStepIndex((prevIndex) => (prevIndex > 0 ? prevIndex - 1 : goBack()));
         }
     };
-    
+
     useEffect(() => {
+
+        
         const handleKeyboardVisibility = (isVisible) => setIsKeyboardVisible(isVisible);
         const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => handleKeyboardVisibility(true));
         const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => handleKeyboardVisibility(false));
@@ -114,17 +121,24 @@ const SeedPhrase = ({ route }) => {
                         </TouchableOpacity>
                     </View>
                     <View style={styles.stepContainer}>
-                        <Text style={styles.stepText}>Step {route?.params?.backupLatter ?
-                            currentStepIndex - 1 : currentStepIndex + 1}</Text>
+                        <Text style={styles.stepText}>
+                            Step {route?.params?.backupLatter
+                                ? currentStepIndex - 1
+                                : route?.params?.restoreWallet
+                                    ? currentStepIndex
+                                    : currentStepIndex + 1}
+                        </Text>
                         <View style={styles.progressBarContainer}>
-
                             <View style={[styles.progressBar, {
                                 width: `${(route?.params?.backupLatter
                                     ? (currentStepIndex - 1) / 2
-                                    : (currentStepIndex + 1) / steps.length) * 100}%`
+                                    : route?.params?.restoreWallet
+                                        ? currentStepIndex / 3 // Adjusting progress for 3 steps in restoreWallet
+                                        : (currentStepIndex + 1) / steps.length) * 100}%`
                             }]} />
                         </View>
                     </View>
+
                     {CurrentStepComponent && <CurrentStepComponent />}
                 </View>
             </ScrollView>

@@ -3,11 +3,9 @@ import {newWallet,walletFromSeedPhrase
 import Toast from "react-native-toast-message";
 import { setConfirmPasswordError } from "./SeedPhraseReducer";
 
-export const validateCurrentStep = (currentStepIndex, words, isSeedPhraseVerified, password, confirmPassword, dispatch, strings, validatePassword) => {
-    if (currentStepIndex === 0 && !words) {
-        Toast.show({ type: 'error', text1: strings.copySeedphrase });
-        return false;
-    }
+
+export const validateCurrentStep = (currentStepIndex, isSeedPhraseVerified, password, confirmPassword, dispatch, strings, validatePassword) => {
+
     if (currentStepIndex === 1 && !isSeedPhraseVerified) {
         Toast.show({ type: 'warning', text1: strings.seedPhrasenotMatched });
         return false;
@@ -25,9 +23,8 @@ export const validateCurrentStep = (currentStepIndex, words, isSeedPhraseVerifie
 export const createWallet = async (words) => {
     try {
         
-       const wallet = words ? await walletFromSeedPhrase({ mnemonic: words, index: 0n, network: 'Mainnet' })
+        const wallet = words ? await walletFromSeedPhrase({ mnemonic: words, index: 0n, network: 'Mainnet' })
                              : await newWallet();
-
         const account = {
             id: 0,
             btcAddress: wallet.btcAddress,

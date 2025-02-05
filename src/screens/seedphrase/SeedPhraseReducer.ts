@@ -10,7 +10,8 @@ export interface seedPhraseReducerType {
     words:string;
     isSeedPhraseVerified:boolean;
     disabled : boolean,
-    wordsArray: []
+    wordsArray: [],
+    isRestoreWallet: boolean
     
 }
 
@@ -24,7 +25,8 @@ const initialState: seedPhraseReducerType = {
     words:'',
     isSeedPhraseVerified:false,
     disabled : true,
-    wordsArray: []
+    wordsArray: [],
+    isRestoreWallet: false
 };
 
 export const seedPhraseReducer = createSlice({
@@ -59,6 +61,9 @@ export const seedPhraseReducer = createSlice({
         setDisabled: (state, action) => {
             state.disabled = action.payload;
         },
+        setIsRestoreWallet: (state, action) => {
+            state.isRestoreWallet = action.payload;
+        },
         setIsSeedPhraseVerified: (state, action) => {
             state.isSeedPhraseVerified = action.payload;
         },
@@ -68,6 +73,6 @@ export const seedPhraseReducer = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { setPassword, setPasswordError, setWordsArray, setConfirmPassword, setConfirmPasswordError, setWords ,setPasswordFeedback ,clearSeedPhraseReducer, setDisabled, setIsSeedPhraseVerified , setConfirmPasswordFeedBack} = seedPhraseReducer.actions;
+export const { setPassword, setPasswordError, setWordsArray,setIsRestoreWallet, setConfirmPassword, setConfirmPasswordError, setWords ,setPasswordFeedback ,clearSeedPhraseReducer, setDisabled, setIsSeedPhraseVerified , setConfirmPasswordFeedBack} = seedPhraseReducer.actions;
 
 export default seedPhraseReducer.reducer;
