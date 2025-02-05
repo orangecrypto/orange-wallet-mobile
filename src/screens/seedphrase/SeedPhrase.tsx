@@ -1,7 +1,6 @@
 import CommonButton from "@components/CommonButton";
 import { Dispatch } from "@reduxjs/toolkit";
-import { goBack, push } from "@routes/Navigator";
-import { RouteType } from "@routes/RouteType";
+import { goBack, resetNavigation } from "@routes/Navigator";
 import ConfirmPassword from "@screens/seedphrase/ConfirmPassword";
 import EnterPassword from "@screens/seedphrase/EnterPassword";
 import SeedPhraseVerification from "@screens/seedphrase/SeedPhraseVerification";
@@ -10,28 +9,22 @@ import { strings } from "@strings/i18n";
 import { Responsive } from '@utils/Responsive';
 import { validatePasswordStrength } from "@utils/Validations";
 import { Color } from "@values/color";
-import { decryptSeedPhrase } from "@orangecryptohq/orangeseed";
 import 'fast-text-encoding';
 import { useEffect, useState } from "react";
-import {
-    Keyboard,
-    KeyboardAvoidingView,
-    Platform,
-    ScrollView,
-    Text,
-    TouchableOpacity,
-    View
-} from "react-native";
+import {Keyboard,KeyboardAvoidingView,Platform,ScrollView,Text,TouchableOpacity,View} from "react-native";
 import Toast from "react-native-toast-message";
 import { useSelector } from "react-redux";
-import { setIsWalletCreated } from "../../redux/slice/appReducer";
 import { useAppDispatch } from "../../redux/store";
-
 import { clearSeedPhraseReducer, seedPhraseReducerType, setConfirmPasswordError, setPasswordError } from "./SeedPhraseReducer";
 import { styles } from './styles';
+import { createWallet, validateCurrentStep } from "./SeedPhraseUtils";
+import { setAccount, setIsWalletCreated, setWallet } from "../../redux/slice/appReducer";
+import { RouteType } from "@routes/RouteType";
 import seedVault from "../../services/seedVault/seedVault";
-
+import { str2buf } from "@orangecryptohq/orangeseed";
 const SeedPhrase = ({ route }) => {
+ const seeValutInstance = seedVault.getInstance()
+    const { getSeed, changePassword }= seeValutInstance
     const steps = [
         { id: 1, component: SeedPhraseView },
         { id: 2, component: SeedPhraseVerification },
@@ -39,8 +32,8 @@ const SeedPhrase = ({ route }) => {
         { id: 4, component: ConfirmPassword },
     ];
 
-    const { password, confirmPassword, words, isSeedPhraseVerified, disabled } = useSelector((state: { seedPhraseReducer: seedPhraseReducerType }) => state.seedPhraseReducer);
-    const [currentStepIndex, setCurrentStepIndex] = useState(route?.params?.backupLatter ? 2 : 0);
+    const { password, confirmPassword,  isSeedPhraseVerified, disabled } = useSelector((state: { seedPhraseReducer: seedPhraseReducerType }) => state.seedPhraseReducer);
+    const [currentStepIndex, setCurrentStepIndex] = useState(route?.params?.backupLatter ? 2 : 0); 
     const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
     const dispatch: Dispatch = useAppDispatch();
 
@@ -62,58 +55,36 @@ const SeedPhrase = ({ route }) => {
     };
 
     const handleNextStep = async () => {
-        if (currentStepIndex === 0 && words == '') {
-            Toast.show({
-                type: 'error',
-                text1: strings.copySeedphrase,
-            });
-            return false
-        };
-        if (currentStepIndex === 1 && !isSeedPhraseVerified) {
-            Toast.show({
-                type: 'warning',
-                text1: strings.seedPhrasenotMatched,
-            });
-            return false
-        };
-        if (currentStepIndex === 2 && !validatePassword(password, currentStepIndex)) return;
+
+        const words= await getSeed()
+        if (!validateCurrentStep(currentStepIndex, words, isSeedPhraseVerified, password, confirmPassword, dispatch, strings, validatePassword)) {
+            return;
+        }    
         if (currentStepIndex === 3) {
-            if (!validatePassword(confirmPassword, currentStepIndex)) return;
-            if (password === confirmPassword) {
-
-                try {
-                    const seedVaultService = seedVault.getInstance();
-                    const passwordBytes = new TextEncoder().encode(confirmPassword);
-                    await seedVaultService.init(passwordBytes);
-                    await seedVaultService.storeSeed(words);
-                    //await decryptSeedPhrase(words, confirmPassword)
-                    push(RouteType.WALLETBALANCE);
-                    dispatch(clearSeedPhraseReducer());
-                    dispatch(setIsWalletCreated(true))
-                    console.log("Seed successfully stored!");
-
-                } catch (error) {
-                    console.error("Error initializing SeedVault:", error.message);
-                    Toast.show({
-                        type: 'error',
-                        text1: error.message,
-                    });
-                }
-            } else {
-                dispatch(setConfirmPasswordError(strings.passwordNotMatch));
-            }
+            console.log("words", words);
+            const { account, wallet } = await createWallet(words);
+            const encoder = new TextEncoder();
+            await changePassword(str2buf(''), encoder.encode(confirmPassword))
+            dispatch(setAccount(account));
+            dispatch(setWallet(wallet));
+            dispatch(clearSeedPhraseReducer());
+            dispatch(setIsWalletCreated(true));
+            resetNavigation(RouteType.WALLETBALANCE);
             return;
         }
-
         if (currentStepIndex < steps.length - 1) {
             setCurrentStepIndex((prevIndex) => prevIndex + 1);
         }
     };
-
+    
     const handlePreviousStep = () => {
-        setCurrentStepIndex((prevIndex) => (prevIndex > 0 ? prevIndex - 1 : goBack()));
+        if (route?.params?.backupLatter && currentStepIndex === 2) {
+            goBack();
+        } else {
+            setCurrentStepIndex((prevIndex) => (prevIndex > 0 ? prevIndex - 1 : goBack()));
+        }
     };
-
+    
     useEffect(() => {
         const handleKeyboardVisibility = (isVisible) => setIsKeyboardVisible(isVisible);
         const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => handleKeyboardVisibility(true));
@@ -137,15 +108,21 @@ const SeedPhrase = ({ route }) => {
                 <View style={styles.contentContainer}>
                     <View style={styles.buttonContainer}>
                         <TouchableOpacity
-                            style={[styles.button, currentStepIndex === 0 && styles.disabledButton]}
+                            style={[styles.button, currentStepIndex >= 0 && styles.disabledButton]}
                             onPress={handlePreviousStep}>
                             <Text style={styles.buttonText}>{strings.back}</Text>
                         </TouchableOpacity>
                     </View>
                     <View style={styles.stepContainer}>
-                        <Text style={styles.stepText}>Step {currentStepIndex + 1}</Text>
+                        <Text style={styles.stepText}>Step {route?.params?.backupLatter ?
+                            currentStepIndex - 1 : currentStepIndex + 1}</Text>
                         <View style={styles.progressBarContainer}>
-                            <View style={[styles.progressBar, { width: `${((currentStepIndex + 1) / steps.length) * 100}%` }]} />
+
+                            <View style={[styles.progressBar, {
+                                width: `${(route?.params?.backupLatter
+                                    ? (currentStepIndex - 1) / 2
+                                    : (currentStepIndex + 1) / steps.length) * 100}%`
+                            }]} />
                         </View>
                     </View>
                     {CurrentStepComponent && <CurrentStepComponent />}

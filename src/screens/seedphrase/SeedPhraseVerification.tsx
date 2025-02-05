@@ -1,25 +1,25 @@
+import { Dispatch } from "@reduxjs/toolkit";
 import { strings } from "@strings/i18n";
+import { Responsive } from "@utils/Responsive";
 import { Color } from "@values/color";
 import React, { useEffect, useState } from 'react';
 import { FlatList, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { styles } from './styles';
-import { useSelector } from "react-redux";
-import { seedPhraseReducerType, setDisabled, setIsSeedPhraseVerified } from "./SeedPhraseReducer";
 import { useAppDispatch } from "../../redux/store";
-import { Dispatch } from "@reduxjs/toolkit";
-import { Responsive } from "@utils/Responsive";
-
+import seedVault from "../../services/seedVault/seedVault";
+import { setDisabled, setIsSeedPhraseVerified } from "./SeedPhraseReducer";
+import { styles } from './styles';
+import Clipboard from "@react-native-clipboard/clipboard";
 const SeedPhraseVerification = () => {
-
-    const { words } = useSelector((state: { seedPhraseReducer: seedPhraseReducerType }) => state.seedPhraseReducer);
     const dispatch: Dispatch = useAppDispatch();
-
     const [data, setData] = useState(
         new Array(12).fill(null).map((_, index) => ({ id: index.toString(), word: '' }))
     );
     const [isPasted, setIsPasted] = useState(false);
+    const seeValutInstance = seedVault.getInstance()
+       const { getSeed } = seeValutInstance
 
-    const handlePaste = () => {
+    const handlePaste = async () => {
+        const words = await Clipboard.getString()
         const splitWords = words.split(' ');
         const newData = data.map((item, index) => ({
             ...item,
@@ -29,18 +29,20 @@ const SeedPhraseVerification = () => {
         setIsPasted(true);
     };
 
-    useEffect (()=>{
-        dispatch(setDisabled(true))
-        const allFilled = data.every(item => item.word.trim() !== '');
-        dispatch(setDisabled(!allFilled))
-        const myWords = words.split(" ");
-        const isMatched = data.length === myWords.length &&
-        data.every(item => myWords.includes(item.word)) &&
-        myWords.every(word => data.some(item => item.word === word));
-        
-        dispatch(setIsSeedPhraseVerified(isMatched))
-       
-    },[data])
+    useEffect(() => {
+        const fetchSeed = async () => {
+            dispatch(setDisabled(true))
+            const allFilled = data.every(item => item.word.trim() !== '');
+            dispatch(setDisabled(!allFilled))
+            const words = await getSeed()
+            const myWords = words.split(' ');
+            const isMatched = data.length === myWords.length &&
+                data.every(item => myWords.includes(item.word)) &&
+                myWords.every(word => data.some(item => item.word === word));
+            dispatch(setIsSeedPhraseVerified(isMatched))
+        }
+        fetchSeed()
+    }, [data])
 
     const handleTextChange = (text, id) => {
         const newData = data.map(item =>
@@ -50,9 +52,9 @@ const SeedPhraseVerification = () => {
     };
 
     const clear = () => {
-            setData( new Array(12).fill(null).map((_, index) => ({ id: index.toString(), word: '' })))
-            setIsPasted(false)
-            dispatch(setIsSeedPhraseVerified(false));
+        setData(new Array(12).fill(null).map((_, index) => ({ id: index.toString(), word: '' })))
+        setIsPasted(false)
+        dispatch(setIsSeedPhraseVerified(false));
     };
 
     const renderItem = ({ item }) => (

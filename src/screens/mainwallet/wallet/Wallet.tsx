@@ -1,17 +1,36 @@
 import { Responsive } from '@utils/Responsive';
 import { Color } from "@values/color";
 import { Fonts } from '@values/fonts';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import RenderCardItem from './RenderCardItem';
 import RenderTransactions from './RenderTransactions';
 import { strings } from '@strings/i18n';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import seedVault from '../../../services/seedVault/seedVault';
 
 
 const Wallet = () => {
     const [currentStep, setCurrentStep] = useState(1);
     const [selectedItem, setSelectedItem] = useState(null);
     const [selectedCategory, setSelectedCategory] = useState("All"); 
+
+
+    const getData = async() =>{
+        console.log('AsyncStorage Keys', await AsyncStorage.getItem('encryptedKey'))
+        console.log('AsyncStorage Keys', await AsyncStorage.getItem('passwordHash'))
+        console.log('AsyncStorage Keys', await AsyncStorage.getItem('passwordSalt'))
+  const seedVaultService = seedVault.getInstance();
+
+  
+        console.log('GetSeed',await  seedVaultService.getSeed())
+    }
+
+    useEffect(()=>{
+        getData()
+    })
+    
 
     const categories = ["All", "BRC20", "Runes", "Stacks"];
 

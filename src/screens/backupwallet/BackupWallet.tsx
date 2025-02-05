@@ -2,13 +2,46 @@ import { localAssets } from "@assets/assets";
 import CommonButton from "@components/CommonButton";
 import { push } from "@routes/Navigator";
 import { RouteType } from "@routes/RouteType";
+
+import { generateMnemonic, str2buf } from "@orangecryptohq/orangeseed";
 import { strings } from "@strings/i18n";
 import { Responsive } from '@utils/Responsive';
 import { Color } from "@values/color";
 import { Fonts } from '@values/fonts';
+import { useCallback, useEffect } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
-
+import seedVault from "../../services/seedVault/seedVault";
 const BackupWallet = () => {
+
+    const seeValutInstance = seedVault.getInstance()
+    const {init: initSeedVault, storeSeed , hasSeed, unlockVault, clearVaultStorage }= seeValutInstance
+
+   
+    const generateAndStoreSeedPhrase =  useCallback( async () =>{
+        let newSeePhrase : string | null = generateMnemonic()
+        await initSeedVault(str2buf(''))
+        await storeSeed(newSeePhrase)
+        newSeePhrase = null
+        
+    },[initSeedVault, storeSeed])
+
+    useEffect(() => {
+        const initialize = async ()=>{
+            const hasseed = await hasSeed()
+            if(!hasseed){
+                await generateAndStoreSeedPhrase()
+                return
+            }
+            await unlockVault(str2buf(''))
+            await clearVaultStorage()
+            await generateAndStoreSeedPhrase()
+            return
+        }
+        initialize()
+
+    }, [clearVaultStorage, generateAndStoreSeedPhrase, hasSeed, initSeedVault]);
+    
+    
     return (
         <View style={styles.container}>
             <View style={styles.contentContainer}>
@@ -22,7 +55,7 @@ const BackupWallet = () => {
             <View style={styles.buttonContainer}>
             <CommonButton
                     title={strings.backupLater}
-                    onPress={() => push(RouteType.SEEDPHRASE,{backupLatter : true})}
+                    onPress={() => {push(RouteType.SEEDPHRASE,{backupLatter : true})}}
                     backgroundColor={Color.black}
                     textColor={Color.white}
                     borderColor={Color.blackBorder}

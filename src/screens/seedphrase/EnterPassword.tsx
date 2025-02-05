@@ -12,7 +12,7 @@ import { styles } from "./styles";
 import { useEffect } from "react";
 
 const EnterPassword = () => {
-    const { password, passwordError, passwordFeedback } = useSelector((state: { seedPhraseReducer: seedPhraseReducerType }) => state.seedPhraseReducer)
+    const { password, passwordError, passwordFeedback, words } = useSelector((state: { seedPhraseReducer: seedPhraseReducerType }) => state.seedPhraseReducer)
     const dispatch: Dispatch = useAppDispatch()
 
     const handlePasswordChange = (inputPassword) => {

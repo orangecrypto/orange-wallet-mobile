@@ -1,39 +1,44 @@
-import { strings } from "@strings/i18n";
-import { useEffect, useState } from "react";
-import { FlatList, Text, TouchableOpacity, View} from "react-native";
-import { generateMnemonic } from '@orangecryptohq/orangeseed';
-import { styles } from "./styles";
-import { Color } from "@values/color";
-import { Responsive } from "@utils/Responsive";
-import { Dispatch } from "@reduxjs/toolkit";
-import { useSelector } from "react-redux";
-import { useAppDispatch } from "../../redux/store";
-import { seedPhraseReducerType, setDisabled, setWords } from "./SeedPhraseReducer";
 import Clipboard from '@react-native-clipboard/clipboard';
+import { Dispatch } from "@reduxjs/toolkit";
+import { strings } from "@strings/i18n";
+import { Responsive } from "@utils/Responsive";
+import { Color } from "@values/color";
+import { useEffect, useState } from "react";
+import { FlatList, Text, TouchableOpacity, View } from "react-native";
+import { useAppDispatch } from "../../redux/store";
+import seedVault from "../../services/seedVault/seedVault";
+import { setDisabled, setWords } from "./SeedPhraseReducer";
+import { styles } from "./styles";
 
+const SeedPhraseView =  () => {
 
-const SeedPhraseView = () => {
-    const { words , disabled} = useSelector((state: { seedPhraseReducer: seedPhraseReducerType }) => state.seedPhraseReducer)
     const dispatch: Dispatch = useAppDispatch()
+    const seeValutInstance = seedVault.getInstance()
+    const { getSeed } = seeValutInstance
     const [seedPhrase, setSeedPhrase] = useState([]);
     const [showOverlay, setShowOverlay] = useState(true);
     const [isCopied, setIsCopied] = useState(false);
 
-    useEffect(() => {
-        const seed = generateMnemonic();
-        console.log('Generated Seed Phrase:', seed);
-        const wordsArray = seed.split(' ').map((word, index) => ({
-            id: (index + 1).toString(),
-            word,
-        }));
-        setSeedPhrase(wordsArray);
-    }, []);
-
+        useEffect(() => {
+            const fetchSeed = async () => {
+                try {
+                    const strings = await getSeed(); 
+                    const words = strings.split(" ").map((word, index) => ({ id: index + 1, word }));
+                    setSeedPhrase(words)
+                } catch (error) {
+                    console.error("Error fetching seed:", error);
+                }
+                console.log(await getSeed())
+            };
+    
+            fetchSeed();
+        }, []);
+    
     const handleOverlayClose = () => {
         setShowOverlay(false); // hide overlay when button is clicked
     };
     const handleCopy = () => {
-        const phrase = seedPhrase.map(item => item.word).join(' '); 
+        const phrase = seedPhrase.map(item => item.word).join(' ');
         Clipboard.setString(phrase);
         dispatch(setWords(phrase))
         setIsCopied(true)
@@ -52,12 +57,12 @@ const SeedPhraseView = () => {
                 <Text style={styles.title}>{strings.speedPhrase}</Text>
                 <Text style={styles.reviewText}>{strings.speedPhraseVerificationDes} </Text>
                 <View style={{ flex: 1 }}>
-                <FlatList
-                    data={seedPhrase}
-                    renderItem={renderItem}
-                    keyExtractor={(item) => item.id}
-                    numColumns={3}
-                    contentContainerStyle={[styles.flatListContainer, { borderWidth: Responsive.size1, borderColor: Color.seedPhraseItemBorder, opacity: showOverlay ? 0.2: 1}]} />
+                    <FlatList
+                        data={seedPhrase}
+                        renderItem={renderItem}
+                        keyExtractor={(item) => item.id}
+                        numColumns={3}
+                        contentContainerStyle={[styles.flatListContainer, { borderWidth: Responsive.size1, borderColor: Color.seedPhraseItemBorder, opacity: showOverlay ? 0.2 : 1 }]} />
                 </View>
 
                 {showOverlay && (
@@ -67,7 +72,7 @@ const SeedPhraseView = () => {
                         </TouchableOpacity>
                     </View>
                 )}
-                {!showOverlay &&<TouchableOpacity style={[styles.copyButton, {marginBottom:Responsive.size60}]} onPress={handleCopy} disabled={isCopied}>
+                {!showOverlay && <TouchableOpacity style={[styles.copyButton, { marginBottom: Responsive.size60 }]} onPress={handleCopy} disabled={isCopied}>
                     <Text style={styles.copyText}>{isCopied ? strings.copied : strings.copy}</Text>
                 </TouchableOpacity>}
             </View>

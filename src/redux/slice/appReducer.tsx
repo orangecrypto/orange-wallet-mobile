@@ -3,13 +3,17 @@ import { createSlice } from '@reduxjs/toolkit';
 export interface appReducerType {
    deviceId: string,
    coinSettings: [],
-   isWalletCreated: boolean
+   isWalletCreated: boolean,
+   account:{},
+   wallet:{}
 }
 
 const initialState: appReducerType = {
     deviceId: '',
     coinSettings:[],
-    isWalletCreated:false
+    isWalletCreated:false,
+    account:{},
+    wallet:{}
 };
 
 export const appReducer = createSlice({
@@ -20,11 +24,17 @@ export const appReducer = createSlice({
             state.isWalletCreated = action.payload
         },
 
+        setAccount: (state, action) => {
+            state.account = action.payload
+        },
+        setWallet: (state, action) => {
+            state.wallet = action.payload
+        },
+
           clearAppReducer: () => initialState,
     }
 });
 
-// Action creators are generated for each case reducer function
-export const {setIsWalletCreated, clearAppReducer } = appReducer.actions;
+export const {setIsWalletCreated, clearAppReducer, setAccount, setWallet } = appReducer.actions;
 
 export default appReducer.reducer;

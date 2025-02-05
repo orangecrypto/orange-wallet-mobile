@@ -4,7 +4,6 @@ import { strings } from "@strings/i18n";
 import React, { useState } from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import { styles } from "./styles";
-
 import seedVault from "../../services/seedVault/seedVault";
 
 const Settings = () => {
@@ -36,8 +35,6 @@ const Settings = () => {
     const lockWallet = async () => {
         try {
             await seedVault.getInstance().lockVault()
-         
-            
             resetNavigation(RouteType.LOGIN)
         }
         catch (error) {

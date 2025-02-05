@@ -1,34 +1,50 @@
-import AES from 'react-native-aes-crypto';
 import { randomBytes } from 'react-native-randombytes';
-import { createHash } from 'react-native-crypto';
+import { createHash, Cipheriv, Decipheriv } from 'react-native-crypto';
+import { generateKeyArgon2id } from './EncryptionUtils';
 
 export const MobileCryptoAdapter = {
-    
-    // Encrypt data using AES
-    encrypt: async (data: string, password: string): Promise<string> => {
-        const iv = randomBytes(16).toString('hex'); // Generate a random IV
-        const key = await AES.pbkdf2(password, iv, 5000, 256,'sha1'); // Derive key
-        const encryptedData = await AES.encrypt(data, key, iv, 'aes-256-cbc'); // Encrypt data
-        return `${iv}:${encryptedData}`; // Return IV with encrypted data
-    },
 
-    // Decrypt AES encrypted data
-    decrypt: async (data: string, password: string): Promise<string> => {
+    encrypt: async (data: string, password: string): Promise<string> => {
         try {
-            const [iv, encryptedData] = data.split(':'); // Extract IV
-            const key = await AES.pbkdf2(password, iv, 5000, 256); // Derive key
-            return await AES.decrypt(encryptedData, key, iv, 'aes-256-cbc'); // Decrypt data
+            const iv = randomBytes(16);  
+            const salt = randomBytes(16).toString('hex');  
+            const key = await generateKeyArgon2id(password, salt);
+
+            const keyBuffer = Buffer.from(key, 'hex');
+            const aesKey = keyBuffer.length === 32 ? keyBuffer : createHash('sha256').update(keyBuffer).digest();
+
+            const cipher = Cipheriv('aes-256-cbc', aesKey, iv);
+            let encryptedData = cipher.update(data, 'utf8', 'base64');
+            encryptedData += cipher.final('base64'); 
+
+            return `${salt}:${iv.toString('hex')}:${encryptedData}`;
         } catch (error) {
-            throw new Error("Decryption failed: Incorrect password or corrupted data");
+            throw new Error(`Encryption failed: ${error.message}`);
         }
     },
 
-    // Hash data using SHA-256
+    decrypt: async (encryptedData: string, password: string): Promise<string> => {
+        try {
+            const [salt, ivHex, encrypted] = encryptedData.split(':');
+            const key = await generateKeyArgon2id(password, salt);
+
+            const keyBuffer = Buffer.from(key, 'hex');
+            const aesKey = keyBuffer.length === 32 ? keyBuffer : createHash('sha256').update(keyBuffer).digest();
+
+            const decipher = Decipheriv('aes-256-cbc', aesKey, Buffer.from(ivHex, 'hex'));
+            let decryptedData = decipher.update(encrypted, 'base64', 'utf8');
+            decryptedData += decipher.final('utf8'); 
+
+            return decryptedData;
+        } catch (error) {
+            throw new Error('Decryption failed: Incorrect password or corrupted data');
+        }
+    },
+
     hash: async (data: string, salt: string): Promise<string> => {
         return createHash('sha256').update(data + salt).digest('hex');
     },
 
-    // Generate secure random bytes
     generateRandomBytes: (length: number): string => {
         return randomBytes(length).toString('hex');
     }

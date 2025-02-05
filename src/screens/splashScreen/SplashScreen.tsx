@@ -8,6 +8,7 @@ import React, { useEffect } from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 import { store } from '../../redux/store';
 import seedVault from "../../services/seedVault/seedVault";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const SplashScreen = () => {
 
   const startTimer = (routeName: string) => {
@@ -31,9 +32,13 @@ const SplashScreen = () => {
       } else {
         startTimer(RouteType.HOME_SCREEN);
       }
+      
     };
   
     initializeSeedVault();
+
+    
+   
   }, []);
   
 

@@ -14,7 +14,7 @@ import { Image, Keyboard, KeyboardAvoidingView, Platform, ScrollView, StyleSheet
 import Toast from "react-native-toast-message";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "../../redux/store";
-import { loginReducerType, setPassword, setPasswordError, setPasswordFeedback } from "./LoginReducer";
+import { clearLoginReducer, loginReducerType, setPassword, setPasswordError, setPasswordFeedback } from "./LoginReducer";
 import seedVault from "../../services/seedVault/seedVault";
 const Login = () => {
     const { password, passwordError, passwordFeedback } = useSelector((state: { loginReducer: loginReducerType }) => state.loginReducer)
@@ -36,14 +36,10 @@ const Login = () => {
         } else {
 
             try {
-               
                 const passwordBytes = new TextEncoder().encode(password);
-
-              //  await seedVault.isVaultUnlocked(passwordBytes);
-              console.log("Seed isVaultUnlocked : ", await seedVault.isVaultUnlocked());
-                // dispatch(clearLoginReducer())
-                // push(RouteType.WALLETBALANCE)
-              
+                await seedVault.getInstance().unlockVault(passwordBytes)
+                dispatch(clearLoginReducer())
+                push(RouteType.WALLETBALANCE)
 
             } catch (error) {
                 console.error("Error initializing SeedVault:", error.message);
