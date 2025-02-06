@@ -11,6 +11,7 @@ import { styles } from './styles';
 import Clipboard from "@react-native-clipboard/clipboard";
 import bip39 from 'react-native-bip39'
 import { useSelector } from "react-redux";
+import { str2buf } from "@orangecryptohq/orangeseed";
 
 const SeedPhraseVerification = () => {
 
@@ -21,7 +22,7 @@ const SeedPhraseVerification = () => {
     );
     const [isPasted, setIsPasted] = useState(false);
     const seeValutInstance = seedVault.getInstance()
-    const { getSeed } = seeValutInstance
+    const { getSeed , init: initSeedVault, storeSeed} = seeValutInstance
 
     const handlePaste = async () => {
         const words = await Clipboard.getString()
@@ -35,13 +36,16 @@ const SeedPhraseVerification = () => {
     };
 
     const validateMnemonic = useCallback(
+        
         (seed: string[]) => {
             const seedStr = seed.map((e) => e.trim()).join(' ');
             if (bip39.validateMnemonic(seedStr)) {
+                console.log('Iside if')
                 return true;
+           
             }
             console.log('Not validate')
-            return 'Invalid seed phrase';
+            return false;
         }, []);
 
     useEffect(() => {
@@ -55,11 +59,17 @@ const SeedPhraseVerification = () => {
                 console.log('isRestoreWallet', isRestoreWallet)
                 const wordsArray = data.map(item => item.word);
                 const validationResult = validateMnemonic(wordsArray)
+                console.log('validationResult', validationResult)
                 if (validationResult) {
+
+                    console.log('wordsArray', wordsArray.join(" "))
+                    await initSeedVault(str2buf(''))
+                    await storeSeed(wordsArray.join(" "))
                     dispatch(setIsSeedPhraseVerified(true));
+                     
                 } else {
                     dispatch(setIsSeedPhraseVerified(false));
-                    console.log('validationResult', validationResult)
+                   
                 }
             } else {
 

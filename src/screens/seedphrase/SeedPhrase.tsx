@@ -17,14 +17,14 @@ import { useSelector } from "react-redux";
 import { useAppDispatch } from "../../redux/store";
 import { clearSeedPhraseReducer, seedPhraseReducerType, setConfirmPasswordError, setIsRestoreWallet, setPasswordError } from "./SeedPhraseReducer";
 import { styles } from './styles';
-import { createWallet, validateCurrentStep } from "./SeedPhraseUtils";
+import { createWallet, restoreWallet, validateCurrentStep } from "./SeedPhraseUtils";
 import { setAccount, setIsWalletCreated, setWallet } from "../../redux/slice/appReducer";
 import { RouteType } from "@routes/RouteType";
 import seedVault from "../../services/seedVault/seedVault";
 import { str2buf } from "@orangecryptohq/orangeseed";
 const SeedPhrase = ({ route }) => {
     const seeValutInstance = seedVault.getInstance()
-    const { getSeed, changePassword } = seeValutInstance
+    const { getSeed, changePassword, hasSeed, clearVaultStorage, storeSeed, init } = seeValutInstance
     const steps = [
         { id: 1, component: SeedPhraseView },
         { id: 2, component: SeedPhraseVerification },
@@ -32,7 +32,7 @@ const SeedPhrase = ({ route }) => {
         { id: 4, component: ConfirmPassword },
     ];
 
-    const { password, confirmPassword, isSeedPhraseVerified, disabled } = useSelector((state: { seedPhraseReducer: seedPhraseReducerType }) => state.seedPhraseReducer);
+    const { password, confirmPassword, isSeedPhraseVerified, disabled, isRestoreWallet } = useSelector((state: { seedPhraseReducer: seedPhraseReducerType }) => state.seedPhraseReducer);
     const [currentStepIndex, setCurrentStepIndex] = useState(
         route?.params?.backupLatter ? 2 : route?.params?.restoreWallet ? 1 : 0
     );
@@ -58,12 +58,32 @@ const SeedPhrase = ({ route }) => {
 
     const handleNextStep = async () => {
         console.log('handleNextStep ', currentStepIndex)
-       
-       if (!validateCurrentStep(currentStepIndex,  isSeedPhraseVerified, password, confirmPassword, dispatch, strings, validatePassword)) {
+        const words = await getSeed()
+        if (!validateCurrentStep(currentStepIndex, isSeedPhraseVerified, password, confirmPassword, dispatch, strings, validatePassword)) {
             return;
         }
+
+        if (currentStepIndex === 3 && isRestoreWallet) {
+            console.log('Wallet Restore')
+            const { account, wallet } = await restoreWallet(words)
+
+            const hasseed = await hasSeed() ;
+            if (hasseed) {
+                await clearVaultStorage();
+            }
+            const encoder = new TextEncoder();
+            
+            await init(encoder.encode(confirmPassword));
+            await storeSeed(words);
+            dispatch(setAccount(account));
+            dispatch(setWallet(wallet));
+            dispatch(clearSeedPhraseReducer());
+            dispatch(setIsWalletCreated(true));
+            resetNavigation(RouteType.WALLETBALANCE);
+            return
+        }
         if (currentStepIndex === 3) {
-            const words = await getSeed()
+
             console.log("words", words);
             const { account, wallet } = await createWallet(words);
             const encoder = new TextEncoder();
@@ -92,7 +112,7 @@ const SeedPhrase = ({ route }) => {
 
     useEffect(() => {
 
-        
+
         const handleKeyboardVisibility = (isVisible) => setIsKeyboardVisible(isVisible);
         const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => handleKeyboardVisibility(true));
         const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => handleKeyboardVisibility(false));

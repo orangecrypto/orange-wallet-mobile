@@ -5,8 +5,9 @@ const defaultConfig = getDefaultConfig(__dirname);
 const customConfig = {
   resolver: {
     extraNodeModules: {
+      stream: require.resolve("stream-browserify"), 
+      buffer: require.resolve("react-native-buffer"),
       ...require("node-libs-react-native"), // Polyfills for Node.js core modules
-      stream: require.resolve("readable-stream"), // Ensure `stream` resolves correctly
     },
   },
 };

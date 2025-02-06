@@ -6,7 +6,7 @@ import 'react-native-crypto';
 import { Buffer } from "buffer";
 import process from "process";
 
-if (typeof global.crypto === "undefined") {
+if (!global.crypto) {
   global.crypto = crypto;
 }
 if (typeof global.Buffer === "undefined") {
