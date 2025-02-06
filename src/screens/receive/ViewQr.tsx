@@ -9,7 +9,7 @@ import React from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import { styles } from "./styles";
 
-const ViewQr = () => {
+const ViewQr = ({ route }) => {
 
     return (
         <View style={styles.container}>
@@ -17,9 +17,9 @@ const ViewQr = () => {
                 <TouchableOpacity style={styles.button} onPress={() => goBack()}>
                     <Text style={styles.buttonText}>{strings.back}</Text>
                 </TouchableOpacity>
-                <Text style={[styles.title, { lineHeight: Responsive.size40 }]}>{'Recieve Ordinal and BRC20'}</Text>
+                <Text style={[styles.title, { lineHeight: Responsive.size40 }]}>{route?.params?.item?.name}</Text>
                 <Image style={styles.qrcodeContainer} source={localAssets.qrcodesample} />
-                <Text style={styles.qrcodeAddressText}>{'1Lbcfr7sAHTD9CgdQo3HTMTkV8LK4ZnX71'}</Text>
+                <Text style={styles.qrcodeAddressText}>{route?.params?.item?.address}</Text>
             </View>
 
             <Text style={styles.warningText}>{strings.warning}:

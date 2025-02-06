@@ -8,7 +8,12 @@ import RenderCardItem from './RenderCardItem';
 import RenderTransactions from './RenderTransactions';
 
 
+import { Dispatch } from '@reduxjs/toolkit';
+import { useAppDispatch, store } from "../../../redux/store";
+import { setHeaderAddress } from '../WalletReducer';
 const Wallet = () => {
+    const account = store.getState().appReducer.account
+    const dispatch: Dispatch = useAppDispatch();
     const [currentStep, setCurrentStep] = useState(1);
     const [selectedItem, setSelectedItem] = useState(null);
     const [selectedCategory, setSelectedCategory] = useState("All"); 
@@ -57,6 +62,9 @@ const Wallet = () => {
         setSelectedItem(item); // Only update selected item for highlight, not category
         const itemIndex = filteredCryptoArray.findIndex((crypto) => crypto.id === item.id);
         setCurrentStep(itemIndex + 1);
+        console.log('handleItemClick',item.category)
+         dispatch(setHeaderAddress(item.category==='Stacks'? account?.stxAddress : account?.btcAddress ))
+
     };
 
     return (
