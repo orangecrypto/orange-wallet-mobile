@@ -27,23 +27,9 @@ import { persistor, store } from "./src/redux/store";
 import { QueryClient, QueryClientProvider, QueryCache, MutationCache } from "@tanstack/react-query";
 import Toast from "react-native-toast-message";
 import toastConfig from "./src/components/ToastConfig";
-import SeedVaultService from "./src/services/seedVault/seedVault";
 
 const App = () => {
-  React.useEffect(() => {
-    const initializeSeedVault = async () => {
-      try {
-        console.log("Initializing SeedVault...");
-        await SeedVaultService.initialize() 
-        console.log("SeedVault initialized successfully!");
-      } catch (error) {
-        console.error("Error initializing SeedVault:", error.message);
-      }
-    };
-
-    initializeSeedVault();
-  }, []);
-
+ 
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {

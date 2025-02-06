@@ -5,38 +5,36 @@ import { Responsive } from "@utils/Responsive";
 import { Color } from "@values/color";
 import { useEffect, useState } from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
+import useSeedVault from '../../hooks/useSeedVault';
 import { useAppDispatch } from "../../redux/store";
-import seedVault from "../../services/seedVault/seedVault";
 import { setDisabled, setWords } from "./SeedPhraseReducer";
 import { styles } from "./styles";
-
-const SeedPhraseView =  () => {
+const SeedPhraseView = () => {
 
     const dispatch: Dispatch = useAppDispatch()
-    const seeValutInstance = seedVault.getInstance()
-    const { getSeed } = seeValutInstance
+    const { getSeed } = useSeedVault()
     const [seedPhrase, setSeedPhrase] = useState([]);
     const [showOverlay, setShowOverlay] = useState(true);
     const [isCopied, setIsCopied] = useState(false);
 
-        useEffect(() => {
-            const fetchSeed = async () => {
-                try {
-                    const strings = await getSeed(); 
-                    const words = strings.split(" ").map((word, index) => ({ id: index + 1, word }));
-                    setSeedPhrase(words)
-                } catch (error) {
-                    console.error("Error fetching seed:", error);
-                }
-                console.log(await getSeed())
-            };
-    
-            fetchSeed();
-        }, []);
-    
+    useEffect(() => {
+        const fetchSeed = async () => {
+            try {
+                const strings = await getSeed();
+                const words = strings.split(" ").map((word, index) => ({ id: index + 1, word }));
+                setSeedPhrase(words)
+            } catch (error) {
+                console.error("Error fetching seed:", error);
+            }
+            console.log(await getSeed())
+        };
+        fetchSeed();
+    }, []);
+
     const handleOverlayClose = () => {
-        setShowOverlay(false); // hide overlay when button is clicked
+        setShowOverlay(false); 
     };
+    
     const handleCopy = () => {
         const phrase = seedPhrase.map(item => item.word).join(' ');
         Clipboard.setString(phrase);

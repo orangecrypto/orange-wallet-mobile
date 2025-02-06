@@ -7,11 +7,11 @@ import { localAssets } from "@assets/assets";
 import { push } from "@routes/Navigator";
 import { RouteType } from "@routes/RouteType";
 import { Fonts } from '@values/fonts';
-import seedVault from '../../services/seedVault/seedVault';
-  
+import useSeedVault from '../../hooks/useSeedVault';
+
 const HomeScreen = () => {
-    const seeValutInstance = seedVault.getInstance()
-    const {clearVaultStorage }= seeValutInstance
+
+    const { clearVaultStorage } = useSeedVault()
 
     return (
         <View style={styles.container}>

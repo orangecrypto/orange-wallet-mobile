@@ -10,13 +10,11 @@ import { Color } from "@values/color";
 import { Fonts } from '@values/fonts';
 import { useCallback, useEffect } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
-import seedVault from "../../services/seedVault/seedVault";
+import useSeedVault from '../../hooks/useSeedVault';
 const BackupWallet = () => {
 
-    const seeValutInstance = seedVault.getInstance()
-    const {init: initSeedVault, storeSeed , hasSeed, unlockVault, clearVaultStorage }= seeValutInstance
+    const {init: initSeedVault, storeSeed , hasSeed, unlockVault, clearVaultStorage }= useSeedVault()
 
-   
     const generateAndStoreSeedPhrase =  useCallback( async () =>{
         let newSeePhrase : string | null = generateMnemonic()
         await initSeedVault(str2buf(''))

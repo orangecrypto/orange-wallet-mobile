@@ -6,11 +6,11 @@ import { Color } from '@values/color';
 import { Fonts } from '@values/fonts';
 import React, { useEffect } from 'react';
 import { Image, StyleSheet, View } from 'react-native';
+import useSeedVault from '../../hooks/useSeedVault';
 import { store } from '../../redux/store';
-import seedVault from "../../services/seedVault/seedVault";
-import AsyncStorage from '@react-native-async-storage/async-storage';
 const SplashScreen = () => {
 
+ const { isVaultUnlocked} = useSeedVault()
   const startTimer = (routeName: string) => {
     setTimeout(() => {
       resetNavigation(routeName);
@@ -20,9 +20,9 @@ const SplashScreen = () => {
   useEffect(() => {
     const initializeSeedVault = async () => {
       if (store.getState().appReducer.isWalletCreated) {
-        const seedVaultService = await seedVault.getInstance();
+      
         
-        if (await seedVaultService.isVaultUnlocked()) {
+        if (await isVaultUnlocked()) {
           startTimer(RouteType.WALLETBALANCE);
         }
         else {
@@ -34,12 +34,8 @@ const SplashScreen = () => {
       }
       
     };
-  
     initializeSeedVault();
-
-    
-   
-  }, []);
+ }, []);
   
 
   return (

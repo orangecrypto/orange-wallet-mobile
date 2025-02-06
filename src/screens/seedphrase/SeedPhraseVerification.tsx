@@ -1,18 +1,17 @@
+import { str2buf } from "@orangecryptohq/orangeseed";
+import Clipboard from "@react-native-clipboard/clipboard";
 import { Dispatch } from "@reduxjs/toolkit";
 import { strings } from "@strings/i18n";
 import { Responsive } from "@utils/Responsive";
 import { Color } from "@values/color";
 import React, { useCallback, useEffect, useState } from 'react';
 import { FlatList, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import bip39 from 'react-native-bip39';
+import { useSelector } from "react-redux";
+import useSeedVault from '../../hooks/useSeedVault';
 import { useAppDispatch } from "../../redux/store";
-import seedVault from "../../services/seedVault/seedVault";
 import { seedPhraseReducerType, setDisabled, setIsSeedPhraseVerified } from "./SeedPhraseReducer";
 import { styles } from './styles';
-import Clipboard from "@react-native-clipboard/clipboard";
-import bip39 from 'react-native-bip39'
-import { useSelector } from "react-redux";
-import { str2buf } from "@orangecryptohq/orangeseed";
-
 const SeedPhraseVerification = () => {
 
     const dispatch: Dispatch = useAppDispatch();
@@ -21,8 +20,7 @@ const SeedPhraseVerification = () => {
         new Array(12).fill(null).map((_, index) => ({ id: index.toString(), word: '' }))
     );
     const [isPasted, setIsPasted] = useState(false);
-    const seeValutInstance = seedVault.getInstance()
-    const { getSeed , init: initSeedVault, storeSeed} = seeValutInstance
+    const { getSeed, init: initSeedVault, storeSeed } = useSeedVault()
 
     const handlePaste = async () => {
         const words = await Clipboard.getString()
@@ -36,13 +34,13 @@ const SeedPhraseVerification = () => {
     };
 
     const validateMnemonic = useCallback(
-        
+
         (seed: string[]) => {
             const seedStr = seed.map((e) => e.trim()).join(' ');
             if (bip39.validateMnemonic(seedStr)) {
                 console.log('Iside if')
                 return true;
-           
+
             }
             console.log('Not validate')
             return false;
@@ -66,18 +64,17 @@ const SeedPhraseVerification = () => {
                     await initSeedVault(str2buf(''))
                     await storeSeed(wordsArray.join(" "))
                     dispatch(setIsSeedPhraseVerified(true));
-                     
+
                 } else {
                     dispatch(setIsSeedPhraseVerified(false));
-                   
+
                 }
             } else {
-
                 const words = await getSeed()
                 const myWords = words.split(' ');
                 const isMatched = data.length === myWords.length &&
-                data.every(item => myWords.includes(item.word)) &&
-                myWords.every(word => data.some(item => item.word === word));
+                    data.every(item => myWords.includes(item.word)) &&
+                    myWords.every(word => data.some(item => item.word === word));
                 dispatch(setIsSeedPhraseVerified(isMatched))
             }
         }
@@ -119,7 +116,6 @@ const SeedPhraseVerification = () => {
                     keyExtractor={(item) => item.id}
                     numColumns={3}
                     contentContainerStyle={styles.flatListContainer} />
-
 
                 <View style={[styles.buttonContainer, {
                     alignSelf: 'center',

@@ -4,12 +4,12 @@ import { Dispatch } from "@reduxjs/toolkit";
 import { strings } from "@strings/i18n";
 import { validatePasswordStrength } from "@utils/Validations";
 import { Color } from "@values/color";
+import { useEffect } from "react";
 import { Image, Text, View } from "react-native";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "../../redux/store";
 import { seedPhraseReducerType, setConfirmPassword, setConfirmPasswordError, setConfirmPasswordFeedBack, setDisabled } from "./SeedPhraseReducer";
 import { styles } from "./styles";
-import { useEffect } from "react";
 
 const ConfirmPassword = () => {
     const { confirmPassword, confirmPasswordError, confirmPasswordFeedback } = useSelector((state: { seedPhraseReducer: seedPhraseReducerType }) => state.seedPhraseReducer)

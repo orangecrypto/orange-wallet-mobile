@@ -72,7 +72,6 @@ export const seedPhraseReducer = createSlice({
     },
 });
 
-// Action creators are generated for each case reducer function
 export const { setPassword, setPasswordError, setWordsArray,setIsRestoreWallet, setConfirmPassword, setConfirmPasswordError, setWords ,setPasswordFeedback ,clearSeedPhraseReducer, setDisabled, setIsSeedPhraseVerified , setConfirmPasswordFeedBack} = seedPhraseReducer.actions;
 
 export default seedPhraseReducer.reducer;

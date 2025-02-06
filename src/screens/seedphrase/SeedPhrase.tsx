@@ -1,6 +1,8 @@
 import CommonButton from "@components/CommonButton";
+import { str2buf } from "@orangecryptohq/orangeseed";
 import { Dispatch } from "@reduxjs/toolkit";
 import { goBack, resetNavigation } from "@routes/Navigator";
+import { RouteType } from "@routes/RouteType";
 import ConfirmPassword from "@screens/seedphrase/ConfirmPassword";
 import EnterPassword from "@screens/seedphrase/EnterPassword";
 import SeedPhraseVerification from "@screens/seedphrase/SeedPhraseVerification";
@@ -14,17 +16,15 @@ import { useEffect, useState } from "react";
 import { Keyboard, KeyboardAvoidingView, Platform, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
 import { useSelector } from "react-redux";
+import useSeedVault from '../../hooks/useSeedVault';
+import { setAccount, setIsWalletCreated, setWallet } from "../../redux/slice/appReducer";
 import { useAppDispatch } from "../../redux/store";
 import { clearSeedPhraseReducer, seedPhraseReducerType, setConfirmPasswordError, setIsRestoreWallet, setPasswordError } from "./SeedPhraseReducer";
-import { styles } from './styles';
 import { createWallet, restoreWallet, validateCurrentStep } from "./SeedPhraseUtils";
-import { setAccount, setIsWalletCreated, setWallet } from "../../redux/slice/appReducer";
-import { RouteType } from "@routes/RouteType";
-import seedVault from "../../services/seedVault/seedVault";
-import { str2buf } from "@orangecryptohq/orangeseed";
+import { styles } from './styles';
 const SeedPhrase = ({ route }) => {
-    const seeValutInstance = seedVault.getInstance()
-    const { getSeed, changePassword, hasSeed, clearVaultStorage, storeSeed, init } = seeValutInstance
+   
+    const { getSeed, changePassword, hasSeed, clearVaultStorage, storeSeed, init } = useSeedVault()
     const steps = [
         { id: 1, component: SeedPhraseView },
         { id: 2, component: SeedPhraseVerification },
@@ -34,11 +34,11 @@ const SeedPhrase = ({ route }) => {
 
     const { password, confirmPassword, isSeedPhraseVerified, disabled, isRestoreWallet } = useSelector((state: { seedPhraseReducer: seedPhraseReducerType }) => state.seedPhraseReducer);
     const [currentStepIndex, setCurrentStepIndex] = useState(
-        route?.params?.backupLatter ? 2 : route?.params?.restoreWallet ? 1 : 0
-    );
+    route?.params?.backupLatter ? 2 : route?.params?.restoreWallet ? 1 : 0);
     const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
     const dispatch: Dispatch = useAppDispatch();
     dispatch(setIsRestoreWallet(route?.params?.restoreWallet || false))
+    
     const validatePassword = (password, step) => {
         const { strengthMessage } = validatePasswordStrength(password);
         if (password === '') {
@@ -66,20 +66,14 @@ const SeedPhrase = ({ route }) => {
         if (currentStepIndex === 3 && isRestoreWallet) {
             console.log('Wallet Restore')
             const { account, wallet } = await restoreWallet(words)
-
             const hasseed = await hasSeed() ;
             if (hasseed) {
                 await clearVaultStorage();
             }
             const encoder = new TextEncoder();
-            
             await init(encoder.encode(confirmPassword));
             await storeSeed(words);
-            dispatch(setAccount(account));
-            dispatch(setWallet(wallet));
-            dispatch(clearSeedPhraseReducer());
-            dispatch(setIsWalletCreated(true));
-            resetNavigation(RouteType.WALLETBALANCE);
+            updateWalletState(account, wallet)
             return
         }
         if (currentStepIndex === 3) {
@@ -88,16 +82,20 @@ const SeedPhrase = ({ route }) => {
             const { account, wallet } = await createWallet(words);
             const encoder = new TextEncoder();
             await changePassword(str2buf(''), encoder.encode(confirmPassword))
-            dispatch(setAccount(account));
-            dispatch(setWallet(wallet));
-            dispatch(clearSeedPhraseReducer());
-            dispatch(setIsWalletCreated(true));
-            resetNavigation(RouteType.WALLETBALANCE);
+            updateWalletState(account, wallet)
             return;
         }
         if (currentStepIndex < steps.length - 1) {
             setCurrentStepIndex((prevIndex) => prevIndex + 1);
         }
+    };
+
+    const updateWalletState = (account, wallet) => {
+        dispatch(setAccount(account));
+        dispatch(setWallet(wallet));
+        dispatch(clearSeedPhraseReducer());
+        dispatch(setIsWalletCreated(true));
+        resetNavigation(RouteType.WALLETBALANCE);
     };
 
     const handlePreviousStep = () => {
@@ -111,9 +109,7 @@ const SeedPhrase = ({ route }) => {
     };
 
     useEffect(() => {
-
-
-        const handleKeyboardVisibility = (isVisible) => setIsKeyboardVisible(isVisible);
+       const handleKeyboardVisibility = (isVisible) => setIsKeyboardVisible(isVisible);
         const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => handleKeyboardVisibility(true));
         const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => handleKeyboardVisibility(false));
         return () => {

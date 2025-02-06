@@ -13,10 +13,12 @@ import { useEffect, useState } from "react";
 import { Image, Keyboard, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
 import Toast from "react-native-toast-message";
 import { useSelector } from "react-redux";
+import useSeedVault from '../../hooks/useSeedVault';
 import { useAppDispatch } from "../../redux/store";
 import { clearLoginReducer, loginReducerType, setPassword, setPasswordError, setPasswordFeedback } from "./LoginReducer";
-import seedVault from "../../services/seedVault/seedVault";
 const Login = () => {
+    
+    const { unlockVault } = useSeedVault()
     const { password, passwordError, passwordFeedback } = useSelector((state: { loginReducer: loginReducerType }) => state.loginReducer)
     const dispatch: Dispatch = useAppDispatch()
     const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
@@ -37,7 +39,7 @@ const Login = () => {
 
             try {
                 const passwordBytes = new TextEncoder().encode(password);
-                await seedVault.getInstance().unlockVault(passwordBytes)
+                await unlockVault(passwordBytes)
                 dispatch(clearLoginReducer())
                 push(RouteType.WALLETBALANCE)
 

@@ -4,9 +4,10 @@ import { strings } from "@strings/i18n";
 import React, { useState } from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import { styles } from "./styles";
-import seedVault from "../../services/seedVault/seedVault";
+import useSeedVault from '../../hooks/useSeedVault';
 
 const Settings = () => {
+    const { lockVault} = useSeedVault()
     const [settingsArray, setSettingsArray] = useState([
         { id: 1, name: "Version", value: "1.1.7" },
         { id: 2, name: "Network", value: "Mainnet" },
@@ -34,7 +35,7 @@ const Settings = () => {
 
     const lockWallet = async () => {
         try {
-            await seedVault.getInstance().lockVault()
+            await lockVault()
             resetNavigation(RouteType.LOGIN)
         }
         catch (error) {
