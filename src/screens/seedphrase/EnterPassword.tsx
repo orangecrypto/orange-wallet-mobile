@@ -19,7 +19,6 @@ const EnterPassword = ({ type, onPasswordChange }: { type: "enter" | "confirm"; 
     const handlePasswordChange = (inputPassword: string) => {
         setPassword(inputPassword);
         onPasswordChange(inputPassword);
-
         const { strengthMessage, feedback } = validatePasswordStrength(inputPassword);
         setError(strengthMessage);
         setFeedback(feedback);
@@ -27,7 +26,7 @@ const EnterPassword = ({ type, onPasswordChange }: { type: "enter" | "confirm"; 
        
     };
     useEffect(() => {
-       dispatch(setDisabled(false))
+       dispatch(setDisabled(true))
     }, [])
 
     return (

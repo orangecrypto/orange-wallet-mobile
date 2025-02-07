@@ -24,17 +24,17 @@ const SeedPhrase = ({ route }) => {
     const { getSeed, changePassword, hasSeed, clearVaultStorage, storeSeed, init } = useSeedVault();
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [backupLatter, setBackupLatter] = useState(route?.params?.backupLatter || false);
     const {isSeedPhraseVerified, disabled, isRestoreWallet } = useSelector((state: { seedPhraseReducer: seedPhraseReducerType }) => state.seedPhraseReducer);
     const [currentStepIndex, setCurrentStepIndex] = useState(route?.params?.backupLatter ? 2 : route?.params?.restoreWallet ? 1 : 0);
     const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
     const dispatch: Dispatch = useAppDispatch();
-    
+
     dispatch(setIsRestoreWallet(route?.params?.restoreWallet || false));
 
     useEffect(() => {
         const handleKeyboardShow = () => setIsKeyboardVisible(true);
         const handleKeyboardHide = () => setIsKeyboardVisible(false);
-
         const showSubscription = Keyboard.addListener("keyboardDidShow", handleKeyboardShow);
         const hideSubscription = Keyboard.addListener("keyboardDidHide", handleKeyboardHide);
 
@@ -52,36 +52,40 @@ const SeedPhrase = ({ route }) => {
     ], []);
 
     const handleNextStep = async () => {
-        console.log('handleNextStep ', currentStepIndex);
-        const words = await getSeed();
         if (!validateCurrentStep(currentStepIndex, isSeedPhraseVerified, password, confirmPassword)) {
             return;
         }
-
-        if (currentStepIndex === 3 && isRestoreWallet) {
-            console.log('Wallet Restore');
-            const { account, wallet } = await restoreWallet(words);
-            const hasseed = await hasSeed();
-            if (hasseed) {
-                await clearVaultStorage();
-            }
-            const encoder = new TextEncoder();
-            await init(encoder.encode(confirmPassword));
-            await storeSeed(words);
-            updateWalletState(account, wallet);
-            return;
-        }
         if (currentStepIndex === 3) {
-            console.log("words", words);
-            const { account, wallet } = await createWallet(words);
-            const encoder = new TextEncoder();
-            await changePassword(str2buf(''), encoder.encode(confirmPassword));
-            updateWalletState(account, wallet);
+            await handleWallet();
             return;
         }
-        if (currentStepIndex < 4 - 1) {
-            setCurrentStepIndex((prevIndex) => prevIndex + 1);
+        currentStepIndex < 3 && setCurrentStepIndex((prevIndex) => prevIndex + 1);
+    };
+
+    const handleWallet = async () => {
+        const words = await getSeed();
+        if (isRestoreWallet) {
+            await restoreAndStoreWallet(words);
+            return;
         }
+        await createAndStoreWallet(words);
+    };
+
+    const restoreAndStoreWallet = async (words) => {
+        console.log('Wallet Restore');
+        const { account, wallet } = await restoreWallet(words);
+        (await hasSeed()) && (await clearVaultStorage());
+        const encoder = new TextEncoder();
+        await init(encoder.encode(confirmPassword));
+        await storeSeed(words);
+        updateWalletState(account, wallet);
+    };
+
+    const createAndStoreWallet = async (words) => {
+        const { account, wallet } = await createWallet(words);
+        const encoder = new TextEncoder();
+        await changePassword(str2buf(''), encoder.encode(confirmPassword));
+        updateWalletState(account, wallet);
     };
 
     const updateWalletState = (account, wallet) => {
@@ -93,16 +97,15 @@ const SeedPhrase = ({ route }) => {
     };
 
     const handlePreviousStep = () => {
-        if (route?.params?.backupLatter && currentStepIndex === 2) {
+        if ((backupLatter && currentStepIndex === 2) || (isRestoreWallet && currentStepIndex === 1)) {
             goBack();
-        } else if (route?.params?.restoreWallet && currentStepIndex === 1) {
-            goBack();
-        } else {
-            setCurrentStepIndex((prevIndex) => (prevIndex > 0 ? prevIndex - 1 : goBack()));
+            return;
         }
+        setCurrentStepIndex((prevIndex) => (prevIndex > 0 ? prevIndex - 1 : (goBack(), prevIndex)));
     };
 
     const CurrentStepComponent = steps[currentStepIndex]?.component;
+    
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -121,18 +124,18 @@ const SeedPhrase = ({ route }) => {
                     </View>
                     <View style={styles.stepContainer}>
                         <Text style={styles.stepText}>
-                            Step {route?.params?.backupLatter
+                            Step {backupLatter
                                 ? currentStepIndex - 1
-                                : route?.params?.restoreWallet
+                                : isRestoreWallet
                                     ? currentStepIndex
                                     : currentStepIndex + 1}
                         </Text>
                         <View style={styles.progressBarContainer}>
                             <View style={[styles.progressBar, {
-                                width: `${(route?.params?.backupLatter
+                                width: `${(backupLatter
                                     ? (currentStepIndex - 1) / 2
-                                    : route?.params?.restoreWallet
-                                        ? currentStepIndex / 3 
+                                    : isRestoreWallet
+                                        ? currentStepIndex / 3
                                         : (currentStepIndex + 1) / 4) * 100}%`
                             }]} />
                         </View>
