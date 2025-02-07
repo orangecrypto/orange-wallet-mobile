@@ -1,91 +1,85 @@
 import CommonButton from "@components/CommonButton";
+import useSeedVault from '@hooks/useSeedVault';
 import { str2buf } from "@orangecryptohq/orangeseed";
+import { setAccount, setIsWalletCreated, setWallet } from "@redux/slice/appReducer";
+import { clearSeedPhraseReducer, seedPhraseReducerType, setIsRestoreWallet } from "@redux/slice/SeedPhraseReducer";
+import { useAppDispatch } from "@redux/store";
 import { Dispatch } from "@reduxjs/toolkit";
 import { goBack, resetNavigation } from "@routes/Navigator";
 import { RouteType } from "@routes/RouteType";
-import ConfirmPassword from "@screens/seedphrase/ConfirmPassword";
-import EnterPassword from "@screens/seedphrase/EnterPassword";
 import SeedPhraseVerification from "@screens/seedphrase/SeedPhraseVerification";
 import SeedPhraseView from "@screens/seedphrase/SeedPhraseView";
 import { strings } from "@strings/i18n";
 import { Responsive } from '@utils/Responsive';
-import { validatePasswordStrength } from "@utils/Validations";
 import { Color } from "@values/color";
 import 'fast-text-encoding';
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Keyboard, KeyboardAvoidingView, Platform, ScrollView, Text, TouchableOpacity, View } from "react-native";
-import Toast from "react-native-toast-message";
 import { useSelector } from "react-redux";
-import useSeedVault from '@hooks/useSeedVault';
-import { setAccount, setIsWalletCreated, setWallet } from "@redux/slice/appReducer";
-import { useAppDispatch } from "@redux/store";
-import { clearSeedPhraseReducer, seedPhraseReducerType, setConfirmPasswordError, setIsRestoreWallet, setPasswordError } from "@redux/slice/SeedPhraseReducer";
+import EnterPassword from "./EnterPassword";
 import { createWallet, restoreWallet, validateCurrentStep } from "./SeedPhraseUtils";
 import { styles } from './styles';
-const SeedPhrase = ({ route }) => {
-   
-    const { getSeed, changePassword, hasSeed, clearVaultStorage, storeSeed, init } = useSeedVault()
-    const steps = [
-        { id: 1, component: SeedPhraseView },
-        { id: 2, component: SeedPhraseVerification },
-        { id: 3, component: EnterPassword },
-        { id: 4, component: ConfirmPassword },
-    ];
 
-    const { password, confirmPassword, isSeedPhraseVerified, disabled, isRestoreWallet } = useSelector((state: { seedPhraseReducer: seedPhraseReducerType }) => state.seedPhraseReducer);
-    const [currentStepIndex, setCurrentStepIndex] = useState(
-    route?.params?.backupLatter ? 2 : route?.params?.restoreWallet ? 1 : 0);
+const SeedPhrase = ({ route }) => {
+    const { getSeed, changePassword, hasSeed, clearVaultStorage, storeSeed, init } = useSeedVault();
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const {isSeedPhraseVerified, disabled, isRestoreWallet } = useSelector((state: { seedPhraseReducer: seedPhraseReducerType }) => state.seedPhraseReducer);
+    const [currentStepIndex, setCurrentStepIndex] = useState(route?.params?.backupLatter ? 2 : route?.params?.restoreWallet ? 1 : 0);
     const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
     const dispatch: Dispatch = useAppDispatch();
-    dispatch(setIsRestoreWallet(route?.params?.restoreWallet || false))
     
-    const validatePassword = (password, step) => {
-        const { strengthMessage } = validatePasswordStrength(password);
-        if (password === '') {
-            Toast.show({
-                type: 'error',
-                text1: strings.enterPassword,
-            });
-            return false;
-        }
-        else if ([strings.weakPassword, strings.moderatePassword].includes(strengthMessage)) {
-            const errorAction = step === 2 ? setPasswordError : setConfirmPasswordError;
-            dispatch(errorAction(strings.useStrongPassword));
-            return false;
-        }
-        return true;
-    };
+    dispatch(setIsRestoreWallet(route?.params?.restoreWallet || false));
+
+    useEffect(() => {
+        const handleKeyboardShow = () => setIsKeyboardVisible(true);
+        const handleKeyboardHide = () => setIsKeyboardVisible(false);
+
+        const showSubscription = Keyboard.addListener("keyboardDidShow", handleKeyboardShow);
+        const hideSubscription = Keyboard.addListener("keyboardDidHide", handleKeyboardHide);
+
+        return () => {
+            showSubscription.remove();
+            hideSubscription.remove();
+        };
+    }, []);
+
+    const steps = useMemo(() => [
+        { id: 1, component: SeedPhraseView },
+        { id: 2, component: SeedPhraseVerification },
+        { id: 3, component: () => <EnterPassword type="enter" onPasswordChange={setPassword} /> },
+        { id: 4, component: () => <EnterPassword type="confirm" onPasswordChange={setConfirmPassword} /> },
+    ], []);
 
     const handleNextStep = async () => {
-        console.log('handleNextStep ', currentStepIndex)
-        const words = await getSeed()
-        if (!validateCurrentStep(currentStepIndex, isSeedPhraseVerified, password, confirmPassword, dispatch, strings, validatePassword)) {
+        console.log('handleNextStep ', currentStepIndex);
+        const words = await getSeed();
+        if (!validateCurrentStep(currentStepIndex, isSeedPhraseVerified, password, confirmPassword)) {
             return;
         }
 
         if (currentStepIndex === 3 && isRestoreWallet) {
-            console.log('Wallet Restore')
-            const { account, wallet } = await restoreWallet(words)
-            const hasseed = await hasSeed() ;
+            console.log('Wallet Restore');
+            const { account, wallet } = await restoreWallet(words);
+            const hasseed = await hasSeed();
             if (hasseed) {
                 await clearVaultStorage();
             }
             const encoder = new TextEncoder();
             await init(encoder.encode(confirmPassword));
             await storeSeed(words);
-            updateWalletState(account, wallet)
-            return
+            updateWalletState(account, wallet);
+            return;
         }
         if (currentStepIndex === 3) {
-
             console.log("words", words);
             const { account, wallet } = await createWallet(words);
             const encoder = new TextEncoder();
-            await changePassword(str2buf(''), encoder.encode(confirmPassword))
-            updateWalletState(account, wallet)
+            await changePassword(str2buf(''), encoder.encode(confirmPassword));
+            updateWalletState(account, wallet);
             return;
         }
-        if (currentStepIndex < steps.length - 1) {
+        if (currentStepIndex < 4 - 1) {
             setCurrentStepIndex((prevIndex) => prevIndex + 1);
         }
     };
@@ -108,18 +102,7 @@ const SeedPhrase = ({ route }) => {
         }
     };
 
-    useEffect(() => {
-       const handleKeyboardVisibility = (isVisible) => setIsKeyboardVisible(isVisible);
-        const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => handleKeyboardVisibility(true));
-        const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => handleKeyboardVisibility(false));
-        return () => {
-            keyboardDidShowListener.remove();
-            keyboardDidHideListener.remove();
-        };
-    }, []);
-
     const CurrentStepComponent = steps[currentStepIndex]?.component;
-
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -149,12 +132,11 @@ const SeedPhrase = ({ route }) => {
                                 width: `${(route?.params?.backupLatter
                                     ? (currentStepIndex - 1) / 2
                                     : route?.params?.restoreWallet
-                                        ? currentStepIndex / 3 // Adjusting progress for 3 steps in restoreWallet
-                                        : (currentStepIndex + 1) / steps.length) * 100}%`
+                                        ? currentStepIndex / 3 
+                                        : (currentStepIndex + 1) / 4) * 100}%`
                             }]} />
                         </View>
                     </View>
-
                     {CurrentStepComponent && <CurrentStepComponent />}
                 </View>
             </ScrollView>

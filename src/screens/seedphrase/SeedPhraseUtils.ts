@@ -1,17 +1,15 @@
-import {newWallet, walletFromSeedPhrase} from '@orangecryptohq/orangeseed/dist';
+import { newWallet, walletFromSeedPhrase } from '@orangecryptohq/orangeseed/dist';
+import { strings } from '@strings/i18n';
 import Toast from "react-native-toast-message";
-import { setConfirmPasswordError } from "@redux/slice/SeedPhraseReducer";
 
-export const validateCurrentStep = (currentStepIndex, isSeedPhraseVerified, password, confirmPassword, dispatch, strings, validatePassword) => {
+export const validateCurrentStep = (currentStepIndex, isSeedPhraseVerified, password, confirmPassword) => {
     if (currentStepIndex === 1 && !isSeedPhraseVerified) {
         Toast.show({ type: 'warning', text1: strings.seedPhrasenotMatched });
         return false;
     }
-    if ((currentStepIndex === 2 || currentStepIndex === 3) && !validatePassword(password, currentStepIndex)) {
-        return false;
-    }
+    
     if (currentStepIndex === 3 && password !== confirmPassword) {
-        dispatch(setConfirmPasswordError(strings.passwordNotMatch));
+        Toast.show({ type: 'error', text1: strings.passwordNotMatch });
         return false;
     }
     return true;

@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import useSeedVault from '@hooks/useSeedVault';
 import { useAppDispatch } from "@redux/store";
-import { setDisabled, setWords } from "@redux/slice/SeedPhraseReducer";
+import { setDisabled } from "@redux/slice/SeedPhraseReducer";
 import { styles } from "./styles";
 const SeedPhraseView = () => {
 
@@ -38,7 +38,6 @@ const SeedPhraseView = () => {
     const handleCopy = () => {
         const phrase = seedPhrase.map(item => item.word).join(' ');
         Clipboard.setString(phrase);
-        dispatch(setWords(phrase))
         setIsCopied(true)
         dispatch(setDisabled(false))
     };
