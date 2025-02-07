@@ -6,8 +6,9 @@ import { Color } from '@values/color';
 import { Fonts } from '@values/fonts';
 import React, { useEffect } from 'react';
 import { Image, StyleSheet, View } from 'react-native';
-import useSeedVault from '../../hooks/useSeedVault';
-import { store } from '../../redux/store';
+import useSeedVault from '@hooks/useSeedVault';
+import { store } from '@redux/store';
+
 const SplashScreen = () => {
 
  const { isVaultUnlocked} = useSeedVault()

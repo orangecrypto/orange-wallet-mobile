@@ -1,6 +1,6 @@
 import { SeedVault } from "@orangecryptohq/orangeseed";
-import { ReactNativeStorageAdapter } from '../services/seedVault/ReactNativeStorageAdapter'
-import { MobileCryptoAdapter } from "../services/seedVault/MobileCryptoAdapter";
+import { MobileCryptoAdapter } from "@services/seedVault/MobileCryptoAdapter";
+import { ReactNativeStorageAdapter } from "@services/seedVault/ReactNativeStorageAdapter";
 import { useMemo } from "react";
 
 const useSeedVault = () => {

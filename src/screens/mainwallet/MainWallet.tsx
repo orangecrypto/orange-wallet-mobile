@@ -11,10 +11,10 @@ import Wallet from './wallet/Wallet';
 import { push } from '@routes/Navigator';
 import { RouteType } from '@routes/RouteType';
 import { useSelector } from 'react-redux';
-import { setHeaderAddress, walletReducerType } from './WalletReducer';
+import { setHeaderAddress, walletReducerType } from '@redux/slice/WalletReducer';
 import { Dispatch } from '@reduxjs/toolkit';
-import { useAppDispatch } from "../../redux/store";
-import { store } from "../../redux/store";
+import { useAppDispatch } from "@redux/store";
+import { store } from '@redux/store';
 import Clipboard from "@react-native-clipboard/clipboard";
 import { truncateAddress } from '@utils/Convert';
 

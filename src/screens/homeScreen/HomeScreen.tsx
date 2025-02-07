@@ -7,7 +7,7 @@ import { localAssets } from "@assets/assets";
 import { push } from "@routes/Navigator";
 import { RouteType } from "@routes/RouteType";
 import { Fonts } from '@values/fonts';
-import useSeedVault from '../../hooks/useSeedVault';
+import useSeedVault from '@hooks/useSeedVault';
 
 const HomeScreen = () => {
 

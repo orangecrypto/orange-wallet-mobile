@@ -8,7 +8,7 @@ import React, { useState } from "react";
 import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
 import { styles } from "./styles";
 import { localAssets } from "@assets/assets";
-import { store } from "../../redux/store";
+import { store } from '@redux/store';
 import Clipboard from "@react-native-clipboard/clipboard";
 
 const Receive = () => {

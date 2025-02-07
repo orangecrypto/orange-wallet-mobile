@@ -16,10 +16,10 @@ import { useEffect, useState } from "react";
 import { Keyboard, KeyboardAvoidingView, Platform, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
 import { useSelector } from "react-redux";
-import useSeedVault from '../../hooks/useSeedVault';
-import { setAccount, setIsWalletCreated, setWallet } from "../../redux/slice/appReducer";
-import { useAppDispatch } from "../../redux/store";
-import { clearSeedPhraseReducer, seedPhraseReducerType, setConfirmPasswordError, setIsRestoreWallet, setPasswordError } from "./SeedPhraseReducer";
+import useSeedVault from '@hooks/useSeedVault';
+import { setAccount, setIsWalletCreated, setWallet } from "@redux/slice/appReducer";
+import { useAppDispatch } from "@redux/store";
+import { clearSeedPhraseReducer, seedPhraseReducerType, setConfirmPasswordError, setIsRestoreWallet, setPasswordError } from "@redux/slice/SeedPhraseReducer";
 import { createWallet, restoreWallet, validateCurrentStep } from "./SeedPhraseUtils";
 import { styles } from './styles';
 const SeedPhrase = ({ route }) => {

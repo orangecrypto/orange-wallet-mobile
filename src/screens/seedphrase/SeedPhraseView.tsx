@@ -5,9 +5,9 @@ import { Responsive } from "@utils/Responsive";
 import { Color } from "@values/color";
 import { useEffect, useState } from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
-import useSeedVault from '../../hooks/useSeedVault';
-import { useAppDispatch } from "../../redux/store";
-import { setDisabled, setWords } from "./SeedPhraseReducer";
+import useSeedVault from '@hooks/useSeedVault';
+import { useAppDispatch } from "@redux/store";
+import { setDisabled, setWords } from "@redux/slice/SeedPhraseReducer";
 import { styles } from "./styles";
 const SeedPhraseView = () => {
 

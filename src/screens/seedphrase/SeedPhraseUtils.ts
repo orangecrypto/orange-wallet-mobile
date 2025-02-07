@@ -1,6 +1,6 @@
 import {newWallet, walletFromSeedPhrase} from '@orangecryptohq/orangeseed/dist';
 import Toast from "react-native-toast-message";
-import { setConfirmPasswordError } from "./SeedPhraseReducer";
+import { setConfirmPasswordError } from "@redux/slice/SeedPhraseReducer";
 
 export const validateCurrentStep = (currentStepIndex, isSeedPhraseVerified, password, confirmPassword, dispatch, strings, validatePassword) => {
     if (currentStepIndex === 1 && !isSeedPhraseVerified) {

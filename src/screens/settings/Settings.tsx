@@ -4,7 +4,7 @@ import { strings } from "@strings/i18n";
 import React, { useState } from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import { styles } from "./styles";
-import useSeedVault from '../../hooks/useSeedVault';
+import useSeedVault from '@hooks/useSeedVault';
 
 const Settings = () => {
     const { lockVault} = useSeedVault()

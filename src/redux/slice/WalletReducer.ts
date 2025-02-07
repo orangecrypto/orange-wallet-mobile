@@ -2,13 +2,10 @@ import { createSlice } from '@reduxjs/toolkit';
 
 export interface walletReducerType {
     headerAddress: string
-    
-    
 }
 
 const initialState: walletReducerType = {
     headerAddress: '',
-   
 };
 
 export const walletReducer = createSlice({

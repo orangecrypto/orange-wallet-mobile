@@ -6,11 +6,9 @@ import { useState } from 'react';
 import { Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import RenderCardItem from './RenderCardItem';
 import RenderTransactions from './RenderTransactions';
-
-
 import { Dispatch } from '@reduxjs/toolkit';
-import { useAppDispatch, store } from "../../../redux/store";
-import { setHeaderAddress } from '../WalletReducer';
+import { useAppDispatch, store } from "@redux/store";
+import { setHeaderAddress } from '@redux/slice/WalletReducer';
 const Wallet = () => {
     const account = store.getState().appReducer.account
     const dispatch: Dispatch = useAppDispatch();

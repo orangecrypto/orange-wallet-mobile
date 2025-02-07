@@ -7,8 +7,8 @@ import { Color } from "@values/color";
 import { useEffect } from "react";
 import { Image, Text, View } from "react-native";
 import { useSelector } from "react-redux";
-import { useAppDispatch } from "../../redux/store";
-import { seedPhraseReducerType, setConfirmPassword, setConfirmPasswordError, setConfirmPasswordFeedBack, setDisabled } from "./SeedPhraseReducer";
+import { useAppDispatch } from "@redux/store";
+import { seedPhraseReducerType, setConfirmPassword, setConfirmPasswordError, setConfirmPasswordFeedBack, setDisabled } from "@redux/slice/SeedPhraseReducer";
 import { styles } from "./styles";
 
 const ConfirmPassword = () => {

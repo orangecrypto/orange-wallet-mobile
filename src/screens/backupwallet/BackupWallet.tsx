@@ -10,7 +10,7 @@ import { Color } from "@values/color";
 import { Fonts } from '@values/fonts';
 import { useCallback, useEffect } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
-import useSeedVault from '../../hooks/useSeedVault';
+import useSeedVault from '@hooks/useSeedVault';
 const BackupWallet = () => {
 
     const {init: initSeedVault, storeSeed , hasSeed, unlockVault, clearVaultStorage }= useSeedVault()

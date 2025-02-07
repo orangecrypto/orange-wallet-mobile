@@ -1,5 +1,7 @@
 import CommonButton from "@components/CommonButton";
 import Switch from "@components/Switch";
+import { clearStoreData, useAppDispatch } from "@redux/store";
+import { Dispatch } from "@reduxjs/toolkit";
 import { goBack, resetNavigation } from "@routes/Navigator";
 import { RouteType } from "@routes/RouteType";
 import { strings } from "@strings/i18n";
@@ -8,9 +10,6 @@ import { Color } from "@values/color";
 import React, { useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { styles } from "./styles";
-import { Dispatch } from "@reduxjs/toolkit";
-import { clearStoreData, useAppDispatch } from "../../redux/store";
-import { clearCoinSettings } from "@screens/addcoin/CoinSettings";
 
 const ResetWallet = () => {
     const dispatch: Dispatch = useAppDispatch();

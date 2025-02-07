@@ -8,8 +8,8 @@ import React, { useState } from "react";
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Dispatch } from "@reduxjs/toolkit";
 import { useSelector } from "react-redux";
-import { useAppDispatch } from "../../redux/store";
-import { updateCoinStatus } from "./CoinSettings";
+import { useAppDispatch } from "@redux/store";
+import { updateCoinStatus } from "@redux/slice/CoinSettings";
 
 const AddCoin = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");

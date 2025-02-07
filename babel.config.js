@@ -14,6 +14,10 @@ module.exports = {
           "@values": "./src/resources/values",
           "@assets": "./src/resources/assets",
           "@strings": "./src/resources/locale",
+          "@redux": "./src/redux",
+          "@hooks": "./src/hooks",
+          "@services": "./src/services"
+
         },
       },
     ]

@@ -13,9 +13,9 @@ import { useEffect, useState } from "react";
 import { Image, Keyboard, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
 import Toast from "react-native-toast-message";
 import { useSelector } from "react-redux";
-import useSeedVault from '../../hooks/useSeedVault';
-import { useAppDispatch } from "../../redux/store";
-import { clearLoginReducer, loginReducerType, setPassword, setPasswordError, setPasswordFeedback } from "./LoginReducer";
+import useSeedVault from '@hooks/useSeedVault';
+import { useAppDispatch } from "@redux/store";
+import { clearLoginReducer, loginReducerType, setPassword, setPasswordError, setPasswordFeedback } from "@redux/slice/LoginReducer";
 const Login = () => {
     
     const { unlockVault } = useSeedVault()

@@ -8,9 +8,9 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { FlatList, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import bip39 from 'react-native-bip39';
 import { useSelector } from "react-redux";
-import useSeedVault from '../../hooks/useSeedVault';
-import { useAppDispatch } from "../../redux/store";
-import { seedPhraseReducerType, setDisabled, setIsSeedPhraseVerified } from "./SeedPhraseReducer";
+import useSeedVault from '@hooks/useSeedVault';
+import { useAppDispatch } from "@redux/store";
+import { seedPhraseReducerType, setDisabled, setIsSeedPhraseVerified } from "@redux/slice/SeedPhraseReducer";
 import { styles } from './styles';
 const SeedPhraseVerification = () => {
 

@@ -1,6 +1,6 @@
+import { getApi } from '@services/network/Api';
+import { ApiEndpoints } from '@services/network/ApiEndpoints';
 import { useQuery } from '@tanstack/react-query';
-import { getApi } from '../services/network/Api';
-import { ApiEndpoints } from '../services/network/ApiEndpoints';
 
 interface MarketDataOptions {
   currency?: string;
