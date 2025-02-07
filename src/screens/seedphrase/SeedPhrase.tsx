@@ -56,7 +56,7 @@ const SeedPhrase = ({ route }) => {
         if (!validateCurrentStep(currentStepIndex, isSeedPhraseVerified, password, confirmPassword)) {
             return;
         }
-        if (currentStepIndex === 3) {
+        if (currentStepIndex === Step.CONFIRM_PASSWORD) {
             await handleWallet();
             return;
         }
@@ -82,7 +82,8 @@ const SeedPhrase = ({ route }) => {
 
     const createAndStoreWallet = async (words) => {
         const { account, wallet } = await createWallet(words);
-        await changePassword(str2buf(''), str2buf(confirmPassword));
+        const encoder = new TextEncoder();
+        await changePassword(str2buf(''), encoder.encode(confirmPassword));
         updateWalletState(account, wallet);
     };
 
@@ -95,7 +96,7 @@ const SeedPhrase = ({ route }) => {
     };
 
     const handlePreviousStep = () => {
-        if ((backupLatter && currentStepIndex === Step.SEEDPHRASE_VERIFICATION) || (isRestoreWallet && currentStepIndex === Step.SEEDPHRASE)) {
+        if ((backupLatter && currentStepIndex === Step.ENTER_PASSWORD) || (isRestoreWallet && currentStepIndex === Step.SEEDPHRASE_VERIFICATION)) {
             goBack();
             return;
         }
@@ -123,14 +124,18 @@ const SeedPhrase = ({ route }) => {
                     <View style={styles.stepContainer}>
                         <Text style={styles.stepText}>
                             Step {backupLatter
-                                ? currentStepIndex - 1 : isRestoreWallet? 
-                                currentStepIndex : currentStepIndex + 1}
+                                ? currentStepIndex - 1
+                                : isRestoreWallet
+                                    ? currentStepIndex
+                                    : currentStepIndex + 1}
                         </Text>
                         <View style={styles.progressBarContainer}>
                             <View style={[styles.progressBar, {
-                                width: `${(backupLatter? (currentStepIndex - 1) / Step.SEEDPHRASE_VERIFICATION : 
-                                        isRestoreWallet? currentStepIndex / Step.ENTER_PASSWORD : 
-                                        (currentStepIndex + 1) / Step.CONFIRM_PASSWORD) * 100}%`
+                                width: `${(backupLatter
+                                    ? (currentStepIndex - 1) / 2
+                                    : isRestoreWallet
+                                        ? currentStepIndex / 3
+                                        : (currentStepIndex + 1) / 4) * 100}%`
                             }]} />
                         </View>
                     </View>

@@ -8,7 +8,7 @@ export const validateCurrentStep = (currentStepIndex, isSeedPhraseVerified, pass
         Toast.show({ type: 'warning', text1: strings.seedPhrasenotMatched });
         return false;
     }   
-    if (currentStepIndex === Step.ENTER_PASSWORD && password !== confirmPassword) {
+    if (currentStepIndex === Step.CONFIRM_PASSWORD && password !== confirmPassword) {
         Toast.show({ type: 'error', text1: strings.passwordNotMatch });
         return false;
     }
