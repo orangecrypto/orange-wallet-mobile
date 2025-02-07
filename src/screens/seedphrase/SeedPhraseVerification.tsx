@@ -20,7 +20,7 @@ const SeedPhraseVerification = () => {
         new Array(12).fill(null).map((_, index) => ({ id: index.toString(), word: '' }))
     );
     const [isPasted, setIsPasted] = useState(false);
-    const { getSeed, init: initSeedVault, storeSeed } = useSeedVault()
+    const { getSeed, init: initSeedVault, storeSeed, hasSeed, clearVaultStorage } = useSeedVault()
 
     const handlePaste = async () => {
         const words = await Clipboard.getString()
@@ -34,52 +34,43 @@ const SeedPhraseVerification = () => {
     };
 
     const validateMnemonic = useCallback(
-
         (seed: string[]) => {
             const seedStr = seed.map((e) => e.trim()).join(' ');
             if (bip39.validateMnemonic(seedStr)) {
-                console.log('Iside if')
                 return true;
-
             }
-            console.log('Not validate')
             return false;
         }, []);
 
     useEffect(() => {
+        dispatch(setDisabled(true));
+        const allFilled = data.every(item => item.word.trim() !== '');
+        dispatch(setDisabled(!allFilled));
+        isRestoreWallet ? handleRestoreWallet() : verifySeed();
+    }, [data]);
 
-        const fetchSeed = async () => {
-            dispatch(setDisabled(true))
-            const allFilled = data.every(item => item.word.trim() !== '');
-            dispatch(setDisabled(!allFilled))
+    const handleRestoreWallet = async () => {
+        const wordsArray = data.map(item => item.word);
+        const validationResult = validateMnemonic(wordsArray);
 
-            if (isRestoreWallet) {
-                console.log('isRestoreWallet', isRestoreWallet)
-                const wordsArray = data.map(item => item.word);
-                const validationResult = validateMnemonic(wordsArray)
-                console.log('validationResult', validationResult)
-                if (validationResult) {
-
-                    console.log('wordsArray', wordsArray.join(" "))
-                    await initSeedVault(str2buf(''))
-                    await storeSeed(wordsArray.join(" "))
-                    dispatch(setIsSeedPhraseVerified(true));
-
-                } else {
-                    dispatch(setIsSeedPhraseVerified(false));
-
-                }
-            } else {
-                const words = await getSeed()
-                const myWords = words.split(' ');
-                const isMatched = data.length === myWords.length &&
-                    data.every(item => myWords.includes(item.word)) &&
-                    myWords.every(word => data.some(item => item.word === word));
-                dispatch(setIsSeedPhraseVerified(isMatched))
-            }
+        if (validationResult) {
+            (await hasSeed()) && (await clearVaultStorage());
+            await initSeedVault(str2buf(''));
+            await storeSeed(wordsArray.join(" "));
+            dispatch(setIsSeedPhraseVerified(true));
+        } else {
+            dispatch(setIsSeedPhraseVerified(false));
         }
-        fetchSeed()
-    }, [data])
+    };
+
+    const verifySeed = async () => {
+        const words = await getSeed();
+        const myWords = words.split(' ');
+        const isMatched = data.length === myWords.length &&
+            data.every(item => myWords.includes(item.word)) &&
+            myWords.every(word => data.some(item => item.word === word));
+        dispatch(setIsSeedPhraseVerified(isMatched));
+    };
 
     const handleTextChange = (text, id) => {
         const newData = data.map(item =>
