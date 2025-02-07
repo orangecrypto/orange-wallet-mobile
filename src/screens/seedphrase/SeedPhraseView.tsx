@@ -26,7 +26,6 @@ const SeedPhraseView = () => {
             } catch (error) {
                 console.error("Error fetching seed:", error);
             }
-            console.log(await getSeed())
         };
         fetchSeed();
     }, []);

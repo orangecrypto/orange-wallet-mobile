@@ -19,6 +19,7 @@ import { useSelector } from "react-redux";
 import EnterPassword from "./EnterPassword";
 import { createWallet, restoreWallet, validateCurrentStep } from "./SeedPhraseUtils";
 import { styles } from './styles';
+import { Step } from "./Steps";
 
 const SeedPhrase = ({ route }) => {
     const { getSeed, changePassword, hasSeed, clearVaultStorage, storeSeed, init } = useSeedVault();
@@ -72,19 +73,16 @@ const SeedPhrase = ({ route }) => {
     };
 
     const restoreAndStoreWallet = async (words) => {
-        console.log('Wallet Restore');
         const { account, wallet } = await restoreWallet(words);
         (await hasSeed()) && (await clearVaultStorage());
-        const encoder = new TextEncoder();
-        await init(encoder.encode(confirmPassword));
+        await init(str2buf(confirmPassword));
         await storeSeed(words);
         updateWalletState(account, wallet);
     };
 
     const createAndStoreWallet = async (words) => {
         const { account, wallet } = await createWallet(words);
-        const encoder = new TextEncoder();
-        await changePassword(str2buf(''), encoder.encode(confirmPassword));
+        await changePassword(str2buf(''), str2buf(confirmPassword));
         updateWalletState(account, wallet);
     };
 
@@ -97,7 +95,7 @@ const SeedPhrase = ({ route }) => {
     };
 
     const handlePreviousStep = () => {
-        if ((backupLatter && currentStepIndex === 2) || (isRestoreWallet && currentStepIndex === 1)) {
+        if ((backupLatter && currentStepIndex === Step.SEEDPHRASE_VERIFICATION) || (isRestoreWallet && currentStepIndex === Step.SEEDPHRASE)) {
             goBack();
             return;
         }
@@ -125,18 +123,14 @@ const SeedPhrase = ({ route }) => {
                     <View style={styles.stepContainer}>
                         <Text style={styles.stepText}>
                             Step {backupLatter
-                                ? currentStepIndex - 1
-                                : isRestoreWallet
-                                    ? currentStepIndex
-                                    : currentStepIndex + 1}
+                                ? currentStepIndex - 1 : isRestoreWallet? 
+                                currentStepIndex : currentStepIndex + 1}
                         </Text>
                         <View style={styles.progressBarContainer}>
                             <View style={[styles.progressBar, {
-                                width: `${(backupLatter
-                                    ? (currentStepIndex - 1) / 2
-                                    : isRestoreWallet
-                                        ? currentStepIndex / 3
-                                        : (currentStepIndex + 1) / 4) * 100}%`
+                                width: `${(backupLatter? (currentStepIndex - 1) / Step.SEEDPHRASE_VERIFICATION : 
+                                        isRestoreWallet? currentStepIndex / Step.ENTER_PASSWORD : 
+                                        (currentStepIndex + 1) / Step.CONFIRM_PASSWORD) * 100}%`
                             }]} />
                         </View>
                     </View>

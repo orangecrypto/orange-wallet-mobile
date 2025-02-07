@@ -1,13 +1,14 @@
 import { newWallet, walletFromSeedPhrase } from '@orangecryptohq/orangeseed/dist';
 import { strings } from '@strings/i18n';
 import Toast from "react-native-toast-message";
+import { Step } from './Steps';
 
 export const validateCurrentStep = (currentStepIndex, isSeedPhraseVerified, password, confirmPassword) => {
-    if (currentStepIndex === 1 && !isSeedPhraseVerified) {
+    if (currentStepIndex === Step.SEEDPHRASE_VERIFICATION && !isSeedPhraseVerified) {
         Toast.show({ type: 'warning', text1: strings.seedPhrasenotMatched });
         return false;
     }   
-    if (currentStepIndex === 3 && password !== confirmPassword) {
+    if (currentStepIndex === Step.ENTER_PASSWORD && password !== confirmPassword) {
         Toast.show({ type: 'error', text1: strings.passwordNotMatch });
         return false;
     }
@@ -33,7 +34,6 @@ export const createWallet = async (words) => {
 
     } catch (error) {
         Toast.show({ type: 'error', text1: error.message });
-        console.log('createWallet', error.message)
     }
 };
 
@@ -58,6 +58,5 @@ export const restoreWallet = async (seed: string) => {
         return { account, wallet };
     } catch (error) {
         Toast.show({ type: 'error', text1: error.message });
-        console.log('createWallet', error.message)
     }
 };

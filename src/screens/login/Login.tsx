@@ -16,6 +16,7 @@ import { useSelector } from "react-redux";
 import useSeedVault from '@hooks/useSeedVault';
 import { useAppDispatch } from "@redux/store";
 import { clearLoginReducer, loginReducerType, setPassword, setPasswordError, setPasswordFeedback } from "@redux/slice/LoginReducer";
+import { str2buf } from "@orangecryptohq/orangeseed";
 const Login = () => {
     
     const { unlockVault } = useSeedVault()
@@ -38,8 +39,7 @@ const Login = () => {
         } else {
 
             try {
-                const passwordBytes = new TextEncoder().encode(password);
-                await unlockVault(passwordBytes)
+                await unlockVault(str2buf(password))
                 dispatch(clearLoginReducer())
                 push(RouteType.WALLETBALANCE)
 
