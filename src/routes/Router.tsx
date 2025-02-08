@@ -35,6 +35,7 @@ import Settings from '@screens/settings/Settings';
 import UpdatePassword from '@screens/settings/updatepassword/UpdatePassword';
 import SplashScreen from '@screens/splashScreen/SplashScreen';
 import Success from '@screens/success/Success';
+import WalletRestored from '@screens/success/WalletRestored';
 import Warning from '@screens/warnings/Warning';
 import React from 'react';
 
@@ -79,6 +80,7 @@ export default () => {
                 <Stack.Screen component={Receive} name={RouteType.RECEIVE}/>
                 <Stack.Screen component={ViewQr} name={RouteType.VIEWQR}/>
                 <Stack.Screen component={Warning} name={RouteType.WARNING}/>
+                <Stack.Screen component={WalletRestored} name={RouteType.WALLETRESTORED}/>
             </Stack.Navigator>
         </NavigationContainer>
     );

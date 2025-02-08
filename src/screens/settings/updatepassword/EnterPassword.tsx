@@ -24,36 +24,36 @@ const EnterPassword = ({ type, onPasswordChange, handleError }: { type: "oldPass
         setError(strengthMessage);
         setFeedback(feedback);
         dispatch(setDisabled(!(strengthMessage === strings.strongPassword)))
-       
+
     };
     useEffect(() => {
-       dispatch(setDisabled(true))
+        dispatch(setDisabled(true))
     }, [])
 
     return (
         <View style={styles.enterPasswordContainer}>
-                    <Image source={localAssets.lock} style={styles.passwordIcon} />
-                    <Text style={styles.title}>{type === "oldPassword" ?  strings.updatePassword : type === "newPassword" ? strings.enterPassword : strings.confirmPassword}</Text>
-                    <Text style={[styles.description,{lineHeight : Responsive.size22}]}>{type === "oldPassword" ? strings.enterCurrentPassword :type === "newPassword" ? strings.enterNewPassword : strings.confirmPasswordDec}</Text>
+            <Image source={localAssets.lock} style={styles.passwordIcon} />
+            <Text style={styles.title}>{type === "oldPassword" ? strings.updatePassword : type === "newPassword" ? strings.enterPassword : strings.confirmPassword}</Text>
+            <Text style={[styles.description, { lineHeight: Responsive.size22 }]}>{type === "oldPassword" ? strings.enterCurrentPassword : type === "newPassword" ? strings.enterNewPassword : strings.confirmPasswordDec}</Text>
 
-                    <CustomTextInput
-                        placeholder=""
-                        value={password}
-                        onChangeText={(text) => {
-                            setPassword(text); 
-                            handlePasswordChange(text); 
-                        }}
-                        keyboardType={'default'}
-                        secureTextEntry={true}
-                        showPasswordToggle={true}
-                        passwordIconVisible={localAssets.eye}
-                        passwordIconHidden={localAssets.eyeoff}
-                        style={styles.input} />
-                    <Text style={[styles.passwordError, { color: error === strings.strongPassword ? 'green' : 'red' }]}>
-                        {error}
-                    </Text>
-                    <Text style={styles.passwordError}>{feedback}</Text>
-                </View>
+            <CustomTextInput
+                placeholder=""
+                value={password}
+                onChangeText={(text) => {
+                    setPassword(text);
+                    handlePasswordChange(text);
+                }}
+                keyboardType={'default'}
+                secureTextEntry={true}
+                showPasswordToggle={true}
+                passwordIconVisible={localAssets.eye}
+                passwordIconHidden={localAssets.eyeoff}
+                style={styles.input} />
+            <Text style={[styles.passwordError, { color: error === strings.strongPassword ? 'green' : 'red' }]}>
+                {error}
+            </Text>
+            <Text style={styles.passwordError}>{feedback}</Text>
+        </View>
     );
 };
 

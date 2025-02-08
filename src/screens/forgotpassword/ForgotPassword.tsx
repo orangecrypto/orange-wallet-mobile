@@ -1,5 +1,9 @@
 import CommonButton from "@components/CommonButton";
 import Switch from "@components/Switch";
+import useSeedVault from "@hooks/useSeedVault";
+import { clearAppReducer } from "@redux/slice/appReducer";
+import { useAppDispatch } from "@redux/store";
+import { Dispatch } from "@reduxjs/toolkit";
 import { goBack, resetNavigation } from "@routes/Navigator";
 import { RouteType } from "@routes/RouteType";
 import { strings } from "@strings/i18n";
@@ -10,11 +14,23 @@ import React, { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 const ForgotPassword = () => {
+    const { clearVaultStorage } = useSeedVault()
+    const dispatch: Dispatch = useAppDispatch()
     const [isSwitchEnabled, setIsSwitchEnabled] = useState(false);
 
     const handleToggle = () => {
         setIsSwitchEnabled((prev) => !prev);
     };
+
+    const resetWallet = async () => {
+        try {
+            await clearVaultStorage()
+            dispatch(clearAppReducer())
+            resetNavigation(RouteType.HOME_SCREEN)
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     return (
         <View style={styles.container}>
@@ -27,16 +43,16 @@ const ForgotPassword = () => {
 
             </View>
             <View style={styles.switchContainer}>
-            <Switch
-                isEnable={isSwitchEnabled}
-                height={Responsive.size35}
-                width={Responsive.size70}
-                onToggle={handleToggle}/>
-                </View>
+                <Switch
+                    isEnable={isSwitchEnabled}
+                    height={Responsive.size35}
+                    width={Responsive.size70}
+                    onToggle={handleToggle} />
+            </View>
             <View style={styles.buttonContainer}>
                 <CommonButton
                     title={strings.RESETWALLET}
-                    onPress={() => resetNavigation(RouteType.HOME_SCREEN)}
+                    onPress={() => resetWallet()}
                     backgroundColor={Color.orangeButton}
                     textColor={Color.white}
                     disabled={!isSwitchEnabled}
@@ -48,16 +64,16 @@ const ForgotPassword = () => {
 };
 
 const styles = StyleSheet.create({
-   container: {
-           flex: 1,
-           backgroundColor: Color.black,
-       },
-       contentContainer: {
-           flex: 1,
-           justifyContent: "flex-start",
-           paddingHorizontal: Responsive.size18,
-       },
-       button: {
+    container: {
+        flex: 1,
+        backgroundColor: Color.black,
+    },
+    contentContainer: {
+        flex: 1,
+        justifyContent: "flex-start",
+        paddingHorizontal: Responsive.size18,
+    },
+    button: {
         backgroundColor: Color.backgroundbg,
         width: Responsive.size70,
         justifyContent: "center",
@@ -82,17 +98,17 @@ const styles = StyleSheet.create({
         fontSize: Responsive.size18,
         fontFamily: Fonts.regular,
         lineHeight: Responsive.size20,
-        marginTop:Responsive.size10
+        marginTop: Responsive.size10
     },
     switchContainer: {
         justifyContent: 'flex-end',
-        padding:Responsive.size18
+        padding: Responsive.size18
     },
     buttonContainer: {
         justifyContent: 'flex-end',
         alignItems: 'center',
         marginBottom: Responsive.size20,
-        padding:Responsive.size18
+        padding: Responsive.size18
     },
 });
 export default ForgotPassword;

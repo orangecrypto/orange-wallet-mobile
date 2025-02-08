@@ -33,5 +33,6 @@ export enum RouteType {
     RECEIVE = 'Receive',
     VIEWQR = 'ViewQr',
     WARNING = 'Warning',
+    WALLETRESTORED='WalletRestored'
   }
   

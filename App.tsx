@@ -4,6 +4,7 @@ import 'react-native-url-polyfill/auto';
 import 'react-native-crypto';
 import { Buffer } from "buffer";
 import process from "process";
+import { AppState } from 'react-native';
 
 if (!global.crypto) {
   global.crypto = crypto;
@@ -45,6 +46,23 @@ const App = () => {
       onError: (error) => console.error("Error in mutation:", error),
     }),
   });
+
+  React.useEffect(() => {
+    const handleAppStateChange = (nextAppState) => {
+      if (nextAppState === 'background') {
+        console.log('Device locked or app moved to background');
+        onDeviceLock(); 
+      }
+    };
+    const subscription = AppState.addEventListener('change', handleAppStateChange);
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
+  const onDeviceLock = () => {
+    console.log('Handling device lock event...');
+  };
 
   return (
     <Provider store={store}>
