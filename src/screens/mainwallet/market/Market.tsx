@@ -107,8 +107,7 @@ const Market = () => {
   return (
     <View style={styles.container}>
       {isLoading && <Loader loading={isLoading} />}
-
-    
+ 
       <FlatList
         data={graphDataList}
         keyExtractor={(item, index) => `${item.id}-${index}`}

@@ -20,15 +20,17 @@ import EnterPassword from "./EnterPassword";
 import { createWallet, restoreWallet, validateCurrentStep } from "./SeedPhraseUtils";
 import { styles } from './styles';
 import { Step } from "./Steps";
+import Loader from "@components/Loader";
 
 const SeedPhrase = ({ route }) => {
     const { getSeed, changePassword, hasSeed, clearVaultStorage, storeSeed, init } = useSeedVault();
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [backupLatter, setBackupLatter] = useState(route?.params?.backupLatter || false);
-    const {isSeedPhraseVerified, disabled, isRestoreWallet } = useSelector((state: { seedPhraseReducer: seedPhraseReducerType }) => state.seedPhraseReducer);
+    const { isSeedPhraseVerified, disabled, isRestoreWallet } = useSelector((state: { seedPhraseReducer: seedPhraseReducerType }) => state.seedPhraseReducer);
     const [currentStepIndex, setCurrentStepIndex] = useState(route?.params?.backupLatter ? 2 : route?.params?.restoreWallet ? 1 : 0);
     const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const dispatch: Dispatch = useAppDispatch();
 
     dispatch(setIsRestoreWallet(route?.params?.restoreWallet || false));
@@ -64,6 +66,7 @@ const SeedPhrase = ({ route }) => {
     };
 
     const handleWallet = async () => {
+        setIsLoading(true)
         const words = await getSeed();
         if (isRestoreWallet) {
             await restoreAndStoreWallet(words);
@@ -73,18 +76,28 @@ const SeedPhrase = ({ route }) => {
     };
 
     const restoreAndStoreWallet = async (words) => {
-        const { account, wallet } = await restoreWallet(words);
-        (await hasSeed()) && (await clearVaultStorage());
-        await init(str2buf(confirmPassword));
-        await storeSeed(words);
-        updateWalletState(account, wallet);
+        try {
+            const { account, wallet } = await restoreWallet(words);
+            (await hasSeed()) && (await clearVaultStorage());
+            await init(str2buf(confirmPassword));
+            await storeSeed(words);
+            updateWalletState(account, wallet);
+            setIsLoading(false)
+        } catch (error) {
+            setIsLoading(false)
+        }
     };
 
     const createAndStoreWallet = async (words) => {
-        const { account, wallet } = await createWallet(words);
-        const encoder = new TextEncoder();
-        await changePassword(str2buf(''), encoder.encode(confirmPassword));
-        updateWalletState(account, wallet);
+        try {
+            const { account, wallet } = await createWallet(words);
+            const encoder = new TextEncoder();
+            await changePassword(str2buf(''), encoder.encode(confirmPassword));
+            updateWalletState(account, wallet);
+            setIsLoading(false)
+        } catch (error) {
+            setIsLoading(false)
+        }
     };
 
     const updateWalletState = (account, wallet) => {
@@ -104,11 +117,12 @@ const SeedPhrase = ({ route }) => {
     };
 
     const CurrentStepComponent = steps[currentStepIndex]?.component;
-    
+
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
             style={styles.seePhrasecontainer}>
+            {isLoading && <Loader loading={isLoading} />}
             <ScrollView
                 contentContainerStyle={{ flexGrow: 1 }}
                 keyboardShouldPersistTaps="handled"
