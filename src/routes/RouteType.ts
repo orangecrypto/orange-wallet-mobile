@@ -14,8 +14,6 @@ export enum RouteType {
     CURRENCY = 'Currency',
     CMS = 'Cms',
     UPDATEPASSWORD = 'Update Password',
-    NEWPASSWORD = 'NewPassword',
-    CONFIRMNEWPASSWORD = 'ConfirmNewPassword',
     BACKUPYOURWALLET = 'Backup Wallet',
     COPYSEEDPHRASE = 'CopySeedPhrase',
     RESTOREASSETS = 'Restore Assets',
