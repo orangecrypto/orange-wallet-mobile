@@ -4,33 +4,48 @@ import { goBack } from "@routes/Navigator";
 import { strings } from "@strings/i18n";
 import { styles } from "./styles";
 import { Color } from "@values/color";
+import { initialNetworksList } from "@orangecryptohq/orangeseed";
+import { Dispatch } from "@reduxjs/toolkit";
+import { store, useAppDispatch } from "@redux/store";
+import { setNetwork } from "@redux/slice/appReducer";
 
 const Network = () => {
-    const [networkArray, setNetworkArray] = useState([
-        { id: 1, name: "MainNet", isSelected: false },
-        { id: 2, name: "TestNet", isSelected: false },
-    ]);
 
-    const handleSelection = (id) => {
+    const networkType = store.getState().appReducer.network?.type;
+
+    const [networkArray, setNetworkArray] = useState(
+        initialNetworksList.map((network, index) => ({
+            id: index + 1,
+            isSelected: network.type === networkType,
+            ...network,
+        }))
+    );
+
+    const dispatch: Dispatch = useAppDispatch();
+    
+    const changeNetwork = (item) => {
         const updatedArray = networkArray.map((network) =>
-            network.id === id
+            network.id === item?.id
                 ? { ...network, isSelected: true }
                 : { ...network, isSelected: false }
         );
         setNetworkArray(updatedArray);
+        dispatch(setNetwork({
+            type: item?.type,
+            address: item?.address
+        }))    
     };
 
     const renderItem = ({ item }) => (
         <TouchableOpacity
             style={styles.item}
-            onPress={() => handleSelection(item.id)}
-        >
+            onPress={() => changeNetwork(item)}>
             <Text
                 style={[
                     styles.text,
                     { color: item.isSelected ? Color.orangeButton: Color.white }, 
                 ]}>
-                {item.name}
+                {item.type}
             </Text>
         </TouchableOpacity>
     );
@@ -52,5 +67,4 @@ const Network = () => {
         </View>
     );
 };
-
 export default Network;

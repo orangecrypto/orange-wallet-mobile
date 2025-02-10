@@ -26,6 +26,7 @@ const MainWallet = () => {
 
     useEffect(()=>{
         dispatch(setHeaderAddress(account?.btcAddress))
+        console.log(store.getState().appReducer.wallet)
     },[])
 
     const handleCopyPress = () => {

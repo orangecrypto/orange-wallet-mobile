@@ -1,26 +1,38 @@
 import { goBack, push, resetNavigation } from "@routes/Navigator";
 import { RouteType } from "@routes/RouteType";
 import { strings } from "@strings/i18n";
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import { styles } from "./styles";
 import useSeedVault from '@hooks/useSeedVault';
+import { store } from "@redux/store";
+import { useFocusEffect } from "@react-navigation/native";
 
 const Settings = () => {
-    const { lockVault} = useSeedVault()
-    const [settingsArray, setSettingsArray] = useState([
-        { id: 1, name: "Version", value: "1.1.7" },
-        { id: 2, name: "Network", value: "Mainnet" },
-        { id: 3, name: "Currency", value: "CAD" },
-        { id: 5, name: "Update Password", value: "" },
-        { id: 6, name: "Backup Wallet", value: "" },
-        { id: 7, name: "Restore Assets", value: "" },
-        { id: 8, name: "Lock Wallet", value: "" },
-        { id: 9, name: "Reset Wallet", value: "" },
-        { id: 10, name: "Terms of Service", value: "", url: "https://docs.orangecrypto.com/legal/terms-of-service" },
-        { id: 11, name: "Privacy Policy", value: "", url: "https://docs.orangecrypto.com/legal/privacy-policy" },
-        { id: 12, name: "Support", value: "", url: "https://docs.orangecrypto.com/orange-wallet" },
-    ]);
+    const { lockVault } = useSeedVault();
+    const [settingsArray, setSettingsArray] = useState([]);
+
+    const loadSettings = () => {
+        setSettingsArray([
+            { id: 1, name: "Version", value: "1.1.7" },
+            { id: 2, name: "Network", value: store.getState().appReducer.network?.type },
+            { id: 3, name: "Currency", value: "CAD" },
+            { id: 5, name: "Update Password", value: "" },
+            { id: 6, name: "Backup Wallet", value: "" },
+            { id: 7, name: "Restore Assets", value: "" },
+            { id: 8, name: "Lock Wallet", value: "" },
+            { id: 9, name: "Reset Wallet", value: "" },
+            { id: 10, name: "Terms of Service", value: "", url: "https://docs.orangecrypto.com/legal/terms-of-service" },
+            { id: 11, name: "Privacy Policy", value: "", url: "https://docs.orangecrypto.com/legal/privacy-policy" },
+            { id: 12, name: "Support", value: "", url: "https://docs.orangecrypto.com/orange-wallet" },
+        ]);
+    };
+
+    useFocusEffect(
+        useCallback(() => {
+            loadSettings();
+        }, [])
+    );
 
     const availableRoutes = [
         "Network",
@@ -35,13 +47,12 @@ const Settings = () => {
 
     const lockWallet = async () => {
         try {
-            await lockVault()
-            resetNavigation(RouteType.LOGIN)
+            await lockVault();
+            resetNavigation(RouteType.LOGIN);
+        } catch (error) {
+            console.log('Lock Wallet', error);
         }
-        catch (error) {
-            console.log('Lock Wallet', error)
-        }
-    }
+    };
 
     const renderItem = ({ item }) => (
         <TouchableOpacity
@@ -51,11 +62,9 @@ const Settings = () => {
                     push(item.name);
                 } else if (cmsRoutes.includes(item.name)) {
                     push("Cms", { title: item.name, url: item.url });
-                }
-                else if (item.name === "Lock Wallet") {
-                    lockWallet()
-                }
-                else {
+                } else if (item.name === "Lock Wallet") {
+                    lockWallet();
+                } else {
                     console.warn(`Route "${item.name}" is not available.`);
                 }
             }}>

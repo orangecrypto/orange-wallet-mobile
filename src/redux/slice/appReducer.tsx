@@ -16,7 +16,8 @@ export interface appReducerType {
    coinSettings: [],
    isWalletCreated: boolean,
    account:{},
-   wallet:{}
+   wallet:{},
+   network:{},
 }
 
 const initialState: appReducerType = {
@@ -24,7 +25,12 @@ const initialState: appReducerType = {
     coinSettings:[],
     isWalletCreated:false,
     account:{},
-    wallet:{}
+    wallet:{},
+    network:{
+        address: "https://api.hiro.so", 
+        btcApiUrl: "https://mempool.space/api",
+        type: "Mainnet"
+    }
 };
 
 export const appReducer = createSlice({
@@ -41,11 +47,13 @@ export const appReducer = createSlice({
         setWallet: (state, action) => {
             state.wallet = action.payload
         },
-
-          clearAppReducer: () => initialState,
+        setNetwork: (state, action) => {
+            state.network = action.payload
+        },
+        clearAppReducer: () => initialState,
     }
 });
 
-export const {setIsWalletCreated, clearAppReducer, setAccount, setWallet } = appReducer.actions;
+export const {setIsWalletCreated, clearAppReducer, setAccount, setWallet, setNetwork } = appReducer.actions;
 
 export default appReducer.reducer;
