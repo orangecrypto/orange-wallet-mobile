@@ -7,8 +7,12 @@ import { localAssets } from "@assets/assets";
 import { push } from "@routes/Navigator";
 import { RouteType } from "@routes/RouteType";
 import { Fonts } from '@values/fonts';
+import useSeedVault from '@hooks/useSeedVault';
 
 const HomeScreen = () => {
+
+    const { clearVaultStorage } = useSeedVault()
+
     return (
         <View style={styles.container}>
             <Image source={localAssets.pill} style={styles.topIcon} />
@@ -28,7 +32,10 @@ const HomeScreen = () => {
                 />
                 <CommonButton
                     title={strings.restoreWallet}
-                    onPress={() => console.log('Restore Wallet pressed')}
+                    onPress={() => {
+                        clearVaultStorage()
+                        push(RouteType.SEEDPHRASE,{restoreWallet : true})
+                    }}
                     backgroundColor={Color.black}
                     textColor={Color.white}
                     borderColor={Color.blackBorder}

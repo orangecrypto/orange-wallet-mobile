@@ -1,3 +1,4 @@
+import { strings } from '@strings/i18n';
 import { Responsive } from '@utils/Responsive';
 import { Color } from "@values/color";
 import { Fonts } from '@values/fonts';
@@ -5,10 +6,12 @@ import { useState } from 'react';
 import { Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import RenderCardItem from './RenderCardItem';
 import RenderTransactions from './RenderTransactions';
-import { strings } from '@strings/i18n';
-
-
+import { Dispatch } from '@reduxjs/toolkit';
+import { useAppDispatch, store } from "@redux/store";
+import { setHeaderAddress } from '@redux/slice/WalletReducer';
 const Wallet = () => {
+    const account = store.getState().appReducer.account
+    const dispatch: Dispatch = useAppDispatch();
     const [currentStep, setCurrentStep] = useState(1);
     const [selectedItem, setSelectedItem] = useState(null);
     const [selectedCategory, setSelectedCategory] = useState("All"); 
@@ -19,7 +22,6 @@ const Wallet = () => {
         { id: 1, category: "BTC", name: "Bitcoin", quantity: "2.9841", value: "$140,298.12" },
         { id: 2, category: "BRC20", name: "Wrapped BTC", quantity: ".932", value: "$26,452.07" },
         { id: 3, category: "Stacks", name: "Stacks", quantity: "10", value: "$100.00" },
-        { id: 4, category: "Runes", name: "Stacks", quantity: "10", value: "$100.00" },
     ];
 
     const totalSteps = cryptoArray.length;
@@ -58,6 +60,9 @@ const Wallet = () => {
         setSelectedItem(item); // Only update selected item for highlight, not category
         const itemIndex = filteredCryptoArray.findIndex((crypto) => crypto.id === item.id);
         setCurrentStep(itemIndex + 1);
+        console.log('handleItemClick',item.category)
+         dispatch(setHeaderAddress(item.category==='Stacks'? account?.stxAddress : account?.btcAddress ))
+
     };
 
     return (

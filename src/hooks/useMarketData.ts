@@ -1,6 +1,6 @@
+import { getApi } from '@services/network/Api';
+import { ApiEndpoints } from '@services/network/ApiEndpoints';
 import { useQuery } from '@tanstack/react-query';
-import { getApi } from '../services/network/Api';
-import { ApiEndpoints } from '../services/network/ApiEndpoints';
 
 interface MarketDataOptions {
   currency?: string;
@@ -19,6 +19,7 @@ const useMarketData = (options: MarketDataOptions = {}) => {
   return useQuery({
     queryKey: ['marketData', currency],
     queryFn: () => fetchMarketData({ currency }),
+    retry: false,
     });
 
  

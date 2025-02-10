@@ -8,13 +8,16 @@ import React, { useState } from "react";
 import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
 import { styles } from "./styles";
 import { localAssets } from "@assets/assets";
+import { store } from '@redux/store';
+import Clipboard from "@react-native-clipboard/clipboard";
 
 const Receive = () => {
 
+    const account =store.getState().appReducer.account
     const [addressArray, setAddressArray] = useState([
-        { id: 1, name: "Bitcoin", },
-        { id: 2, name: "Ordinals and BRC20", },
-        { id: 3, name: "Stacks and SIP10", }
+        { id: 1, name: "Bitcoin", address : account?.btcAddress },
+        { id: 2, name: "Ordinals and BRC20",address : account?.ordinalsAddress },
+        { id: 3, name: "Stacks and SIP10",address : account?.stxAddress }
 
     ]);
 
@@ -22,10 +25,10 @@ const Receive = () => {
         <View style={styles.item}>
             <Text style={styles.text}>{item.name}</Text>
             <View style={styles.rightItemContainer}>
-                <TouchableOpacity  style={styles.rightItemIconContaner} onPress={()=>{console.log('Copy click')}}>
+                <TouchableOpacity  style={styles.rightItemIconContaner} onPress={()=>{ Clipboard.setString(item?.address)}}>
                 <Image style={styles.rightItemIcon} source={localAssets.copy} />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.rightItemIconContaner} onPress={()=>{push(RouteType.VIEWQR)}}>
+                <TouchableOpacity style={styles.rightItemIconContaner} onPress={()=>{push(RouteType.VIEWQR,{ item : item})}}>
                 <Image style={styles.rightItemIcon} source={localAssets.qr} />
                 </TouchableOpacity>
             </View>

@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { getApi } from '../services/network/Api';
-import { ApiEndpoints } from '../services/network/ApiEndpoints';
+import { getApi } from '@services/network/Api';
+import { ApiEndpoints } from '@services/network/ApiEndpoints';
 
 interface GraphDataOptions {
   currency?: string;
@@ -24,6 +24,7 @@ const useGraphData = (options: GraphDataOptions = {}) => {
   return useQuery({
     queryKey: ['graphData', currency, id, count , interval],
     queryFn: () => fetchGraphData({ currency , id, count , interval}),
+    retry: false,
     });
 
  

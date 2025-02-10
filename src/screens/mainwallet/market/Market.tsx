@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { Dimensions, FlatList, Text, View } from 'react-native';
-import useMarketData from '../../../hooks/useMarketData';
-import GraphSliderItem from './GraphSliderItem';
-import RenderAssets from './RenderAssets';
 import Loader from '@components/Loader';
 import { strings } from '@strings/i18n';
 import { Responsive } from '@utils/Responsive';
-import { styles } from './styles';
-import useGraphData from '../../../hooks/useGraphData';
+import React, { useEffect, useState } from 'react';
+import { Dimensions, FlatList, Text, View } from 'react-native';
+import useGraphData from '@hooks/useGraphData';
+import useMarketData from '@hooks/useMarketData';
 import CategoryButton from './CategoryButton';
-import { categories, categoryMap } from './categoryData';
+import { categories, categoryMap } from './CategoryData';
+import GraphSliderItem from './GraphSliderItem';
+import RenderAssets from './RenderAssets';
+import { styles } from './styles';
 
 const Market = () => {
   const currency = 'USD';
@@ -30,6 +30,7 @@ const Market = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedItem, setSelectedItem] = useState(null);
 
+  console.log('Market', error)
   useEffect(() => {
     if (!isLoading && assetList) {
       setSelectedItem(assetList[0]);
@@ -39,6 +40,7 @@ const Market = () => {
         interval: interval,
         id: assetList[0].id
       });
+
     }
   }, [isLoading, assetList]);
 
@@ -105,7 +107,7 @@ const Market = () => {
   return (
     <View style={styles.container}>
       {isLoading && <Loader loading={isLoading} />}
-
+ 
       <FlatList
         data={graphDataList}
         keyExtractor={(item, index) => `${item.id}-${index}`}

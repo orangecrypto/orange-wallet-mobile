@@ -31,6 +31,7 @@ const getRoute = () => {
 };
 
 const goBack = () => {
+    
     navigationRef.current?.goBack()
 }
 

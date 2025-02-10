@@ -21,6 +21,10 @@ export const store = configureStore({
   reducer: persistedReducer,
 })
 
+export const clearStoreData = () => {
+  store.dispatch({ type: 'RESET_STORE' });
+  persistor.purge(); 
+};
 export type RootState = ReturnType<typeof store.getState>
 export type Dispatch = ThunkDispatch<RootState, undefined, Action>;
 export type AppDispatch = typeof store.dispatch

@@ -60,6 +60,8 @@ const localAssets = {
   transactiondone: require('./images/done.png'),
   qrcodesample: require('./images/qrcodesample.png'),
   whitecross: require('./images/whitecross.png'),
+  yellowcross: require('./images/toastclose.png'),
+  toastright: require('./images/toastright.png'),
 
   // Icons
 };

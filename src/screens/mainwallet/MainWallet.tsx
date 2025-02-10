@@ -2,7 +2,7 @@ import { localAssets } from '@assets/assets';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Responsive } from '@utils/Responsive';
 import { Color } from '@values/color';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Image, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import Assistant from './assistant/Assistant';
 import Market from './market/Market';
@@ -10,12 +10,26 @@ import Nft from './nft/Nft';
 import Wallet from './wallet/Wallet';
 import { push } from '@routes/Navigator';
 import { RouteType } from '@routes/RouteType';
+import { useSelector } from 'react-redux';
+import { setHeaderAddress, walletReducerType } from '@redux/slice/WalletReducer';
+import { Dispatch } from '@reduxjs/toolkit';
+import { useAppDispatch } from "@redux/store";
+import { store } from '@redux/store';
+import Clipboard from "@react-native-clipboard/clipboard";
+import { truncateAddress } from '@utils/Convert';
 
 const MainWallet = () => {
+    const account = store.getState().appReducer.account
+    const { headerAddress } = useSelector((state: { walletReducer: walletReducerType }) => state.walletReducer);
+    const dispatch: Dispatch = useAppDispatch();
     const Tab = createBottomTabNavigator();
 
+    useEffect(()=>{
+        dispatch(setHeaderAddress(account?.btcAddress))
+    },[])
+
     const handleCopyPress = () => {
-        console.log('Copy pressed');
+        Clipboard.setString(headerAddress)
     };
 
     const handleAddAddress = () => {
@@ -35,7 +49,7 @@ const MainWallet = () => {
         <View style={styles.container}>
             <View style={styles.header}>
                 <TouchableOpacity onPress={handleAddAddress} style={styles.headerClickableText}>
-                <Text style={styles.headerText}>3Lq8...JVK4</Text>
+                    <Text style={styles.headerText} numberOfLines={1}>{truncateAddress(headerAddress)}</Text>
                 </TouchableOpacity>
                 <View style={styles.iconsContainer}>
 
@@ -59,7 +73,7 @@ const MainWallet = () => {
                         backgroundColor: Color.black,
                         borderRadius: Responsive.size10,
                         borderWidth: Responsive.size1,
-                        borderColor:Color.gray,
+                        borderColor: Color.gray,
                         height: Responsive.size62,
                         justifyContent: 'center',
                         alignItems: 'center',
@@ -108,9 +122,26 @@ const MainWallet = () => {
                         padding: 0,
                     },
                 })}>
-                <Tab.Screen name="Wallet" component={Wallet} />
-                <Tab.Screen name="Market" component={Market} />
-                <Tab.Screen name="NFT" component={Nft} />
+                <Tab.Screen name="Wallet" component={Wallet}
+
+                    listeners={({ navigation, route }) => ({
+                        tabPress: (e) => {
+                            dispatch(setHeaderAddress(account?.btcAddress))
+                        },
+                    })}
+                />
+                <Tab.Screen name="Market" component={Market}
+                    listeners={({ navigation, route }) => ({
+                        tabPress: (e) => {
+                            dispatch(setHeaderAddress(account?.btcAddress))
+                        },
+                    })} />
+                <Tab.Screen name="NFT" component={Nft}
+                    listeners={({ navigation, route }) => ({
+                        tabPress: (e) => {
+                            dispatch(setHeaderAddress(account?.ordinalsAddress))
+                        },
+                    })} />
                 <Tab.Screen name="Assistant" component={Assistant} />
             </Tab.Navigator>
         </View>
@@ -144,15 +175,16 @@ const styles = StyleSheet.create({
     },
     headerText: {
         fontSize: Responsive.size20,
-        color: Color.white
+        color: Color.white,
+        width: Responsive.size170
     },
-    headerClickableText: {  
-        padding:Responsive.size2
+    headerClickableText: {
+        padding: Responsive.size2
     },
     headerIcon: {
         width: Responsive.size20,
         height: Responsive.size20,
-       
+
     },
     iconsContainer: {
         flexDirection: 'row',

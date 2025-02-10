@@ -100,9 +100,11 @@ const Send = () => {
                     </View>
                 </View>
             </ScrollView>
-            {!isKeyboardVisible && (<View>  <Text style={styles.warningText}>{strings.warning}:
-                <Text style={styles.warningMessage}> {strings.warningMessage}</Text>
-            </Text>
+            {!isKeyboardVisible && (<View>
+                <Text style={styles.warningText}>
+                    {strings.warning}: <Text style={styles.warningMessage}>{strings.warningMessage}</Text>
+                </Text>
+
 
                 <View style={styles.horizontalButtonContainer}>
                     <CommonButton
@@ -121,7 +123,9 @@ const Send = () => {
                         textColor={Color.white}
                         width={'45%'}
                         height={Responsive.size50} />
-                </View> </View>)}
+                </View> 
+                
+                </View>)}
 
         </KeyboardAvoidingView>
     );

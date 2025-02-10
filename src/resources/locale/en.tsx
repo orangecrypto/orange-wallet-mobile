@@ -100,6 +100,7 @@ export default {
     warning:'Warning',
     warningMessage:'Please confirm the wallet address as transactions are irreversible and funds can not be recovered.',
     paste:'Paste',
+    pasted:'Pasted',
     enterNonce:'Enter the nonce amount.',
     enterFeesAmount:'Enter the fee amount.',
     incriptionDetails:'Inscription Details',
@@ -127,7 +128,15 @@ export default {
     name:'Name',
     price:'Price',
     onehr:'1h',
-    noSymbols:'No symbols available'
+    noSymbols:'No symbols available',
+    copy:'Copy',
+    copied:'Copied',
+    clear:'Clear',
+    showSeedphrase:'Show Seedphrase',
+    copySeedphrase:'Copy Seedphrase',
+    seedPhrasenotMatched:'Seedphrase does not matched'
+
+
 
 
 }   

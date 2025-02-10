@@ -1,0 +1,7 @@
+export enum Step {
+    SEEDPHRASE = 0,
+    SEEDPHRASE_VERIFICATION=1,
+    ENTER_PASSWORD=2,
+    CONFIRM_PASSWORD=3,
+    TOTAL_STEPS=4,
+}

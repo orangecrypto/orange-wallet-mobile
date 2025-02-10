@@ -1,13 +1,13 @@
-import React, { useState } from "react";
-import { ActivityIndicator, FlatList, Text, TouchableOpacity, View } from "react-native";
 import { goBack, push, resetNavigation } from "@routes/Navigator";
-import { strings } from "@strings/i18n";
-import { styles } from "./styles";
 import { RouteType } from "@routes/RouteType";
-import Loader from "@components/Loader";
-import { Color } from "@values/color";
+import { strings } from "@strings/i18n";
+import React, { useState } from "react";
+import { FlatList, Text, TouchableOpacity, View } from "react-native";
+import { styles } from "./styles";
+import useSeedVault from '@hooks/useSeedVault';
 
 const Settings = () => {
+    const { lockVault} = useSeedVault()
     const [settingsArray, setSettingsArray] = useState([
         { id: 1, name: "Version", value: "1.1.7" },
         { id: 2, name: "Network", value: "Mainnet" },
@@ -21,10 +21,7 @@ const Settings = () => {
         { id: 11, name: "Privacy Policy", value: "", url: "https://docs.orangecrypto.com/legal/privacy-policy" },
         { id: 12, name: "Support", value: "", url: "https://docs.orangecrypto.com/orange-wallet" },
     ]);
- const [loading, setLoading]= useState(true)
-  setTimeout(() => {
-      setLoading(false)
-  }, 2000);
+
     const availableRoutes = [
         "Network",
         "Currency",
@@ -35,25 +32,33 @@ const Settings = () => {
     ];
 
     const cmsRoutes = ["Terms of Service", "Privacy Policy", "Support"];
-   
+
+    const lockWallet = async () => {
+        try {
+            await lockVault()
+            resetNavigation(RouteType.LOGIN)
+        }
+        catch (error) {
+            console.log('Lock Wallet', error)
+        }
+    }
 
     const renderItem = ({ item }) => (
         <TouchableOpacity
             style={styles.item}
             onPress={() => {
                 if (availableRoutes.includes(item.name)) {
-                    push(item.name); 
+                    push(item.name);
                 } else if (cmsRoutes.includes(item.name)) {
-                    push("Cms", { title: item.name, url: item.url }); 
+                    push("Cms", { title: item.name, url: item.url });
                 }
                 else if (item.name === "Lock Wallet") {
-                    resetNavigation(RouteType.LOGIN)
+                    lockWallet()
                 }
                 else {
                     console.warn(`Route "${item.name}" is not available.`);
                 }
-            }}
-        >
+            }}>
             <Text style={styles.text}>{item.name}</Text>
             <Text style={styles.value}>{item.value}</Text>
         </TouchableOpacity>
@@ -61,7 +66,6 @@ const Settings = () => {
 
     return (
         <View style={styles.container}>
-              <Loader loading={loading} />
             <View style={styles.contentContainer}>
                 <TouchableOpacity style={styles.button} onPress={() => goBack()}>
                     <Text style={styles.buttonText}>{strings.back}</Text>
