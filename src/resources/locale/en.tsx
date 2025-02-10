@@ -71,7 +71,7 @@ export default {
     enterCurrentPassword:'Enter your current password.',
     enterNewPassword :'Enter the password you would like to set for your wallet.',
     backupWallet:'Backup Wallet',
-    seedPhraseMessage:'Write down, safely store, and keep your seed phrase private. This is the unique key to your wallet.',
+    seedPhraseMessage:'Record and store your seed phrase in a secure place where only you have access.',
     restoreAssets:'Restore Assets',
     restoreAssetsMessage:'If you accidentally sent Ordinals to your Bitcoin address or vice-versa sent Bitcoin to your Ordinals address, press the button below to restore them.',
     selectAsset:'Select the assets you would like to restore and transfer back to the correct wallet address.',

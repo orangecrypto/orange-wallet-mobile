@@ -14,10 +14,10 @@ export const styles = StyleSheet.create({
         left: 0,
         right: 0,
         bottom: 0,
-        justifyContent: 'center', // Center vertically
-        alignItems: 'center',      // Center horizontally
-        backgroundColor: 'transparent', // Ensure background is transparent
-        zIndex: 9999, // Make sure the loader is on top of other content
+        justifyContent: 'center', 
+        alignItems: 'center',     
+        backgroundColor: 'transparent',
+        zIndex: 9999, 
     },
     contentContainer: {
         flex: 1,
@@ -55,7 +55,7 @@ export const styles = StyleSheet.create({
         fontSize: Responsive.size18,
         fontFamily: Fonts.regular,
         lineHeight: Responsive.size20,
-        marginTop:Responsive.size10
+        marginTop: Responsive.size10
     },
     item: {
         flexDirection: "row",
@@ -69,8 +69,8 @@ export const styles = StyleSheet.create({
     },
     assetItem: {
         flexDirection: "row",
-        padding:Responsive.size10,
-        marginTop:Responsive.size14,
+        padding: Responsive.size10,
+        marginTop: Responsive.size14,
         backgroundColor: Color.listBordercolor,
         borderRadius: Responsive.size10,
         justifyContent: "space-between",
@@ -115,17 +115,18 @@ export const styles = StyleSheet.create({
         justifyContent: 'flex-end',
         alignItems: 'center',
         marginBottom: Responsive.size20,
-        padding:Responsive.size18
+        padding: Responsive.size18
     },
     switchContainer: {
         justifyContent: 'flex-end',
-        padding:Responsive.size18
+        padding: Responsive.size18
     },
     itemContainer: {
         flex: 1,
-        margin: Responsive.size12,
+        marginHorizontal: Responsive.size14,
+        marginVertical:Responsive.size5,
         width: '30%', 
-        height: Responsive.size45, 
+        height: Responsive.size40, 
         backgroundColor: Color.black,
         borderRadius: Responsive.size12,
         alignItems: 'center',
@@ -148,43 +149,70 @@ export const styles = StyleSheet.create({
         borderWidth: Responsive.size2,
         borderColor: Color.listBordercolor,
     },
-    assetContainer:{
-            flexDirection:'row',
-            alignContent:'center'
-        },
-        assetDetails: {
-            flexDirection: "column",
-            alignItems:'center',
-            justifyContent:'center',
-            marginLeft: Responsive.size10
-        },
-        assetName: {
-            color: Color.white,
-            fontSize: Responsive.size18,
-            fontFamily: Fonts.semibold
-        },
-        assetCategory: {
-            color: Color.grayText,
-            fontSize: Responsive.size14,
-            fontFamily: Fonts.regular
-        },
-        assetValues: {
-            flexDirection: "column",
-            alignItems: "flex-end",
-        },
-        assetQuantity: {
-            color: Color.white,
-            fontSize: Responsive.size16,
-            fontFamily: Fonts.regular
-        },
-        assetValue: {
-            color: Color.nftcategoryText,
-            fontSize: Responsive.size14,
-            fontFamily: Fonts.regular
-        },
-    
-        letIcon:{
-            height: Responsive.size32,
-            width: Responsive.size32
-        }
+    assetContainer: {
+        flexDirection: 'row',
+        alignContent: 'center'
+    },
+    assetDetails: {
+        flexDirection: "column",
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginLeft: Responsive.size10
+    },
+    assetName: {
+        color: Color.white,
+        fontSize: Responsive.size18,
+        fontFamily: Fonts.semibold
+    },
+    assetCategory: {
+        color: Color.grayText,
+        fontSize: Responsive.size14,
+        fontFamily: Fonts.regular
+    },
+    assetValues: {
+        flexDirection: "column",
+        alignItems: "flex-end",
+    },
+    assetQuantity: {
+        color: Color.white,
+        fontSize: Responsive.size16,
+        fontFamily: Fonts.regular
+    },
+    assetValue: {
+        color: Color.nftcategoryText,
+        fontSize: Responsive.size14,
+        fontFamily: Fonts.regular
+    },
+
+    letIcon: {
+        height: Responsive.size32,
+        width: Responsive.size32
+    },
+    overlay: {
+        ...StyleSheet.absoluteFillObject,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    overlayButton: {
+        backgroundColor: Color.primary, // Customize the button style
+        padding: 10,
+        borderRadius: 5,
+    },
+    overlayButtonText: {
+        color: 'white',
+        fontSize: 16,
+    },
+    copyText: {
+        fontSize: Responsive.size12,
+        fontFamily: Fonts.regular,
+        color: Color.orangeButton,
+    },
+
+    copyButton: {
+        backgroundColor: Color.orangeOpacityBg,
+        paddingHorizontal: Responsive.size8,
+        paddingVertical: Responsive.size4,
+        borderRadius: Responsive.size20,
+        alignSelf: 'center'
+    },
 });
