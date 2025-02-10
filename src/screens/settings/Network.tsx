@@ -1,18 +1,17 @@
-import React, { useState } from "react";
-import { FlatList, Text, TouchableOpacity, View } from "react-native";
+import { initialNetworksList } from "@orangecryptohq/orangeseed";
+import { setNetwork } from "@redux/slice/appReducer";
+import { store, useAppDispatch } from "@redux/store";
+import { Dispatch } from "@reduxjs/toolkit";
 import { goBack } from "@routes/Navigator";
 import { strings } from "@strings/i18n";
-import { styles } from "./styles";
 import { Color } from "@values/color";
-import { initialNetworksList } from "@orangecryptohq/orangeseed";
-import { Dispatch } from "@reduxjs/toolkit";
-import { store, useAppDispatch } from "@redux/store";
-import { setNetwork } from "@redux/slice/appReducer";
+import React, { useState } from "react";
+import { FlatList, Text, TouchableOpacity, View } from "react-native";
+import { styles } from "./styles";
 
 const Network = () => {
 
     const networkType = store.getState().appReducer.network?.type;
-
     const [networkArray, setNetworkArray] = useState(
         initialNetworksList.map((network, index) => ({
             id: index + 1,

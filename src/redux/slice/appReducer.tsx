@@ -7,6 +7,8 @@ import { createSlice } from '@reduxjs/toolkit';
  * - isWalletCreated: Flag indicating if the wallet has been created (to be stored in local storage)
  * - account: Stores user account details (to be stored in local storage)
  * - wallet: Stores wallet details (to be stored in local storage)
+ * - network : Stores current network setting (to be stored in local storage)
+ * - currency : Stores currency setting (to be stored in local storage)
  * 
  * The state is updated via reducers and persisted to local storage where necessary.
  */
@@ -18,6 +20,7 @@ export interface appReducerType {
    account:{},
    wallet:{},
    network:{},
+   currency:{},
 }
 
 const initialState: appReducerType = {
@@ -30,7 +33,10 @@ const initialState: appReducerType = {
         address: "https://api.hiro.so", 
         btcApiUrl: "https://mempool.space/api",
         type: "Mainnet"
-    }
+    },
+    currency:{
+        type:"USD"
+    },
 };
 
 export const appReducer = createSlice({
@@ -50,10 +56,13 @@ export const appReducer = createSlice({
         setNetwork: (state, action) => {
             state.network = action.payload
         },
+        setCurrency: (state, action) => {
+            state.currency = action.payload
+        },
         clearAppReducer: () => initialState,
     }
 });
 
-export const {setIsWalletCreated, clearAppReducer, setAccount, setWallet, setNetwork } = appReducer.actions;
+export const {setIsWalletCreated, clearAppReducer, setAccount, setWallet, setNetwork, setCurrency } = appReducer.actions;
 
 export default appReducer.reducer;

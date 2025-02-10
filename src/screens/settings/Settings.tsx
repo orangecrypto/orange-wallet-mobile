@@ -16,7 +16,7 @@ const Settings = () => {
         setSettingsArray([
             { id: 1, name: "Version", value: "1.1.7" },
             { id: 2, name: "Network", value: store.getState().appReducer.network?.type },
-            { id: 3, name: "Currency", value: "CAD" },
+            { id: 3, name: "Currency", value: store.getState().appReducer.currency.type},
             { id: 5, name: "Update Password", value: "" },
             { id: 6, name: "Backup Wallet", value: "" },
             { id: 7, name: "Restore Assets", value: "" },
@@ -27,6 +27,8 @@ const Settings = () => {
             { id: 12, name: "Support", value: "", url: "https://docs.orangecrypto.com/orange-wallet" },
         ]);
     };
+
+    
 
     useFocusEffect(
         useCallback(() => {
