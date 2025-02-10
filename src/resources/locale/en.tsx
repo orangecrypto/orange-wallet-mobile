@@ -137,6 +137,7 @@ export default {
     seedPhrasenotMatched:'Seedphrase does not matched',
     passwordUpdated:'Password Updated',
     walletRestored:"Wallet Restored",
-    walletRestoredMessage:"You wallet has been successfully restored."
+    walletRestoredMessage:"You wallet has been successfully restored.",
+    resetWalletPassword:"Enter your password to reset your wallet"
 
 }   

@@ -2,27 +2,23 @@ import CommonButton from "@components/CommonButton";
 import Switch from "@components/Switch";
 import { clearStoreData, useAppDispatch } from "@redux/store";
 import { Dispatch } from "@reduxjs/toolkit";
-import { goBack, resetNavigation } from "@routes/Navigator";
+import { goBack, push, resetNavigation } from "@routes/Navigator";
 import { RouteType } from "@routes/RouteType";
 import { strings } from "@strings/i18n";
 import { Responsive } from "@utils/Responsive";
 import { Color } from "@values/color";
 import React, { useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
-import { styles } from "./styles";
+import { styles } from "../styles";
 
 const ResetWallet = () => {
-    const dispatch: Dispatch = useAppDispatch();
     const [isSwitchEnabled, setIsSwitchEnabled] = useState(false);
 
     const handleToggle = () => {
         setIsSwitchEnabled((prev) => !prev);
     };
 
-    const handleResetWallet = () => {
-        clearStoreData()
-        resetNavigation(RouteType.HOME_SCREEN)
-    };
+   
 
     return (
         <View style={styles.container}>
@@ -44,7 +40,7 @@ const ResetWallet = () => {
             <View style={styles.buttonContainer}>
                 <CommonButton
                     title={strings.RESETWALLET}
-                    onPress={() =>handleResetWallet() }
+                    onPress={() =>push(RouteType.RESETWALLETPASSWORD) }
                     backgroundColor={Color.orangeButton}
                     textColor={Color.white}
                     disabled={!isSwitchEnabled}
