@@ -1,5 +1,5 @@
 import { initialNetworksList } from "@orangecryptohq/orangeseed";
-import { setNetwork } from "@redux/slice/appReducer";
+import { setAccount, setNetwork, setWallet } from "@redux/slice/appReducer";
 import { store, useAppDispatch } from "@redux/store";
 import { Dispatch } from "@reduxjs/toolkit";
 import { goBack } from "@routes/Navigator";
@@ -8,9 +8,11 @@ import { Color } from "@values/color";
 import React, { useState } from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import { styles } from "./styles";
+import { changeNetwork } from "./SettingsUtils";
+import useSeedVault from "@hooks/useSeedVault";
 
 const Network = () => {
-
+    const { getSeed } = useSeedVault();
     const networkType = store.getState().appReducer.network?.type;
     const [networkArray, setNetworkArray] = useState(
         initialNetworksList.map((network, index) => ({
@@ -22,7 +24,7 @@ const Network = () => {
 
     const dispatch: Dispatch = useAppDispatch();
     
-    const changeNetwork = (item) => {
+    const changeNetworkSetting = async (item) => {
         const updatedArray = networkArray.map((network) =>
             network.id === item?.id
                 ? { ...network, isSelected: true }
@@ -32,13 +34,16 @@ const Network = () => {
         dispatch(setNetwork({
             type: item?.type,
             address: item?.address
-        }))    
+        }))  
+         const seed= await getSeed()
+         const { account } = await changeNetwork(seed, item?.type );
+         dispatch(setAccount(account))
     };
 
     const renderItem = ({ item }) => (
         <TouchableOpacity
             style={styles.item}
-            onPress={() => changeNetwork(item)}>
+            onPress={() => changeNetworkSetting(item)}>
             <Text
                 style={[
                     styles.text,

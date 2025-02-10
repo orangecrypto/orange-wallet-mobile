@@ -16,6 +16,7 @@ import CommonButton from "@components/CommonButton";
 import useSeedVault from "@hooks/useSeedVault";
 import { str2buf } from "@orangecryptohq/orangeseed";
 import Toast from "react-native-toast-message";
+import { clearAppReducer } from "@redux/slice/appReducer";
 
 const VerifyPassword = () => {
 
@@ -39,10 +40,12 @@ const VerifyPassword = () => {
             await unlockVault(str2buf(password));
             await clearVaultStorage()
             clearStoreData()
+            dispatch(clearAppReducer())
             resetNavigation(RouteType.HOME_SCREEN)
         } catch (error) {
             Toast.show({ type: 'error', text1: error.message });
         }
+        
 
     };
 
