@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-
+import { HIRO_MAINNET_DEFAULT, BTC_BASE_URI_MAINNET } from "@orangecryptohq/orangeseed";
 /**
  * Redux slice to manage application state, including:
  * - deviceId: Unique identifier for the device (to be stored in local storage)
@@ -7,6 +7,8 @@ import { createSlice } from '@reduxjs/toolkit';
  * - isWalletCreated: Flag indicating if the wallet has been created (to be stored in local storage)
  * - account: Stores user account details (to be stored in local storage)
  * - wallet: Stores wallet details (to be stored in local storage)
+ * - network : Stores current network setting (to be stored in local storage)
+ * - currency : Stores currency setting (to be stored in local storage)
  * 
  * The state is updated via reducers and persisted to local storage where necessary.
  */
@@ -16,7 +18,9 @@ export interface appReducerType {
    coinSettings: [],
    isWalletCreated: boolean,
    account:{},
-   wallet:{}
+   wallet:{},
+   network:{},
+   currency:{},
 }
 
 const initialState: appReducerType = {
@@ -24,7 +28,15 @@ const initialState: appReducerType = {
     coinSettings:[],
     isWalletCreated:false,
     account:{},
-    wallet:{}
+    wallet:{},
+    network:{
+        address:HIRO_MAINNET_DEFAULT , 
+        btcApiUrl: BTC_BASE_URI_MAINNET,
+        type: "Mainnet"
+    },
+    currency:{
+        type: "USD"
+    },
 };
 
 export const appReducer = createSlice({
@@ -41,11 +53,16 @@ export const appReducer = createSlice({
         setWallet: (state, action) => {
             state.wallet = action.payload
         },
-
-          clearAppReducer: () => initialState,
+        setNetwork: (state, action) => {
+            state.network = action.payload
+        },
+        setCurrency: (state, action) => {
+            state.currency = action.payload
+        },
+        clearAppReducer: () => initialState,
     }
 });
 
-export const {setIsWalletCreated, clearAppReducer, setAccount, setWallet } = appReducer.actions;
+export const {setIsWalletCreated, clearAppReducer, setAccount, setWallet, setNetwork, setCurrency } = appReducer.actions;
 
 export default appReducer.reducer;

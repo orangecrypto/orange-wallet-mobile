@@ -28,7 +28,8 @@ import CopySeedPhrase from '@screens/settings/backupwallet/CopySeedPhrase';
 import Cms from '@screens/settings/Cms';
 import Currency from '@screens/settings/Currency';
 import Network from '@screens/settings/Network';
-import ResetWallet from '@screens/settings/ResetWallet';
+import ResetWallet from '@screens/settings/resetwallet/ResetWallet';
+import VerifyPassword from '@screens/settings/resetwallet/VerifyPassword';
 import RestoreAssets from '@screens/settings/restoreassets/RestoreAssets';
 import RestoreDetails from '@screens/settings/restoreassets/RestoreDetails';
 import Settings from '@screens/settings/Settings';
@@ -81,6 +82,7 @@ export default () => {
                 <Stack.Screen component={ViewQr} name={RouteType.VIEWQR}/>
                 <Stack.Screen component={Warning} name={RouteType.WARNING}/>
                 <Stack.Screen component={WalletRestored} name={RouteType.WALLETRESTORED}/>
+                <Stack.Screen component={VerifyPassword} name={RouteType.RESETWALLETPASSWORD}/>
             </Stack.Navigator>
         </NavigationContainer>
     );

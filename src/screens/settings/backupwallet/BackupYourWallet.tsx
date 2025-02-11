@@ -10,31 +10,37 @@ import CommonButton from "@components/CommonButton";
 import { Color } from "@values/color";
 import { Responsive } from "@utils/Responsive";
 import { RouteType } from "@routes/RouteType";
+import useSeedVault from "@hooks/useSeedVault";
+import Toast from "react-native-toast-message";
+import { str2buf } from "@orangecryptohq/orangeseed";
 
 const BackupYourWallet = () => {
+
+    const { unlockVault } = useSeedVault()
     const [password, setPassword] = useState("");
     const [passwordError, setPasswordError] = useState("");
     const [passwordFeedback, setPasswordFeedback] = useState("");
     const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
 
-    const handleSubmit = () => {
-        const { strengthMessage } = validatePasswordStrength(password);
-        if (strengthMessage === strings.weakPassword || strengthMessage === strings.moderatePassword) {
-            setPasswordError(strings.useStrongPassword)
-        } else {
-           push(RouteType.COPYSEEDPHRASE)
+    const handleSubmit = async () => {
+        try {
+            await unlockVault(str2buf(password));
+            setPassword("")
+            setPasswordError("")
+            setPasswordFeedback("")
+            push(RouteType.COPYSEEDPHRASE)      
+        } catch (error) {
+            Toast.show({ type: 'error', text1: error.message });
         }
-    };
+     };
 
     const handlePasswordChange = (inputPassword) => {
         const { strengthMessage, feedback } = validatePasswordStrength(inputPassword);
         console.log(strengthMessage);
         setPasswordError(strengthMessage);
         setPasswordFeedback(feedback);
-
-        console.log(feedback);
     };
- useEffect(() => {
+    useEffect(() => {
         const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
             setIsKeyboardVisible(true);
         });
@@ -82,10 +88,10 @@ const BackupYourWallet = () => {
                         onPress={() => handleSubmit()}
                         backgroundColor={Color.orangeButton}
                         textColor={Color.white}
-                        disabled={passwordError === strings.strongPassword? false: true}
+                        disabled={passwordError === strings.strongPassword ? false : true}
                         width={'100%'}
                         height={Responsive.size50}
-                        />
+                    />
                 </View>
             )}
         </View>
