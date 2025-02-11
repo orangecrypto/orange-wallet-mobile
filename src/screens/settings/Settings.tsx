@@ -1,4 +1,3 @@
-import useSeedVault from '@hooks/useSeedVault';
 import { useFocusEffect } from "@react-navigation/native";
 import { store } from "@redux/store";
 import { goBack } from "@routes/Navigator";
@@ -26,8 +25,6 @@ const Settings = () => {
             { id: 12, name: "Support", value: "", url: "https://docs.orangecrypto.com/orange-wallet" },
         ]);
     };
-
-    
 
     useFocusEffect(
         useCallback(() => {
