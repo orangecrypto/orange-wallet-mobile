@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-
+import { HIRO_MAINNET_DEFAULT, BTC_BASE_URI_MAINNET } from "@orangecryptohq/orangeseed";
 /**
  * Redux slice to manage application state, including:
  * - deviceId: Unique identifier for the device (to be stored in local storage)
@@ -30,12 +30,12 @@ const initialState: appReducerType = {
     account:{},
     wallet:{},
     network:{
-        address: "https://api.hiro.so", 
-        btcApiUrl: "https://mempool.space/api",
+        address:HIRO_MAINNET_DEFAULT , 
+        btcApiUrl: BTC_BASE_URI_MAINNET,
         type: "Mainnet"
     },
     currency:{
-        type:"USD"
+        type: "USD"
     },
 };
 
