@@ -1,5 +1,5 @@
 import { initialNetworksList } from "@orangecryptohq/orangeseed";
-import { setAccount, setNetwork, setWallet } from "@redux/slice/appReducer";
+import { setSelectedAccount, setNetwork, setWallet } from "@redux/slice/appReducer";
 import { store, useAppDispatch } from "@redux/store";
 import { Dispatch } from "@reduxjs/toolkit";
 import { goBack } from "@routes/Navigator";
@@ -37,7 +37,7 @@ const Network = () => {
         }))  
          const seed= await getSeed()
          const { account } = await changeNetwork(seed, item?.type );
-         dispatch(setAccount(account))
+         dispatch(setSelectedAccount(account))
     };
 
     const renderItem = ({ item }) => (

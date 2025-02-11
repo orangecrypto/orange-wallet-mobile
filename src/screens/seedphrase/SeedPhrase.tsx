@@ -1,7 +1,7 @@
 import CommonButton from "@components/CommonButton";
 import useSeedVault from '@hooks/useSeedVault';
 import { str2buf } from "@orangecryptohq/orangeseed";
-import { setAccount, setIsWalletCreated, setWallet } from "@redux/slice/appReducer";
+import { setSelectedAccount, setIsWalletCreated, setWallet, setAccountList, appReducerType } from "@redux/slice/appReducer";
 import { clearSeedPhraseReducer, seedPhraseReducerType, setIsRestoreWallet } from "@redux/slice/SeedPhraseReducer";
 import { useAppDispatch } from "@redux/store";
 import { Dispatch } from "@reduxjs/toolkit";
@@ -28,6 +28,7 @@ const SeedPhrase = ({ route }) => {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [backupLatter, setBackupLatter] = useState(route?.params?.backupLatter || false);
     const { isSeedPhraseVerified, disabled, isRestoreWallet } = useSelector((state: { seedPhraseReducer: seedPhraseReducerType }) => state.seedPhraseReducer);
+    const { accountList } = useSelector((state: { seedPhraseReducer: appReducerType }) => state.appReducer);
     const [currentStepIndex, setCurrentStepIndex] = useState(route?.params?.backupLatter ? 2 : route?.params?.restoreWallet ? 1 : 0);
     const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -101,7 +102,8 @@ const SeedPhrase = ({ route }) => {
     };
 
     const updateWalletState = (account, wallet) => {
-        dispatch(setAccount(account));
+        dispatch(setAccountList([...accountList, account]));
+        dispatch(setSelectedAccount(account));
         dispatch(setWallet(wallet));
         dispatch(clearSeedPhraseReducer());
         dispatch(setIsWalletCreated(true));

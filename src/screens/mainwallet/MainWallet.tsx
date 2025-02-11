@@ -19,14 +19,14 @@ import Clipboard from "@react-native-clipboard/clipboard";
 import { truncateAddress } from '@utils/Convert';
 
 const MainWallet = () => {
-    const account = store.getState().appReducer.account
+    const account = store.getState().appReducer.selectedAccount
     const { headerAddress } = useSelector((state: { walletReducer: walletReducerType }) => state.walletReducer);
     const dispatch: Dispatch = useAppDispatch();
     const Tab = createBottomTabNavigator();
 
     useEffect(()=>{
         dispatch(setHeaderAddress(account?.btcAddress))
-        console.log('account ', store.getState().appReducer.account)
+        console.log('account ', store.getState().appReducer.selectedAccount)
     },[])
 
     const handleCopyPress = () => {

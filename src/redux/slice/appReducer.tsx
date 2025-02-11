@@ -5,7 +5,8 @@ import { createSlice } from '@reduxjs/toolkit';
  * - deviceId: Unique identifier for the device (to be stored in local storage)
  * - coinSettings: User-defined coin settings (to be stored in local storage)
  * - isWalletCreated: Flag indicating if the wallet has been created (to be stored in local storage)
- * - account: Stores user account details (to be stored in local storage)
+ * - accountList: Stores multiple account list (to be stored in local storage)
+ * - selectedAccount: Stores users selected account details (to be stored in local storage)
  * - wallet: Stores wallet details (to be stored in local storage)
  * - network : Stores current network setting (to be stored in local storage)
  * - currency : Stores currency setting (to be stored in local storage)
@@ -17,17 +18,18 @@ export interface appReducerType {
    deviceId: string,
    coinSettings: [],
    isWalletCreated: boolean,
-   account:{},
+   selectedAccount:{},
    wallet:{},
    network:{},
    currency:{},
+   accountList:[]
 }
 
 const initialState: appReducerType = {
     deviceId: '',
     coinSettings:[],
     isWalletCreated:false,
-    account:{},
+    selectedAccount:{},
     wallet:{},
     network:{
         address: "https://api.hiro.so", 
@@ -37,6 +39,7 @@ const initialState: appReducerType = {
     currency:{
         type:"USD"
     },
+    accountList:[]
 };
 
 export const appReducer = createSlice({
@@ -47,8 +50,8 @@ export const appReducer = createSlice({
             state.isWalletCreated = action.payload
         },
 
-        setAccount: (state, action) => {
-            state.account = action.payload
+        setSelectedAccount: (state, action) => {
+            state.selectedAccount = action.payload
         },
         setWallet: (state, action) => {
             state.wallet = action.payload
@@ -59,10 +62,13 @@ export const appReducer = createSlice({
         setCurrency: (state, action) => {
             state.currency = action.payload
         },
+        setAccountList: (state, action) => {
+            state.accountList = action.payload
+        },
         clearAppReducer: () => initialState,
     }
 });
 
-export const {setIsWalletCreated, clearAppReducer, setAccount, setWallet, setNetwork, setCurrency } = appReducer.actions;
+export const {setIsWalletCreated, clearAppReducer, setSelectedAccount, setWallet, setNetwork, setCurrency, setAccountList} = appReducer.actions;
 
 export default appReducer.reducer;

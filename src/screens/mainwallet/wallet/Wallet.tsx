@@ -10,7 +10,7 @@ import { Dispatch } from '@reduxjs/toolkit';
 import { useAppDispatch, store } from "@redux/store";
 import { setHeaderAddress } from '@redux/slice/WalletReducer';
 const Wallet = () => {
-    const account = store.getState().appReducer.account
+    const account = store.getState().appReducer.selectedAccount
     const dispatch: Dispatch = useAppDispatch();
     const [currentStep, setCurrentStep] = useState(1);
     const [selectedItem, setSelectedItem] = useState(null);
