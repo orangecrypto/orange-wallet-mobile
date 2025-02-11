@@ -1,15 +1,13 @@
-import { goBack, push, resetNavigation } from "@routes/Navigator";
-import { RouteType } from "@routes/RouteType";
-import { strings } from "@strings/i18n";
-import React, { useState, useCallback } from "react";
-import { FlatList, Text, TouchableOpacity, View } from "react-native";
-import { styles } from "./styles";
-import useSeedVault from '@hooks/useSeedVault';
-import { store } from "@redux/store";
 import { useFocusEffect } from "@react-navigation/native";
+import { store } from "@redux/store";
+import { goBack } from "@routes/Navigator";
+import { strings } from "@strings/i18n";
+import React, { useCallback, useState } from "react";
+import { FlatList, Text, TouchableOpacity, View } from "react-native";
+import SettingsItem from "./SettingsItem";
+import { styles } from "./styles";
 
 const Settings = () => {
-    const { lockVault } = useSeedVault();
     const [settingsArray, setSettingsArray] = useState([]);
 
     const loadSettings = () => {
@@ -28,54 +26,13 @@ const Settings = () => {
         ]);
     };
 
-    
-
     useFocusEffect(
         useCallback(() => {
             loadSettings();
         }, [])
     );
 
-    const availableRoutes = [
-        "Network",
-        "Currency",
-        "Update Password",
-        "Backup Wallet",
-        "Restore Assets",
-        "Reset Wallet",
-    ];
-
-    const cmsRoutes = ["Terms of Service", "Privacy Policy", "Support"];
-
-    const lockWallet = async () => {
-        try {
-            await lockVault();
-            resetNavigation(RouteType.LOGIN);
-        } catch (error) {
-            console.log('Lock Wallet', error);
-        }
-    };
-
-    const renderItem = ({ item }) => (
-        <TouchableOpacity
-            style={styles.item}
-            onPress={() => {
-                if (availableRoutes.includes(item.name)) {
-                    push(item.name);
-                } else if (cmsRoutes.includes(item.name)) {
-                    push("Cms", { title: item.name, url: item.url });
-                } else if (item.name === "Lock Wallet") {
-                    lockWallet();
-                } else {
-                    console.warn(`Route "${item.name}" is not available.`);
-                }
-            }}>
-            <Text style={styles.text}>{item.name}</Text>
-            <Text style={styles.value}>{item.value}</Text>
-        </TouchableOpacity>
-    );
-
-    return (
+ return (
         <View style={styles.container}>
             <View style={styles.contentContainer}>
                 <TouchableOpacity style={styles.button} onPress={() => goBack()}>
@@ -86,11 +43,10 @@ const Settings = () => {
                 <FlatList
                     data={settingsArray}
                     keyExtractor={(item) => item.id.toString()}
-                    renderItem={renderItem}
-                />
+                    renderItem={({ item }) => <SettingsItem item={item} />}
+                    />
             </View>
         </View>
     );
 };
-
 export default Settings;
