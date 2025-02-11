@@ -42,14 +42,11 @@ const Currency = () => {
         return (
             <TouchableOpacity
                 style={styles.item}
-                onPress={() => changeCurrency(item)}
-            >
+                onPress={() => changeCurrency(item)}>
                 <Text
                     style={[
                         styles.text,
-                        { color: isSelected ? Color.orangeButton : Color.white },
-                    ]}
-                >
+                        { color: isSelected ? Color.orangeButton : Color.white }]}>
                     {item.currency}
                 </Text>
             </TouchableOpacity>
@@ -68,8 +65,7 @@ const Currency = () => {
                     data={currencyArray}
                     keyExtractor={(item) => item.id.toString()}
                     renderItem={renderItem}
-                    extraData={selectedCurrency}
-                />
+                    extraData={selectedCurrency}/>
             </View>
         </View>
     );
