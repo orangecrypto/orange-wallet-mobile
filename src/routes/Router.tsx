@@ -32,11 +32,10 @@ import ResetWallet from '@screens/settings/ResetWallet';
 import RestoreAssets from '@screens/settings/restoreassets/RestoreAssets';
 import RestoreDetails from '@screens/settings/restoreassets/RestoreDetails';
 import Settings from '@screens/settings/Settings';
-import ConfirmNewPassword from '@screens/settings/updatepassword/ConfirmNewPassword';
-import EnterNewPassword from '@screens/settings/updatepassword/EnterNewPassword';
 import UpdatePassword from '@screens/settings/updatepassword/UpdatePassword';
 import SplashScreen from '@screens/splashScreen/SplashScreen';
 import Success from '@screens/success/Success';
+import WalletRestored from '@screens/success/WalletRestored';
 import Warning from '@screens/warnings/Warning';
 import React from 'react';
 
@@ -62,8 +61,6 @@ export default () => {
                 <Stack.Screen component={Currency} name={RouteType.CURRENCY}/>
                 <Stack.Screen component={Cms} name={RouteType.CMS}/>
                 <Stack.Screen component={UpdatePassword} name={RouteType.UPDATEPASSWORD}/>
-                <Stack.Screen component={EnterNewPassword} name={RouteType.NEWPASSWORD}/>
-                <Stack.Screen component={ConfirmNewPassword} name={RouteType.CONFIRMNEWPASSWORD}/>
                 <Stack.Screen component={BackupYourWallet} name={RouteType.BACKUPYOURWALLET}/>
                 <Stack.Screen component={CopySeedPhrase} name={RouteType.COPYSEEDPHRASE}/>
                 <Stack.Screen component={RestoreAssets} name={RouteType.RESTOREASSETS}/>
@@ -83,6 +80,7 @@ export default () => {
                 <Stack.Screen component={Receive} name={RouteType.RECEIVE}/>
                 <Stack.Screen component={ViewQr} name={RouteType.VIEWQR}/>
                 <Stack.Screen component={Warning} name={RouteType.WARNING}/>
+                <Stack.Screen component={WalletRestored} name={RouteType.WALLETRESTORED}/>
             </Stack.Navigator>
         </NavigationContainer>
     );

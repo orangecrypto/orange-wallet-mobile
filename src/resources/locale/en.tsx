@@ -134,9 +134,9 @@ export default {
     clear:'Clear',
     showSeedphrase:'Show Seedphrase',
     copySeedphrase:'Copy Seedphrase',
-    seedPhrasenotMatched:'Seedphrase does not matched'
-
-
-
+    seedPhrasenotMatched:'Seedphrase does not matched',
+    passwordUpdated:'Password Updated',
+    walletRestored:"Wallet Restored",
+    walletRestoredMessage:"You wallet has been successfully restored."
 
 }   

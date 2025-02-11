@@ -1,80 +1,93 @@
-import React, { useEffect, useState } from "react";
-import { styles } from "../styles";
-import { Image, Keyboard, Text, TouchableOpacity, View } from "react-native";
-import { goBack, push } from "@routes/Navigator";
-import { strings } from "@strings/i18n";
-import { localAssets } from "@assets/assets";
-import CustomTextInput from "@components/CustomTextInput";
-import { validatePasswordStrength } from "@utils/Validations";
 import CommonButton from "@components/CommonButton";
-import { Color } from "@values/color";
+import useSeedVault from "@hooks/useSeedVault";
+import { str2buf } from "@orangecryptohq/orangeseed";
+import { goBack } from "@routes/Navigator";
+import { strings } from "@strings/i18n";
 import { Responsive } from "@utils/Responsive";
-import { RouteType } from "@routes/RouteType";
+import { Color } from "@values/color";
+import React, { useEffect, useMemo, useState } from "react";
+import { Keyboard, Text, TouchableOpacity, View } from "react-native";
+import Toast from "react-native-toast-message";
+import { styles } from "../styles";
+import EnterPassword from "./EnterPassword";
 
 const UpdatePassword = () => {
-    const [password, setPassword] = useState("");
-    const [passwordError, setPasswordError] = useState("");
-    const [passwordFeedback, setPasswordFeedback] = useState("");
+
+    const { unlockVault, changePassword } = useSeedVault()
+    const [oldPassword, setOldPassword] = useState("");
+    const [newPassword, setNewPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
+    const [currentStepIndex, setCurrentStepIndex] = useState(0);
     const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
 
-    const handleSubmit = () => {
-        const { strengthMessage } = validatePasswordStrength(password);
-        if (strengthMessage === strings.weakPassword || strengthMessage === strings.moderatePassword) {
-            setPasswordError(strings.useStrongPassword)
-        } else {
-           push(RouteType.NEWPASSWORD)
+    const handlePasswordChange = async () => {
+        try {
+            await changePassword(str2buf(oldPassword), str2buf(confirmPassword))
+            Toast.show({ type: 'success', text1: strings.passwordUpdated });
+            goBack()
+
+        } catch (error) {
+            console.log("error : ", error.message)
+            Toast.show({ type: 'error', text1: error.message });
+        }
+    }
+
+    const validateInputs = async () => {
+        if (currentStepIndex === 0) {
+            await unlockVault(str2buf(oldPassword));
+            return true;
+        }
+        if (currentStepIndex === 2 && newPassword !== confirmPassword) {
+            Toast.show({ type: "error", text1: strings.passwordNotMatch });
+            return false;
+        }
+        return true;
+    };
+
+    const handleSubmit = async () => {
+        setErrorMessage("")
+        try {
+            if (!(await validateInputs())) return;
+            setCurrentStepIndex((prevIndex) => (prevIndex < 2 ? prevIndex + 1 : prevIndex));
+            currentStepIndex === 2 && handlePasswordChange();
+        } catch (error) {
+            console.log("Error:", error.message);
+            Toast.show({ type: "error", text1: error.message });
         }
     };
 
-    const handlePasswordChange = (inputPassword) => {
-        const { strengthMessage, feedback } = validatePasswordStrength(inputPassword);
-        console.log(strengthMessage);
-        setPasswordError(strengthMessage);
-        setPasswordFeedback(feedback);
+    const handleBack = () => {
+        setErrorMessage("")
+        setCurrentStepIndex((prevIndex) => (prevIndex > 0 ? prevIndex - 1 : (goBack(), prevIndex)));
+    }
 
-        console.log(feedback);
-    };
- useEffect(() => {
-        const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
-            setIsKeyboardVisible(true);
-        });
-        const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
-            setIsKeyboardVisible(false);
-        });
+    const steps = useMemo(() => [
+        { id: 1, component: () => <EnterPassword type="oldPassword" onPasswordChange={setOldPassword} handleError={setErrorMessage} /> },
+        { id: 2, component: () => <EnterPassword type="newPassword" onPasswordChange={setNewPassword} handleError={setErrorMessage} /> },
+        { id: 3, component: () => <EnterPassword type="confirmPassword" onPasswordChange={setConfirmPassword} handleError={setErrorMessage} /> },
+    ], []);
+
+    useEffect(() => {
+        const handleKeyboardShow = () => setIsKeyboardVisible(true);
+        const handleKeyboardHide = () => setIsKeyboardVisible(false);
+        const showSubscription = Keyboard.addListener("keyboardDidShow", handleKeyboardShow);
+        const hideSubscription = Keyboard.addListener("keyboardDidHide", handleKeyboardHide);
+
         return () => {
-            keyboardDidHideListener.remove();
-            keyboardDidShowListener.remove();
+            showSubscription.remove();
+            hideSubscription.remove();
         };
     }, []);
+    const CurrentStepComponent = steps[currentStepIndex]?.component;
+
     return (
         <View style={styles.container}>
             <View style={styles.contentContainer}>
-                <TouchableOpacity style={styles.button} onPress={() => goBack()}>
+                <TouchableOpacity style={styles.button} onPress={handleBack}>
                     <Text style={styles.buttonText}>{strings.back}</Text>
                 </TouchableOpacity>
-                <View style={styles.enterPasswordContainer}>
-                    <Image source={localAssets.lock} style={styles.passwordIcon} />
-                    <Text style={styles.title}>{strings.updatePassword}</Text>
-                    <Text style={styles.description}>{strings.enterCurrentPassword}</Text>
-
-                    <CustomTextInput
-                        placeholder="Enter your password"
-                        value={password}
-                        onChangeText={(text) => {
-                            setPassword(text); // Update local password state
-                            handlePasswordChange(text); // Validate password
-                        }}
-                        keyboardType={'default'}
-                        secureTextEntry={true}
-                        showPasswordToggle={true}
-                        passwordIconVisible={localAssets.eye}
-                        passwordIconHidden={localAssets.eyeoff}
-                        style={styles.input} />
-                    <Text style={[styles.passwordError, { color: passwordError === strings.strongPassword ? 'green' : 'red' }]}>
-                        {passwordError}
-                    </Text>
-                    <Text style={styles.passwordError}>{passwordFeedback}</Text>
-                </View>
+                {CurrentStepComponent && <CurrentStepComponent />}
             </View>
             {!isKeyboardVisible && (
                 <View style={styles.buttonContainer}>
@@ -83,10 +96,10 @@ const UpdatePassword = () => {
                         onPress={() => handleSubmit()}
                         backgroundColor={Color.orangeButton}
                         textColor={Color.white}
-                        disabled={passwordError === strings.strongPassword? false: true}
+                        disabled={errorMessage != strings.strongPassword}
                         width={'100%'}
                         height={Responsive.size50}
-                        />
+                    />
                 </View>
             )}
         </View>

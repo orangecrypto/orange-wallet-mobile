@@ -105,7 +105,7 @@ const SeedPhrase = ({ route }) => {
         dispatch(setWallet(wallet));
         dispatch(clearSeedPhraseReducer());
         dispatch(setIsWalletCreated(true));
-        resetNavigation(RouteType.WALLETBALANCE);
+        resetNavigation( isRestoreWallet?RouteType.WALLETRESTORED : RouteType.SUCCESS);
     };
 
     const handlePreviousStep = () => {

@@ -3,11 +3,12 @@ import { Dimensions, Image, ScrollView, StyleSheet, Text, View } from "react-nat
 import CommonButton from "@components/CommonButton";
 import { strings } from "@strings/i18n";
 import { Color } from "@values/color";
-import { push } from "@routes/Navigator";
+import { push, resetNavigation } from "@routes/Navigator";
 import { RouteType } from "@routes/RouteType";
 import { Responsive } from '@utils/Responsive';
 import { localAssets } from "@assets/assets";
 import { Fonts } from '@values/fonts';
+import { styles } from "./styles";
 
 const Success = () => {
     const contentArray = [
@@ -79,7 +80,7 @@ const Success = () => {
             <View style={styles.buttonContainer}>
                 <CommonButton
                     title={strings.complete}
-                    onPress={() => push(RouteType.LOGIN)}
+                    onPress={() => resetNavigation(RouteType.WALLETBALANCE)}
                     backgroundColor={Color.orangeButton}
                     textColor={Color.white}
                     borderColor={Color.orangeBorder}
@@ -93,57 +94,3 @@ const Success = () => {
 
 export default Success;
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: Color.black,
-    },
-    scrollViewContainer: {
-        flexGrow: 1,
-    },
-    contentPage: {
-        width: Dimensions.get("window").width,
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        paddingHorizontal: Responsive.size20,
-    },
-    icon: {
-        width: Responsive.size156,
-        height: Responsive.size156,
-        marginBottom: Responsive.size10,
-    },
-    contentTitle: {
-        fontSize: Responsive.size24,
-        fontFamily:Fonts.semibold,
-        color: Color.orangeButton,
-        textAlign: "center",
-        marginBottom: Responsive.size10,
-    },
-    contentDescription: {
-        fontSize: Responsive.size16,
-        color: Color.white,
-        textAlign: "center",
-        fontFamily: Fonts.regular,
-        lineHeight: Responsive.size22,
-    },
-    progressBarContainer: {
-        height: Responsive.size5,
-        width: "40%",
-        backgroundColor: Color.grey,
-        borderRadius: Responsive.size5,
-        overflow: "hidden",
-        alignSelf: "center",
-        marginVertical: Responsive.size40,
-    },
-    progressBar: {
-        height: "100%",
-        backgroundColor: Color.orangeButton,
-    },
-    buttonContainer: {
-        justifyContent: "flex-end",
-        alignItems: "center",
-        paddingBottom: Responsive.size20,
-        marginHorizontal: Responsive.size24
-    },
-});
