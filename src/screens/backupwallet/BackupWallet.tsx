@@ -2,7 +2,6 @@ import { localAssets } from "@assets/assets";
 import CommonButton from "@components/CommonButton";
 import { push } from "@routes/Navigator";
 import { RouteType } from "@routes/RouteType";
-
 import { generateMnemonic, str2buf } from "@orangecryptohq/orangeseed";
 import { strings } from "@strings/i18n";
 import { Responsive } from '@utils/Responsive';

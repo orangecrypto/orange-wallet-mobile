@@ -13,16 +13,15 @@ import Loader from '@components/Loader';
 import Toast from 'react-native-toast-message';
 import { Dispatch } from '@reduxjs/toolkit';
 import { RouteType } from '@routes/RouteType';
+import useSelectedNetwork from '@hooks/useSelectedNetwork';
 
 const AddAddress = () => {
     const { getSeed }= useSeedVault()
     const { accountList } = useSelector((state: { seedPhraseReducer: appReducerType }) => state.appReducer);
     const network =store.getState().appReducer?.network
-    const selectedNetwork= network?.type === 'Mainnet'
-    ? new StacksMainnet({ url: network.address })
-    : new StacksMainnet({ url: network.address })
+    const selectedNetwork= useSelectedNetwork()
+    
     const dispatch: Dispatch = useAppDispatch();
-
     const [isLoading, setIsLoading] = useState(false);
 
     const addAddress =async () => {

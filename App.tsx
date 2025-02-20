@@ -2,6 +2,10 @@ import "node-libs-react-native/globals";
 import 'react-native-get-random-values';
 import 'react-native-url-polyfill/auto';
 import 'react-native-crypto';
+import "crypto-browserify";
+import "react-native-randombytes";
+import "stream-browserify";
+
 import { Buffer } from "buffer";
 import process from "process";
 import { AppState } from 'react-native';

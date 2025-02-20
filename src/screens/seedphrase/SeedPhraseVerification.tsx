@@ -1,5 +1,9 @@
-import { str2buf } from "@orangecryptohq/orangeseed";
+import useSeedVault from '@hooks/useSeedVault';
+import { str2buf } from '@orangecryptohq/orangeseed';
 import Clipboard from "@react-native-clipboard/clipboard";
+import { appReducerType } from "@redux/slice/appReducer";
+import { seedPhraseReducerType, setDisabled, setIsSeedPhraseVerified } from "@redux/slice/SeedPhraseReducer";
+import { useAppDispatch } from "@redux/store";
 import { Dispatch } from "@reduxjs/toolkit";
 import { strings } from "@strings/i18n";
 import { Responsive } from "@utils/Responsive";
@@ -8,14 +12,12 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { FlatList, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import bip39 from 'react-native-bip39';
 import { useSelector } from "react-redux";
-import useSeedVault from '@hooks/useSeedVault';
-import { useAppDispatch } from "@redux/store";
-import { seedPhraseReducerType, setDisabled, setIsSeedPhraseVerified } from "@redux/slice/SeedPhraseReducer";
 import { styles } from './styles';
 const SeedPhraseVerification = () => {
 
     const dispatch: Dispatch = useAppDispatch();
     const { isRestoreWallet } = useSelector((state: { seedPhraseReducer: seedPhraseReducerType }) => state.seedPhraseReducer);
+    const { network } = useSelector((state: { appReducer: appReducerType }) => state.appReducer);
     const [data, setData] = useState(
         new Array(12).fill(null).map((_, index) => ({ id: index.toString(), word: '' }))
     );
@@ -50,13 +52,16 @@ const SeedPhraseVerification = () => {
     }, [data]);
 
     const handleRestoreWallet = async () => {
-        const wordsArray = data.map(item => item.word);
+        global.Buffer = Buffer;
+
+         const wordsArray = data.map(item => item.word);
         const validationResult = validateMnemonic(wordsArray);
 
         if (validationResult) {
             (await hasSeed()) && (await clearVaultStorage());
             await initSeedVault(str2buf(''));
             await storeSeed(wordsArray.join(" "));
+           
             dispatch(setIsSeedPhraseVerified(true));
         } else {
             dispatch(setIsSeedPhraseVerified(false));
@@ -123,9 +128,7 @@ const SeedPhraseVerification = () => {
                                 marginBottom: Responsive.size60,
                                 borderWidth: Responsive.size0,
                                 backgroundColor: isPasted ? Color.pastegreen : Color.orangeOpacityBg
-                            },
-
-                        ]}
+                            },]}
                         onPress={handlePaste}>
                         <Text style={[styles.copyText, { color: isPasted ? Color.successgreen : Color.orangeButton }]}>{isPasted ? strings.pasted : strings.paste}</Text>
                     </TouchableOpacity>
