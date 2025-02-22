@@ -62,6 +62,7 @@ const localAssets = {
   whitecross: require('./images/whitecross.png'),
   yellowcross: require('./images/toastclose.png'),
   toastright: require('./images/toastright.png'),
+  stackscard: require('./images/stackscard.png'),
 
   // Icons
 };

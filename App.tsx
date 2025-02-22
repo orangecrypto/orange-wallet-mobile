@@ -8,7 +8,6 @@ import "stream-browserify";
 
 import { Buffer } from "buffer";
 import process from "process";
-import { AppState } from 'react-native';
 
 if (!global.crypto) {
   global.crypto = crypto;
@@ -23,7 +22,7 @@ if (typeof global.stream === "undefined") {
   global.stream = require("readable-stream");
 }
 import * as React from "react";
-import { SafeAreaView, View, StyleSheet } from "react-native";
+import { SafeAreaView, View, StyleSheet , Text} from "react-native";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import AppContainer from "./src/services/app/AppContainer";
@@ -33,6 +32,16 @@ import Toast from "react-native-toast-message";
 import toastConfig from "./src/components/ToastConfig";
 
 const App = () => {
+
+    const [network, setNetwork] = React.useState(store.getState().appReducer.network);
+
+  React.useEffect(() => {
+    const unsubscribe = store.subscribe(() => {
+      setNetwork(store.getState().appReducer.network);
+    });
+  
+    return () => unsubscribe(); 
+  }, []);
  
   const queryClient = new QueryClient({
     defaultOptions: {
@@ -51,28 +60,15 @@ const App = () => {
     }),
   });
 
-  React.useEffect(() => {
-    const handleAppStateChange = (nextAppState) => {
-      if (nextAppState === 'background') {
-        console.log('Device locked or app moved to background');
-        onDeviceLock(); 
-      }
-    };
-    const subscription = AppState.addEventListener('change', handleAppStateChange);
-    return () => {
-      subscription.remove();
-    };
-  }, []);
-
-  const onDeviceLock = () => {
-    console.log('Handling device lock event...');
-  };
-
+  
   return (
     <Provider store={store}>
       <PersistGate persistor={persistor}>
         <SafeAreaView style={styles.safeArea}>
           <QueryClientProvider client={queryClient}>
+           {network?.type === 'Testnet' && <View style={styles.headerViewTestNet}>
+               <Text style={styles.testNetText}>{'Testnet'}</Text>
+            </View>}
             <AppContainer />
             <Toast config={toastConfig} position="bottom" visibilityTime={2000} />
           </QueryClientProvider>
@@ -87,6 +83,18 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
   },
+    headerViewTestNet:{
+    height:45,
+    backgroundColor:'red',
+    justifyContent:'center'
+  },
+
+  testNetText:{
+      fontSize: 18,
+      color:'white',
+      textAlign:'center'
+  }
 });
 
 export default App;
+

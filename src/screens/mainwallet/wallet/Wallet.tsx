@@ -1,38 +1,114 @@
+
+import useBtcClient from '@hooks/useBtcClient';
+import useRunesApi from '@hooks/useRunesApi';
+import useStxData from '@hooks/useStxData';
+import { satsToBtc } from '@orangecryptohq/orangeseed';
+import { setHeaderAddress } from '@redux/slice/WalletReducer';
+import { store, useAppDispatch } from "@redux/store";
+import { Dispatch } from '@reduxjs/toolkit';
 import { strings } from '@strings/i18n';
-import { Responsive } from '@utils/Responsive';
-import { Color } from "@values/color";
-import { Fonts } from '@values/fonts';
-import { useState } from 'react';
-import { Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { convertBtcToUsd, convertStxToUsd, fetchBtcPrice, fetchStxPrice, microStxToStx } from '@utils/cryptoUtils';
+import BigNumber from 'bignumber.js';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { Dimensions, FlatList, Text, TouchableOpacity, View } from "react-native";
 import RenderCardItem from './RenderCardItem';
 import RenderTransactions from './RenderTransactions';
-import { Dispatch } from '@reduxjs/toolkit';
-import { useAppDispatch, store } from "@redux/store";
-import { setHeaderAddress } from '@redux/slice/WalletReducer';
+import { styles } from './styles';
 const Wallet = () => {
+    const flatListRef = useRef(null);
     const account = store.getState().appReducer.selectedAccount
     const dispatch: Dispatch = useAppDispatch();
     const [currentStep, setCurrentStep] = useState(1);
+    const [totalBalance, setTotalBalance] = useState(0.00);
     const [selectedItem, setSelectedItem] = useState(null);
-    const [selectedCategory, setSelectedCategory] = useState("All"); 
+    const [selectedCategory, setSelectedCategory] = useState("All");
+    const [cryptoArray, setCryptoArray] = useState([
+        { id: 2, category: "BTC", name: "Bitcoin" },
+        { id: 3, category: "Stacks", name: "Stacks" },
+    ])
 
+    const { btcClient, bitcoinAddress } = useBtcClient();
+    const { runesApi, ordinalsAddress } = useRunesApi();
+    const { data, loading } = useStxData();
+
+    const getBalance = async () => {
+
+        const btcBalance = await btcClient.getBalance(bitcoinAddress)
+        //  console.log('btcClient getBalance : ',)
+        //  console.log('brc20 getBalance : ',await getOrdinalsFtBalance('Testnet',ordinalsAddress))
+        //  console.log('runesApi getBalance  : ',await runesApi.getRuneBalance(ordinalsAddress))
+        //  console.log('useStxData baln: ', JSON.stringify(data))
+
+        await createTokenArray(btcBalance, data)
+    }
+
+
+    const createTokenArray = async (btcBalance, stxBalance) => {
+
+        const btcPrice = await fetchBtcPrice()
+        const stxPrice = await fetchStxPrice()
+        const stx = await microStxToStx(stxBalance.balance)
+        const btcTokenFiateRate = convertBtcToUsd(
+            satsToBtc(new BigNumber(btcBalance?.finalBalance)).toNumber(),
+            btcPrice
+        )
+        const stxTokenFiateRate = convertStxToUsd(stx, stxPrice)
+        setTotalBalance(((parseFloat(btcTokenFiateRate) || 0) + (parseFloat(stxTokenFiateRate) || 0)).toFixed(2));
+
+
+        setCryptoArray(prevArray =>
+            prevArray.map(item =>
+                item.category === 'BTC'
+                    ? {
+                        ...item,
+                        balance: satsToBtc(new BigNumber(btcBalance?.finalBalance)).toString(), // Convert to string
+                        total_sent: btcBalance?.totalSent?.toString(), // Ensure values are strings/numbers
+                        total_received: btcBalance?.totalReceived?.toString(),
+                        tokenFiatRate: convertBtcToUsd(
+                            satsToBtc(new BigNumber(btcBalance?.finalBalance)).toNumber(),
+                            btcPrice
+                        ),
+                        protocol: 'btc'
+                    }
+                    : item.category === 'Stacks'
+                        ? {
+                            ...item,
+                            balance: stx,
+                            total_sent: stxBalance?.availableBalance?.toString(),
+                            total_received: stxBalance?.availableBalance?.toString(),
+                            tokenFiatRate: convertStxToUsd(stx, stxPrice),
+                            protocol: 'btc'
+                        }
+                        : item
+            )
+        );
+
+    }
+
+    useEffect(() => {
+        if (data) {
+            getBalance()
+        }
+    }, [data])
+
+    useMemo(() => {
+
+        
+    }, [cryptoArray])
     const categories = ["All", "BRC20", "Runes", "Stacks"];
 
-    const cryptoArray = [
-        { id: 1, category: "BTC", name: "Bitcoin", quantity: "2.9841", value: "$140,298.12" },
-        { id: 2, category: "BRC20", name: "Wrapped BTC", quantity: ".932", value: "$26,452.07" },
-        { id: 3, category: "Stacks", name: "Stacks", quantity: "10", value: "$100.00" },
-    ];
 
-    const totalSteps = cryptoArray.length;
-    const progressPercentage = (currentStep / totalSteps) * 100;
 
     const handleScroll = (event) => {
         const screenWidth = Dimensions.get("window").width;
         const currentIndex = Math.round(event.nativeEvent.contentOffset.x / screenWidth);
         setCurrentStep(currentIndex + 1);
-        setSelectedItem(filteredCryptoArray[currentIndex]); // Synchronize selection
+        setSelectedItem(getCardItems(cryptoArray)[currentIndex]); // Synchronize selection
+
+
+        console.log('handleScroll', getCardItems(cryptoArray)[currentIndex])
     };
+
 
     const filteredCryptoArray = selectedCategory === "All"
         ? cryptoArray
@@ -57,18 +133,50 @@ const Wallet = () => {
     );
 
     const handleItemClick = (item) => {
-        setSelectedItem(item); // Only update selected item for highlight, not category
-        const itemIndex = filteredCryptoArray.findIndex((crypto) => crypto.id === item.id);
-        setCurrentStep(itemIndex + 1);
-        console.log('handleItemClick',item.category)
-         dispatch(setHeaderAddress(item.category==='Stacks'? account?.stxAddress : account?.btcAddress ))
+        setSelectedItem(item);
 
+        const itemIndex = getCardItems(cryptoArray).findIndex((crypto) => crypto.id === item.id);
+        setCurrentStep(itemIndex + 1);
+
+        console.log('handleItemClick', item.category);
+        dispatch(setHeaderAddress(item.category === 'Stacks' ? account?.stxAddress : account?.btcAddress));
+
+        if (flatListRef.current && itemIndex !== -1) {
+            flatListRef.current.scrollToIndex({ index: itemIndex, animated: true });
+        }
     };
 
+    const getCardItems = (cryptoArray) => {
+
+
+        const totalFiatRate = cryptoArray.reduce((acc, item) => {
+        return acc + (parseFloat(item.tokenFiatRate) || 0);
+        }, 0);
+
+
+    console.log('totalFiatRate', totalFiatRate)
+        const newItem = {
+            id: 1, // Unique ID
+            name: "Default",
+            category: "USD",
+            assetCount: cryptoArray.length,
+            balance: totalFiatRate,
+            total_sent: "0.00",
+            total_received: "0.00",
+            tokenFiatRate: totalFiatRate,
+            protocol: "custom"
+        };
+
+        return [newItem, ...cryptoArray];
+    };
+
+    const totalSteps = getCardItems(cryptoArray).length;
+    const progressPercentage = (currentStep / totalSteps) * 100;
     return (
         <View style={styles.container}>
             <FlatList
-                data={cryptoArray}
+                ref={flatListRef} // Attach the reference to FlatList
+                data={getCardItems(cryptoArray)}
                 horizontal
                 style={styles.flatList}
                 pagingEnabled
@@ -76,8 +184,12 @@ const Wallet = () => {
                 onScroll={handleScroll}
                 scrollEventThrottle={16}
                 keyExtractor={(item) => item.id.toString()}
-                renderItem={({ item }) => <RenderCardItem item={item} selectedItem={selectedItem} />}   />
-
+                getItemLayout={(data, index) => ({
+                    length: Dimensions.get("window").width,
+                    offset: Dimensions.get("window").width * index,
+                    index,
+                })}
+                renderItem={({ item }) => <RenderCardItem item={item} selectedItem={selectedItem} />} />
             <View style={styles.progressBarContainer}>
                 <View style={[styles.progressBar, { width: `${progressPercentage}%` }]} />
             </View>
@@ -87,145 +199,21 @@ const Wallet = () => {
                     {categories.map((category) => renderCategory(category))}
                 </View>
                 <View style={styles.headerTitleContainer}>
-                        <Text style={styles.headerTitle}>{strings.assets}</Text>
-                        <Text style={styles.headerTitle}>{strings.quantity}</Text>
+                    <Text style={styles.headerTitle}>{strings.assets}</Text>
+                    <Text style={styles.headerTitle}>{strings.quantity}</Text>
                 </View>
                 <FlatList
                     data={filteredCryptoArray}
                     keyExtractor={(item) => item.id.toString()}
                     renderItem={({ item }) => <RenderTransactions item={item} selectedItem={selectedItem} handleItemClick={handleItemClick} />}
-                    contentContainerStyle={styles.listContainer}/>
+                    ListEmptyComponent={
+                        <View style={styles.emptyListContainer}>
+                            <Text style={styles.emptyListText}>{strings.noAssets}</Text>
+                        </View>
+                    }
+                    contentContainerStyle={styles.listContainer} />
             </View>
         </View>
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        backgroundColor: Color.black,
-        alignItems: 'center',
-        paddingBottom: Responsive.size62,
-        flex:1
-    },
-    flatList: {
-        marginTop: Responsive.size10,
-        alignContent:'center'
-    },
-    contentContainer: {
-        justifyContent: 'center',
-        paddingHorizontal: 0,
-    },
-   
-    progressBarContainer: {
-        height: Responsive.size5,
-        width: "30%",
-        backgroundColor: Color.grey,
-        borderRadius: Responsive.size5,
-        overflow: "hidden",
-        alignSelf: "center",
-        marginTop: Responsive.size20,
-    },
-    progressBar: {
-        height: "100%",
-        backgroundColor: Color.orangeButton,
-    },
-    contentArea: {
-        marginTop: Responsive.size15,
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-        paddingHorizontal: Responsive.size20,
-        height: '60%',
-        width: '100%',
-        paddingTop: Responsive.size16,
-        backgroundColor: Color.transactionListBackground,
-        borderTopLeftRadius:Responsive.size20,
-        borderTopRightRadius: Responsive.size20
-    },
-    contentText: {
-        fontSize: Responsive.size18,
-        fontFamily: Fonts.semibold,
-        color: Color.white,
-    },
-    balanceView: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-    },
-    stepImage: {
-        width: Responsive.size100,
-        height: Responsive.size100,
-        marginTop: Responsive.size10,
-    },
-    categoryContainer: {
-        flexDirection: "row",
-        marginBottom: Responsive.size16,
-        width: '100%',
-        justifyContent: 'space-between'
-    },
-    categoryButton: {
-        paddingHorizontal: Responsive.size12,
-        paddingVertical: Responsive.size8,
-        backgroundColor: Color.orangeOpacityBg,
-        borderRadius: Responsive.size16,
-        marginRight: Responsive.size8,
-        alignContent:'center',
-        justifyContent:'center'
-    },
-    selectedCategory: {
-        backgroundColor: Color.selectedCategory,
-    },
-    categoryText: {
-        color: Color.orangeButton,
-        fontSize: Responsive.size14,
-        fontFamily: Fonts.regular
-    },
-    selectedCategoryText: {
-        color: Color.white,
-        fontFamily: Fonts.semibold
-    },
-    listContainer: {
-        paddingBottom: Responsive.size16,
-       
-    },
-    listItem: {
-        width: '100%',
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        backgroundColor: Color.transactionListBackground,
-        borderBottomColor: Color.gray,
-        borderBottomWidth: Responsive.size1,
-        paddingVertical: Responsive.size10
-    },
-    headerContainer: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        marginBottom: Responsive.size10,
-        paddingHorizontal: Responsive.size8,
-        width: '100%',
-        marginTop:Responsive.size8,
-        
-    },
-    headerText: {
-        color: Color.grayText,
-        fontSize: Responsive.size14,
-        fontFamily: Fonts.bold,
-    },
-
-    headerTitleContainer :{
-        width: '100%',
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        borderWidth: Responsive.size1,
-        borderColor: Color.transactionListBackground
-    },
-
-    headerTitle:{
-        color: Color.nftcategoryText,
-        fontFamily: Fonts.semibold,
-        fontSize: Responsive.size14
-    }
-});
-
 export default Wallet;

@@ -1,7 +1,7 @@
-// CategoryButton.js
+
 import React from 'react';
 import { TouchableOpacity, Text } from 'react-native';
-import { styles } from './styles'; // Ensure to import the styles
+import { styles } from './styles';
 
 const CategoryButton = ({ category, selectedCategory, onSelectCategory }) => (
   <TouchableOpacity
