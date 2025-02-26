@@ -140,6 +140,10 @@ export default {
     walletRestoredMessage:"You wallet has been successfully restored.",
     resetWalletPassword:"Enter your password to reset your wallet",
     save:"Save",
-    noAssets:'No assets.'
+    noAssets:'No assets.',
+    transactions:'Transactions',
+    noTransactions:'No Transactions',
+
+
 
 }   

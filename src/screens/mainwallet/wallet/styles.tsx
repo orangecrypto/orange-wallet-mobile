@@ -94,7 +94,7 @@ export const styles = StyleSheet.create({
         backgroundColor: Color.transactionListBackground,
         borderBottomColor: Color.gray,
         borderBottomWidth: Responsive.size1,
-        paddingVertical: Responsive.size10
+        paddingVertical: Responsive.size12
     },
     headerContainer: {
         flexDirection: "row",
@@ -265,5 +265,10 @@ export const styles = StyleSheet.create({
         fontFamily: Fonts.regular,
         color: Color.white,
         textAlign:'center'
+    },
+    transactionTitle:{
+        color: Color.orangeButton,
+        fontFamily: Fonts.bold,
+        fontSize: Responsive.size18
     }
 });

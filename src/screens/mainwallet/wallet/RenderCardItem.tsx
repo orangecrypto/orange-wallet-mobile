@@ -6,30 +6,19 @@ import { Image, ImageBackground, Text, TouchableOpacity, View } from "react-nati
 import { styles } from './styles';
 
 const RenderCardItem = ({ item, selectedItem }) => {
-
-    console.log('RenderCardItem', selectedItem)
     return (
         <ImageBackground
             source={localAssets.walletbg}
             style={styles.walletBackground}
             borderRadius={12}>
             <View style={styles.balanceView}>
-                <Image source={selectedItem ? selectedItem.name === 'Bitcoin' ? localAssets.bitcoincard : selectedItem.name === 'Stacks' ? localAssets.stackscard : localAssets.walletbalance : localAssets.walletbalance} style={styles.balanceIcon} />
+                <Image source={item.image} style={styles.balanceIcon} />
                 <View>
-                    <Text style={styles.walletText}>{selectedItem ? `$${selectedItem.balance}` : `$${item.balance}`}</Text>
+                    <Text style={styles.walletText}>{`${item.balance}`}</Text>
                     <View style={styles.walletTextView}>
-                        <Text style={styles.walletTextCurrencyView}> {selectedItem ? selectedItem.category : item.category} </Text>
-                        {selectedItem ? selectedItem.name === 'Bitcoin' ?
-                            null
-                            :
-                            selectedItem.name === 'Stacks' ?
-                                <Text style={styles.walletTextCurrencyView}>SIP 10</Text>
-                                :
-                                <Text style={styles.walletTextCurrencyView}>{` ${item.assetCount} Assets`}</Text>
-                            :
-                            <Text style={styles.walletTextCurrencyView}>{` ${item.assetCount} Assets`}</Text>
-
-                        }
+                        {item?.name !== 'Bitcoin' &&<Text style={styles.walletTextCurrencyView}> {item.name === 'all' ? item.category : item.name} </Text>}
+                        <Text style={styles.walletTextCurrencyView}>{item.name === 'all' ?` ${item.assetCount} Assets` :  item.protocol=== 'stacks'? 'SIP-10' :`${item.protocol}`.toLocaleUpperCase() }</Text>
+                        
                     </View>
                 </View>
             </View>
@@ -46,13 +35,7 @@ const RenderCardItem = ({ item, selectedItem }) => {
                     <TouchableOpacity style={styles.actionButtonBg} onPress={() => push(RouteType.VIEWQR)}>
                         <Image source={localAssets.receive} style={styles.actionButtonIcon} />
                     </TouchableOpacity>
-                    {/* <TouchableOpacity style={styles.actionButtonBg} onPress={() => push(RouteType.BUY)}>
-                    <Image source={localAssets.buy} style={styles.actionButtonIcon} />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.actionButtonBg} onPress={() => push(RouteType.WARNING)}>
-                    <Image source={localAssets.sell} style={styles.actionButtonIcon} />
-                </TouchableOpacity> */}
-
+                
                 </View> :
                 <TouchableOpacity style={styles.addCoinView} onPress={() => push(RouteType.ADDCOIN)}>
                     <Image style={styles.addCoinIcon} source={localAssets.addcoin} />

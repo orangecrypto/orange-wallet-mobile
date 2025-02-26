@@ -13,8 +13,8 @@ const useStxData = () => {
     const fetchData = async () => {
         setLoading(true);
         try {
-            const response = await fetchStxAddressData(stxAddress, network, offset, paginationLimit);
-            setData(response);
+            const data = await fetchStxAddressData(stxAddress, network, offset, paginationLimit);
+            setData(data);
         } catch (err) {
             console.error("Error fetching STX data:", err);
         } finally {
