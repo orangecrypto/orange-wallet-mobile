@@ -1,4 +1,4 @@
-
+import { localAssets } from '@assets/assets';
 import Loader from '@components/Loader';
 import useBtcClient from '@hooks/useBtcClient';
 import useRunesApi from '@hooks/useRunesApi';
@@ -18,7 +18,6 @@ import { createTokenArray } from './TokenUtils';
 import TransactionItem from './TransactionItem';
 import { getStxAddressTransactions } from './TransactionUtils';
 import { groupBtcTxsByDate, groupedTxsByDateMap, mapBtcTransactionList, mapStxTransactionList } from './WalletUtils';
-import { localAssets } from '@assets/assets';
 
 
 const Wallet = () => {
@@ -46,33 +45,31 @@ const Wallet = () => {
     const { data, loading } = useStxData();
 
     const getBalance = async () => {
-        try
-       { 
-        const btcBalance = await btcClient.getBalance(bitcoinAddress)
-        const brc20Tokens= await getOrdinalsFtBalance('Testnet','bc1pk8g4rztfkxs2q9c40g6keeknjw6aadx3kzu4suzlll0remfw7xxs5x9ctv')
-        const runesTokens= await runesApi.getRuneFungibleTokens('bc1pk8g4rztfkxs2q9c40g6keeknjw6aadx3kzu4suzlll0remfw7xxs5x9ctv')
-        const stacksTokens=await getFtData('SP3V5DY757XADMFXSSSWCJ4NSDCBJSYB92N6BXCKQ', stackNetwork)
-        // const btcTransaction = await btcClient.getAddressTransactions(bitcoinAddress)
-        //console.log('getStxTransactions : ', data?.transactions)
-          console.log('brc20 getBalance : ',await getOrdinalsFtBalance('Testnet','bc1pk8g4rztfkxs2q9c40g6keeknjw6aadx3kzu4suzlll0remfw7xxs5x9ctv'))
-          console.log('runesApi getTokens  : ',await runesApi.getRuneFungibleTokens('bc1pk8g4rztfkxs2q9c40g6keeknjw6aadx3kzu4suzlll0remfw7xxs5x9ctv'))
-          console.log('stacks getTokens  : ',await getFtData('SP3V5DY757XADMFXSSSWCJ4NSDCBJSYB92N6BXCKQ', stackNetwork))
-         //  console.log('useStxData baln: ', JSON.stringify(data))
-
-       //   console.log('runesApi transaction  : ',await runesApi.getRuneTxHistory(ordinalsAddress,'',0,1))
-        await updateTokenArray(btcBalance, data, brc20Tokens, runesTokens, stacksTokens )
-        
-        setIsLoading(false)
-    }catch(error){
-        setIsLoading(false)
-        console.log('getBalance error', error)
-    }
-        
-    }
+        setIsLoading(true);
+    
+        const [btcRes, brc20Res, runesRes, stacksRes] = await Promise.allSettled([
+            btcClient.getBalance(bitcoinAddress),
+            getOrdinalsFtBalance(store.getState().appReducer.network?.type, account?.ordinalsAddress),
+            //getOrdinalsFtBalance('Testnet','bc1pk8g4rztfkxs2q9c40g6keeknjw6aadx3kzu4suzlll0remfw7xxs5x9ctv'),
+            //runesApi.getRuneFungibleTokens(account?.ordinalsAddress),
+            runesApi.getRuneFungibleTokens('bc1pk8g4rztfkxs2q9c40g6keeknjw6aadx3kzu4suzlll0remfw7xxs5x9ctv'),
+            getFtData(account?.stxAddress, stackNetwork),
+        ]);
+       
+        const btcBalance = btcRes.status === 'fulfilled' ? btcRes.value : 0;
+        const brc20Tokens = brc20Res.status === 'fulfilled' ? brc20Res.value : [];
+        const runesTokens = runesRes.status === 'fulfilled' ? runesRes.value : [];
+        const stacksTokens = stacksRes.status === 'fulfilled' ? stacksRes.value : [];
+    
+        await updateTokenArray(btcBalance, data, brc20Tokens, runesTokens, stacksTokens);
+    
+        setIsLoading(false);
+    };
+    
 
     const updateTokenArray = async (btcBalance, stxBalance, brc20Tokens, runesTokens, stacksTokens) => {
-        const { finalCryptoArray, totalBalance, btcPrice, stxPrice } = await createTokenArray(btcBalance, stxBalance, brc20Tokens, runesTokens, stacksTokens, cryptoArray);
-        setCryptoArray(finalCryptoArray);
+        const { newCryptoArray, totalBalance, btcPrice, stxPrice } = await createTokenArray(btcBalance, stxBalance, brc20Tokens, runesTokens, stacksTokens, cryptoArray);
+        setCryptoArray(newCryptoArray);
         setBtcPrice(btcPrice);
         setStxPrice(stxPrice);
     };
@@ -106,10 +103,6 @@ const Wallet = () => {
         console.log('handleBtcTransactions','call')
         const btcTransaction = await fetchBtcTransactionsData(bitcoinAddress, account?.ordinalsAddress, btcClient, false)
         const groupBtcTxsByDatevalue = groupBtcTxsByDate(btcTransaction)
-
-     
-        console.log('groupBtcTxsByDatevalue', groupBtcTxsByDatevalue)
-        console.log('mapBtcTransactionList', await mapBtcTransactionList(groupBtcTxsByDatevalue, btcPrice))
         setTransaction(await mapBtcTransactionList(groupBtcTxsByDatevalue, btcPrice))
     }
 
@@ -117,9 +110,6 @@ const Wallet = () => {
 
         const  stxAddressTransactions = await getStxAddressTransactions(account?.stxAddress, stackNetwork,0,10)
         const  groupedTxsByDateMapData = groupedTxsByDateMap(stxAddressTransactions)
-        
-        console.log('handleStacksTransactions', await mapStxTransactionList(groupedTxsByDateMapData))
-
         setTransaction(await mapStxTransactionList(groupedTxsByDateMapData, stxPrice))
     }
 
@@ -227,14 +217,12 @@ const Wallet = () => {
             </View> :
 
                 <View style={styles.contentArea}>
-
                     <View style={styles.headerTitleContainer}>
                         <Text style={styles.transactionTitle}>{`${transactionProtocol + ' ' + strings.transactions} `}</Text>
-
                     </View>
                     <FlatList
                         data={transaction}
-                        // keyExtractor={(item) => item.id.toString()}
+                     //   keyExtractor={(item) => item.id.toString()}
                         renderItem={({ item }) => <TransactionItem item={item} handleTransactionClick={handleTransactionClick} />}
                         ListEmptyComponent={
                             <View style={styles.emptyListContainer}>

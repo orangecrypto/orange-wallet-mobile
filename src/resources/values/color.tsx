@@ -57,6 +57,10 @@ export enum Color {
     progressBackground = '#A8B9F426',
     graphfill = '#4E120099',
     successgreen='#42BF23',
-    pastegreen='#42BF2333'
+    pastegreen='#42BF2333',
+    tokenImageDarkBg='#222737',
+    tokenImageBg='#F0F0F0',
+    tokenImageDarkText='#A8B9F4'
+
   }
   

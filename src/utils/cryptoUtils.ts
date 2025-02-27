@@ -1,3 +1,4 @@
+import { localAssets } from '@assets/assets';
 import { FungibleToken } from '@orangecryptohq/orangeseed';
 import BigNumber from 'bignumber.js';
 
@@ -11,7 +12,7 @@ export const truncateAddress = (address: string, startLength = 4, endLength = 4)
         const response = await fetch(`https://api.orangemarketcap.com/coins/fiat?symbol=${symbol}&fiat_currency=USD`);
        
         const data = await response.json();
-        console.log('fetchPrice', data[symbol])
+      
         return data[symbol]; 
     } catch (error) {
         console.error(`Error fetching ${symbol} price:`, error);
@@ -89,7 +90,7 @@ function ftDecimals(value: number | string | BigNumber, decimals: number): strin
   return amount.shiftedBy(-decimals).toString();
 }
 
-function getTicker(name: string) {
+export function getTicker(name: string) {
   if (name.includes('-')) {
     const parts = name.split('-');
     if (parts.length >= 3) {
@@ -102,3 +103,79 @@ function getTicker(name: string) {
   }
   return name;
 }
+
+export const getImageSource = async (name: string) => {
+
+  const formatString = (str) => str.replace(/[^a-zA-Z0-9]/g, ''); 
+  const result = formatString(name);
+  const lowerCaseName = result.trim().toUpperCase(); // Trim and convert to uppercase
+  const matchingKey = Object.keys(localAssets).find(
+      (key) => key.trim().toUpperCase() === lowerCaseName
+  );
+
+  console.log("getImageSource "+name , matchingKey);
+  return matchingKey ? localAssets[matchingKey] : null;
+};
+
+export const getImageSourceOrange = async (name: string) => {
+  const formatString = (str: string) => str.replace(/[^a-zA-Z0-9]/g, ''); 
+  const formattedName = formatString(name).trim().toUpperCase();
+
+  // Find a key that matches the formatted name + "Orange"
+  const matchingKey = Object.keys(localAssets).find(
+    (key) => key.trim().toUpperCase() === formattedName + "ORANGE"
+  );
+
+  console.log(`Searching for: ${formattedName}ORANGE, Found: ${matchingKey}`);
+
+  return matchingKey ? localAssets[matchingKey] : null;
+};
+
+
+
+
+// export interface TokenImageProps {
+//   token?: string;
+//   loading?: boolean;
+//   fungibleToken?: FungibleToken;
+//   size?: number;
+//   loaderSize?: LoaderSize;
+//   round?: boolean;
+//   variant?: 'default' | 'dark';
+// }
+
+// export default function TokenImage({
+//   token,
+//   loading,
+//   fungibleToken,
+//   loaderSize = LoaderSize.LARGE,
+//   size,
+//   round,
+//   variant = 'default',
+// }: TokenImageProps) {
+//   const theme = useTheme();
+
+//   const background = variant === 'dark' ? theme.colors.background.brand_dark : theme.colors.white_0;
+
+//   const displayedTicker = useMemo(() => {
+//     const ticker = fungibleToken?.ticker || getTicker(fungibleToken?.name || token);
+//     return ticker.substring(0, 4).toUpperCase();
+//   }, [fungibleToken, token]);
+
+//   if (loading) {
+//     return (
+//       <LoaderImageContainer>
+//         <BarLoader loaderSize={loaderSize} />
+//       </LoaderImageContainer>
+//     );
+//   }
+
+//   const Imgsrc = getImageSourceForFt();
+//   return Imgsrc ? (
+//     <TickerImage src={Imgsrc} size={size} round={round} />
+//   ) : (
+//     <TickerIconContainer size={size} color={background} round={round}>
+//       <TickerIconText variant={variant}>{displayedTicker}</TickerIconText>
+//     </TickerIconContainer>
+//   );
+// }
