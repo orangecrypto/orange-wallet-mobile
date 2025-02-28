@@ -1,4 +1,3 @@
-import { localAssets } from '@assets/assets';
 import Loader from '@components/Loader';
 import useBtcClient from '@hooks/useBtcClient';
 import useRunesApi from '@hooks/useRunesApi';
@@ -10,11 +9,12 @@ import { store, useAppDispatch } from "@redux/store";
 import { Dispatch } from '@reduxjs/toolkit';
 import { strings } from '@strings/i18n';
 import { useEffect, useRef, useState } from 'react';
-import { Dimensions, FlatList, Text, TouchableOpacity, View } from "react-native";
+import { Dimensions, FlatList, Text, View } from "react-native";
+import categoryItem from './CategoryItem';
 import RenderCardItem from './RenderCardItem';
 import { styles } from './styles';
 import TokenItem from './TokenItem';
-import { createTokenArray } from './TokenUtils';
+import { createTokenArray, getCardItems } from './TokenUtils';
 import TransactionItem from './TransactionItem';
 import { getStxAddressTransactions } from './TransactionUtils';
 import { groupBtcTxsByDate, groupedTxsByDateMap, mapBtcTransactionList, mapStxTransactionList } from './WalletUtils';
@@ -26,7 +26,6 @@ const Wallet = () => {
     const stackNetwork = useSelectedNetwork()
     const dispatch: Dispatch = useAppDispatch();
     const [currentStep, setCurrentStep] = useState(1);
-    const [totalBalance, setTotalBalance] = useState(0.00);
     const [btcPrice, setBtcPrice] = useState();
     const [stxPrice, setStxPrice] = useState();
     const [isLoading, setIsLoading] = useState(false);
@@ -46,7 +45,7 @@ const Wallet = () => {
 
     const getBalance = async () => {
         setIsLoading(true);
-    
+
         const [btcRes, brc20Res, runesRes, stacksRes] = await Promise.allSettled([
             btcClient.getBalance(bitcoinAddress),
             getOrdinalsFtBalance(store.getState().appReducer.network?.type, account?.ordinalsAddress),
@@ -55,17 +54,16 @@ const Wallet = () => {
             runesApi.getRuneFungibleTokens('bc1pk8g4rztfkxs2q9c40g6keeknjw6aadx3kzu4suzlll0remfw7xxs5x9ctv'),
             getFtData(account?.stxAddress, stackNetwork),
         ]);
-       
+
         const btcBalance = btcRes.status === 'fulfilled' ? btcRes.value : 0;
         const brc20Tokens = brc20Res.status === 'fulfilled' ? brc20Res.value : [];
         const runesTokens = runesRes.status === 'fulfilled' ? runesRes.value : [];
         const stacksTokens = stacksRes.status === 'fulfilled' ? stacksRes.value : [];
-    
+
         await updateTokenArray(btcBalance, data, brc20Tokens, runesTokens, stacksTokens);
-    
         setIsLoading(false);
     };
-    
+
 
     const updateTokenArray = async (btcBalance, stxBalance, brc20Tokens, runesTokens, stacksTokens) => {
         const { newCryptoArray, totalBalance, btcPrice, stxPrice } = await createTokenArray(btcBalance, stxBalance, brc20Tokens, runesTokens, stacksTokens, cryptoArray);
@@ -87,29 +85,29 @@ const Wallet = () => {
         const screenWidth = Dimensions.get("window").width;
         const currentIndex = Math.round(event.nativeEvent.contentOffset.x / screenWidth);
         setCurrentStep(currentIndex + 1);
-        setSelectedItem(getCardItems(cryptoArray)[currentIndex]); 
+        setSelectedItem(getCardItems(cryptoArray)[currentIndex]);
         setTransactionProtocol(getCardItems(cryptoArray)[currentIndex].name)
-        
+
         if (await getCardItems(cryptoArray)[currentIndex].name === 'Bitcoin') {
             await handleBtcTransactions()
-        } else if(await getCardItems(cryptoArray)[currentIndex].name === 'Stacks') {
-            handleStacksTransactions()
-        } else  {
+        } else if (await getCardItems(cryptoArray)[currentIndex].name === 'Stacks') {
+            await handleStacksTransactions()
+        } else {
             setTransaction([])
         }
     };
 
-    const handleBtcTransactions = async () =>{
-        console.log('handleBtcTransactions','call')
+    const handleBtcTransactions = async () => {
+        console.log('handleBtcTransactions', 'call')
         const btcTransaction = await fetchBtcTransactionsData(bitcoinAddress, account?.ordinalsAddress, btcClient, false)
         const groupBtcTxsByDatevalue = groupBtcTxsByDate(btcTransaction)
         setTransaction(await mapBtcTransactionList(groupBtcTxsByDatevalue, btcPrice))
     }
 
-    const handleStacksTransactions = async () =>{
+    const handleStacksTransactions = async () => {
 
-        const  stxAddressTransactions = await getStxAddressTransactions(account?.stxAddress, stackNetwork,0,10)
-        const  groupedTxsByDateMapData = groupedTxsByDateMap(stxAddressTransactions)
+        const stxAddressTransactions = await getStxAddressTransactions(account?.stxAddress, stackNetwork, 0, 10)
+        const groupedTxsByDateMapData = groupedTxsByDateMap(stxAddressTransactions)
         setTransaction(await mapStxTransactionList(groupedTxsByDateMapData, stxPrice))
     }
 
@@ -117,25 +115,8 @@ const Wallet = () => {
         ? cryptoArray
         : cryptoArray.filter((item) => item.category === selectedCategory);
 
-    const renderCategory = (category) => (
-        <TouchableOpacity
-            key={category}
-            onPress={() => setSelectedCategory(category)} // Update the selected category
-            style={[
-                styles.categoryButton,
-                selectedCategory === category && styles.selectedCategory]}>
-            <Text
-                style={[
-                    styles.categoryText,
-                    selectedCategory === category && styles.selectedCategoryText]}>
-                {category}
-            </Text>
-        </TouchableOpacity>
-    );
-
     const handleItemClick = (item) => {
         setSelectedItem(item);
-
         const itemIndex = getCardItems(cryptoArray).findIndex((crypto) => crypto.id === item.id);
         setCurrentStep(itemIndex + 1);
         dispatch(setHeaderAddress(item.category === 'Stacks' ? account?.stxAddress : account?.btcAddress));
@@ -148,35 +129,13 @@ const Wallet = () => {
         console.log('handleTransactionClick', item)
     };
 
-    const getCardItems = (cryptoArray) => {
-
-        const totalFiatRate = cryptoArray.reduce((acc, item) => {
-            return acc + (parseFloat(item.tokenFiatRate) || 0);
-        }, 0);
-
-        const newItem = {
-            id: 1, // Unique ID
-            image: localAssets.walletbalance,
-            name: "all",
-            category: "USD",
-            assetCount: cryptoArray.length,
-            balance: `$${totalFiatRate.toFixed(5)}`,
-            total_sent: "0.00",
-            total_received: "0.00",
-            tokenFiatRate: totalFiatRate,
-            protocol: "all"
-        };
-
-        return [newItem, ...cryptoArray];
-    };
-
     const totalSteps = getCardItems(cryptoArray).length;
     const progressPercentage = (currentStep / totalSteps) * 100;
     return (
         <View style={styles.container}>
             {isLoading && <Loader loading={isLoading} />}
             <FlatList
-                ref={flatListRef} // Attach the reference to FlatList
+                ref={flatListRef}
                 data={getCardItems(cryptoArray)}
                 horizontal
                 style={styles.flatList}
@@ -198,7 +157,9 @@ const Wallet = () => {
 
             {transactionProtocol === 'all' ? <View style={styles.contentArea}>
                 <View style={styles.categoryContainer}>
-                    {categories.map((category) => renderCategory(category))}
+                    {categories.map((category) =>
+                        categoryItem(category, selectedCategory, setSelectedCategory)
+                    )}
                 </View>
                 <View style={styles.headerTitleContainer}>
                     <Text style={styles.headerTitle}>{strings.assets}</Text>
@@ -222,7 +183,7 @@ const Wallet = () => {
                     </View>
                     <FlatList
                         data={transaction}
-                     //   keyExtractor={(item) => item.id.toString()}
+                        //   keyExtractor={(item) => item.id.toString()}
                         renderItem={({ item }) => <TransactionItem item={item} handleTransactionClick={handleTransactionClick} />}
                         ListEmptyComponent={
                             <View style={styles.emptyListContainer}>
@@ -230,8 +191,7 @@ const Wallet = () => {
                             </View>
                         }
                         contentContainerStyle={styles.listContainer} />
-                </View>
-            }
+                </View>}
         </View>
     );
 };

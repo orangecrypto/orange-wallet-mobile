@@ -116,6 +116,26 @@ export const createTokenArray = async (
 };
 
 
+export const getCardItems = (cryptoArray) => {
+    const totalFiatRate = cryptoArray.reduce((acc, item) => {
+        return acc + (parseFloat(item.tokenFiatRate) || 0);
+    }, 0);
+
+    const newItem = {
+        id: 1,
+        image: localAssets.walletbalance,
+        name: "all",
+        category: "USD",
+        assetCount: cryptoArray.length,
+        balance: `$${totalFiatRate.toFixed(5)}`,
+        total_sent: "0.00",
+        total_received: "0.00",
+        tokenFiatRate: totalFiatRate,
+        protocol: "all"
+    };
+
+    return [newItem, ...cryptoArray];
+};
 const generateUniqueId = () => `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 
 

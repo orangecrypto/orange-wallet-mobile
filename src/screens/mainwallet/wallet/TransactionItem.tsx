@@ -1,5 +1,4 @@
 import { localAssets } from "@assets/assets";
-import { satsToBtc } from "@orangecryptohq/orangeseed";
 import { timeStampToDate, truncateAddress } from "@utils/cryptoUtils";
 import { Fonts } from "@values/fonts";
 import { Image, Text, TouchableOpacity, View } from "react-native";
