@@ -40,6 +40,7 @@ import {
       },
       timeout: API_TIMEOUT_MILLI,
     });
+    console.log('getTransferTransactions', response.data.total)
     return response.data.results;
   }
   
@@ -55,6 +56,7 @@ import {
     limit: number;
   }): Promise<MempoolTransactionListResponse> {
     const apiUrl = `${network.coreApiUrl}/extended/v1/tx/mempool?address=${stxAddress}`;
+    console.log('MempoolTransactionListResponse', apiUrl)
     const results = await axios.get<MempoolTransactionListResponse>(apiUrl, {
       timeout: API_TIMEOUT_MILLI,
       params: {
@@ -146,3 +148,5 @@ import {
   ): tx is RuneTx {
     return (tx as RuneTx).burned !== undefined;
   }
+
+  

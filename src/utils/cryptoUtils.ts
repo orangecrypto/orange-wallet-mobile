@@ -9,6 +9,9 @@ export const truncateAddress = (address: string, startLength = 4, endLength = 4)
 
   export const fetchPrice = async (symbol) => {
     try {
+
+
+        //fiat_currency  based on currency settings
         const response = await fetch(`https://api.orangemarketcap.com/coins/fiat?symbol=${symbol}&fiat_currency=USD`);
        
         const data = await response.json();
@@ -46,7 +49,7 @@ export const fetchStxPrice = async () => {
 
 export const convertStxToUsd =  (stxBalance, stxPrice) => {
   
-  return `${(stxBalance * stxPrice).toFixed(3)}`; 
+  return `${(stxBalance * stxPrice).toFixed(2)}`; 
 };
 
 export const convertRunesToUsd =  async (runesBalance, runePrice) => {
@@ -77,6 +80,8 @@ export function getFtTicker(ft: FungibleToken) {
   }
   if (ft?.name) {
     return getTicker(ft.name).toUpperCase();
+  }else {
+    return getTicker(ft.assetName).toUpperCase();
   }
   return '';
 }

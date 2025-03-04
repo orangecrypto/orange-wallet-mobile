@@ -49,6 +49,7 @@ export const createTokenArray = async (
                 total_received: stxBalance?.availableBalance?.toString(),
                 tokenFiatRate: stxTokenFiatRate,
                 protocol: 'stacks',
+                type:'Stacks',
                 ticker: 'STX',
             };
         } else if (item.category === 'BRC20') {
@@ -71,8 +72,10 @@ export const createTokenArray = async (
         ...stacksTokens.map(token => ({
             ...token,
             category: 'Stacks',
+            type:'SIP-10',
             balance: microstacksToStx(new BigNumber(token.balance)),
             name: token.assetName,
+            ticker: getFtTicker(token),
             id: generateUniqueId(),
             tokenFiatRate: convertStxToUsd(microstacksToStx(new BigNumber(token.balance)), stxPrice),
         })),

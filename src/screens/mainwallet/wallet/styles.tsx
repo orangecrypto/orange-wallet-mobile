@@ -8,11 +8,25 @@ export const styles = StyleSheet.create({
         backgroundColor: Color.black,
         alignItems: 'center',
         paddingBottom: Responsive.size62,
-        flex:1
+        flex:1,
+    },
+    button: {
+        backgroundColor: Color.backbackgroundbg,
+        width: Responsive.size70,
+        justifyContent: "center",
+        alignItems: "center",
+        padding: Responsive.size10,
+        borderRadius: Responsive.size8,
+        marginTop: Responsive.size50,
+    },
+    buttonText: {
+        color: Color.white,
+        fontSize: Responsive.size16,
+        fontFamily: Fonts.regular,
     },
     flatList: {
         marginTop: Responsive.size10,
-        alignContent:'center'
+        alignContent:'center',
     },
     contentContainer: {
         justifyContent: 'center',
@@ -33,6 +47,18 @@ export const styles = StyleSheet.create({
         backgroundColor: Color.orangeButton,
     },
     contentArea: {
+        marginTop: Responsive.size15,
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        paddingHorizontal: Responsive.size20,
+        height: '60%',
+        width: '100%',
+        paddingTop: Responsive.size16,
+        backgroundColor: Color.transactionListBackground,
+        borderTopLeftRadius:Responsive.size20,
+        borderTopRightRadius: Responsive.size20
+    },
+    transactionContainer: {
         marginTop: Responsive.size15,
         justifyContent: 'flex-start',
         alignItems: 'center',
@@ -168,9 +194,15 @@ export const styles = StyleSheet.create({
         width: Responsive.size32
     },
     walletBackground: {
-        width: Dimensions.get('window').width - 40,
-        marginHorizontal: Responsive.size16,
-        padding: Responsive.size24,
+      width: Dimensions.get('window').width - Responsive.size20, // Adjust width for spacing
+    marginHorizontal: Responsive.size10, // Adds space between cards
+    overflow: 'hidden',
+    borderRadius: Responsive.size12,
+        
+    },
+    walletCardBackground:{
+        padding : Responsive.size24,
+        borderRadius: Responsive.size12
     },
     
     walletText: {
@@ -216,7 +248,7 @@ export const styles = StyleSheet.create({
         width: Responsive.size147,
         flexDirection: 'row',
         alignSelf: 'center',
-        marginTop: Responsive.size28,
+        marginTop: Responsive.size15,
     },
 
     addCoinIcon: {
@@ -233,7 +265,7 @@ export const styles = StyleSheet.create({
 
     horizontalActions :{
         flexDirection:'row',
-        marginTop:Responsive.size22,
+        marginTop:Responsive.size12,
         alignContent:'center',
         paddingHorizontal: Responsive.size10,
         justifyContent:'center',

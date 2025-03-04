@@ -1,4 +1,4 @@
-import { BtcTransactionData, fetchBtcFeeRate, fetchBtcToCurrencyRate, microstacksToStx, satsToBtc } from "@orangecryptohq/orangeseed";
+import { BtcTransactionData, fetchBtcFeeRate, fetchBtcToCurrencyRate, microstacksToStx, parseStxTransactionData, RuneTx, satsToBtc } from "@orangecryptohq/orangeseed";
 import { convertBtcToUsd, convertStxToUsd, fetchBtcPrice, microStxToStx, timeStampToDate } from "@utils/cryptoUtils";
 import BigNumber from 'bignumber.js';
 import { isAddressTransactionWithTransfers, Tx } from "./TransactionUtils";
@@ -6,12 +6,14 @@ import {
   AddressTransactionWithTransfers,
   MempoolTransaction
 } from '@stacks/stacks-blockchain-api-types';
+import { localAssets } from "@assets/assets";
 
 export const mapBtcTransactionList = async (groupBtcTxsByDatevalue, btcPrice) => {
   try {
     const mappedTransactions = Object.values(groupBtcTxsByDatevalue) // Get values (arrays of transactions)
       .flat() // Flatten into a single array
       .map(({ seenTime, incoming, amount, txType, txStatus, isOrdinal, recipientAddress }) => ({
+        icon: incoming ? localAssets.receive: localAssets.send,
         seenTime,
         incoming,
         amount: satsToBtc(amount).toFixed(6),
@@ -20,6 +22,7 @@ export const mapBtcTransactionList = async (groupBtcTxsByDatevalue, btcPrice) =>
         isOrdinal,
         recipientAddress,
         protocol: 'BTC',
+        ticker:'BTC',
         usdValue: convertBtcToUsd(satsToBtc(new BigNumber(amount)), btcPrice)
       }));
     return mappedTransactions
@@ -30,27 +33,153 @@ export const mapBtcTransactionList = async (groupBtcTxsByDatevalue, btcPrice) =>
 };
 
 
+export const mapBrc20TransactionList = async (groupBrc20TxsByDatevalue, tokenName, tokePrice) => {
+  try {
+    const mappedTransactions = Object.values(groupBrc20TxsByDatevalue) // Get values (arrays of transactions)
+      .flat() // Flatten into a single array
+      .map(({ seenTime, incoming, amount, txType, txStatus, address }) => ({
+        icon: incoming ? localAssets.receive: localAssets.send,
+        seenTime,
+        incoming : incoming,
+        amount: satsToBtc(amount).toFixed(6),
+        txType,
+        txStatus,
+        recipientAddress: address,
+        protocol: 'brc-20',
+        ticker:tokenName,
+        usdValue: convertBtcToUsd(satsToBtc(new BigNumber(amount)), tokePrice)
+      }));
 
-export const mapStxTransactionList = async (groupStxTxsByDatevalue, stxPrice) => {
+      console.log('mappedTransactions', mappedTransactions)
+    return mappedTransactions
+  } catch (error) {
+    console.log('mapBtcTransactionList', error)
 
-  const formattedTransactions = Object.values(groupStxTxsByDatevalue)
-    .flat()
-    .map(({ tx, stx_sent, stx_received, stx_transfers }) => ({
-      seenTime: tx.block_time_iso,
-      incoming: stx_received > 0 ? true : stx_sent < 0,
-      amount: parseFloat(stx_transfers[0].amount) / 1_000_000,
-      txType: tx.tx_type,
-      txStatus: tx.tx_status,
-      isOrdinal: "",
-      recipientAddress:  stx_transfers[0].recipient,
-      protocol: 'STX',
-      usdValue: convertStxToUsd(new BigNumber(parseFloat(stx_transfers[0].amount) / 1000000), 0.7605)
-    }));
 
-  console.log('formattedTransactions stxPrice', stxPrice);
-
-  return formattedTransactions
+  }
+  return false
 };
+
+
+export const mapRunesTransactionList = async (grouppedRuneTransactions, divisibility, tokenPrize, ticker) => {
+  
+  try {
+    const mappedTransactions = Object.values(grouppedRuneTransactions) // Extract arrays of transactions
+      .flat() // Flatten into a single array
+      .map(({ blockTimestamp, amount, txid, burned }) => ({
+
+        icon : burned ? localAssets.failed : BigInt(amount) > 0 ? localAssets.receive : localAssets.send,
+        seenTime: blockTimestamp,
+        incoming: BigInt(amount) > 0, 
+        amount: ftDecimals(amount, divisibility),
+        recipientAddress: txid,
+        protocol: 'runes',
+        ticker: ticker,
+        usdValue: ftDecimals(amount, divisibility) * tokenPrize
+      }));
+  
+    console.log(mappedTransactions);
+    return mappedTransactions;
+  } catch (error) {
+    console.log('mapBtcTransactionList', error);
+  }
+  return false;
+  
+
+
+};
+
+
+
+export const mapStxTransactionItem = async (tx, stxPrice) => {
+ 
+
+  let amount;
+  let recipientAddress = '';
+  let icon=0;
+  // Handle different transaction types
+  if (tx.txType === "token_transfer" && tx.amount) {
+    amount = parseFloat(tx.amount) / 1_000_000;
+    recipientAddress = tx.recipientAddress || tx.txid;
+    icon = tx.incoming ? localAssets.receive: localAssets.send;
+  } else {
+    amount = tx[formatTransactionType(tx.txType)].function_name;
+    icon = localAssets.contract;
+   // recipientAddress = tx.txid;
+   // amount =tx.amount;
+  } 
+
+  
+  const amountValue = parseFloat(tx.amount) || 0;
+  return {
+    icon :tx.txStatus !== 'pending'? icon: localAssets.pendingIcon,
+    seenTime: tx.txStatus !== 'pending'?  tx.seenTime: 'pending' ,
+    incoming: tx.txType === "token_transfer" ? tx.incoming :'',
+    amount: amount,
+    txType: tx.txType,
+    txStatus: tx.txStatus,
+    isOrdinal: "",
+    recipientAddress : tx.txType === "token_transfer" ? tx.tokenTransfer.recipientAddress: tx.txid,
+    protocol: "STX",
+    ticker:  tx.txType === "token_transfer" ?'STX' : '',
+    usdValue : isNaN(Number(convertStxToUsd(new BigNumber(amountValue / 1_000_000), stxPrice))) ?0.00:convertStxToUsd(new BigNumber(amountValue / 1_000_000), stxPrice)
+       
+  };
+
+  console.log('mapStxTransactionItem', tx)
+};
+
+export const handlePendingTransactions = async (tx, stxPrice) => {
+  
+
+  // Extract function name for contract call transactions
+  let amount;
+
+  if (tx.tx_type === "token_transfer" && tx.token_transfer) {
+    amount = parseFloat(tx.token_transfer.amount) / 1_000_000;
+  } else if (tx[tx.tx_type]?.function_name) {
+    amount = tx[tx.tx_type].function_name;
+  } else {
+    amount = "N/A";
+  }
+
+  return {
+    icon:localAssets.transactionarrow,
+    seenTime: 'pending', 
+    incoming: false,
+    amount: amount,
+    txType: tx.tx_type,
+    txStatus: tx.tx_status,
+    isOrdinal: "",
+    recipientAddress: tx.tx_id, 
+    protocol: "STX",
+    ticker: "",
+    usdValue: 0,
+  };
+};
+
+
+export const mapStxTransactionList = async (groupStxTxsByDatevalue, stxPrice, address) => {
+  const transactionPromises = Object.values(groupStxTxsByDatevalue)
+    .flat()
+    .map(async (txItem) => {
+      if (!isAddressTransactionWithTransfers(txItem)) {
+       // console.log("Transaction with true condition", parseStxTransactionData({responseTx : txItem,stxAddress: 'SP3WMZH4GCH820YP3XHD6GX5TKQ411MHSKPJ9H22R'}));
+        return await mapStxTransactionItem(parseStxTransactionData({responseTx : txItem,stxAddress: address}), stxPrice); 
+      } else {
+        console.log("Transaction with false condition", parseStxTransactionData({responseTx : txItem.tx,stxAddress: address}));
+        return await mapStxTransactionItem(parseStxTransactionData({responseTx : txItem.tx,stxAddress: address}), stxPrice);
+      }
+    });
+
+  const formattedTransactions = await Promise.all(transactionPromises); 
+
+  console.log("formattedTransactions", formattedTransactions.filter(Boolean));
+
+  return formattedTransactions.filter(Boolean); 
+};
+
+
 
 
 const sortTransactionsByBlockHeight = (transactions: BtcTransactionData[]) =>
@@ -86,6 +215,18 @@ export const groupBtcTxsByDate = (
   }
   return processedTransactions;
 };
+
+// pas data as responceTX from another type of stx transaction.
+
+ //parseStxTransactionData()
+ // handle test cases from above method responce
+//  const responseTx = useMemo(() => {
+//   if (!isAddressTransactionWithTransfers(transaction)) {
+//     return transaction;
+//   }
+//   return transaction?.tx;
+// }, [transaction]);
+
 export const groupedTxsByDateMap = (txs: (AddressTransactionWithTransfers | MempoolTransaction)[]) =>
   txs.reduce(
     (
@@ -108,36 +249,52 @@ export const groupedTxsByDateMap = (txs: (AddressTransactionWithTransfers | Memp
     },
     {},
   );
-//     //acceptes data.items if is runes transaction array 
-//   const groupRuneTxsByDate = (transactions: RuneTx[]): Record<string, RuneTx[]> => {
-//     const mappedTransactions = {};
-//     transactions.forEach((transaction) => {
-//       const txDate = formatDate(new Date(transaction.blockTimestamp));
-//       if (!mappedTransactions[txDate]) {
-//         mappedTransactions[txDate] = [transaction];
-//       } else {
-//         mappedTransactions[txDate].push(transaction);
-//       }
-//     });
-//     return mappedTransactions;
-//   };
-//   const filterTxs = (
-//     txs: (AddressTransactionWithTransfers | MempoolTransaction)[],
-//     filter: string,
-//   ): (AddressTransactionWithTransfers | MempoolTransaction)[] =>
-//     txs.filter((atx) => {
-//       const tx = isAddressTransactionWithTransfers(atx) ? atx.tx : atx;
-//       const acceptedTypes = tx.tx_type === 'contract_call';
-//       const ftTransfers = atx && isAddressTransactionWithTransfers(atx) ? atx.ft_transfers || [] : [];
-//       const nftTransfers =
-//         atx && isAddressTransactionWithTransfers(atx) ? atx.nft_transfers || [] : [];
-//       const fungibleTokenPostCondition = tx?.post_conditions[0] as PostConditionFungible;
-//       const contractFromPostCondition = `${fungibleTokenPostCondition?.asset?.contract_address}.${fungibleTokenPostCondition?.asset?.contract_name}::${fungibleTokenPostCondition?.asset?.asset_name}`;
-//       return (
-//         acceptedTypes &&
-//         (ftTransfers.filter((transfer) => transfer.asset_identifier.includes(filter)).length > 0 ||
-//           nftTransfers.filter((transfer) => transfer.asset_identifier.includes(filter)).length > 0 ||
-//           tx?.contract_call?.contract_id === filter ||
-//           (contractFromPostCondition && contractFromPostCondition === filter))
-//         );
-//     });
+
+
+//acceptes data.items if is runes transaction array 
+  export const groupRuneTxsByDate = (transactions: RuneTx[]): Record<string, RuneTx[]> => {
+    const mappedTransactions = {};
+    transactions.forEach((transaction) => {
+      const txDate = timeStampToDate(new Date(transaction.blockTimestamp));
+      if (!mappedTransactions[txDate]) {
+        mappedTransactions[txDate] = [transaction];
+      } else {
+        mappedTransactions[txDate].push(transaction);
+      }
+    });
+    return mappedTransactions;
+  };
+
+export const filterTxs = async (
+    txs: (AddressTransactionWithTransfers | MempoolTransaction)[],
+    filter: string,
+  ): (AddressTransactionWithTransfers | MempoolTransaction)[] =>
+    txs.filter((atx) => {
+      const tx = isAddressTransactionWithTransfers(atx) ? atx.tx : atx;
+      const acceptedTypes = tx.tx_type === 'contract_call';
+      const ftTransfers = atx && isAddressTransactionWithTransfers(atx) ? atx.ft_transfers || [] : [];
+      const nftTransfers =
+        atx && isAddressTransactionWithTransfers(atx) ? atx.nft_transfers || [] : [];
+      const fungibleTokenPostCondition = tx?.post_conditions[0] as PostConditionFungible;
+      const contractFromPostCondition = `${fungibleTokenPostCondition?.asset?.contract_address}.${fungibleTokenPostCondition?.asset?.contract_name}::${fungibleTokenPostCondition?.asset?.asset_name}`;
+      return (
+        acceptedTypes &&
+        (ftTransfers.filter((transfer) => transfer.asset_identifier.includes(filter)).length > 0 ||
+          nftTransfers.filter((transfer) => transfer.asset_identifier.includes(filter)).length > 0 ||
+          tx?.contract_call?.contract_id === filter ||
+          (contractFromPostCondition && contractFromPostCondition === filter))
+        );
+    });
+
+const formatTransactionType = (type : any): string => {
+  return type.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase());
+};
+
+function ftDecimals(value: number | string | BigNumber, decimals: number): string {
+  const amount = initBigNumber(value);
+  return amount.shiftedBy(-decimals).toString();
+}
+
+function initBigNumber(num: string | number | BigNumber) {
+  return BigNumber.isBigNumber(num) ? num : new BigNumber(num);
+ }

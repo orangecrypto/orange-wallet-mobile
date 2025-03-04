@@ -28,7 +28,7 @@ const useStxData = () => {
         }
     }, [stxAddress, network]);
 
-    return { data, loading };
+    return { data, loading, stxAddress };
 };
 
 export default useStxData;

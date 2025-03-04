@@ -63,6 +63,9 @@ const localAssets = {
   yellowcross: require('./images/toastclose.png'),
   toastright: require('./images/toastright.png'),
   stackscard: require('./images/stackscard.png'),
+  contract: require('./images/contract.png'),
+  pendingIcon: require('./images/pendingIcon.png'),
+  failed: require('./images/failed.png'),
 
   // Cypto Icons
 

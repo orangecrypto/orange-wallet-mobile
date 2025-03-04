@@ -3,12 +3,13 @@ import useBtcClient from '@hooks/useBtcClient';
 import useRunesApi from '@hooks/useRunesApi';
 import useSelectedNetwork from '@hooks/useSelectedNetwork';
 import useStxData from '@hooks/useStxData';
-import { fetchBtcTransactionsData, getFtData, getOrdinalsFtBalance } from '@orangecryptohq/orangeseed';
+import { fetchBtcTransactionsData, FungibleToken, getBrc20History, getFtData, getOrdinalsFtBalance, HIRO_MAINNET_DEFAULT, StacksMainnet, StacksNetwork } from '@orangecryptohq/orangeseed';
 import { setHeaderAddress } from '@redux/slice/WalletReducer';
 import { store, useAppDispatch } from "@redux/store";
 import { Dispatch } from '@reduxjs/toolkit';
 import { strings } from '@strings/i18n';
-import { useEffect, useRef, useState } from 'react';
+import { Responsive } from '@utils/Responsive';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Dimensions, FlatList, Text, View } from "react-native";
 import categoryItem from './CategoryItem';
 import RenderCardItem from './RenderCardItem';
@@ -17,12 +18,21 @@ import TokenItem from './TokenItem';
 import { createTokenArray, getCardItems } from './TokenUtils';
 import TransactionItem from './TransactionItem';
 import { getStxAddressTransactions } from './TransactionUtils';
-import { groupBtcTxsByDate, groupedTxsByDateMap, mapBtcTransactionList, mapStxTransactionList } from './WalletUtils';
+import { filterTxs, groupBtcTxsByDate, groupedTxsByDateMap, groupRuneTxsByDate, mapBrc20TransactionList, mapBtcTransactionList, mapRunesTransactionList, mapStxTransactionList } from './WalletUtils';
 
 
 const Wallet = () => {
+
+    const limit = 10;
+    const [pageNumber, setPageNumber] = useState(0);
+    const [selectedToken, setSelectedToken] = useState('');
+
     const flatListRef = useRef(null);
+    const ITEM_WIDTH = Dimensions.get("window").width - Responsive.size20;
+    const ITEM_OFFSET = ITEM_WIDTH + Responsive.size20;
     const account = store.getState().appReducer.selectedAccount
+
+    const stackNetworkMainnet = new StacksMainnet({ url: HIRO_MAINNET_DEFAULT })
     const stackNetwork = useSelectedNetwork()
     const dispatch: Dispatch = useAppDispatch();
     const [currentStep, setCurrentStep] = useState(1);
@@ -30,10 +40,13 @@ const Wallet = () => {
     const [stxPrice, setStxPrice] = useState();
     const [isLoading, setIsLoading] = useState(false);
     const [selectedItem, setSelectedItem] = useState(null);
+
+    const memoizedSelectedItem = useMemo(() =>
+        selectedItem, [selectedItem]);
     const [selectedCategory, setSelectedCategory] = useState("All");
     const [cryptoArray, setCryptoArray] = useState([
         { id: 2, category: "BTC", name: "Bitcoin" },
-        { id: 3, category: "BRC20", name: "ORNG" },
+        { id: 3, category: "BRC20", name: "Orange", ticker: 'ORNJ' },
         { id: 4, category: "Stacks", name: "Stacks" },
 
     ])
@@ -41,18 +54,19 @@ const Wallet = () => {
     const [transaction, setTransaction] = useState([])
     const { btcClient, bitcoinAddress } = useBtcClient();
     const { runesApi, ordinalsAddress } = useRunesApi();
-    const { data, loading } = useStxData();
+    const { data, loading, stxAddress } = useStxData();
 
     const getBalance = async () => {
         setIsLoading(true);
 
         const [btcRes, brc20Res, runesRes, stacksRes] = await Promise.allSettled([
             btcClient.getBalance(bitcoinAddress),
-            getOrdinalsFtBalance(store.getState().appReducer.network?.type, account?.ordinalsAddress),
-            //getOrdinalsFtBalance('Testnet','bc1pk8g4rztfkxs2q9c40g6keeknjw6aadx3kzu4suzlll0remfw7xxs5x9ctv'),
-            //runesApi.getRuneFungibleTokens(account?.ordinalsAddress),
-            runesApi.getRuneFungibleTokens('bc1pk8g4rztfkxs2q9c40g6keeknjw6aadx3kzu4suzlll0remfw7xxs5x9ctv'),
-            getFtData(account?.stxAddress, stackNetwork),
+            getOrdinalsFtBalance(store.getState().appReducer.network?.type, ordinalsAddress),
+            // getOrdinalsFtBalance(store.getState().appReducer.network?.type, 'bc1pk8g4rztfkxs2q9c40g6keeknjw6aadx3kzu4suzlll0remfw7xxs5x9ctv'),
+            runesApi.getRuneFungibleTokens(ordinalsAddress),
+            //  runesApi.getRuneFungibleTokens('bc1pk8g4rztfkxs2q9c40g6keeknjw6aadx3kzu4suzlll0remfw7xxs5x9ctv'),
+            getFtData(stxAddress, stackNetwork),
+            //getFtData('ST1J2JTYXGRMZYNKE40GM87ZCACSPSSEEQVSNB7DC', stackNetwork),
         ]);
 
         const btcBalance = btcRes.status === 'fulfilled' ? btcRes.value : 0;
@@ -66,6 +80,8 @@ const Wallet = () => {
 
 
     const updateTokenArray = async (btcBalance, stxBalance, brc20Tokens, runesTokens, stacksTokens) => {
+
+        console.log('updateTokenArray', stacksTokens)
         const { newCryptoArray, totalBalance, btcPrice, stxPrice } = await createTokenArray(btcBalance, stxBalance, brc20Tokens, runesTokens, stacksTokens, cryptoArray);
         setCryptoArray(newCryptoArray);
         setBtcPrice(btcPrice);
@@ -79,37 +95,82 @@ const Wallet = () => {
         }
     }, [data])
 
+
+
     const categories = ["All", "BRC20", "Runes", "Stacks"];
 
     const handleScroll = async (event) => {
+        setIsLoading(true)
         const screenWidth = Dimensions.get("window").width;
         const currentIndex = Math.round(event.nativeEvent.contentOffset.x / screenWidth);
         setCurrentStep(currentIndex + 1);
+        setSelectedCategory(currentIndex === 0 ? 'All' : '')
         setSelectedItem(getCardItems(cryptoArray)[currentIndex]);
         setTransactionProtocol(getCardItems(cryptoArray)[currentIndex].name)
 
-        if (await getCardItems(cryptoArray)[currentIndex].name === 'Bitcoin') {
-            await handleBtcTransactions()
-        } else if (await getCardItems(cryptoArray)[currentIndex].name === 'Stacks') {
-            await handleStacksTransactions()
-        } else {
-            setTransaction([])
-        }
+        const token = await getCardItems(cryptoArray)[currentIndex]
+        setPageNumber(() => 0);
+        setTransaction([])
+        setSelectedToken(token)
+        await fetchTransactions(token)
+
+        setIsLoading(false)
     };
 
-    const handleBtcTransactions = async () => {
-        console.log('handleBtcTransactions', 'call')
-        const btcTransaction = await fetchBtcTransactionsData(bitcoinAddress, account?.ordinalsAddress, btcClient, false)
-        const groupBtcTxsByDatevalue = groupBtcTxsByDate(btcTransaction)
-        setTransaction(await mapBtcTransactionList(groupBtcTxsByDatevalue, btcPrice))
-    }
 
-    const handleStacksTransactions = async () => {
-
-        const stxAddressTransactions = await getStxAddressTransactions(account?.stxAddress, stackNetwork, 0, 10)
-        const groupedTxsByDateMapData = groupedTxsByDateMap(stxAddressTransactions)
-        setTransaction(await mapStxTransactionList(groupedTxsByDateMapData, stxPrice))
-    }
+    const fetchTransactions = async (token: FungibleToken) => {
+        setIsLoading(true)
+    
+        try {
+            let newTransactions = [];
+    
+            if (token.name === 'Bitcoin') {
+                console.log('Fetching Bitcoin transactions...');
+                const btcTransaction = await fetchBtcTransactionsData(bitcoinAddress, ordinalsAddress, btcClient, false);
+                const groupedTransactions = groupBtcTxsByDate(btcTransaction);
+                newTransactions = await mapBtcTransactionList(groupedTransactions, btcPrice);
+            }
+    
+            if (token.name === 'Stacks') {
+                console.log('Fetching Stacks transactions...');
+                //const stxAddressTransactions = await getStxAddressTransactions('SP3WMZH4GCH820YP3XHD6GX5TKQ411MHSKPJ9H22R', stackNetworkMainnet, pageNumber, limit);
+                const stxAddressTransactions = await getStxAddressTransactions(stxAddress, stackNetwork, pageNumber, limit);
+                const groupedTxsByDateMapData = groupedTxsByDateMap(stxAddressTransactions);
+              // newTransactions = await mapStxTransactionList(groupedTxsByDateMapData, stxPrice, 'SP3WMZH4GCH820YP3XHD6GX5TKQ411MHSKPJ9H22R');
+                 newTransactions = await mapStxTransactionList(groupedTxsByDateMapData, stxPrice, stxAddress);
+            }
+    
+            if (token.protocol === 'runes') {
+                console.log('Fetching Runes transactions...');
+                const runesTransactions = await runesApi.getRuneTxHistory(ordinalsAddress, token.name, pageNumber, limit);
+                const groupedRunes = await groupRuneTxsByDate(runesTransactions.items);
+                newTransactions = await mapRunesTransactionList(groupedRunes, runesTransactions.divisibility, token.tokenFiatRate, token.ticker);
+            }
+    
+            if (token.protocol === 'brc-20') {
+                console.log('Fetching BRC-20 transactions...');
+                const brc20Transactions = await getBrc20History(store.getState().appReducer.network?.type, ordinalsAddress, token.name);
+                const groupedTransactions = await groupBtcTxsByDate(brc20Transactions);
+                newTransactions = await mapBrc20TransactionList(groupedTransactions, token.name, token.tokenFiatRate);
+            }
+    
+            if (token.protocol === 'stacks' && token?.type === 'SIP-10') {
+                console.log('Fetching Stacks SIP-10 transactions...');
+                const stxAddressTransactions = await getStxAddressTransactions(stxAddress, stackNetwork, pageNumber, limit);
+                const sip10Transactions = await filterTxs(stxAddressTransactions, token.name);
+                const groupedTxsByDateMapData = groupedTxsByDateMap(sip10Transactions);
+                newTransactions = await mapStxTransactionList(groupedTxsByDateMapData, stxPrice, stxAddress);
+            }
+    
+            // Append new transactions instead of replacing
+            setTransaction(prev => [...prev, ...newTransactions]);
+            setPageNumber(prev => prev + 1);
+        } catch (error) {
+            console.error('Error fetching transactions:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     const filteredCryptoArray = selectedCategory === "All"
         ? cryptoArray
@@ -123,16 +184,33 @@ const Wallet = () => {
 
         if (flatListRef.current && itemIndex !== -1) {
             flatListRef.current.scrollToIndex({ index: itemIndex, animated: true });
+            console.log('handleItemClick', 'call')
         }
     };
     const handleTransactionClick = (item) => {
         console.log('handleTransactionClick', item)
     };
+    const handlecategoryChange = (item) => {
+        setSelectedCategory(item)
+        setCurrentStep(1);
+        setTransactionProtocol('all')
+        flatListRef.current && flatListRef.current.scrollToIndex({ index: 0, animated: true });
 
+    };
+    const renderItem = useCallback(({ item }) => (
+        <RenderCardItem item={item} selectedItem={memoizedSelectedItem} />
+    ), [memoizedSelectedItem]);
     const totalSteps = getCardItems(cryptoArray).length;
     const progressPercentage = (currentStep / totalSteps) * 100;
     return (
         <View style={styles.container}>
+
+            {transactionProtocol !== 'all' && <View style={[styles.categoryContainer, { paddingHorizontal: Responsive.size20 }]}>
+                {categories.map((category) =>
+                    categoryItem(category, selectedCategory, handlecategoryChange)
+                )}
+            </View>}
+
             {isLoading && <Loader loading={isLoading} />}
             <FlatList
                 ref={flatListRef}
@@ -141,16 +219,20 @@ const Wallet = () => {
                 style={styles.flatList}
                 pagingEnabled
                 keyExtractor={(item, index) => index.toString()}
-                onMomentumScrollEnd={(event) => {
-                    handleScroll(event)
-                }}
+                onMomentumScrollEnd={handleScroll}
                 showsHorizontalScrollIndicator={false}
                 getItemLayout={(data, index) => ({
-                    length: Dimensions.get("window").width,
-                    offset: Dimensions.get("window").width * index,
+                    length: ITEM_WIDTH,
+                    offset: ITEM_OFFSET * index,
                     index,
                 })}
-                renderItem={({ item }) => <RenderCardItem item={item} selectedItem={selectedItem} />} />
+                contentContainerStyle={{ paddingLeft: 0, paddingRight: 0 }}
+                snapToInterval={ITEM_OFFSET}
+                snapToAlignment='start'
+                decelerationRate='normal'
+                renderItem={renderItem} />
+
+
             <View style={styles.progressBarContainer}>
                 <View style={[styles.progressBar, { width: `${progressPercentage}%` }]} />
             </View>
@@ -177,20 +259,28 @@ const Wallet = () => {
                     contentContainerStyle={styles.listContainer} />
             </View> :
 
-                <View style={styles.contentArea}>
+                <View style={[styles.transactionContainer, { height: transactionProtocol !== 'all' ? '50%' : '60%' }]}>
                     <View style={styles.headerTitleContainer}>
                         <Text style={styles.transactionTitle}>{`${transactionProtocol + ' ' + strings.transactions} `}</Text>
                     </View>
                     <FlatList
                         data={transaction}
-                        //   keyExtractor={(item) => item.id.toString()}
+                        keyExtractor={(item, index) => index.toString()}
                         renderItem={({ item }) => <TransactionItem item={item} handleTransactionClick={handleTransactionClick} />}
                         ListEmptyComponent={
                             <View style={styles.emptyListContainer}>
-                                <Text style={styles.emptyListText}>{strings.noTransactions}</Text>
+                                {!isLoading && <Text style={styles.emptyListText}>{strings.noTransactions}</Text>}
                             </View>
                         }
-                        contentContainerStyle={styles.listContainer} />
+                        contentContainerStyle={styles.listContainer} 
+                        onEndReached={()=>{
+                            console.log('End Reached')
+                            if ((selectedToken.protocol === 'runes' || selectedToken.protocol === 'stacks') && transaction.length >= limit) {
+                                fetchTransactions(selectedToken);
+                            }
+                            
+                        }}
+                        />
                 </View>}
         </View>
     );
