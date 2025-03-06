@@ -3,7 +3,7 @@ import { push } from '@routes/Navigator';
 import { RouteType } from '@routes/RouteType';
 import { strings } from '@strings/i18n';
 import { Image, ImageBackground, Text, TouchableOpacity, View } from "react-native";
-import { styles } from './styles';
+import { styles } from '../styles';
 import { Responsive } from '@utils/Responsive';
 import TokenImage from '@components/TokenImage';
 

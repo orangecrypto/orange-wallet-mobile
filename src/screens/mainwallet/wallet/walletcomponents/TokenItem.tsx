@@ -2,7 +2,7 @@ import TokenImage from "@components/TokenImage";
 import { Responsive } from "@utils/Responsive";
 import { Color } from "@values/color";
 import { Image, Text, TouchableOpacity, View } from "react-native";
-import { styles } from "./styles";
+import { styles } from "../styles";
 
 const TokenItem = ({ item, selectedItem, handleItemClick }) => {
     return (

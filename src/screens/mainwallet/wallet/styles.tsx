@@ -63,7 +63,7 @@ export const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         alignItems: 'center',
         paddingHorizontal: Responsive.size20,
-        height: '60%',
+        height: '50%',
         width: '100%',
         paddingTop: Responsive.size16,
         backgroundColor: Color.transactionListBackground,

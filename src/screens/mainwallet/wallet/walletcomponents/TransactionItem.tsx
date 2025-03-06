@@ -2,7 +2,7 @@ import { localAssets } from "@assets/assets";
 import { timeStampToDate, truncateAddress } from "@utils/cryptoUtils";
 import { Fonts } from "@values/fonts";
 import { Image, Text, TouchableOpacity, View } from "react-native";
-import { styles } from "./styles";
+import { styles } from "../styles";
 import { Responsive } from "@utils/Responsive";
 
 const TransactionItem = ({ item, handleTransactionClick }) => {

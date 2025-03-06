@@ -1,6 +1,6 @@
 import { localAssets } from '@assets/assets';
-import { btcToSats, microstacksToStx, satsToBtc } from '@orangecryptohq/orangeseed';
-import { convertBtcToUsd, convertStxToUsd, fetchPrice, fetchStxPrice, getFtBalance, getFtTicker, getImageSource, getImageSourceOrange, getTicker, microStxToStx } from '@utils/cryptoUtils';
+import { microstacksToStx, satsToBtc } from '@orangecryptohq/orangeseed';
+import { convertBtcToUsd, convertStxToUsd, fetchPrice, getFtBalance, getFtTicker, getImageSource, getImageSourceOrange, microStxToStx } from '@utils/cryptoUtils';
 import BigNumber from 'bignumber.js';
 
 export const createTokenArray = async (
@@ -140,5 +140,3 @@ export const getCardItems = (cryptoArray) => {
     return [newItem, ...cryptoArray];
 };
 const generateUniqueId = () => `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-
-

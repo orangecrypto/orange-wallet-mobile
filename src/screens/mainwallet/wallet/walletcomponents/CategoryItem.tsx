@@ -1,5 +1,5 @@
 import { Text, TouchableOpacity } from "react-native";
-import { styles } from "./styles";
+import { styles } from "../styles";
 
 
 const categoryItem = (category, selectedCategory, setSelectedCategory) => (
