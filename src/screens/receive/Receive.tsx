@@ -16,14 +16,14 @@ const Receive = () => {
     const account =store.getState().appReducer.selectedAccount
     const [addressArray, setAddressArray] = useState([
         { id: 1, name: "Bitcoin", address : account?.btcAddress },
-        { id: 2, name: "Ordinals and BRC20",address : account?.ordinalsAddress },
-        { id: 3, name: "Stacks and SIP10",address : account?.stxAddress }
+        { id: 2, name: "Ordinals, RUNES and BRC20",address : account?.ordinalsAddress },
+        { id: 3, name: "Stacks and SIP-10",address : account?.stxAddress }
 
     ]);
 
     const renderItem = ({ item }) => (
         <View style={styles.item}>
-            <Text style={styles.text}>{item.name}</Text>
+            <Text style={styles.text} numberOfLines={1}>{item.name}</Text>
             <View style={styles.rightItemContainer}>
                 <TouchableOpacity  style={styles.rightItemIconContaner} onPress={()=>{ Clipboard.setString(item?.address)}}>
                 <Image style={styles.rightItemIcon} source={localAssets.copy} />

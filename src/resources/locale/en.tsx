@@ -144,6 +144,8 @@ export default {
     transactions:'Transactions',
     noTransactions:'No Transactions',
 
+    share:'Share'
+
 
 
 }   
