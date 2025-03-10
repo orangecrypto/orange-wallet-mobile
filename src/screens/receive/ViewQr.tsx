@@ -33,49 +33,49 @@ const ViewQr = ({ route }) => {
     return (
         <View style={styles.container}>
             <ScrollView>
-            <View style={styles.contentContainer}>
-                <TouchableOpacity style={styles.button} onPress={() => goBack()}>
-                    <Text style={styles.buttonText}>{strings.back}</Text>
-                </TouchableOpacity>
-                <Text style={[styles.title, { lineHeight: Responsive.size40 }]}> 
-                    {`${strings.receive} ${route?.params?.item?.name}`}
+                <View style={styles.contentContainer}>
+                    <TouchableOpacity style={styles.button} onPress={() => goBack()}>
+                        <Text style={styles.buttonText}>{strings.back}</Text>
+                    </TouchableOpacity>
+                    <Text style={[styles.title, { lineHeight: Responsive.size40 }]}>
+                        {`${strings.receive} ${route?.params?.item?.name || ''}`}
+                    </Text>
+                    <ViewShot ref={qrRef} style={styles.qrView}>
+                        <QRCode
+                            value={route?.params?.item?.address}
+                            size={Platform.OS === 'ios' ? Responsive.size150 : Responsive.size170}
+                            backgroundColor={Color.white}
+                        />
+                    </ViewShot>
+                    <Text
+                        style={styles.qrcodeAddressText}
+                        numberOfLines={2}
+                        adjustsFontSizeToFit
+                    >
+                        {route?.params?.item?.address}
+                    </Text>
+                </View>
+                <Text style={styles.warningText}>{strings.warning}:
+                    <Text style={styles.warningMessage}> {strings.receiveWarningMessage}</Text>
                 </Text>
-                <ViewShot ref={qrRef} style={styles.qrView}>
-                    <QRCode
-                        value={route?.params?.item?.address}
-                        size={Platform.OS === 'ios' ? Responsive.size150 : Responsive.size170}
-                        backgroundColor={Color.white}
+                <View style={styles.buttonContainer}>
+                    <CommonButton
+                        title={strings.close}
+                        onPress={() => resetNavigation(RouteType.WALLETBALANCE)}
+                        backgroundColor={Color.orangeButton}
+                        textColor={Color.white}
+                        width={'100%'}
+                        height={Responsive.size50}
                     />
-                </ViewShot>
-                <Text
-                    style={styles.qrcodeAddressText}
-                    numberOfLines={2}
-                    adjustsFontSizeToFit
-                >
-                    {route?.params?.item?.address}
-                </Text>
-            </View>
-            <Text style={styles.warningText}>{strings.warning}:
-                <Text style={styles.warningMessage}> {strings.receiveWarningMessage}</Text>
-            </Text>
-            <View style={styles.buttonContainer}>
-                <CommonButton
-                    title={strings.close}
-                    onPress={() => resetNavigation(RouteType.WALLETBALANCE)}
-                    backgroundColor={Color.orangeButton}
-                    textColor={Color.white}
-                    width={'100%'}
-                    height={Responsive.size50}
-                />
-                <CommonButton
-                    title={strings.share}
-                    onPress={captureAndShare}
-                    backgroundColor={Color.orangeButton}
-                    textColor={Color.white}
-                    width={'100%'}
-                    height={Responsive.size50}
-                />
-            </View>
+                    <CommonButton
+                        title={strings.share}
+                        onPress={captureAndShare}
+                        backgroundColor={Color.orangeButton}
+                        textColor={Color.white}
+                        width={'100%'}
+                        height={Responsive.size50}
+                    />
+                </View>
             </ScrollView>
         </View>
     );

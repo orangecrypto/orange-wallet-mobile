@@ -15,7 +15,7 @@ import Transfer from '@screens/mainwallet/nft/Transfer';
 import Receive from '@screens/receive/Receive';
 import ViewQr from '@screens/receive/ViewQr';
 import SeedPhrase from '@screens/seedphrase/SeedPhrase';
-import Buy from '@screens/sendings/Buy';
+import Buy from '@screens/buy/Buy';
 import Confirmation from '@screens/sendings/Confirmation';
 import EditConfirmation from '@screens/sendings/EditConfirmation';
 import EditFees from '@screens/sendings/EditFees';
