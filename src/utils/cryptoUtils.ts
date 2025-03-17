@@ -136,7 +136,15 @@ export const getImageSourceOrange = async (name: string) => {
   return matchingKey ? localAssets[matchingKey] : null;
 };
 
+export const formatNumber = (value) => {
+  const num = Number(value); 
 
+  if (isNaN(num)) {
+    return "Invalid Number";
+  }
+
+  return num < 1 ? num.toString() : num.toFixed(2);
+};
 
 
 // export interface TokenImageProps {

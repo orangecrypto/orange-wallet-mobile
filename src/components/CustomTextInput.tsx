@@ -1,5 +1,5 @@
 import { Responsive } from '@utils/Responsive';
-import { Color} from '@values/color';
+import { Color } from '@values/color';
 import React, { useState } from 'react';
 import { TextInput, View, TouchableOpacity, StyleSheet, Text, FlatList, Image } from 'react-native';
 
@@ -100,18 +100,21 @@ const CustomTextInput = ({
         <View style={styles.dropdownList}>
           <FlatList
             data={dropdownOptions}
-            keyExtractor={(item) => item.value}
+            keyExtractor={(index) => index}
             renderItem={({ item }) => (
               <TouchableOpacity
                 style={styles.dropdownItem}
-                onPress={() => handleDropdownSelect(item.value)}
+                onPress={() => handleDropdownSelect(item)}
               >
-                <Text style={styles.dropdownItemText}>
-                  {item.label} {item.symbol}
+                <Text numberOfLines ={1} style={styles.dropdownItemText}>
+                  {item.name} {item.ticker}
                 </Text>
               </TouchableOpacity>
             )}
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={true}
           />
+
         </View>
       )}
     </View>
@@ -162,6 +165,9 @@ const styles = StyleSheet.create({
     borderColor: Color.gray,
     borderWidth: 1,
     zIndex: 10,
+    width: Responsive.size188,
+    maxHeight: Responsive.size180, 
+    overflow: 'hidden', 
   },
   dropdownItem: {
     padding: Responsive.size10,

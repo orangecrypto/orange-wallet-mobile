@@ -23,12 +23,13 @@ export const fetchTransactions = async (token, walletContext) => {
         if (token.name === 'Bitcoin') {
             console.log('Fetching Bitcoin transactions...');
             const btcTransaction = await fetchBtcTransactionsData(bitcoinAddress, ordinalsAddress, btcClient, false);
+            console.log('Fetching Bitcoin transactions...', btcTransaction);
             const groupedTransactions = groupBtcTxsByDate(btcTransaction);
             newTransactions = await mapBtcTransactionList(groupedTransactions, btcPrice);
         }
 
         if (token.name === 'Stacks') {
-            console.log('Fetching Stacks transactions...');
+            console.log('Fetching Stacks transactions...', pageNumber);
             const stxAddressTransactions = await getStxAddressTransactions(stxAddress, stackNetwork, pageNumber, limit);
             const groupedTxsByDateMapData = groupedTxsByDateMap(stxAddressTransactions);
             newTransactions = await mapStxTransactionList(groupedTxsByDateMapData, stxPrice, stxAddress);

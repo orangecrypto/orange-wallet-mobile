@@ -22,7 +22,7 @@ export interface appReducerType {
    wallet:{},
    network:{},
    currency:{},
-   accountList:[]
+   accountList:[],
 }
 
 const initialState: appReducerType = {

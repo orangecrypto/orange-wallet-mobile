@@ -96,6 +96,7 @@ export default {
     enterwalletAddress:'Enter the wallet address.',
     enterBitcoinAddress: "Enter Bitcoin address...",
     insufficientfunds:'Insufficient funds.',
+    minimumtransfer:'Minimum transfer should be.',
     invalidAddress:'Invalid Address.',
     warning:'Warning',
     warningMessage:'Please confirm the wallet address as transactions are irreversible and funds can not be recovered.',
@@ -142,9 +143,11 @@ export default {
     save:"Save",
     noAssets:'No assets.',
     transactions:'Transactions',
+    transactionId:'Transaction ID',
     noTransactions:'No Transactions',
 
-    share:'Share'
+    share:'Share',
+    selfAddress:'Self Address'
 
 
 

@@ -9,12 +9,14 @@ import BigNumber from 'bignumber.js';
 import { isAddressTransactionWithTransfers, Tx } from "./TransactionUtils";
 
 export const mapBtcTransactionList = async (groupBtcTxsByDatevalue, btcPrice) => {
+
+  console.log('mapBtcTransactionList',groupBtcTxsByDatevalue )
   try {
     const mappedTransactions = Object.values(groupBtcTxsByDatevalue) // Get values (arrays of transactions)
       .flat() // Flatten into a single array
       .map(({ seenTime, incoming, amount, txType, txStatus, isOrdinal, recipientAddress }) => ({
-        icon: incoming ? localAssets.receive: localAssets.send,
-        seenTime,
+        icon: txStatus !== 'pending'? incoming ? localAssets.receive: localAssets.send :localAssets.pendingIcon,
+        seenTime: txStatus !== 'pending'?  seenTime : 'pending',
         incoming,
         amount: satsToBtc(amount).toFixed(6),
         txType,

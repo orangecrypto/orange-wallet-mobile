@@ -90,14 +90,16 @@ export const styles = StyleSheet.create({
         fontSize: Responsive.size12,
         fontFamily: Fonts.regular,
         color: Color.white,
+        textAlign:'right',
+          alignSelf:'flex-end'
        
     },
     subValue: {
         fontSize: Responsive.size12,
         fontFamily: Fonts.regular,
         color: Color.nftcategoryText,
-        marginLeft: Responsive.size4,
-         marginTop: Platform.OS ==='ios' ? Responsive.size4:0
+        textAlign:'right', 
+        alignSelf:'flex-end'
     },
     valueContainer: {
         justifyContent: 'center',
@@ -206,7 +208,8 @@ export const styles = StyleSheet.create({
       errorMessage:{
         fontFamily: Fonts.regular,
         fontSize: Responsive.size12,
-        color: Color.erroryellow
+        color: Color.erroryellow,
+        width: Responsive.size230
       },
       balanceText:{
         borderRadius: Responsive.size5,
@@ -362,6 +365,19 @@ export const styles = StyleSheet.create({
         fontFamily: Fonts.bold,
         marginTop: Responsive.size15,
     },
+    transactionIdContainer:{
+        padding: Responsive.size18
+    },
+    transactionIdLabel: {
+        color: Color.orangeButton,
+        fontSize: Responsive.size12,
+        fontFamily: Fonts.bold,
+    },
+    transactionIdValue: {
+        color: Color.white,
+        fontSize: Responsive.size12,
+        fontFamily: Fonts.bold,
+    },
     transactionDescription: {
         color: Color.white,
         fontSize: Responsive.size18,
@@ -414,5 +430,10 @@ export const styles = StyleSheet.create({
         fontSize: Responsive.size12,
         color:Color.nftcategoryText,
         fontFamily: Fonts.regular,
+      },
+      rightText: {
+        color: Color.orangeButton,
+        fontSize: Responsive.size16,
+        marginVertical: Responsive.size2, // Add spacing between texts
       },
 });

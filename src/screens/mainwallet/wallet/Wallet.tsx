@@ -3,23 +3,23 @@ import useBtcClient from '@hooks/useBtcClient';
 import useRunesApi from '@hooks/useRunesApi';
 import useSelectedNetwork from '@hooks/useSelectedNetwork';
 import useStxData from '@hooks/useStxData';
-import { getFtData, getMoonPaySignedUrl, getOrdinalsFtBalance, HIRO_MAINNET_DEFAULT, StacksMainnet } from '@orangecryptohq/orangeseed';
-import { setHeaderAddress } from '@redux/slice/WalletReducer';
+import { getFtData, getOrdinalsFtBalance, HIRO_MAINNET_DEFAULT, StacksMainnet } from '@orangecryptohq/orangeseed';
+import { setHeaderAddress, setTokenList } from '@redux/slice/WalletReducer';
 import { store, useAppDispatch } from "@redux/store";
 import { Dispatch } from '@reduxjs/toolkit';
 import { strings } from '@strings/i18n';
 import { Responsive } from '@utils/Responsive';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Dimensions, Text, View } from "react-native";
+import { styles } from './styles';
 import categoryItem from './walletcomponents/CategoryItem';
 import ProgressBar from './walletcomponents/ProgressBar';
 import RenderCardItem from './walletcomponents/RenderCardItem';
-import { styles } from './styles';
 import TokenList from './walletcomponents/TokenList';
-import { createTokenArray, getCardItems } from './walletutils/TokenUtils';
 import TransactionList from './walletcomponents/TransactionList';
-import { fetchTransactions } from './walletutils/Transactions';
 import WalletSlider from './walletcomponents/WalletSlider';
+import { createTokenArray, getCardItems } from './walletutils/TokenUtils';
+import { fetchTransactions } from './walletutils/Transactions';
 
 const Wallet = () => {
 
@@ -36,6 +36,7 @@ const Wallet = () => {
     const [btcPrice, setBtcPrice] = useState();
     const [stxPrice, setStxPrice] = useState();
     const [isLoading, setIsLoading] = useState(false);
+    const [isMoreAvailable, setIsMoreAvailable] = useState(true);
     const [selectedItem, setSelectedItem] = useState(null);
 
     const memoizedSelectedItem = useMemo(() =>
@@ -70,12 +71,13 @@ const Wallet = () => {
     const getBalance = async () => {
         setIsLoading(true);
 
+       
         const [btcRes, brc20Res, runesRes, stacksRes] = await Promise.allSettled([
             btcClient.getBalance(bitcoinAddress),
             getOrdinalsFtBalance(store.getState().appReducer.network?.type, ordinalsAddress),
-            // getOrdinalsFtBalance(store.getState().appReducer.network?.type, 'bc1pk8g4rztfkxs2q9c40g6keeknjw6aadx3kzu4suzlll0remfw7xxs5x9ctv'),
+            //getOrdinalsFtBalance(store.getState().appReducer.network?.type, 'bc1pk8g4rztfkxs2q9c40g6keeknjw6aadx3kzu4suzlll0remfw7xxs5x9ctv'),
             runesApi.getRuneFungibleTokens(ordinalsAddress),
-            //  runesApi.getRuneFungibleTokens('bc1pk8g4rztfkxs2q9c40g6keeknjw6aadx3kzu4suzlll0remfw7xxs5x9ctv'),
+            //runesApi.getRuneFungibleTokens('bc1pk8g4rztfkxs2q9c40g6keeknjw6aadx3kzu4suzlll0remfw7xxs5x9ctv'),
             getFtData(stxAddress, stackNetwork),
             //getFtData('ST1J2JTYXGRMZYNKE40GM87ZCACSPSSEEQVSNB7DC', stackNetwork),
         ]);
@@ -95,6 +97,7 @@ const Wallet = () => {
         setCryptoArray(newCryptoArray);
         setBtcPrice(btcPrice);
         setStxPrice(stxPrice);
+        dispatch(setTokenList(newCryptoArray))
     };
 
     useEffect(() => {
@@ -119,10 +122,10 @@ const Wallet = () => {
         setPageNumber(0);
         setTransaction([]);
         setSelectedToken(token);
-
+        setIsMoreAvailable(true);
         const newTransactions = await fetchTransactions(token, walletContext);
         setTransaction(prev => [...prev, ...newTransactions]);
-        setPageNumber(prev => prev + 1);
+        setPageNumber(prev => prev + 10);
         setIsLoading(false);
     };
 
@@ -135,7 +138,7 @@ const Wallet = () => {
         const itemIndex = getCardItems(cryptoArray).findIndex((crypto) => crypto.id === item.id);
         setCurrentStep(itemIndex + 1);
         dispatch(setHeaderAddress(item.category === 'Stacks' ? account?.stxAddress : account?.btcAddress));
-
+        setPageNumber(0);
         if (flatListRef.current && itemIndex !== -1) {
             flatListRef.current.scrollToIndex({ index: itemIndex, animated: true });
         }
@@ -159,7 +162,23 @@ const Wallet = () => {
     const totalSteps = getCardItems(cryptoArray).length;
     const progressPercentage = (currentStep / totalSteps) * 100;
 
-     return (
+    const getTransactions = async () => {
+        if (isLoading || !isMoreAvailable) return;
+        setIsLoading(true);
+        const newTransactions = await fetchTransactions(selectedToken, walletContext);
+    
+        if (newTransactions.length > 0) {
+            setTransaction(prev => [...prev, ...newTransactions]);
+            setPageNumber(prev => prev + 10); 
+        }
+        setIsMoreAvailable(newTransactions.length === limit); 
+        setIsLoading(false);
+    };
+    
+    
+
+
+    return (
         <View style={styles.container}>
             {transactionProtocol !== 'all' && <View style={[styles.categoryContainer, { paddingHorizontal: Responsive.size20 }]}>
                 {categories.map((category) =>
@@ -175,6 +194,12 @@ const Wallet = () => {
             <ProgressBar progressPercentage={progressPercentage} />
             {transactionProtocol === 'all' ?
                 <View style={styles.contentArea}>
+
+                    <View style={styles.categoryContainer}>
+                        {categories.map((category) =>
+                            categoryItem(category, selectedCategory, handlecategoryChange)
+                        )}
+                    </View>
                     <View style={styles.headerTitleContainer}>
                         <Text style={styles.headerTitle}>{strings.assets}</Text>
                         <Text style={styles.headerTitle}>{strings.quantity}</Text>
@@ -183,7 +208,7 @@ const Wallet = () => {
                         filteredCryptoArray={filteredCryptoArray}
                         selectedItem={selectedItem}
                         handleItemClick={handleItemClick} />
-                </View>:
+                </View> :
                 <View style={styles.transactionContainer}>
                     <View style={styles.headerTitleContainer}>
                         <Text style={styles.transactionTitle}>{`${transactionProtocol + ' ' + strings.transactions} `}</Text>
@@ -193,13 +218,11 @@ const Wallet = () => {
                         isLoading={isLoading}
                         selectedToken={selectedToken}
                         limit={limit}
-                        fetchTransactions={fetchTransactions}
+                        fetchTransactions={getTransactions}
                         walletContext={walletContext}
                         handleTransactionClick={handleTransactionClick} />
                 </View>}
         </View>
-
-
     );
 };
 export default Wallet;
