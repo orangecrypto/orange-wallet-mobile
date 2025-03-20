@@ -10,7 +10,7 @@ import { Dispatch } from '@reduxjs/toolkit';
 import { strings } from '@strings/i18n';
 import { Responsive } from '@utils/Responsive';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Dimensions, Text, View } from "react-native";
+import { Dimensions, ScrollView, Text, View, RefreshControl } from "react-native";
 import { styles } from './styles';
 import categoryItem from './walletcomponents/CategoryItem';
 import ProgressBar from './walletcomponents/ProgressBar';
@@ -18,17 +18,20 @@ import RenderCardItem from './walletcomponents/RenderCardItem';
 import TokenList from './walletcomponents/TokenList';
 import TransactionList from './walletcomponents/TransactionList';
 import WalletSlider from './walletcomponents/WalletSlider';
-import { createTokenArray, getCardItems } from './walletutils/TokenUtils';
+import { createTokenArray, getCardItems, updateCoinSettingList } from './walletutils/TokenUtils';
 import { fetchTransactions } from './walletutils/Transactions';
+import { useSelector } from 'react-redux';
+import { clearCoinSettings, resetCoinNames, setAddCoinSettings, updateCoinStatus } from '@redux/slice/CoinSettings';
 
 const Wallet = () => {
 
     const limit = 10;
+    const [isResetting, setIsResetting] = useState(false);
     const [pageNumber, setPageNumber] = useState(0);
     const [selectedToken, setSelectedToken] = useState('');
     const flatListRef = useRef(null);
     const account = store.getState().appReducer.selectedAccount
-
+    const coinSettings = useSelector((state) => state.coinSettingsSlice.coinSettings);
     const stackNetworkMainnet = new StacksMainnet({ url: HIRO_MAINNET_DEFAULT })
     const stackNetwork = useSelectedNetwork()
     const dispatch: Dispatch = useAppDispatch();
@@ -38,7 +41,7 @@ const Wallet = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [isMoreAvailable, setIsMoreAvailable] = useState(true);
     const [selectedItem, setSelectedItem] = useState(null);
-
+    const [refreshing, setRefreshing] = useState(false);
     const memoizedSelectedItem = useMemo(() =>
         selectedItem, [selectedItem]);
     const [selectedCategory, setSelectedCategory] = useState("All");
@@ -47,6 +50,14 @@ const Wallet = () => {
         { id: 3, category: "BRC20", name: "Orange", ticker: 'ORNJ' },
         { id: 4, category: "Stacks", name: "Stacks" },
     ])
+    const namesToAlwaysShow = ["Bitcoin", "Orange", "Stacks"];
+    const visibleItems = cryptoArray.filter(item => {
+        if (namesToAlwaysShow.includes(item.name)) {
+            return true; 
+        }
+        const coinSetting = coinSettings.find(setting => setting.name === item.name);
+        return coinSetting ? coinSetting.visible : false;
+    });
 
     const [transactionProtocol, setTransactionProtocol] = useState('all')
     const [transaction, setTransaction] = useState([])
@@ -68,18 +79,39 @@ const Wallet = () => {
         store
     };
 
-    const getBalance = async () => {
+    const onRefresh = async () => {
+
+        console.log('onRefresh','call')
+        setRefreshing(true);
+        await getBalance([
+            { id: 2, category: "BTC", name: "Bitcoin" },
+            { id: 3, category: "BRC20", name: "Orange", ticker: 'ORNJ' },
+            { id: 4, category: "Stacks", name: "Stacks" },
+        ]);
+
+        if (transactionProtocol !== 'all') {
+            setPageNumber(0)
+            setTransaction([]);
+            setIsMoreAvailable(true);
+            const updatedWalletContext = { ...walletContext, pageNumber: 0 };
+            const newTransactions = await fetchTransactions(selectedToken, updatedWalletContext);
+            setTransaction(prev => [...prev, ...newTransactions]);
+            setPageNumber(prev => prev + 10);
+
+        }
+        setRefreshing(false);
+    };
+
+    const getBalance = async (initialTokens = cryptoArray) => {
         setIsLoading(true);
 
-       
         const [btcRes, brc20Res, runesRes, stacksRes] = await Promise.allSettled([
             btcClient.getBalance(bitcoinAddress),
             getOrdinalsFtBalance(store.getState().appReducer.network?.type, ordinalsAddress),
-            //getOrdinalsFtBalance(store.getState().appReducer.network?.type, 'bc1pk8g4rztfkxs2q9c40g6keeknjw6aadx3kzu4suzlll0remfw7xxs5x9ctv'),
-            runesApi.getRuneFungibleTokens(ordinalsAddress),
-            //runesApi.getRuneFungibleTokens('bc1pk8g4rztfkxs2q9c40g6keeknjw6aadx3kzu4suzlll0remfw7xxs5x9ctv'),
+          // getOrdinalsFtBalance(store.getState().appReducer.network?.type, 'bc1pk8g4rztfkxs2q9c40g6keeknjw6aadx3kzu4suzlll0remfw7xxs5x9ctv'),
+           runesApi.getRuneFungibleTokens(ordinalsAddress),
+         //  runesApi.getRuneFungibleTokens('bc1pk8g4rztfkxs2q9c40g6keeknjw6aadx3kzu4suzlll0remfw7xxs5x9ctv'),
             getFtData(stxAddress, stackNetwork),
-            //getFtData('ST1J2JTYXGRMZYNKE40GM87ZCACSPSSEEQVSNB7DC', stackNetwork),
         ]);
 
         const btcBalance = btcRes.status === 'fulfilled' ? btcRes.value : 0;
@@ -87,17 +119,38 @@ const Wallet = () => {
         const runesTokens = runesRes.status === 'fulfilled' ? runesRes.value : [];
         const stacksTokens = stacksRes.status === 'fulfilled' ? stacksRes.value : [];
 
-        await updateTokenArray(btcBalance, data, brc20Tokens, runesTokens, stacksTokens);
+        await updateTokenArray(btcBalance, data, brc20Tokens, runesTokens, stacksTokens, initialTokens);
         setIsLoading(false);
     };
 
-    const updateTokenArray = async (btcBalance, stxBalance, brc20Tokens, runesTokens, stacksTokens) => {
-
-        const { newCryptoArray, btcPrice, stxPrice } = await createTokenArray(btcBalance, stxBalance, brc20Tokens, runesTokens, stacksTokens, cryptoArray);
+    const updateTokenArray = async (btcBalance, stxBalance, brc20Tokens, runesTokens, stacksTokens, initialTokens) => {
+        const { newCryptoArray, btcPrice, stxPrice } = await createTokenArray(btcBalance, stxBalance, brc20Tokens, runesTokens, stacksTokens, initialTokens);
         setCryptoArray(newCryptoArray);
         setBtcPrice(btcPrice);
         setStxPrice(stxPrice);
-        dispatch(setTokenList(newCryptoArray))
+        console.log('updateTokenArray newCryptoArray', newCryptoArray)
+       
+        setIsResetting(true); // Set flag before dispatching
+        await dispatch(resetCoinNames()); 
+        dispatch(setTokenList(newCryptoArray));
+    };
+
+    useEffect(() => {
+        if (isResetting) {
+            addCoinSettings(cryptoArray);
+            dispatch(setTokenList(cryptoArray));
+            setIsResetting(false); // Reset flag after execution
+        }
+    }, [coinSettings]);
+
+    const addCoinSettings = async (newCryptoArray) => {
+
+        let newCoinsForSettings = await updateCoinSettingList(newCryptoArray);
+        const finalSettingsList = newCoinsForSettings.filter(newCoin =>
+            !coinSettings.some(existingCoin => existingCoin.name === newCoin.name)
+        );
+        dispatch(setAddCoinSettings(finalSettingsList));
+        
     };
 
     useEffect(() => {
@@ -115,15 +168,16 @@ const Wallet = () => {
         const currentIndex = Math.round(event.nativeEvent.contentOffset.x / screenWidth);
         setCurrentStep(currentIndex + 1);
         setSelectedCategory(currentIndex === 0 ? 'All' : '');
-        setSelectedItem(getCardItems(cryptoArray)[currentIndex]);
-        setTransactionProtocol(getCardItems(cryptoArray)[currentIndex].name);
+        setSelectedItem(getCardItems(visibleItems)[currentIndex]);
+        setTransactionProtocol(getCardItems(visibleItems)[currentIndex].name);
 
-        const token = await getCardItems(cryptoArray)[currentIndex];
+        const token = await getCardItems(visibleItems)[currentIndex];
         setPageNumber(0);
+        const updatedWalletContext = { ...walletContext, pageNumber: 0 };
         setTransaction([]);
         setSelectedToken(token);
         setIsMoreAvailable(true);
-        const newTransactions = await fetchTransactions(token, walletContext);
+        const newTransactions = await fetchTransactions(token, updatedWalletContext);
         setTransaction(prev => [...prev, ...newTransactions]);
         setPageNumber(prev => prev + 10);
         setIsLoading(false);
@@ -135,7 +189,7 @@ const Wallet = () => {
 
     const handleItemClick = (item) => {
         setSelectedItem(item);
-        const itemIndex = getCardItems(cryptoArray).findIndex((crypto) => crypto.id === item.id);
+        const itemIndex = getCardItems(visibleItems).findIndex((crypto) => crypto.id === item.id);
         setCurrentStep(itemIndex + 1);
         dispatch(setHeaderAddress(item.category === 'Stacks' ? account?.stxAddress : account?.btcAddress));
         setPageNumber(0);
@@ -158,47 +212,57 @@ const Wallet = () => {
     const renderItem = useCallback(({ item }) => (
         <RenderCardItem item={item} selectedItem={memoizedSelectedItem} />
     ), [memoizedSelectedItem]);
-
-    const totalSteps = getCardItems(cryptoArray).length;
+   
+   
+    const totalSteps = getCardItems(visibleItems).length;
     const progressPercentage = (currentStep / totalSteps) * 100;
 
     const getTransactions = async () => {
         if (isLoading || !isMoreAvailable) return;
         setIsLoading(true);
         const newTransactions = await fetchTransactions(selectedToken, walletContext);
-    
+
         if (newTransactions.length > 0) {
             setTransaction(prev => [...prev, ...newTransactions]);
-            setPageNumber(prev => prev + 10); 
+            setPageNumber(prev => prev + 10);
         }
-        setIsMoreAvailable(newTransactions.length === limit); 
+        setIsMoreAvailable(newTransactions.length === limit);
         setIsLoading(false);
+
+
+
     };
-    
-    
+
+
 
 
     return (
-        <View style={styles.container}>
-            {transactionProtocol !== 'all' && <View style={[styles.categoryContainer, { paddingHorizontal: Responsive.size20 }]}>
-                {categories.map((category) =>
-                    categoryItem(category, selectedCategory, handlecategoryChange)
-                )}
-            </View>}
-            {isLoading && <Loader loading={isLoading} />}
-            <WalletSlider
-                cryptoArray={cryptoArray}
-                flatListRef={flatListRef}
-                handleScroll={handleScroll}
-                renderItem={renderItem} />
-            <ProgressBar progressPercentage={progressPercentage} />
-            {transactionProtocol === 'all' ?
-                <View style={styles.contentArea}>
+        <ScrollView
+            style={styles.container}
+            contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps="handled"
+            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+            {transactionProtocol !== 'all' && (
+                <View style={[styles.categoryContainer, { paddingHorizontal: Responsive.size20 }]}>
+                    {categories.map((category) => categoryItem(category, selectedCategory, handlecategoryChange))}
+                </View>
+            )}
 
+            {isLoading && !refreshing && <Loader loading={isLoading} />}
+
+            <View style={styles.walletContainer}>
+                <WalletSlider
+                    cryptoArray={cryptoArray}
+                    flatListRef={flatListRef}
+                    handleScroll={handleScroll}
+                    renderItem={renderItem}
+                />
+                <ProgressBar progressPercentage={progressPercentage} />
+            </View>
+
+            {transactionProtocol === 'all' ? (
+                <View style={styles.contentArea}>
                     <View style={styles.categoryContainer}>
-                        {categories.map((category) =>
-                            categoryItem(category, selectedCategory, handlecategoryChange)
-                        )}
+                        {categories.map((category) => categoryItem(category, selectedCategory, handlecategoryChange))}
                     </View>
                     <View style={styles.headerTitleContainer}>
                         <Text style={styles.headerTitle}>{strings.assets}</Text>
@@ -207,22 +271,27 @@ const Wallet = () => {
                     <TokenList
                         filteredCryptoArray={filteredCryptoArray}
                         selectedItem={selectedItem}
-                        handleItemClick={handleItemClick} />
-                </View> :
-                <View style={styles.transactionContainer}>
+                        handleItemClick={handleItemClick}
+                    />
+                </View>
+            ) : (
+                <View style={[styles.transactionContainer, { height: 400 }]}>
                     <View style={styles.headerTitleContainer}>
-                        <Text style={styles.transactionTitle}>{`${transactionProtocol + ' ' + strings.transactions} `}</Text>
+                        <Text style={styles.transactionTitle}>{`${transactionProtocol + ' ' + strings.transactions}`}</Text>
                     </View>
+
                     <TransactionList
                         transaction={transaction}
-                        isLoading={isLoading}
+                        isLoading={isLoading || refreshing}
                         selectedToken={selectedToken}
                         limit={limit}
                         fetchTransactions={getTransactions}
                         walletContext={walletContext}
-                        handleTransactionClick={handleTransactionClick} />
-                </View>}
-        </View>
+                        handleTransactionClick={handleTransactionClick}
+                    />
+                </View>
+            )}
+        </ScrollView>
     );
 };
 export default Wallet;

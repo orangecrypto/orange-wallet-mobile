@@ -89,5 +89,6 @@ const Responsive = {
     size320: scale(320),
     size325: scale(325),
     size412: scale(412),
+    size400: scale(400),
 };
 export { Responsive };

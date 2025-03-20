@@ -16,7 +16,7 @@ export const fetchTransactions = async (token, walletContext) => {
         limit,
         store
     } = walletContext;
-
+    
     try {
         let newTransactions = [];
 
