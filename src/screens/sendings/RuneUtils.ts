@@ -1,5 +1,6 @@
-import { btcTransaction, runesTransaction } from "@orangecryptohq/orangeseed";
+import { btcTransaction, getBtcFeeRate, runesTransaction } from "@orangecryptohq/orangeseed";
 import { TransactionSummary } from "@orangecryptohq/orangeseed/dist/transactions/bitcoin";
+import { BigNumber } from "@orangecryptohq/orangeseed/dist/utils/bignumber";
 import Toast from "react-native-toast-message";
 
 type TransactionBuildPayload = {
@@ -15,11 +16,11 @@ export const generateTransaction = async (
     feeRate: number,
 ): Promise<TransactionBuildPayload> => {
     console.log('generateTransaction', 'call');
-    console.log('transactionContext', transactionContext);
-    console.log('amount', amount);
-    console.log('tokenName', tokenName);
-    console.log('feeRate', feeRate);
-    console.log('toAddress', toAddress);
+    // console.log('transactionContext', transactionContext);
+    // console.log('amount', amount);
+    // console.log('tokenName', tokenName);
+    // console.log('feeRate', feeRate);
+    // console.log('toAddress', toAddress);
 
     let transaction: btcTransaction.EnhancedTransaction | undefined;
     const safeFeeRate = Number(feeRate);
@@ -53,4 +54,21 @@ export const generateTransaction = async (
         }
         throw e;
     }
+};
+
+export const generateTransactionAndSummary = async (amount, selectedCoin, walletAddress, transactionContext, network) => {
+    const decimalsToBase = BigNumber(10 ** (selectedCoin.decimals || 0));
+    console.log('decimalsToBase', decimalsToBase);
+    const realAmountToSend = BigNumber(amount || 0).multipliedBy(decimalsToBase);
+    
+    const feeRate = (await getBtcFeeRate(network.type)).regular;
+    console.log("feeRate value:", feeRate);
+    
+    return generateTransaction(
+        transactionContext,
+        selectedCoin.name,
+        walletAddress,
+        BigInt(realAmountToSend.toFixed()),
+         feeRate
+    );
 };

@@ -15,8 +15,10 @@ import { Color } from "@values/color";
 import React, { useEffect, useState } from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import { useSelector } from "react-redux";
-import { gnerateDataForBtc, gnerateDataForSTX } from "./ConfirmTransactionUtils";
+import { gnerateDataForBtc, gnerateDataForRunes, gnerateDataForSTX } from "./ConfirmTransactionUtils";
 import { styles } from "./styles";
+import ConfirmationItem from "./ConfirmationItem";
+import Toast from "react-native-toast-message";
 
 const SendConfirmation = ({ route }) => {
     const selectedNetwork = useSelectedNetwork();
@@ -28,7 +30,7 @@ const SendConfirmation = ({ route }) => {
         "Edit Fees",
         "Edit Nonce",
     ];
-   
+
     const { getSeed } = useSeedVault();
     const { btcClient } = useBtcClient();
     const {
@@ -37,15 +39,17 @@ const SendConfirmation = ({ route }) => {
         data: btcTxBroadcastData,
         mutate: mutateBtc,
     } = useMutation<BtcTransactionBroadcastResponse, Error, { txToBeBroadcasted: string }>({
-        mutationFn: async ({ txToBeBroadcasted }) => btcClient.sendRawTransaction(txToBeBroadcasted)});
+        mutationFn: async ({ txToBeBroadcasted }) => btcClient.sendRawTransaction(txToBeBroadcasted)
+    });
 
     const {
-        isPending : stxLoading,
+        isPending: stxLoading,
         error: txStxError,
         data: stxTxBroadcastData,
         mutate: mutateStx,
-      } = useMutation<string, Error, { signedTx: StacksTransaction }>({
-        mutationFn: async ({ signedTx }) => broadcastSignedTransaction(signedTx, selectedNetwork)});
+    } = useMutation<string, Error, { signedTx: StacksTransaction }>({
+        mutationFn: async ({ signedTx }) => broadcastSignedTransaction(signedTx, selectedNetwork)
+    });
 
     useEffect(() => {
         const fetchAndSetData = async () => {
@@ -57,6 +61,11 @@ const SendConfirmation = ({ route }) => {
                 }
                 if (confirmData.transactionType === 'STX') {
                     setConfirmationArray(await gnerateDataForSTX(transactionData, network.type, rate, confirmData));
+                }
+                if (confirmData.transactionType === 'runes') {
+                    const confirmationArray = await gnerateDataForRunes(transactionData, network.type, rate, confirmData);
+                    console.log('setConfirmationArray', confirmationArray)
+                    setConfirmationArray(confirmationArray)
                 }
             } catch (error) {
                 console.error("Error fetching price:", error);
@@ -74,8 +83,10 @@ const SendConfirmation = ({ route }) => {
             }
         );
     };
-    
+
     const handleStxTransaction = async () => {
+
+        console.log('handleStxTransaction','call')
         try {
             const seed = await getSeed();
             const signedContractCall = await signTransaction(
@@ -84,24 +95,41 @@ const SendConfirmation = ({ route }) => {
                 selectedAccount?.id ?? 0,
                 selectedNetwork
             );
-            
+
             mutateStx(
                 { signedTx: signedContractCall },
                 {
                     onSuccess: (data) => push(RouteType.CONFIRMATION, { transactionId: data }),
-                    onError: console.error.bind(console, "Transaction Broadcast Failed:"),
+                    onError: (error) =>{
+                         Toast.show({ type: 'error', text1: error.message });
+                    },
                 }
             );
         } catch (error) {
             console.log("Generate signed for STX", error);
         }
     };
-    
+
     const confirmTransaction = async () => {
         if (confirmData.transactionType === "BTC") {
             handleBtcTransaction();
         } else if (confirmData.transactionType === "STX") {
+
+            
             await handleStxTransaction();
+        }
+        else if (confirmData.transactionType === "runes") {
+            try
+            {
+                const transactionId=await transactionData.transaction.broadcast({
+                rbfEnabled: true
+            }) 
+                push(RouteType.CONFIRMATION, {transactionId: transactionId })
+            }catch(error){
+                console.log('transaction.broadcast', error)
+                Toast.show({ type: 'error', text1: error.message });
+            }
+           
         }
     };
 
@@ -110,30 +138,22 @@ const SendConfirmation = ({ route }) => {
             {btcLoading && <Loader loading={btcLoading} />}
             {stxLoading && <Loader loading={stxLoading} />}
             <View style={styles.contentContainer}>
-                <TouchableOpacity style={styles.button} onPress={() => goBack()}>
-                    <Text style={styles.buttonText}>{strings.back}</Text>
-                </TouchableOpacity>
+                <View style={styles.topContainerConfirmationScreen}>
+                    <TouchableOpacity style={styles.button} onPress={() => goBack()}>
+                        <Text style={styles.buttonText}>{strings.back}</Text>
+                    </TouchableOpacity>
+                    {confirmData.transactionType === 'runes' && <View style={styles.runeContainer}>
+                        <Text style={styles.ordinalsText}>{confirmData.transactionType.toUpperCase()}</Text>
+                    </View>}
+
+                </View>
                 <Text style={styles.title}>{strings.sendConfirmation}</Text>
                 <Text style={styles.description}>{strings.confirmationMessage}</Text>
                 <FlatList
                     data={confirmationArray}
-                    keyExtractor={(item) => item.id.toString()}
+                    keyExtractor={(index) => index}
                     renderItem={({ item }) => (
-                        <TouchableOpacity style={styles.item}
-                            onPress={() => {
-                                if (availableRoutes.includes(item.name)) {
-                                    push(item.name);
-                                }
-                                else {
-                                    console.warn(`Route "${item.name}" is not available.`);
-                                }
-                            }}>
-                            <Text style={styles.text}>{item.name}</Text>
-                            <View style={styles.valueContainer}>
-                                <Text style={styles.value}>{item.value}</Text>
-                                {item.subvalue && <Text style={styles.subValue}>{item.subvalue}</Text>}
-                            </View>
-                        </TouchableOpacity>
+                        <ConfirmationItem item={item} availableRoutes={availableRoutes} type={confirmData.transactionType} />
                     )} />
             </View>
             <View style={styles.horizontalButtonContainer}>

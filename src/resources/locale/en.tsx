@@ -145,10 +145,14 @@ export default {
     transactions:'Transactions',
     transactionId:'Transaction ID',
     noTransactions:'No Transactions',
-
     share:'Share',
-    selfAddress:'Self Address'
-
-
+    selfAddress:'Self Address',
+    nfts:'NFTs',
+    nonfts:'No NFTs',
+    yourAddress:'(Your address)',
+    input:'Inputs',
+    Output:'Output',
+    Script:'Script output',
+    networkFee:'Network Fee'
 
 }   

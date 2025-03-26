@@ -1,6 +1,6 @@
 import { satsToBtc } from "@orangecryptohq/orangeseed";
 import { BigNumber } from "@orangecryptohq/orangeseed/dist/utils/bignumber";
-import { microStxToStx, truncateAddress } from "@utils/cryptoUtils";
+import { getImageSourceOrange, microStxToStx, truncateAddress } from "@utils/cryptoUtils";
 
 
 
@@ -87,3 +87,60 @@ export const gnerateDataForSTX = async (transactionData, networkType, rate, conf
         { id: 7, name: "Edit Nonce", value: '', subvalue: '' },
     ];
 };
+
+export const gnerateDataForRunes = async(transactionData, networkType, rate, confirmData) =>{
+
+
+    console.log('gnerateDataForRunes summary', transactionData.summary)
+    console.log('gnerateDataForRunes transaction', transactionData.transaction)
+    console.log('gnerateDataForRunes inputs', JSON.stringify(transactionData.summary.inputs))
+    console.log('gnerateDataForRunes outputs', transactionData.summary.outputs)
+    console.log('gnerateDataForRunes runes', transactionData.summary.inputs[0].extendedUtxo._bundleData.runes)
+    const value =  Number(transactionData.summary.fee) * rate;
+    const feeFiateValue = value > 0 && value < 0.01 ? '<$0.01 USD' : `$${value.toFixed(2)} USD`;
+    return [
+        {
+            id: 1,
+            name: "Amount",
+            value: `${confirmData.sendAmount} ${confirmData.ticker}`,
+            runes: transactionData.summary.inputs[0].extendedUtxo._bundleData.runes,
+            FiateRate:`${value}`,
+            image : await getImageSourceOrange(transactionData.summary.inputs[0].extendedUtxo._bundleData.runes[0][0])
+        },
+        {
+            id: 2,
+            name: "Recipient",
+            value: `${truncateAddress(confirmData.recipientAddress)}`,
+            subvalue: ''
+        },
+        {
+            id: 3,
+            name: "Inputs & Outputs",
+            value: {
+                ticker: confirmData.ticker,
+                inputs :transactionData.summary.inputs,
+                outputs :transactionData.summary.outputs
+            },
+            subvalue: ''
+        },
+        {
+            id: 4,
+            name: "Network",
+            value: `${networkType}`,
+            subvalue: ''
+        },
+        {
+            id: 5,
+            name: "Fees",
+            value: {
+                feeRate: transactionData.summary.feeRate,
+                fee :transactionData.summary.fee,
+                feeFiateValue:feeFiateValue
+            },
+            subvalue: `${''}`
+        },
+       
+        { id: 6, name: "Edit Fees", value: '', subvalue: '' },
+       
+    ];
+}
