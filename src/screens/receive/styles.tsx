@@ -63,13 +63,15 @@ export const styles = StyleSheet.create({
         fontSize: Responsive.size18,
         fontFamily: Fonts.regular,
         color: Color.white,
-        alignSelf: 'center'
+        alignSelf: 'center',
+        width:'70%'
     },
 
     rightItemContainer: {
         flexDirection: "row",
         justifyContent: 'center',
         alignContent: 'center',
+         width:'30%'
     },
     rightItemIconContaner: {
         height: Responsive.size24,
@@ -105,6 +107,15 @@ export const styles = StyleSheet.create({
         color:Color.white,
         marginTop: Responsive.size18,
         lineHeight: Responsive.size32
+    },
+    qrView:{
+        justifyContent:'center',
+        alignItems:'center',
+        backgroundColor:Color.white,
+        padding:Responsive.size10,
+        marginTop:Responsive.size10,
+        borderRadius:Responsive.size10,
+        alignSelf:'center'
     }
 
 });
