@@ -2,7 +2,7 @@ import { localAssets } from "@assets/assets";
 import CommonButton from "@components/CommonButton";
 import CustomTextInput from "@components/CustomTextInput";
 import { Dispatch } from "@reduxjs/toolkit";
-import { push } from "@routes/Navigator";
+import { push, resetNavigation } from "@routes/Navigator";
 import { RouteType } from "@routes/RouteType";
 import { strings } from "@strings/i18n";
 import { Responsive } from '@utils/Responsive';
@@ -41,7 +41,7 @@ const Login = () => {
             try {
                 await unlockVault(str2buf(password))
                 dispatch(clearLoginReducer())
-                push(RouteType.WALLETBALANCE)
+                resetNavigation(RouteType.WALLETBALANCE)
 
             } catch (error) {
                 console.error("Error initializing SeedVault:", error.message);

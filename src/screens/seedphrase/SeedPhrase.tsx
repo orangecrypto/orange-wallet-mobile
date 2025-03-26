@@ -1,7 +1,8 @@
 import CommonButton from "@components/CommonButton";
+import Loader from "@components/Loader";
 import useSeedVault from '@hooks/useSeedVault';
 import { str2buf } from "@orangecryptohq/orangeseed";
-import { setAccount, setIsWalletCreated, setWallet } from "@redux/slice/appReducer";
+import { appReducerType, setAccountList, setIsWalletCreated, setSelectedAccount, setWallet } from "@redux/slice/appReducer";
 import { clearSeedPhraseReducer, seedPhraseReducerType, setIsRestoreWallet } from "@redux/slice/SeedPhraseReducer";
 import { useAppDispatch } from "@redux/store";
 import { Dispatch } from "@reduxjs/toolkit";
@@ -18,16 +19,16 @@ import { Keyboard, KeyboardAvoidingView, Platform, ScrollView, Text, TouchableOp
 import { useSelector } from "react-redux";
 import EnterPassword from "./EnterPassword";
 import { createWallet, restoreWallet, validateCurrentStep } from "./SeedPhraseUtils";
-import { styles } from './styles';
 import { Step } from "./Steps";
-import Loader from "@components/Loader";
+import { styles } from './styles';
 
 const SeedPhrase = ({ route }) => {
-    const { getSeed, changePassword, hasSeed, clearVaultStorage, storeSeed, init } = useSeedVault();
+    const { getSeed , changePassword, hasSeed, clearVaultStorage, storeSeed, init } = useSeedVault();
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [backupLatter, setBackupLatter] = useState(route?.params?.backupLatter || false);
     const { isSeedPhraseVerified, disabled, isRestoreWallet } = useSelector((state: { seedPhraseReducer: seedPhraseReducerType }) => state.seedPhraseReducer);
+    const { accountList,network } = useSelector((state: { seedPhraseReducer: appReducerType }) => state.appReducer);
     const [currentStepIndex, setCurrentStepIndex] = useState(route?.params?.backupLatter ? 2 : route?.params?.restoreWallet ? 1 : 0);
     const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -68,31 +69,35 @@ const SeedPhrase = ({ route }) => {
     const handleWallet = async () => {
         setIsLoading(true)
         const words = await getSeed();
+        console.log('Seed', words)
         if (isRestoreWallet) {
+            console.log('isRestoreWallet Seed', words)
             await restoreAndStoreWallet(words);
             return;
-        }
+        }        
         await createAndStoreWallet(words);
     };
 
     const restoreAndStoreWallet = async (words) => {
         try {
             const { account, wallet } = await restoreWallet(words);
-            (await hasSeed()) && (await clearVaultStorage());
-            await init(str2buf(confirmPassword));
-            await storeSeed(words);
-            updateWalletState(account, wallet);
-            setIsLoading(false)
+            const hasSeedCheck = await hasSeed()
+            if(hasSeedCheck && !account.masterPubKey){
+                await clearVaultStorage()
+            }
+           await changePassword(str2buf(''), str2buf(confirmPassword));
+            await updateWalletState(account, wallet);
+             setIsLoading(false)
         } catch (error) {
             setIsLoading(false)
+            console.log('restoreAndStoreWallet error', error)
         }
     };
 
     const createAndStoreWallet = async (words) => {
         try {
             const { account, wallet } = await createWallet(words);
-            const encoder = new TextEncoder();
-            await changePassword(str2buf(''), encoder.encode(confirmPassword));
+            await changePassword(str2buf(''), str2buf(confirmPassword));
             updateWalletState(account, wallet);
             setIsLoading(false)
         } catch (error) {
@@ -101,7 +106,8 @@ const SeedPhrase = ({ route }) => {
     };
 
     const updateWalletState = (account, wallet) => {
-        dispatch(setAccount(account));
+        dispatch(setAccountList([...accountList, account]));
+        dispatch(setSelectedAccount(account));
         dispatch(setWallet(wallet));
         dispatch(clearSeedPhraseReducer());
         dispatch(setIsWalletCreated(true));

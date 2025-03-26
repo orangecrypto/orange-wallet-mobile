@@ -138,6 +138,12 @@ export default {
     passwordUpdated:'Password Updated',
     walletRestored:"Wallet Restored",
     walletRestoredMessage:"You wallet has been successfully restored.",
-    resetWalletPassword:"Enter your password to reset your wallet"
+    resetWalletPassword:"Enter your password to reset your wallet",
+    save:"Save",
+    noAssets:'No assets.',
+    transactions:'Transactions',
+    noTransactions:'No Transactions',
+
+
 
 }   

@@ -1,39 +1,67 @@
-import { goBack } from '@routes/Navigator';
+import { appReducerType, setAccountList, setSelectedAccount } from '@redux/slice/appReducer';
+import { goBack, resetNavigation } from '@routes/Navigator';
 import { strings } from '@strings/i18n';
-import { useState } from 'react';
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
+import { useSelector } from 'react-redux';
 import { styles } from './styles';
+import { truncateAddress } from '@utils/cryptoUtils';
+import useSeedVault from '@hooks/useSeedVault';
+import { createWalletAccount, StacksMainnet } from '@orangecryptohq/orangeseed';
+import { store, useAppDispatch } from '@redux/store';
+import { useState } from 'react';
+import Loader from '@components/Loader';
+import Toast from 'react-native-toast-message';
+import { Dispatch } from '@reduxjs/toolkit';
+import { RouteType } from '@routes/RouteType';
+import useSelectedNetwork from '@hooks/useSelectedNetwork';
 
 const AddAddress = () => {
+    const { getSeed }= useSeedVault()
+    const { accountList } = useSelector((state: { seedPhraseReducer: appReducerType }) => state.appReducer);
+    const network =store.getState().appReducer?.network
+    const selectedNetwork= useSelectedNetwork()
+    
+    const dispatch: Dispatch = useAppDispatch();
+    const [isLoading, setIsLoading] = useState(false);
 
-    const [data, setData] = useState([
-        { id: '1', primary: '2AbC...3xTY', secondary: 'ST5Z...EOTW' },
-    ]);
-
-    const generateText = () => {
-        const randomPrimary = `2AbC${Math.random().toString(36).substring(2, 6)}...${Math.random().toString(36).substring(2, 6)}`;
-        const randomSecondary = `ST5Z${Math.random().toString(36).substring(2, 6)}...${Math.random().toString(36).substring(2, 6)}`;
-        return { primary: randomPrimary, secondary: randomSecondary };
+    const addAddress =async () => {
+        try
+        {
+            setIsLoading(true)
+            const seedPhrase = await getSeed();
+            const newAccountsList = await createWalletAccount(
+            seedPhrase,
+            network,
+            selectedNetwork,
+            accountList,
+            );
+            console.log('newAccountsList : ',newAccountsList)
+            dispatch(setAccountList(newAccountsList))
+        }catch(error){
+            setIsLoading(false)
+            console.log('addAddress : ',error)    
+             Toast.show({ type: 'error', text1: error.message });
+        }
+        setIsLoading(false)
+       
     };
 
-    const addItem = () => {
-        const newItem = {
-            id: (data.length + 1).toString(),
-            ...generateText(),
-        };
-        setData([...data, newItem]);
-    };
+    const selectAccount = async (item)=>{
+        dispatch(setSelectedAccount(item))
+        resetNavigation(RouteType.WALLETBALANCE)
+    }
 
     const renderItem = ({ item }) => (
-        <View style={styles.item}>
+        <TouchableOpacity style={styles.item} onPress={()=>selectAccount(item)}>
             <Text style={styles.text}>
-                <Text style={styles.primaryText}>{item.primary}</Text> /{' '}
-                <Text style={styles.secondaryText}>{item.secondary}</Text>
+                <Text style={styles.primaryText}>{truncateAddress(item.btcAddress)}</Text> /{' '}
+                <Text style={styles.secondaryText}>{truncateAddress(item.stxAddress)}</Text>
             </Text>
-        </View>
+        </TouchableOpacity>
     );
     return (
         <View style={styles.container}>
+             {isLoading && <Loader loading={isLoading} />}
             <View style={styles.contentContainer}>
                 <TouchableOpacity
                     style={styles.button}
@@ -44,11 +72,12 @@ const AddAddress = () => {
                 <Text style={styles.addAddressMessage}>{strings.addAddressMessage}</Text>
 
                 <FlatList
-                    data={data}
+                    data={accountList}
                     keyExtractor={(item) => item.id}
                     renderItem={renderItem} />
 
-                <TouchableOpacity style={styles.addAddressButton} onPress={() => { addItem() }}>
+                {/* add address is disabled due to loadactive account issue */}
+                <TouchableOpacity disabled={true} style={styles.addAddressButton} onPress={() => { addAddress() }}>
                     <Text style={styles.addAddressButtonText}>{strings.addNewAddress}</Text>
                 </TouchableOpacity>
             </View>          

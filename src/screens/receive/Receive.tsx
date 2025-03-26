@@ -13,7 +13,7 @@ import Clipboard from "@react-native-clipboard/clipboard";
 
 const Receive = () => {
 
-    const account =store.getState().appReducer.account
+    const account =store.getState().appReducer.selectedAccount
     const [addressArray, setAddressArray] = useState([
         { id: 1, name: "Bitcoin", address : account?.btcAddress },
         { id: 2, name: "Ordinals and BRC20",address : account?.ordinalsAddress },

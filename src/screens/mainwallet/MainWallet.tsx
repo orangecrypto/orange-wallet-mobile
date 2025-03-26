@@ -16,17 +16,17 @@ import { Dispatch } from '@reduxjs/toolkit';
 import { useAppDispatch } from "@redux/store";
 import { store } from '@redux/store';
 import Clipboard from "@react-native-clipboard/clipboard";
-import { truncateAddress } from '@utils/Convert';
+import { truncateAddress } from '@utils/cryptoUtils';
+import { styles } from './styles';
 
 const MainWallet = () => {
-    const account = store.getState().appReducer.account
+    const account = store.getState().appReducer.selectedAccount
     const { headerAddress } = useSelector((state: { walletReducer: walletReducerType }) => state.walletReducer);
     const dispatch: Dispatch = useAppDispatch();
     const Tab = createBottomTabNavigator();
 
     useEffect(()=>{
         dispatch(setHeaderAddress(account?.btcAddress))
-        console.log('account ', store.getState().appReducer.account)
     },[])
 
     const handleCopyPress = () => {
@@ -48,6 +48,7 @@ const MainWallet = () => {
 
     return (
         <View style={styles.container}>
+
             <View style={styles.header}>
                 <TouchableOpacity onPress={handleAddAddress} style={styles.headerClickableText}>
                     <Text style={styles.headerText} numberOfLines={1}>{truncateAddress(headerAddress)}</Text>
@@ -148,51 +149,5 @@ const MainWallet = () => {
         </View>
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: Color.black,
-    },
-    icon: {
-        width: Responsive.size24,
-        height: Responsive.size24,
-    },
-    iconFocused: {
-        borderRadius: Responsive.size15,
-    },
-    header: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginTop: Responsive.size16,
-        marginBottom: Responsive.size24,
-        borderWidth: Responsive.size1,
-        borderColor: Color.grey,
-        paddingHorizontal: Responsive.size16,
-        paddingVertical: Responsive.size16,
-        borderRadius: Responsive.size10,
-        marginHorizontal: Responsive.size16,
-    },
-    headerText: {
-        fontSize: Responsive.size20,
-        color: Color.white,
-        width: Responsive.size170
-    },
-    headerClickableText: {
-        padding: Responsive.size2
-    },
-    headerIcon: {
-        width: Responsive.size20,
-        height: Responsive.size20,
-
-    },
-    iconsContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        width: '30%',
-    },
-});
 
 export default MainWallet;

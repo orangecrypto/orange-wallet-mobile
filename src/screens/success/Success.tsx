@@ -1,13 +1,12 @@
-import { useState } from "react";
-import { Dimensions, Image, ScrollView, StyleSheet, Text, View } from "react-native";
-import CommonButton from "@components/CommonButton";
-import { strings } from "@strings/i18n";
-import { Color } from "@values/color";
-import { push, resetNavigation } from "@routes/Navigator";
-import { RouteType } from "@routes/RouteType";
-import { Responsive } from '@utils/Responsive';
 import { localAssets } from "@assets/assets";
-import { Fonts } from '@values/fonts';
+import CommonButton from "@components/CommonButton";
+import { resetNavigation } from "@routes/Navigator";
+import { RouteType } from "@routes/RouteType";
+import { strings } from "@strings/i18n";
+import { Responsive } from '@utils/Responsive';
+import { Color } from "@values/color";
+import { useState } from "react";
+import { Dimensions, Image, ScrollView, Text, View } from "react-native";
 import { styles } from "./styles";
 
 const Success = () => {
@@ -38,7 +37,7 @@ const Success = () => {
         },
         {
             id: 5,
-            icon: localAssets.decentralized,
+            icon: localAssets.decentralized_success,
             title: strings.decentralized,
             description: strings.decentralizedDescription,
         },
