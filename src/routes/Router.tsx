@@ -39,6 +39,9 @@ import Success from '@screens/success/Success';
 import WalletRestored from '@screens/success/WalletRestored';
 import Warning from '@screens/warnings/Warning';
 import React from 'react';
+import SendConfirmOrdinlas from '@screens/sendings/SendConfirmOrdinlas';
+import ConfirmBrc20 from '@screens/sendings/brc20/ConfirmBrc20';
+import SendBrc20Confirmation from '@screens/sendings/brc20/SendBrc20Confirmation';
 
 const Stack = createNativeStackNavigator();
 
@@ -83,6 +86,9 @@ export default () => {
                 <Stack.Screen component={Warning} name={RouteType.WARNING}/>
                 <Stack.Screen component={WalletRestored} name={RouteType.WALLETRESTORED}/>
                 <Stack.Screen component={VerifyPassword} name={RouteType.RESETWALLETPASSWORD}/>
+                <Stack.Screen component={SendConfirmOrdinlas} name={RouteType.SENDORDINALSCONFIRMATION}/>
+                <Stack.Screen component={ConfirmBrc20} name={RouteType.CONFIRMBRC20}/>
+                <Stack.Screen component={SendBrc20Confirmation} name={RouteType.SENDCONFIRMBRC20}/>
             </Stack.Navigator>
         </NavigationContainer>
     );

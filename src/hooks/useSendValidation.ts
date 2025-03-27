@@ -6,6 +6,7 @@ import { strings } from "@strings/i18n";
 
 const BITCOIN_DUST_AMOUNT_SATS = 1500;
 const MIN_STX = 0.000001
+const MICROSATS =1
 const useSendValidation = (selectedCoin) => {
     const [amount, setAmount] = useState(0);
     const [sendFiatRate, setSendFiatRate] = useState(0);
@@ -64,9 +65,9 @@ const useSendValidation = (selectedCoin) => {
 
             case "brc-20":
             case "runes":
-                isBelowDustAmount = bigAmount.isLessThan(BITCOIN_DUST_AMOUNT_SATS);
+                isBelowDustAmount = bigAmount.isLessThan(MICROSATS);
                 if (isBelowDustAmount) {
-                    errorMessage = `${strings.minimumtransfer} ${BITCOIN_DUST_AMOUNT_SATS} sats for ${selectedCoin.ticker}`;
+                    errorMessage = `${strings.minimumtransfer} ${MICROSATS} sats for ${selectedCoin.ticker}`;
                 }
                 break;
 

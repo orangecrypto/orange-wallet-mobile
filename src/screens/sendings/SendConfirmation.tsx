@@ -14,11 +14,11 @@ import { Responsive } from "@utils/Responsive";
 import { Color } from "@values/color";
 import React, { useEffect, useState } from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
+import Toast from "react-native-toast-message";
 import { useSelector } from "react-redux";
+import ConfirmationItem from "./ConfirmationItem";
 import { gnerateDataForBtc, gnerateDataForRunes, gnerateDataForSTX } from "./ConfirmTransactionUtils";
 import { styles } from "./styles";
-import ConfirmationItem from "./ConfirmationItem";
-import Toast from "react-native-toast-message";
 
 const SendConfirmation = ({ route }) => {
     const selectedNetwork = useSelectedNetwork();
@@ -35,8 +35,6 @@ const SendConfirmation = ({ route }) => {
     const { btcClient } = useBtcClient();
     const {
         isPending: btcLoading,
-        error: txBtcError,
-        data: btcTxBroadcastData,
         mutate: mutateBtc,
     } = useMutation<BtcTransactionBroadcastResponse, Error, { txToBeBroadcasted: string }>({
         mutationFn: async ({ txToBeBroadcasted }) => btcClient.sendRawTransaction(txToBeBroadcasted)
@@ -44,8 +42,6 @@ const SendConfirmation = ({ route }) => {
 
     const {
         isPending: stxLoading,
-        error: txStxError,
-        data: stxTxBroadcastData,
         mutate: mutateStx,
     } = useMutation<string, Error, { signedTx: StacksTransaction }>({
         mutationFn: async ({ signedTx }) => broadcastSignedTransaction(signedTx, selectedNetwork)
@@ -67,6 +63,7 @@ const SendConfirmation = ({ route }) => {
                     console.log('setConfirmationArray', confirmationArray)
                     setConfirmationArray(confirmationArray)
                 }
+               
             } catch (error) {
                 console.error("Error fetching price:", error);
             }
@@ -86,7 +83,7 @@ const SendConfirmation = ({ route }) => {
 
     const handleStxTransaction = async () => {
 
-        console.log('handleStxTransaction','call')
+        console.log('handleStxTransaction', 'call')
         try {
             const seed = await getSeed();
             const signedContractCall = await signTransaction(
@@ -100,8 +97,8 @@ const SendConfirmation = ({ route }) => {
                 { signedTx: signedContractCall },
                 {
                     onSuccess: (data) => push(RouteType.CONFIRMATION, { transactionId: data }),
-                    onError: (error) =>{
-                         Toast.show({ type: 'error', text1: error.message });
+                    onError: (error) => {
+                        Toast.show({ type: 'error', text1: error.message });
                     },
                 }
             );
@@ -114,25 +111,21 @@ const SendConfirmation = ({ route }) => {
         if (confirmData.transactionType === "BTC") {
             handleBtcTransaction();
         } else if (confirmData.transactionType === "STX") {
-
-            
             await handleStxTransaction();
         }
         else if (confirmData.transactionType === "runes") {
-            try
-            {
-                const transactionId=await transactionData.transaction.broadcast({
-                rbfEnabled: true
-            }) 
-                push(RouteType.CONFIRMATION, {transactionId: transactionId })
-            }catch(error){
+            try {
+                const transactionId = await transactionData.transaction.broadcast({
+                    rbfEnabled: true
+                })
+                push(RouteType.CONFIRMATION, { transactionId: transactionId })
+            } catch (error) {
                 console.log('transaction.broadcast', error)
                 Toast.show({ type: 'error', text1: error.message });
             }
-           
-        }
+        }       
     };
-
+    
     return (
         <View style={styles.container}>
             {btcLoading && <Loader loading={btcLoading} />}
@@ -142,19 +135,20 @@ const SendConfirmation = ({ route }) => {
                     <TouchableOpacity style={styles.button} onPress={() => goBack()}>
                         <Text style={styles.buttonText}>{strings.back}</Text>
                     </TouchableOpacity>
-                    {confirmData.transactionType === 'runes' && <View style={styles.runeContainer}>
-                        <Text style={styles.ordinalsText}>{confirmData.transactionType.toUpperCase()}</Text>
-                    </View>}
-
+                    {(confirmData.transactionType === 'runes' || confirmData.transactionType === 'brc-20') && (
+                        <View style={styles.runeContainer}>
+                            <Text style={styles.ordinalsText}>{confirmData.transactionType.toUpperCase()}</Text>
+                        </View>
+                    )}
                 </View>
                 <Text style={styles.title}>{strings.sendConfirmation}</Text>
                 <Text style={styles.description}>{strings.confirmationMessage}</Text>
                 <FlatList
                     data={confirmationArray}
-                    keyExtractor={(index) => index}
-                    renderItem={({ item }) => (
-                        <ConfirmationItem item={item} availableRoutes={availableRoutes} type={confirmData.transactionType} />
-                    )} />
+                    keyExtractor={(_, index) => index.toString()}
+                    renderItem={({ item }) => 
+                            <ConfirmationItem item={item} availableRoutes={availableRoutes} type={confirmData.transactionType} />
+                       }/>
             </View>
             <View style={styles.horizontalButtonContainer}>
                 <CommonButton

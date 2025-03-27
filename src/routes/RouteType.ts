@@ -34,6 +34,9 @@ export enum RouteType {
     VIEWQR = 'ViewQr',
     WARNING = 'Warning',
     WALLETRESTORED='WalletRestored',
-    RESETWALLETPASSWORD='ResetWalletPassword'
+    RESETWALLETPASSWORD='ResetWalletPassword',
+    SENDORDINALSCONFIRMATION='SendORdinalsConfirmation',
+    CONFIRMBRC20='ConfirmBrc20',
+    SENDCONFIRMBRC20='SendConfirmBrc20'
   }
   

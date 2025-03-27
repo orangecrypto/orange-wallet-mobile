@@ -44,7 +44,7 @@ const useTransactionContext = () => {
         esploraApiProvider: btcClient,
       });
     }, [utxoCache, selectedAccount, network, seedVault, btcClient]);
-    console.log('transactionContext log', JSON.stringify(transactionContext))
+   
     return transactionContext;
   };
   export default useTransactionContext;

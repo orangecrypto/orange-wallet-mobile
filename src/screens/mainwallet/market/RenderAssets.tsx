@@ -28,12 +28,12 @@ const RenderAssets = ({ item, selectedItem, handleItemClick }) => {
                 <Text 
                     style={[
                         styles.price, 
-                        isSelected && { color: Color.orangeButton }]}>{'$ '+item.price.toFixed(2)}</Text>
+                        isSelected && { color: Color.orangeButton }]}>{'$ '+item?.price?.toFixed(2)}</Text>
                 <Text 
                     style={[
                         styles.price, 
                         isSelected && { color: Color.orangeButton },
-                        { marginLeft: Responsive.size10 }]}>{item.percent_change_1h.toFixed(2)+'%'}</Text>
+                        { marginLeft: Responsive.size10 }]}>{item?.percent_change_1h?.toFixed(2)+'%'}</Text>
             </View>
         </TouchableOpacity>
     );

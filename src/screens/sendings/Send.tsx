@@ -4,6 +4,7 @@ import CustomTextInput from "@components/CustomTextInput";
 import Loader from "@components/Loader";
 import SendingHeader from "@components/SendingHeader";
 import useAddressValidation from "@hooks/useAddressValidation";
+import useBtcClient from "@hooks/useBtcClient";
 import useGenerateSignedBtcTransaction from "@hooks/useGenerateSignedBtcTransaction";
 import useSendValidation from "@hooks/useSendValidation";
 import useTransactionContext from "@hooks/useTransactionContext";
@@ -19,13 +20,15 @@ import { Responsive } from "@utils/Responsive";
 import { Color } from "@values/color";
 import React, { useEffect, useState } from "react";
 import { Image, KeyboardAvoidingView, Platform, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import Toast from "react-native-toast-message";
 import { useSelector } from "react-redux";
+import { estimateBrc20TransferFees } from "./brc20/Brc20Utils";
 import { generateTransactionAndSummary } from "./RuneUtils";
 import { styles } from "./styles";
 
 const Send = ({ route }) => {
 
-    const { network } = useSelector((state: { seedPhraseReducer: appReducerType }) => state.appReducer);
+    const { selectedAccount, network } = useSelector((state: { seedPhraseReducer: appReducerType }) => state.appReducer);
     const { tokenList } = useSelector((state: { walletReducer: walletReducerType }) => state.walletReducer);
     const [selectedCoin, setSelectedCoin] = useState(route?.params?.tokenDetails);
     const [walletAddress, setWalletAddress] = useState("");
@@ -43,7 +46,7 @@ const Send = ({ route }) => {
     const { isPending, generateSignedTransaction: generateSignedTransactionBtc, transactionData, transactionError } = useGenerateSignedBtcTransaction();
     const { isPending: stxIsPending, generateUnsignedTransaction, transactionData: stxTransactionData, transactionError: stxTransactionDataError } = useUnsignedStxTransaction();
     const transactionContext: btcTransaction.TransactionContext = useTransactionContext()
-
+    const { btcClient } = useBtcClient();
     useEffect(() => {
         const handleTransaction = (transactionData, transactionError, type) => {
             if (transactionData) {
@@ -67,7 +70,8 @@ const Send = ({ route }) => {
     }, [transactionData, transactionError, stxTransactionData, stxTransactionDataError]);
 
 
-    const handleRuneTransaction = async (TransactionSummary) =>{
+
+    const handleRuneTransaction = async (TransactionSummary) => {
 
         console.log('handleRuneTransaction', TransactionSummary)
         if (TransactionSummary) {
@@ -94,12 +98,38 @@ const Send = ({ route }) => {
             });
         } else if (selectedCoin.protocol === 'runes') {
             setisRuneLoading(true)
-            
             await handleRuneTransaction(await generateTransactionAndSummary(amount, selectedCoin, walletAddress, transactionContext, network))
             setisRuneLoading(false)
+        } else if (selectedCoin.protocol === 'brc-20') {
+            handeBRC20Transfer()
         }
     };
-   
+
+    const handeBRC20Transfer = async () => {
+        setisRuneLoading(true)
+        try {
+            const { estimateFeesParams, estimatedFees } = await estimateBrc20TransferFees(selectedAccount, btcClient, network, selectedCoin.ticker, amount);
+            console.log('handeBRC20Transfer estimateFeesParams', estimateFeesParams);
+            setisRuneLoading(false)
+            push(RouteType.SENDCONFIRMBRC20, {
+                //transactionData: TransactionSummary,
+                confirmData: {
+                    transactionType: 'brc-20',
+                    recipientAddress: walletAddress,
+                    sendAmount: amount,
+                    token: selectedCoin,
+                    estimateFeesParams: estimateFeesParams,
+                    estimatedFees: estimatedFees
+                }
+            });
+        } catch (error) {
+            setisRuneLoading(false)
+            console.log('handleBRC20Transfer error', error);
+            Toast.show({ type: 'error', text1: error?.message || 'Something went wrong.' });
+            throw error;
+        }
+    }
+
     const handlePaste = async () => {
         setWalletAddress(await Clipboard.getString())
     };
