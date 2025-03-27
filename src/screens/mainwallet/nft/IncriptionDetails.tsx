@@ -16,8 +16,8 @@ import useOrdinalData from "@hooks/useOrdinalData";
 
 const IncriptionDetails = ({ route }) => {
 
-    //const { data, isPending , isError} = useAddressInscription(route?.params?.item?.id)
-    const { data, error, isPending } = useOrdinalData('619e1911ebc96b2ebffdfe3c0a90bbc4cbebf92fae39f0910a41aef2bbf4ead1i0');
+    const { data, isPending , isError} = useAddressInscription(route?.params?.item?.id)
+    //const { data, error, isPending } = useOrdinalData('619e1911ebc96b2ebffdfe3c0a90bbc4cbebf92fae39f0910a41aef2bbf4ead1i0');
 
     console.log('IncriptionDetails', data)
 
