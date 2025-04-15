@@ -143,6 +143,7 @@ const localAssets = {
   SATSOrange: require('./images/SATSOrange.png'),
   nft: require('./images/nft.png'),
   dropupArrow: require('./images/dropupArrow.png'),
+  backMain: require('./images/backMain.png'),
   
 
 };

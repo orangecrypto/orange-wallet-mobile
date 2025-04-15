@@ -43,7 +43,7 @@ const SeedPhraseView = () => {
 
     const renderItem = ({ item }) => (
         <View style={[styles.itemContainer, { borderColor: Color.black }]}>
-            <Text style={[styles.itemText, { textAlign: 'left' }]}>{item.word}</Text>
+            <Text style={[styles.itemText, { textAlign: 'center'}]}>{item.word}</Text>
         </View>
     );
 

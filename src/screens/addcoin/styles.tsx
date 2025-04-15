@@ -29,15 +29,16 @@ export const styles = StyleSheet.create({
     },
     addAddress: {
       color: Color.orangeButton,
-      fontSize: Responsive.size24,
+      fontSize: Responsive.size32,
       fontFamily: Fonts.bold,
       marginTop: Responsive.size20,
     },
     addAddressMessage: {
       color: Color.white,
       fontSize: Responsive.size18,
-      fontFamily: Fonts.regular,
-      lineHeight: Responsive.size24,
+      fontFamily: Fonts.semibold,
+      lineHeight: Responsive.size22,
+      marginTop: Responsive.size10
     },
     categoryContainer: {
       flexDirection: "row",
@@ -75,8 +76,8 @@ export const styles = StyleSheet.create({
       borderColor: Color.borderLineSeedphrase,
     },
     text: {
-      fontSize: Responsive.size16,
-      fontFamily: Fonts.regular,
+      fontSize: Responsive.size18,
+      fontFamily: Fonts.semibold,
       color: Color.white,
       width: Responsive.size200
     },

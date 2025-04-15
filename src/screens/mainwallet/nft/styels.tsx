@@ -9,7 +9,6 @@ export const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: Color.black,
-        alignItems: 'center'
     },
     contentContainer: {
         justifyContent: 'flex-start',
@@ -59,7 +58,7 @@ export const styles = StyleSheet.create({
         flexDirection: 'row',
         alignContent:'center',
         justifyContent: 'space-between',
-        marginHorizontal: Responsive.size20,
+        marginHorizontal: Responsive.size4,
         marginTop: Responsive.size28,
     },
     addCoinView: {
@@ -68,8 +67,8 @@ export const styles = StyleSheet.create({
         alignContent: 'center',
         justifyContent: 'center',
         alignItems: 'center',
-        paddingVertical: Responsive.size10,
-        width: Responsive.size110,
+        paddingVertical: Responsive.size12,
+        width:Responsive.size123,
         flexDirection: 'row',
         alignSelf: 'center',
 
@@ -226,16 +225,18 @@ export const styles = StyleSheet.create({
         borderTopLeftRadius: Responsive.size20,
         borderTopRightRadius: Responsive.size20,
         marginTop: Responsive.size15,
-       marginBottom: Responsive.size70
+        marginBottom: Responsive.size70,
+       
     },
-    emprtyViewStyle:{
-        flex:1,
-        justifyContent:'center',
-        alignContent:'center',
+    emprtyViewStyle: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingVertical: Responsive.size100
     },
     emprtyViewText: {
         fontFamily: Fonts.regular,
         fontSize: Responsive.size14,
-        color: Color.white,
+        color: Color.grayText,
+        textAlign: 'center',
     },
 });

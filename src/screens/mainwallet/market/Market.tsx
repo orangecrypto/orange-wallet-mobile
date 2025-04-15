@@ -25,7 +25,7 @@ const Market = () => {
   });
 
   const { data: assetList, error, isLoading } = useMarketData({ currency });
-  const { data: graphData } = useGraphData(graphParams);
+  const { data: graphData, isLoading: loadingMarketData } = useGraphData(graphParams);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedItem, setSelectedItem] = useState(null);
@@ -106,8 +106,12 @@ const Market = () => {
 
   return (
     <View style={styles.container}>
-      {isLoading && <Loader loading={isLoading} />}
- 
+      {isLoading && (
+        <View style={styles.loadingBackground}>
+          <Loader loading={isLoading} />
+        </View>
+      )}
+
       <FlatList
         data={graphDataList}
         keyExtractor={(item, index) => `${item.id}-${index}`}
@@ -119,7 +123,7 @@ const Market = () => {
         onScroll={handleScroll}
         renderItem={({ item }) => (
           <View style={{ width: screenWidth }}>
-            <GraphSliderItem data={item} />
+            <GraphSliderItem data={item} loading = {loadingMarketData}/>
           </View>
         )}
         showsHorizontalScrollIndicator={false}

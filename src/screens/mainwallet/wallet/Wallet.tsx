@@ -158,6 +158,7 @@ const Wallet = () => {
         setIsLoading(true)
         if (data) {
             getBalance()
+            console.log('useEffect ', JSON.stringify(data) +'stx data')
         }
     }, [data])
 
@@ -211,12 +212,12 @@ const Wallet = () => {
     };
 
     const renderItem = useCallback(({ item }) => (
-        <RenderCardItem item={item} selectedItem={memoizedSelectedItem} />
-    ), [memoizedSelectedItem]);
-   
-   
+        <RenderCardItem item={item} selectedItem={memoizedSelectedItem} loader={isLoading} />
+    ), [memoizedSelectedItem, isLoading]);
+    
     const totalSteps = getCardItems(visibleItems).length;
-    const progressPercentage = (currentStep / totalSteps) * 100;
+    const progressPercentage =
+    totalSteps > 1 ? ((currentStep - 1) / (totalSteps - 1)) * 100 : 0;
 
     const getTransactions = async () => {
         if (isLoading || !isMoreAvailable) return;
@@ -229,13 +230,7 @@ const Wallet = () => {
         }
         setIsMoreAvailable(newTransactions.length === limit);
         setIsLoading(false);
-
-
-
     };
-
-
-
 
     return (
         <ScrollView
@@ -248,15 +243,15 @@ const Wallet = () => {
                 </View>
             )}
 
-            {isLoading && !refreshing && <Loader loading={isLoading} />}
+            {/* {isLoading && !refreshing && <Loader loading={isLoading} />} */}
 
             <View style={styles.walletContainer}>
                 <WalletSlider
                     cryptoArray={cryptoArray}
                     flatListRef={flatListRef}
                     handleScroll={handleScroll}
-                    renderItem={renderItem}
-                />
+                    renderItem={renderItem}/>
+
                 <ProgressBar progressPercentage={progressPercentage} />
             </View>
 
@@ -266,8 +261,8 @@ const Wallet = () => {
                         {categories.map((category) => categoryItem(category, selectedCategory, handlecategoryChange))}
                     </View>
                     <View style={styles.headerTitleContainer}>
-                        <Text style={styles.headerTitle}>{strings.assets}</Text>
-                        <Text style={styles.headerTitle}>{strings.quantity}</Text>
+                        <Text style={styles.assetsTitle}>{strings.assets}</Text>
+                        <Text style={styles.assetsTitle}>{strings.quantity}</Text>
                     </View>
                     <TokenList
                         filteredCryptoArray={filteredCryptoArray}

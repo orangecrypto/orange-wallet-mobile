@@ -1,8 +1,10 @@
 import CommonButton from "@components/CommonButton";
 import Switch from "@components/Switch";
 import useSeedVault from "@hooks/useSeedVault";
+import { str2buf } from "@orangecryptohq/orangeseed";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { clearAppReducer } from "@redux/slice/appReducer";
-import { useAppDispatch } from "@redux/store";
+import { clearStoreData, useAppDispatch } from "@redux/store";
 import { Dispatch } from "@reduxjs/toolkit";
 import { goBack, resetNavigation } from "@routes/Navigator";
 import { RouteType } from "@routes/RouteType";
@@ -24,9 +26,12 @@ const ForgotPassword = () => {
 
     const resetWallet = async () => {
         try {
+         
             await clearVaultStorage()
+            clearStoreData()
             dispatch(clearAppReducer())
             resetNavigation(RouteType.HOME_SCREEN)
+            AsyncStorage.setItem('isWalletCreated','')
         } catch (error) {
             console.log(error)
         }
@@ -74,18 +79,18 @@ const styles = StyleSheet.create({
         paddingHorizontal: Responsive.size18,
     },
     button: {
-        backgroundColor: Color.backgroundbg,
+        backgroundColor: Color.backbackgroundbg,
         width: Responsive.size70,
         justifyContent: "center",
         alignItems: "center",
         padding: Responsive.size10,
         borderRadius: Responsive.size8,
-        marginTop: Responsive.size50,
+        marginTop: Responsive.size50
     },
     buttonText: {
         color: Color.white,
         fontSize: Responsive.size16,
-        fontFamily: Fonts.regular,
+        fontFamily: Fonts.regular
     },
     title: {
         color: Color.orangeButton,

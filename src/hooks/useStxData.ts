@@ -4,31 +4,38 @@ import { fetchStxAddressData } from '@orangecryptohq/orangeseed';
 import useSelectedNetwork from './useSelectedNetwork';
 
 const useStxData = () => {
-    const stxAddress = store.getState().appReducer.selectedAccount?.stxAddress;
-    const network = useSelectedNetwork();
-    const offset = 0, paginationLimit = 10;
-    const [data, setData] = useState(null);
-    const [loading, setLoading] = useState(true);
+  const stxAddress = store.getState().appReducer.selectedAccount?.stxAddress;
+  const network = useSelectedNetwork();
+  const offset = 0;
+  const paginationLimit = 10;
 
-    const fetchData = async () => {
-        setLoading(true);
-        try {
-            const data = await fetchStxAddressData(stxAddress, network, offset, paginationLimit);
-            setData(data);
-        } catch (err) {
-            console.error("Error fetching STX data:", err);
-        } finally {
-            setLoading(false);
-        }
-    };
+  const [data, setData] = useState<{ balance: number; availableBalance: number } | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
 
-    useEffect(() => {
-        if (stxAddress && network) {
-            fetchData();
-        }
-    }, [stxAddress, network]);
+  const fetchData = async () => {
+    setLoading(true);
+    setError(null);
 
-    return { data, loading, stxAddress };
+    try {
+      const result = await fetchStxAddressData(stxAddress, network, offset, paginationLimit);
+      setData(result);
+    } catch (err: any) {
+      console.error("Error fetching STX data:", err);
+      setData({ balance: 0.0, availableBalance: 0.0 }); // fallback
+      setError(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (stxAddress && network) {
+      fetchData();
+    }
+  }, [stxAddress, network]);
+
+  return { data, loading, error, stxAddress };
 };
 
 export default useStxData;

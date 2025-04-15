@@ -12,12 +12,20 @@ import { useSelector } from 'react-redux';
 import { appReducerType } from '@redux/slice/appReducer';
 import { Config } from '@config/Config';
 import { store } from '@redux/store';
-
-const RenderCardItem = ({ item, selectedItem }) => {
-     const account =store.getState().appReducer.selectedAccount
+import {
+    SkaletonView,
+    ANIMATION_TYPE,
+    ANIMATION_DIRECTION,
+} from 'react-native-skaleton-kit';
+import { Color } from '@values/color';
+const RenderCardItem = ({ item, selectedItem, loader }) => {
+    const account = store.getState().appReducer.selectedAccount
     const { bitcoinAddress } = useBtcClient();
     const { network } = useSelector((state: { seedPhraseReducer: appReducerType }) => state.appReducer);
-
+    function formatBalance(balance) {
+        let num = parseFloat(balance);
+        return num % 1 === 0 ? num.toFixed(0) : num.toString().replace(/(?:\.0+|(\.\d+?)0+)$/, "$1");
+    }
     const getTanStackUrl = async () => {
         try {
             const transakUrl = new URL(ApiEndpoints.TRANSAK_URL);
@@ -51,16 +59,16 @@ const RenderCardItem = ({ item, selectedItem }) => {
 
     const handleReceive = async (item) => {
         console.log('handleReceive', item);
-    
+
         const addressMap = {
             Bitcoin: account?.btcAddress,
             'brc-20': account?.ordinalsAddress,
             runes: account?.ordinalsAddress,
             stacks: account?.stxAddress,
         };
-    
+
         const receiveItem = { address: addressMap[item.name] || addressMap[item.protocol] };
-    
+
         push(RouteType.VIEWQR, { item: receiveItem });
     };
     return (
@@ -68,30 +76,59 @@ const RenderCardItem = ({ item, selectedItem }) => {
             <ImageBackground
                 source={localAssets.walletbg}
                 style={styles.walletCardBackground}>
-                <View style={styles.balanceView}>
-                    {item?.image ? <Image source={item.image} style={styles.balanceIcon} /> :
-                        <TokenImage
-                            fungibleToken={item}
-                            size={Responsive.size56}
-                            round
-                            variant="light" />
-                    }
-                    <View>
-                        <Text numberOfLines={1} style={[styles.walletText, { width: Responsive.size150 }]}>{`${item.balance}`}</Text>
-                        <View style={styles.walletTextView}>
-                            {item?.name !== 'Bitcoin' && <Text style={styles.walletTextCurrencyView}> {item.name === 'all' ? item.category : item.ticker} </Text>}
-                            <Text style={styles.walletTextCurrencyView}>{item.name === 'all' ? ` ${item.assetCount} Assets` : item.protocol === 'stacks' ? 'SIP-10' : `${item.protocol}`.toLocaleUpperCase()}</Text>
+
+
+                {loader ? (
+                    <SkaletonView
+                        viewHeight={100}
+                        animationType={ANIMATION_TYPE.shiver}
+                        direction={ANIMATION_DIRECTION.leftToRight}
+                        viewWidth={'100%'}
+                        backgroundColor={Color.transparent}
+                        style={styles.skeletonItem}
+                    />
+                ) : (
+                    <View style={styles.balanceView}>
+                        {item?.image ? (
+                            <Image source={item.image} style={styles.balanceIcon} />
+                        ) : (
+                            <TokenImage
+                                fungibleToken={item}
+                                size={Responsive.size56}
+                                round
+                                variant="light"
+                            />
+                        )}
+                        <View>
+                            <Text numberOfLines={1} style={[styles.walletText, { width: Responsive.size150 }]}>
+                                {item.name === 'all' ? `$${formatBalance(item.balance)}` : `${formatBalance(item.balance)}`}
+                            </Text>
+                            <View style={styles.walletTextView}>
+                                {item?.name !== 'Bitcoin' && (
+                                    <Text style={styles.walletTextCurrencyView}>
+                                        {item.name === 'all' ? item.category : item.ticker}
+                                    </Text>
+                                )}
+                                <Text style={styles.walletTextCurrencyView}>
+                                    {item.name === 'all'
+                                        ? ` ${item.assetCount} Assets`
+                                        : item.protocol === 'stacks'
+                                            ? 'SIP-10'
+                                            : `${item.protocol}`.toUpperCase()}
+                                </Text>
+                            </View>
                         </View>
                     </View>
-                </View>
-                {selectedItem ? selectedItem.id === 1 ?
+                )}
+
+                {item ? item.id === 1 ?
                     <TouchableOpacity style={styles.addCoinView} onPress={() => push(RouteType.ADDCOIN)}>
                         <Image style={styles.addCoinIcon} source={localAssets.addcoin} />
                         <Text style={styles.addCoinText}>{strings.addCoin}</Text>
                     </TouchableOpacity>
                     :
                     <View style={styles.horizontalActions}>
-                        <TouchableOpacity style={styles.actionButtonBg} onPress={() => push(RouteType.SEND,{tokenDetails : selectedItem})}>
+                        <TouchableOpacity style={styles.actionButtonBg} onPress={() => push(RouteType.SEND, { tokenDetails: selectedItem })}>
                             <Image source={localAssets.send} style={styles.actionButtonIcon} />
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.actionButtonBg} onPress={() => handleReceive(item)}>
@@ -99,19 +136,19 @@ const RenderCardItem = ({ item, selectedItem }) => {
                         </TouchableOpacity>
 
 
-                        {selectedItem.name === 'Bitcoin' && network.type === 'Mainnet' &&
+                        {item.name === 'Bitcoin' && network.type === 'Mainnet' &&
                             <TouchableOpacity style={styles.actionButtonBg} onPress={() => { push(RouteType.BUY, { isFor: 'Bitcoin' }) }}>
                                 <Image source={localAssets.buy} style={styles.actionButtonIcon} />
                             </TouchableOpacity>}
 
-                        {selectedItem.name === 'Stacks' && network.type === 'Mainnet' &&
+                        {item.name === 'Stacks' && network.type === 'Mainnet' &&
                             <TouchableOpacity style={styles.actionButtonBg} onPress={() => { push(RouteType.BUY, { isFor: 'Stacks' }) }}>
                                 <Image source={localAssets.buy} style={styles.actionButtonIcon} />
                             </TouchableOpacity>}
 
 
-                        {selectedItem.name === 'Bitcoin' && network.type === 'Mainnet' &&
-                            <TouchableOpacity style={styles.actionButtonBg} onPress={() => openSale()}>
+                        {item.name === 'Bitcoin' && network.type === 'Mainnet' &&
+                            <TouchableOpacity style={styles.actionButtonBg} onPress={() => openSale()} disabled={item.balance === '0'}>
                                 <Image source={localAssets.sell} style={styles.actionButtonIcon} />
                             </TouchableOpacity>}
                     </View>

@@ -36,7 +36,7 @@ export const styles = StyleSheet.create({
     },
     addAddress: {
         color: Color.orangeButton,
-        fontSize: Responsive.size24,
+        fontSize: Responsive.size32,
         fontFamily: Fonts.bold,
         marginTop: Responsive.size20
     },

@@ -33,10 +33,7 @@ const Login = () => {
     };
 
     const handleSubmit = async () => {
-        const { strengthMessage } = validatePasswordStrength(password);
-        if (strengthMessage === strings.weakPassword || strengthMessage === strings.moderatePassword) {
-            dispatch(setPasswordError(strings.useStrongPassword))
-        } else {
+       
 
             try {
                 await unlockVault(str2buf(password))
@@ -50,8 +47,6 @@ const Login = () => {
                     text1: error.message,
                 });
             }
-
-        }
     };
 
     useEffect(() => {
@@ -89,8 +84,8 @@ const Login = () => {
                             passwordIconVisible={localAssets.eye}
                             passwordIconHidden={localAssets.eyeoff}
                             style={styles.input} />
-                        <Text style={[styles.passwordError, { color: passwordError === strings.strongPassword ? Color.green : Color.red }]}>{passwordError}</Text>
-                        <Text style={styles.passwordError}>{passwordFeedback}</Text>
+                        {/* <Text style={[styles.passwordError, { color: passwordError === strings.strongPassword ? Color.green : Color.red }]}>{passwordError}</Text>
+                        <Text style={styles.passwordError}>{passwordFeedback}</Text> */}
                         <TouchableOpacity onPress={() => push(RouteType.FORGOTPASSWORD)}>
                             <Text style={styles.forgotPassword}>{strings.forgotPassword}</Text>
                         </TouchableOpacity>
@@ -105,7 +100,7 @@ const Login = () => {
                         onPress={() => handleSubmit()}
                         backgroundColor={Color.orangeButton}
                         textColor={Color.white}
-                        disabled={passwordError === strings.strongPassword ? false : true}
+                        disabled={password=== ''}
                         width={'100%'}
                         height={Responsive.size50}
                     />

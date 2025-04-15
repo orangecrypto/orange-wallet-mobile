@@ -1,7 +1,9 @@
 import CommonButton from "@components/CommonButton";
 import Loader from "@components/Loader";
 import useSeedVault from '@hooks/useSeedVault';
+import useSelectedNetwork from "@hooks/useSelectedNetwork";
 import { str2buf } from "@orangecryptohq/orangeseed";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { appReducerType, setAccountList, setIsWalletCreated, setSelectedAccount, setWallet } from "@redux/slice/appReducer";
 import { clearSeedPhraseReducer, seedPhraseReducerType, setIsRestoreWallet } from "@redux/slice/SeedPhraseReducer";
 import { useAppDispatch } from "@redux/store";
@@ -18,22 +20,23 @@ import { useEffect, useMemo, useState } from "react";
 import { Keyboard, KeyboardAvoidingView, Platform, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { useSelector } from "react-redux";
 import EnterPassword from "./EnterPassword";
+import { loadAccount } from "./LoadAccounts";
 import { createWallet, restoreWallet, validateCurrentStep } from "./SeedPhraseUtils";
 import { Step } from "./Steps";
 import { styles } from './styles';
 
 const SeedPhrase = ({ route }) => {
-    const { getSeed , changePassword, hasSeed, clearVaultStorage, storeSeed, init } = useSeedVault();
+    const { getSeed, changePassword, hasSeed, clearVaultStorage, storeSeed, init } = useSeedVault();
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [backupLatter, setBackupLatter] = useState(route?.params?.backupLatter || false);
     const { isSeedPhraseVerified, disabled, isRestoreWallet } = useSelector((state: { seedPhraseReducer: seedPhraseReducerType }) => state.seedPhraseReducer);
-    const { accountList,network } = useSelector((state: { seedPhraseReducer: appReducerType }) => state.appReducer);
+    const { network } = useSelector((state: { seedPhraseReducer: appReducerType }) => state.appReducer);
     const [currentStepIndex, setCurrentStepIndex] = useState(route?.params?.backupLatter ? 2 : route?.params?.restoreWallet ? 1 : 0);
     const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const dispatch: Dispatch = useAppDispatch();
-
+    const selectedNetwork = useSelectedNetwork()
     dispatch(setIsRestoreWallet(route?.params?.restoreWallet || false));
 
     useEffect(() => {
@@ -74,7 +77,7 @@ const SeedPhrase = ({ route }) => {
             console.log('isRestoreWallet Seed', words)
             await restoreAndStoreWallet(words);
             return;
-        }        
+        }
         await createAndStoreWallet(words);
     };
 
@@ -82,12 +85,13 @@ const SeedPhrase = ({ route }) => {
         try {
             const { account, wallet } = await restoreWallet(words);
             const hasSeedCheck = await hasSeed()
-            if(hasSeedCheck && !account.masterPubKey){
+            if (hasSeedCheck && !account.masterPubKey) {
                 await clearVaultStorage()
             }
-           await changePassword(str2buf(''), str2buf(confirmPassword));
-            await updateWalletState(account, wallet);
-             setIsLoading(false)
+            await changePassword(str2buf(''), str2buf(confirmPassword));
+            const activeAccounts = await loadAccount(account.stxAddress, selectedNetwork, account, words, network)
+            await updateWalletState(account, wallet, activeAccounts);
+            setIsLoading(false)
         } catch (error) {
             setIsLoading(false)
             console.log('restoreAndStoreWallet error', error)
@@ -105,13 +109,16 @@ const SeedPhrase = ({ route }) => {
         }
     };
 
-    const updateWalletState = (account, wallet) => {
-        dispatch(setAccountList([...accountList, account]));
+    const updateWalletState = (account, wallet, accountList = []) => {
+        isRestoreWallet ?
+        dispatch(setAccountList(accountList)) :
+        dispatch(setAccountList([...accountList, account]))
         dispatch(setSelectedAccount(account));
         dispatch(setWallet(wallet));
         dispatch(clearSeedPhraseReducer());
         dispatch(setIsWalletCreated(true));
-        resetNavigation( isRestoreWallet?RouteType.WALLETRESTORED : RouteType.SUCCESS);
+        AsyncStorage.setItem('isWalletCreated', 'true')
+        resetNavigation(isRestoreWallet ? RouteType.WALLETRESTORED : RouteType.SUCCESS);
     };
 
     const handlePreviousStep = () => {
@@ -130,7 +137,10 @@ const SeedPhrase = ({ route }) => {
             style={styles.seePhrasecontainer}>
             {isLoading && <Loader loading={isLoading} />}
             <ScrollView
-                contentContainerStyle={{ flexGrow: 1 }}
+                contentContainerStyle={{
+                    flexGrow: 1,
+                    paddingBottom: isKeyboardVisible ? Responsive.size50 : 0,
+                }}
                 keyboardShouldPersistTaps="handled"
                 showsVerticalScrollIndicator={false}>
                 <View style={styles.contentContainer}>
@@ -138,7 +148,7 @@ const SeedPhrase = ({ route }) => {
                         <TouchableOpacity
                             style={[styles.button, currentStepIndex >= 0 && styles.disabledButton]}
                             onPress={handlePreviousStep}>
-                            <Text style={styles.buttonText}>{strings.back}</Text>
+                            <Text style={styles.buttonText} >{strings.back}</Text>
                         </TouchableOpacity>
                     </View>
                     <View style={styles.stepContainer}>

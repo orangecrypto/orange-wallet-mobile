@@ -44,8 +44,10 @@ const EnterPassword = ({ type, onPasswordChange }: { type: "enter" | "confirm"; 
                     passwordIconVisible={localAssets.eye}
                     passwordIconHidden={localAssets.eyeoff}
                     style={styles.input} />
-                <Text style={[styles.passwordError, { color: error === strings.strongPassword ? Color.green : Color.red }]}>{error}</Text>
-                <Text style={styles.passwordError}>{feedback}</Text>
+                {/* <Text style={[styles.passwordError, { color: error === strings.strongPassword ? Color.green : Color.red }]}>{error}</Text>
+                <Text style={styles.passwordError}>{feedback}</Text> */}
+
+                {error !== strings.strongPassword && <Text style={styles.passwordError}>{strings.passwordValidationMessage}</Text>}
             </View>
         </View>
     );

@@ -116,6 +116,14 @@ export const styles = StyleSheet.create({
         marginTop:Responsive.size10,
         borderRadius:Responsive.size10,
         alignSelf:'center'
-    }
+    },
+
+    horizontalButtonContainer: {
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        flexDirection: 'row',
+        marginBottom: Responsive.size20,
+        marginHorizontal: Responsive.size18
+    },
 
 });

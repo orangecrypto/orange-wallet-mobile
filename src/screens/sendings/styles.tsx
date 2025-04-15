@@ -44,7 +44,7 @@ export const styles = StyleSheet.create({
     },
     title: {
         color: Color.orangeButton,
-        fontSize: Responsive.size28,
+        fontSize: Responsive.size32,
         fontFamily: Fonts.bold,
         marginTop: Responsive.size15,
     },
@@ -58,17 +58,21 @@ export const styles = StyleSheet.create({
         color: Color.white,
         fontSize: Responsive.size18,
         fontFamily: Fonts.regular,
-        lineHeight: Responsive.size20,
+        lineHeight: Responsive.size22,
         marginTop: Responsive.size10
     },
     item: {
         flexDirection: "row",
         padding: Responsive.size16,
+        backgroundColor: Color.listBordercolor,
+        borderRadius: Responsive.size10,
+        marginVertical: Responsive.size10,
         justifyContent: "space-between",
-        alignContent: 'center',
-      
+        borderWidth: Responsive.size2,
+        borderColor: Color.borderLineSeedphrase,
+
     },
-    itemContiner :{
+    itemContiner: {
         marginTop: Responsive.size18,
         borderRadius: Responsive.size10,
         backgroundColor: Color.listBordercolor,
@@ -354,7 +358,7 @@ export const styles = StyleSheet.create({
     },
     transactionItem: {
         flexDirection: "row",
-        padding: Responsive.size16,
+        padding: Responsive.size10,
         backgroundColor: Color.listBordercolor,
         borderRadius: Responsive.size10,
         marginTop: Responsive.size18,
@@ -484,42 +488,42 @@ export const styles = StyleSheet.create({
         color: Color.white,
         alignSelf: 'center'
     },
-    rightContainer :{
+    rightContainer: {
 
     },
-    dropDownIcon:{
+    dropDownIcon: {
         height: Responsive.size18,
         width: Responsive.size18
     },
-    inputConfirmContainer:{ 
-       marginVertical: Responsive.size10,
-     
+    inputConfirmContainer: {
+        marginVertical: Responsive.size10,
+
     },
     inputTextTitle: {
         fontSize: Responsive.size14,
         fontFamily: Fonts.regular,
         color: Color.white,
-       
+
     },
-    inputTextDescription:{
+    inputTextDescription: {
         fontSize: Responsive.size12,
         fontFamily: Fonts.regular,
         color: Color.grayText,
-        
+
     },
     inputText: {
         fontSize: Responsive.size16,
         fontFamily: Fonts.regular,
         color: Color.white,
-       
+
     },
     inputRowContainer: {
         flexDirection: "row",
         justifyContent: "space-between",
         alignContent: 'center',
-      
+
     },
-    inputDownIcon:{
+    inputDownIcon: {
         height: Responsive.size20,
         width: Responsive.size20
     },
@@ -571,14 +575,14 @@ export const styles = StyleSheet.create({
         padding: Responsive.size16,
         justifyContent: "space-between",
         alignContent: 'center',
-      
+
     },
     networkFeeText: {
         fontSize: Responsive.size14,
         fontFamily: Fonts.regular,
         color: Color.white,
         alignSelf: 'center',
-        
+
     },
     networkFeeDescription: {
         fontSize: Responsive.size12,
@@ -586,8 +590,19 @@ export const styles = StyleSheet.create({
         color: Color.grayText,
         alignSelf: 'center'
     },
-    tokeIcon:{
+    tokeIcon: {
         height: Responsive.size32,
         width: Responsive.size32
+    },
+    emprtyViewStyle: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingVertical: Responsive.size100,    
+    },
+    emprtyViewText: {
+        fontFamily: Fonts.regular,
+        fontSize: Responsive.size14,
+        color: Color.grayText,
+        textAlign: 'center',
     },
 });

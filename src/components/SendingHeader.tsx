@@ -92,8 +92,10 @@ const styles = StyleSheet.create({
     categoryTextBackground: {
         fontFamily: Fonts.regular,
         fontSize: Responsive.size12,
+        paddingVertical: Responsive.size1,
         color: 'white',
-        borderRadius: Responsive.size8,
+        textAlign:'center',
+        borderRadius: Responsive.size10,
         backgroundColor: Color.viewbutton,
         paddingHorizontal: Responsive.size4,
         marginLeft: Responsive.size8,

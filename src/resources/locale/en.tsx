@@ -49,6 +49,7 @@ export default {
     receive: "Receive",
 
     strongPassword:'Strong password',
+    verystrongPassword:'Very strong password',
     weakPassword:'Weak password',
     moderatePassword:'Moderate password',
     useStrongPassword:'Please use a stronger password!',
@@ -153,6 +154,11 @@ export default {
     input:'Inputs',
     Output:'Output',
     Script:'Script output',
-    networkFee:'Network Fee'
+    networkFee:'Network Fee',
+    unableToGenrateTransaction:'Unable to generate transaction',
+    buyMessageWarning: 'You will be redirected to our partner service provider to complete the purchase. Please contact the partner directly if you encounter any issues.',
+    noBrc20incriptions:'No BRC-20 Inscriptions',
+    passwordValidationMessage:'Your password should be at least 10 characters long. Use a mix of uppercase letters, lowercase letters, numbers, and symbols.'
+
 
 }   

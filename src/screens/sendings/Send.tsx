@@ -19,7 +19,7 @@ import { strings } from "@strings/i18n";
 import { Responsive } from "@utils/Responsive";
 import { Color } from "@values/color";
 import React, { useEffect, useState } from "react";
-import { Image, KeyboardAvoidingView, Platform, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { Image, Keyboard, KeyboardAvoidingView, Platform, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
 import { useSelector } from "react-redux";
 import { estimateBrc20TransferFees } from "./brc20/Brc20Utils";
@@ -29,7 +29,24 @@ import { styles } from "./styles";
 const Send = ({ route }) => {
 
     const { selectedAccount, network } = useSelector((state: { seedPhraseReducer: appReducerType }) => state.appReducer);
+    const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
     const { tokenList } = useSelector((state: { walletReducer: walletReducerType }) => state.walletReducer);
+    const coinSettings = useSelector((state) => state.coinSettingsSlice.coinSettings);
+    const namesToAlwaysShow = ["Bitcoin", "Orange", "Stacks"];
+    const visibleItems = [];
+    const seenNames = new Set();
+    
+    tokenList.forEach(item => {
+        if (seenNames.has(item.name)) {
+            return; // Skip duplicates
+        }
+        const coinSetting = coinSettings.find(setting => setting.name === item.name);
+        
+        if (namesToAlwaysShow.includes(item.name) || (coinSetting ? coinSetting.visible : true)) {
+            visibleItems.push(item);
+            seenNames.add(item.name); // Track unique names
+        }
+    });
     const [selectedCoin, setSelectedCoin] = useState(route?.params?.tokenDetails);
     const [walletAddress, setWalletAddress] = useState("");
     const [isRuneLoading, setisRuneLoading] = useState(false);
@@ -69,7 +86,17 @@ const Send = ({ route }) => {
 
     }, [transactionData, transactionError, stxTransactionData, stxTransactionDataError]);
 
+ useEffect(() => {
+        const handleKeyboardShow = () => setIsKeyboardVisible(true);
+        const handleKeyboardHide = () => setIsKeyboardVisible(false);
+        const showSubscription = Keyboard.addListener("keyboardDidShow", handleKeyboardShow);
+        const hideSubscription = Keyboard.addListener("keyboardDidHide", handleKeyboardHide);
 
+        return () => {
+            showSubscription.remove();
+            hideSubscription.remove();
+        };
+    }, []);
 
     const handleRuneTransaction = async (TransactionSummary) => {
 
@@ -136,7 +163,7 @@ const Send = ({ route }) => {
 
     const handleButtonDisable = () => !(amount > 0 && walletAddress && isValidAddress && !invalidFund);
     return (
-        <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : undefined}>
+        <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : "height"}>
             {isPending && <Loader loading={isPending} />}
             {stxIsPending && <Loader loading={stxIsPending} />}
             {isRuneLoading && <Loader loading={isRuneLoading} />}
@@ -162,7 +189,7 @@ const Send = ({ route }) => {
                             placeholder={strings.enterAmount}
                             value={amount}
                             onChangeText={onAmountChange}
-                            dropdownOptions={tokenList}
+                            dropdownOptions={visibleItems}
                             keyboardType={"numeric"}
                             selectedDropdownValue={selectedCoin.ticker}
                             onDropdownSelect={setSelectedCoin}
@@ -199,7 +226,7 @@ const Send = ({ route }) => {
 
                 </View>
             </ScrollView>
-            <View>
+            {!isKeyboardVisible &&(<View>
                 <Text style={styles.warningText}>
                     {strings.warning}: <Text style={styles.warningMessage}>{strings.warningMessage}</Text>
                 </Text>
@@ -221,7 +248,7 @@ const Send = ({ route }) => {
                         disabled={handleButtonDisable()}
                         height={Responsive.size50} />
                 </View>
-            </View>
+            </View>)}
         </KeyboardAvoidingView>
     );
 };

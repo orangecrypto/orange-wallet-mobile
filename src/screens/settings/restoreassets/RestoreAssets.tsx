@@ -9,8 +9,9 @@ import { Responsive } from "@utils/Responsive";
 import { RouteType } from "@routes/RouteType";
 
 const RestoreAssets = () => {
-    const [assetsArray, setAssetsArray] = useState([
-        { id: 1, name: "Bitcoin", isSelected: false },
+
+   const [assetsArray, setAssetsArray] = useState([
+      //  { id: 1, name: "Bitcoin", isSelected: false },
         { id: 2, name: "Ordinals", isSelected: false }
     ]);
 
@@ -28,8 +29,7 @@ const RestoreAssets = () => {
     const renderItem = ({ item }) => (
         <TouchableOpacity
             style={styles.item}
-            onPress={() => handleSelection(item.id)}
-        >
+            onPress={() => handleSelection(item.id)}>
             <Text
                 style={[
                     styles.text,

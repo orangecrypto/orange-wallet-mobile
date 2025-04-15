@@ -112,7 +112,7 @@ export const styles = StyleSheet.create({
         fontFamily: Fonts.semibold
     },
     listContainer: {
-       
+       flex:1,
        
     },
     listItem: {
@@ -147,11 +147,20 @@ export const styles = StyleSheet.create({
         justifyContent: "space-between",
         alignItems: "center",
         borderWidth: Responsive.size1,
-        borderColor: Color.transactionListBackground
+        borderColor: Color.transactionListBackground,
+        backgroundColor:Color.black,
+        borderRadius: Responsive.size5,
+        paddingHorizontal: Responsive.size6,
+        paddingVertical: Responsive.size4
     },
 
     headerTitle:{
         color: Color.nftcategoryText,
+        fontFamily: Fonts.semibold,
+        fontSize: Responsive.size14
+    },
+    assetsTitle:{
+        color: Color.grayText,
         fontFamily: Fonts.semibold,
         fontSize: Responsive.size14
     },
@@ -169,7 +178,7 @@ export const styles = StyleSheet.create({
     assetName: {
         color: Color.white,
         fontSize: Responsive.size16,
-        fontFamily: Fonts.semibold
+        fontFamily: Fonts.regular
     },
     assetCategory: {
         color: Color.grayText,
@@ -184,7 +193,7 @@ export const styles = StyleSheet.create({
     assetQuantity: {
         color: Color.white,
         fontSize: Responsive.size16,
-        fontFamily: Fonts.bold
+        fontFamily: Fonts.regular
     },
     assetValue: {
         color: Color.white,
@@ -305,5 +314,16 @@ export const styles = StyleSheet.create({
         color: Color.orangeButton,
         fontFamily: Fonts.bold,
         fontSize: Responsive.size18
-    }
+    },
+    skeletonContainer: {
+        width: '100%',
+        paddingVertical: 10,
+        paddingHorizontal: 16,
+      },
+      skeletonItem: {
+        height: 50,
+        width: '100%',
+        borderRadius: 10,
+        marginBottom: 10,
+      },
 });

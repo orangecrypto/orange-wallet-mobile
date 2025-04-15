@@ -22,8 +22,9 @@ const useGetCollectionsData = () => {
 
     return getCollections(
       network?.type || "Mainnet",
-     'bc1psgkjsnvc5dq2eete2q98qnmt3qsdp23wxdff6qvp9mumve9vh09smxlnuq',
+     //'bc1psgkjsnvc5dq2eete2q98qnmt3qsdp23wxdff6qvp9mumve9vh09smxlnuq',
     //'bc1pzcswdh4g7ye823ryxnpmn9w8053m4ghy5n4p2eheg60xrs5pf7gse9w8ma',
+    selectedAccount?.ordinalsAddress,
       offset, // ✅ Pass the manual offset
       PAGE_SIZE
     );

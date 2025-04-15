@@ -9,6 +9,14 @@ export const styles = StyleSheet.create({
         backgroundColor: Color.black,
         justifyContent: 'flex-start',
       },
+
+      loadingBackground: {
+        ...StyleSheet.absoluteFillObject,
+        backgroundColor: Color.black,
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 10, 
+      },
       Graphcontainer: {
        
         marginHorizontal:10

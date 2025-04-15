@@ -9,7 +9,7 @@ import { strings } from "@strings/i18n";
 import { Responsive } from "@utils/Responsive";
 import { validatePasswordStrength } from "@utils/Validations";
 import { useEffect, useState } from "react";
-import { Image, Keyboard, Text, TouchableOpacity, View } from "react-native";
+import { Image, Keyboard, KeyboardAvoidingView, Platform, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { styles } from "../styles";
 import { Color } from "@values/color";
 import CommonButton from "@components/CommonButton";
@@ -17,6 +17,7 @@ import useSeedVault from "@hooks/useSeedVault";
 import { str2buf } from "@orangecryptohq/orangeseed";
 import Toast from "react-native-toast-message";
 import { clearAppReducer } from "@redux/slice/appReducer";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const VerifyPassword = () => {
 
@@ -42,6 +43,7 @@ const VerifyPassword = () => {
             clearStoreData()
             dispatch(clearAppReducer())
             resetNavigation(RouteType.HOME_SCREEN)
+            AsyncStorage.setItem('isWalletCreated','')
         } catch (error) {
             Toast.show({ type: 'error', text1: error.message });
         }
@@ -63,14 +65,24 @@ const VerifyPassword = () => {
 
     return (
 
-        <View style={styles.container}>
+        <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.container}>
+      
+        <ScrollView
+           contentContainerStyle={{
+            flexGrow: 1,
+            paddingBottom: isKeyboardVisible ? Responsive.size50 : 0,
+          }}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}>
             <View style={styles.contentContainer}>
                 <TouchableOpacity style={styles.button} onPress={() => goBack()}>
                     <Text style={styles.buttonText}>{strings.back}</Text>
                 </TouchableOpacity>
                 <View style={styles.enterPasswordContainer}>
                     <Image source={localAssets.lock} style={styles.passwordIcon} />
-                    <Text style={styles.title}>{strings.resetWalletPassword}</Text>
+                    <Text style={styles.enterPasswordtitle}>{strings.resetWalletPassword}</Text>
                     <Text style={[styles.description, { lineHeight: Responsive.size22 }]}>{strings.enterCurrentPassword}</Text>
 
                     <CustomTextInput
@@ -86,12 +98,11 @@ const VerifyPassword = () => {
                         passwordIconVisible={localAssets.eye}
                         passwordIconHidden={localAssets.eyeoff}
                         style={styles.input} />
-                    <Text style={[styles.passwordError, { color: error === strings.strongPassword ? 'green' : 'red' }]}>
-                        {error}
-                    </Text>
-                    <Text style={styles.passwordError}>{feedback}</Text>
+                     {error !== strings.strongPassword && <Text style={styles.passwordError}>{strings.passwordValidationMessage}</Text>}
+                    {/* <Text style={styles.passwordError}>{feedback}</Text> */}
                 </View>
-            </View>
+                </View>
+            </ScrollView>
 
             {!isKeyboardVisible && (
                 <View style={styles.buttonContainer}>
@@ -106,7 +117,7 @@ const VerifyPassword = () => {
                     />
                 </View>
             )}
-        </View>
+        </KeyboardAvoidingView>
     );
 };
 export default VerifyPassword;
