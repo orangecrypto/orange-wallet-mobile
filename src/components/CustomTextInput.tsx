@@ -1,10 +1,12 @@
 import { Responsive } from '@utils/Responsive';
 import { Color } from '@values/color';
+import { Fonts } from '@values/fonts';
 import React, { useState } from 'react';
-import { TextInput, View, TouchableOpacity, StyleSheet, Text, FlatList, Image } from 'react-native';
+import { TextInput, View, TouchableOpacity, StyleSheet, Text, FlatList, Image, Platform } from 'react-native';
 
 const CustomTextInput = ({
   placeholder,
+  editable,
   value,
   onChangeText,
   secureTextEntry = false,
@@ -51,11 +53,13 @@ const CustomTextInput = ({
           placeholder={placeholder}
           placeholderTextColor={Color.nftcategoryText}
           value={value}
+          editable={editable}
           onChangeText={onChangeText}
           secureTextEntry={isSecure}
           keyboardType={keyboardType}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
+          selectionColor={Color.orangeButton}
         />
 
         {showPasswordToggle && (
@@ -134,7 +138,12 @@ const styles = StyleSheet.create({
   textInput: {
     flex: 1,
     color: Color.white,
-    fontSize: Responsive.size16,
+    fontSize: Responsive.size18,
+    fontFamily: Fonts.semibold,
+    paddingHorizontal: Responsive.size10,
+    paddingVertical: 0,
+    textAlignVertical: 'center',
+    lineHeight: Responsive.size18, 
   },
   icon: {
     width: Responsive.size24,
@@ -170,11 +179,14 @@ const styles = StyleSheet.create({
     overflow: 'hidden', 
   },
   dropdownItem: {
-    padding: Responsive.size10,
+    padding: Responsive.size12,
+    borderBottomWidth: Responsive.size2,
+    borderBottomColor: Color.backbackgroundbg
   },
   dropdownItemText: {
     color: Color.white,
-    fontSize: Responsive.size16,
+    fontSize: Responsive.size14,
+    fontFamily: Fonts.regular
   },
   rightTextsContainer: {
     flexDirection: 'column',

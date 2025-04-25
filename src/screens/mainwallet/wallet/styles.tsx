@@ -25,6 +25,7 @@ export const styles = StyleSheet.create({
     flatList: {
         marginTop: Responsive.size10,
         alignContent:'center',
+        height:'auto'
     },
     contentContainer: {
         justifyContent: 'center',
@@ -63,7 +64,7 @@ export const styles = StyleSheet.create({
     },
 
     transactionContainer: {
-        marginTop: Responsive.size15,
+        marginTop: Responsive.size20,
         justifyContent: 'flex-start',
         alignItems: 'center',
         paddingHorizontal: Responsive.size20,
@@ -146,12 +147,10 @@ export const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        borderWidth: Responsive.size1,
-        borderColor: Color.transactionListBackground,
-        backgroundColor:Color.black,
-        borderRadius: Responsive.size5,
         paddingHorizontal: Responsive.size6,
-        paddingVertical: Responsive.size4
+        paddingVertical: Responsive.size8,
+        borderBottomColor: Color.seedPhraseItemBackground,
+        borderBottomWidth: Responsive.size1
     },
 
     headerTitle:{
@@ -206,19 +205,21 @@ export const styles = StyleSheet.create({
         width: Responsive.size32
     },
     walletBackground: {
-      width: Dimensions.get('window').width - Responsive.size20, // Adjust width for spacing
-    marginHorizontal: Responsive.size10, // Adds space between cards
+    width: Dimensions.get('window').width - Responsive.size20, 
+    marginHorizontal: Responsive.size10, 
     overflow: 'hidden',
+    backgroundColor:'red',
     borderRadius: Responsive.size12,
         
     },
     walletCardBackground:{
         padding : Responsive.size24,
-        borderRadius: Responsive.size12
+        borderRadius: Responsive.size12,
+        height: Responsive.size180
     },
     
     walletText: {
-        fontSize: Responsive.size22,
+        fontSize: Responsive.size32,
         color: Color.white,
         fontFamily: Fonts.semibold,
         textAlign:'right'
@@ -233,10 +234,12 @@ export const styles = StyleSheet.create({
     walletTextCurrencyView: {
         backgroundColor: Color.viewbutton,
         borderRadius: Responsive.size20,
-        fontFamily: Fonts.regular,
-        fontSize: Responsive.size9,
+        fontFamily: Fonts.semibold,
+        fontSize: Responsive.size12,
         color: Color.white,
-        padding: Responsive.size4,
+        paddingVertical: Responsive.size4,
+        paddingHorizontal: Responsive.size8,
+        textAlign:'center',
         marginLeft: Responsive.size10,
     },
 
@@ -256,11 +259,11 @@ export const styles = StyleSheet.create({
         alignContent: 'center',
         alignItems:'center',
         justifyContent: 'center',
-        paddingVertical: Responsive.size10,
+        paddingVertical: Responsive.size12,
         width: Responsive.size147,
         flexDirection: 'row',
         alignSelf: 'center',
-        marginTop: Responsive.size15,
+        marginTop: Platform.OS === 'ios'? Responsive.size30 : Responsive.size24,
     },
 
     addCoinIcon: {
@@ -277,7 +280,7 @@ export const styles = StyleSheet.create({
 
     horizontalActions :{
         flexDirection:'row',
-        marginTop:Responsive.size12,
+        marginTop: Platform.OS === 'ios'? Responsive.size30 : Responsive.size20,
         alignContent:'center',
         paddingHorizontal: Responsive.size10,
         justifyContent:'center',
@@ -325,5 +328,10 @@ export const styles = StyleSheet.create({
         width: '100%',
         borderRadius: 10,
         marginBottom: 10,
+      },
+      lineSaperator:{
+        backgroundColor: Color.red,
+        height: Responsive.size1,
+        marginVertical: Responsive.size10
       },
 });

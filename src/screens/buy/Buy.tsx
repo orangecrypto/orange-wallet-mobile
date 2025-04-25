@@ -69,6 +69,7 @@ const Buy = ({ route }) => {
                 <Text style={styles.title}>{strings.buy}</Text>
                 <Text style={styles.description}>{strings.buyMessage}</Text>
                 <FlatList
+                    style={{marginTop: Responsive.size25}}
                     data={gatewayArray}
                     keyExtractor={(item) => item.id.toString()}
                     renderItem={renderItem} />

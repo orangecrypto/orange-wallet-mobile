@@ -1,16 +1,18 @@
-import Loader from '@components/Loader';
 import useBtcClient from '@hooks/useBtcClient';
 import useRunesApi from '@hooks/useRunesApi';
 import useSelectedNetwork from '@hooks/useSelectedNetwork';
 import useStxData from '@hooks/useStxData';
 import { getFtData, getOrdinalsFtBalance, HIRO_MAINNET_DEFAULT, StacksMainnet } from '@orangecryptohq/orangeseed';
+import { resetCoinNames, setAddCoinSettings } from '@redux/slice/CoinSettings';
 import { setHeaderAddress, setTokenList } from '@redux/slice/WalletReducer';
 import { store, useAppDispatch } from "@redux/store";
 import { Dispatch } from '@reduxjs/toolkit';
 import { strings } from '@strings/i18n';
 import { Responsive } from '@utils/Responsive';
+import { Color } from '@values/color';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Dimensions, ScrollView, Text, View, RefreshControl } from "react-native";
+import { Dimensions, RefreshControl, ScrollView, Text, View } from "react-native";
+import { useSelector } from 'react-redux';
 import { styles } from './styles';
 import categoryItem from './walletcomponents/CategoryItem';
 import ProgressBar from './walletcomponents/ProgressBar';
@@ -20,11 +22,10 @@ import TransactionList from './walletcomponents/TransactionList';
 import WalletSlider from './walletcomponents/WalletSlider';
 import { createTokenArray, getCardItems, updateCoinSettingList } from './walletutils/TokenUtils';
 import { fetchTransactions } from './walletutils/Transactions';
-import { useSelector } from 'react-redux';
-import { clearCoinSettings, resetCoinNames, setAddCoinSettings, updateCoinStatus } from '@redux/slice/CoinSettings';
+import { useIsFocused } from '@react-navigation/native';
 
 const Wallet = () => {
-
+    const isFocused = useIsFocused();
     const limit = 10;
     const [isResetting, setIsResetting] = useState(false);
     const [pageNumber, setPageNumber] = useState(0);
@@ -53,7 +54,7 @@ const Wallet = () => {
     const namesToAlwaysShow = ["Bitcoin", "Orange", "Stacks"];
     const visibleItems = cryptoArray.filter(item => {
         if (namesToAlwaysShow.includes(item.name)) {
-            return true; 
+            return true;
         }
         const coinSetting = coinSettings.find(setting => setting.name === item.name);
         return coinSetting ? coinSetting.visible : false;
@@ -81,7 +82,7 @@ const Wallet = () => {
 
     const onRefresh = async () => {
 
-        console.log('onRefresh','call')
+        console.log('onRefresh', 'call')
         setRefreshing(true);
         await getBalance([
             { id: 2, category: "BTC", name: "Bitcoin" },
@@ -108,9 +109,9 @@ const Wallet = () => {
         const [btcRes, brc20Res, runesRes, stacksRes] = await Promise.allSettled([
             btcClient.getBalance(bitcoinAddress),
             getOrdinalsFtBalance(store.getState().appReducer.network?.type, ordinalsAddress),
-          // getOrdinalsFtBalance(store.getState().appReducer.network?.type, 'bc1pk8g4rztfkxs2q9c40g6keeknjw6aadx3kzu4suzlll0remfw7xxs5x9ctv'),
-           runesApi.getRuneFungibleTokens(ordinalsAddress),
-         //  runesApi.getRuneFungibleTokens('bc1pk8g4rztfkxs2q9c40g6keeknjw6aadx3kzu4suzlll0remfw7xxs5x9ctv'),
+            // getOrdinalsFtBalance(store.getState().appReducer.network?.type, 'bc1pk8g4rztfkxs2q9c40g6keeknjw6aadx3kzu4suzlll0remfw7xxs5x9ctv'),
+            runesApi.getRuneFungibleTokens(ordinalsAddress),
+            //  runesApi.getRuneFungibleTokens('bc1pk8g4rztfkxs2q9c40g6keeknjw6aadx3kzu4suzlll0remfw7xxs5x9ctv'),
             getFtData(stxAddress, stackNetwork),
         ]);
 
@@ -130,9 +131,9 @@ const Wallet = () => {
         setBtcPrice(btcPrice);
         setStxPrice(stxPrice);
         console.log('updateTokenArray newCryptoArray', newCryptoArray)
-       
+
         setIsResetting(true); // Set flag before dispatching
-        await dispatch(resetCoinNames()); 
+        await dispatch(resetCoinNames());
         dispatch(setTokenList(newCryptoArray));
     };
 
@@ -151,20 +152,21 @@ const Wallet = () => {
             !coinSettings.some(existingCoin => existingCoin.name === newCoin.name)
         );
         dispatch(setAddCoinSettings(finalSettingsList));
-        
+
     };
 
     useEffect(() => {
         setIsLoading(true)
         if (data) {
             getBalance()
-            console.log('useEffect ', JSON.stringify(data) +'stx data')
+            console.log('useEffect ', JSON.stringify(data) + 'stx data')
         }
     }, [data])
 
     const categories = ["All", "BRC20", "Runes", "Stacks"];
 
     const handleScroll = async (event) => {
+        if (!isFocused) return;
         setIsLoading(true);
         const screenWidth = Dimensions.get("window").width;
         const currentIndex = Math.round(event.nativeEvent.contentOffset.x / screenWidth);
@@ -183,8 +185,26 @@ const Wallet = () => {
         setTransaction(prev => [...prev, ...newTransactions]);
         setPageNumber(prev => prev + 10);
         setIsLoading(false);
+
+        const address = await setHeaderAddressByProtocol(token.protocol);
+        if (address) {
+          dispatch(setHeaderAddress(address));
+        }
     };
 
+
+
+    const setHeaderAddressByProtocol = async (protocol: string): string | undefined => {
+        console.log('setHeaderAddressByProtocol',  `protocol ${protocol}`)
+        if (protocol === 'runes' || protocol === 'brc-20') {
+          return account?.ordinalsAddress;
+        } else if (protocol === 'stacks') {
+          return account?.stxAddress;
+        } else if (protocol === 'btc'  || protocol === 'all') {
+          return account?.btcAddress;
+        }
+        return account?.btcAddress;
+      };
     const filteredCryptoArray = selectedCategory === "All"
         ? cryptoArray
         : cryptoArray.filter((item) => item.category === selectedCategory);
@@ -214,10 +234,10 @@ const Wallet = () => {
     const renderItem = useCallback(({ item }) => (
         <RenderCardItem item={item} selectedItem={memoizedSelectedItem} loader={isLoading} />
     ), [memoizedSelectedItem, isLoading]);
-    
+
     const totalSteps = getCardItems(visibleItems).length;
     const progressPercentage =
-    totalSteps > 1 ? ((currentStep - 1) / (totalSteps - 1)) * 100 : 0;
+        totalSteps > 1 ? ((currentStep - 1) / (totalSteps - 1)) * 100 : 0;
 
     const getTransactions = async () => {
         if (isLoading || !isMoreAvailable) return;
@@ -250,43 +270,58 @@ const Wallet = () => {
                     cryptoArray={cryptoArray}
                     flatListRef={flatListRef}
                     handleScroll={handleScroll}
-                    renderItem={renderItem}/>
+                    renderItem={renderItem} />
 
                 <ProgressBar progressPercentage={progressPercentage} />
             </View>
 
-            {transactionProtocol === 'all' ? (
-                <View style={styles.contentArea}>
-                    <View style={styles.categoryContainer}>
-                        {categories.map((category) => categoryItem(category, selectedCategory, handlecategoryChange))}
+            {!isLoading ? (
+                transactionProtocol === 'all' ? (
+                    <View style={styles.contentArea}>
+                        <View style={styles.categoryContainer}>
+                            {categories.map((category) =>
+                                categoryItem(category, selectedCategory, handlecategoryChange)
+                            )}
+                        </View>
+                        <View
+                            style={[
+                                styles.headerTitleContainer,
+                                { backgroundColor: Color.black },
+                            ]}
+                        >
+                            <Text style={styles.assetsTitle}>{strings.assets}</Text>
+                            <Text style={styles.assetsTitle}>{strings.quantity}</Text>
+                        </View>
+                        <TokenList
+                            filteredCryptoArray={filteredCryptoArray}
+                            selectedItem={selectedItem}
+                            handleItemClick={handleItemClick}
+                        />
                     </View>
-                    <View style={styles.headerTitleContainer}>
-                        <Text style={styles.assetsTitle}>{strings.assets}</Text>
-                        <Text style={styles.assetsTitle}>{strings.quantity}</Text>
+                ) : (
+                    <View style={[styles.transactionContainer, { height: 400 }]}>
+                        <View style={styles.headerTitleContainer}>
+                            <Text style={styles.transactionTitle}>
+                                {`${transactionProtocol} ${strings.transactions}`}
+                            </Text>
+                         
+                        </View>
+                        
+                        
+                        <TransactionList
+                            transaction={transaction}
+                            isLoading={isLoading || refreshing}
+                            selectedToken={selectedToken}
+                            limit={limit}
+                            fetchTransactions={getTransactions}
+                            walletContext={walletContext}
+                            handleTransactionClick={handleTransactionClick}
+                        />
                     </View>
-                    <TokenList
-                        filteredCryptoArray={filteredCryptoArray}
-                        selectedItem={selectedItem}
-                        handleItemClick={handleItemClick}
-                    />
-                </View>
-            ) : (
-                <View style={[styles.transactionContainer, { height: 400 }]}>
-                    <View style={styles.headerTitleContainer}>
-                        <Text style={styles.transactionTitle}>{`${transactionProtocol + ' ' + strings.transactions}`}</Text>
-                    </View>
+                )
+            ) : null}
 
-                    <TransactionList
-                        transaction={transaction}
-                        isLoading={isLoading || refreshing}
-                        selectedToken={selectedToken}
-                        limit={limit}
-                        fetchTransactions={getTransactions}
-                        walletContext={walletContext}
-                        handleTransactionClick={handleTransactionClick}
-                    />
-                </View>
-            )}
+
         </ScrollView>
     );
 };

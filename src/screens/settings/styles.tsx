@@ -29,9 +29,17 @@ export const styles = StyleSheet.create({
         justifyContent: "flex-start",
         paddingHorizontal: Responsive.size18,
     },
+    cmsContainer: {
+        flex: 1,
+        justifyContent: "flex-start",
+        backgroundColor: Color.black
+      
+    },
+
     button: {
         backgroundColor: Color.backbackgroundbg,
         width: Responsive.size70,
+        height: Responsive.size40,
         justifyContent: "center",
         alignItems: "center",
         padding: Responsive.size10,
@@ -40,8 +48,23 @@ export const styles = StyleSheet.create({
     },
     buttonText: {
         color: Color.white,
-        fontSize: Responsive.size16,
-        fontFamily: Fonts.regular,
+        fontSize: Responsive.size14,
+        fontFamily: Fonts.semibold,
+    },
+    cmsButton: {
+        backgroundColor: Color.backbackgroundbg,
+        width: Responsive.size70,
+        height: Responsive.size40,
+        justifyContent: "center",
+        alignItems: "center",
+        padding: Responsive.size10,
+        borderRadius: Responsive.size8,
+      
+    },
+    cmsButtonText: {
+        color: Color.white,
+        fontSize: Responsive.size14,
+        fontFamily: Fonts.semibold,
     },
     title: {
         color: Color.orangeButton,
@@ -71,11 +94,14 @@ export const styles = StyleSheet.create({
     item: {
         flexDirection: "row",
         padding: Responsive.size16,
+        height: Responsive.size56,
         backgroundColor: Color.listBordercolor,
-        borderRadius: Responsive.size10,
+        borderRadius: Responsive.size12,
         marginVertical: Responsive.size10,
         justifyContent: "space-between",
-        borderWidth: Responsive.size2,
+        alignContent:'center',
+        alignItems:'center',
+        borderWidth: Responsive.size1,
         borderColor: Color.borderLineSeedphrase,
     },
     assetItem: {
@@ -85,12 +111,14 @@ export const styles = StyleSheet.create({
         backgroundColor: Color.listBordercolor,
         borderRadius: Responsive.size10,
         justifyContent: "space-between",
+        alignContent:'center',
+        alignItems:'center',
         borderWidth: Responsive.size2,
         borderColor: Color.borderLineSeedphrase,
     },
     text: {
         fontSize: Responsive.size18,
-        fontFamily: Fonts.regular,
+        fontFamily: Fonts.semibold,
         color: Color.white,
     },
     loader: {
@@ -129,8 +157,16 @@ export const styles = StyleSheet.create({
         padding: Responsive.size18
     },
     switchContainer: {
-        justifyContent: 'flex-end',
-        padding: Responsive.size18
+        flexDirection:'row',
+        padding: Responsive.size18,
+        alignContent:'center',
+        alignItems:'center'
+    },
+    switchText: {
+        color: Color.white,
+        fontSize: Responsive.size14,
+        fontFamily: Fonts.regular,
+        marginLeft: Responsive.size10
     },
     itemContainer: {
         flex: 1,

@@ -5,11 +5,12 @@ import { strings } from "@strings/i18n";
 import { Responsive } from "@utils/Responsive";
 import { Color } from "@values/color";
 import React, { useState } from "react";
-import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
+import { FlatList, Image, Platform, Text, TouchableOpacity, View } from "react-native";
 import { styles } from "./styles";
 import { localAssets } from "@assets/assets";
 import { store } from '@redux/store';
 import Clipboard from "@react-native-clipboard/clipboard";
+import Toast from "react-native-toast-message";
 
 const Receive = () => {
 
@@ -21,11 +22,20 @@ const Receive = () => {
 
     ]);
 
+     const handleCopyPress = (address) => {
+            Clipboard.setString(address)
+            Platform.OS === 'ios' &&
+                Toast.show({
+                    type: 'success',
+                    text1: strings.copiedMessage,
+                });
+        };
+
     const renderItem = ({ item }) => (
         <View style={styles.item}>
             <Text style={styles.text} numberOfLines={1}>{item.name}</Text>
             <View style={styles.rightItemContainer}>
-                <TouchableOpacity  style={styles.rightItemIconContaner} onPress={()=>{ Clipboard.setString(item?.address)}}>
+                <TouchableOpacity  style={styles.rightItemIconContaner} onPress={()=>{ handleCopyPress(item?.address)}}>
                 <Image style={styles.rightItemIcon} source={localAssets.copy} />
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.rightItemIconContaner} onPress={()=>{push(RouteType.VIEWQR,{ item : item})}}>
@@ -52,7 +62,7 @@ const Receive = () => {
             <View style={styles.buttonContainer}>
                 <CommonButton
                     title={strings.close}
-                    onPress={() => resetNavigation(RouteType.HOME_SCREEN)}
+                    onPress={() => goBack()}
                     backgroundColor={Color.orangeButton}
                     textColor={Color.white}
                     width={'100%'}

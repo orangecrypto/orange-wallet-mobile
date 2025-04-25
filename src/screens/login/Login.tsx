@@ -152,6 +152,8 @@ const styles = StyleSheet.create({
         color: Color.white,
         marginTop: Responsive.size16,
         textDecorationLine: 'underline',
+        lineHeight: Responsive.size20,
+        textDecorationColor: Color.white,
         alignSelf: 'center'
     },
     passwordError: {

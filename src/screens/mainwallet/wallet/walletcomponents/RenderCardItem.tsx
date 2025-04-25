@@ -18,6 +18,7 @@ import {
     ANIMATION_DIRECTION,
 } from 'react-native-skaleton-kit';
 import { Color } from '@values/color';
+import { signMessage } from '@orangecryptohq/orangeseed';
 const RenderCardItem = ({ item, selectedItem, loader }) => {
     const account = store.getState().appReducer.selectedAccount
     const { bitcoinAddress } = useBtcClient();
@@ -47,6 +48,8 @@ const RenderCardItem = ({ item, selectedItem, loader }) => {
 
 
     const openSale = async () => {
+
+        console.log('openSale ', item)
         const getWebURL = await getTanStackUrl()
         console.log("Opening Tanstack Gateway", getWebURL);
         try {
@@ -59,18 +62,45 @@ const RenderCardItem = ({ item, selectedItem, loader }) => {
 
     const handleReceive = async (item) => {
         console.log('handleReceive', item);
-
-        const addressMap = {
-            Bitcoin: account?.btcAddress,
-            'brc-20': account?.ordinalsAddress,
-            runes: account?.ordinalsAddress,
-            stacks: account?.stxAddress,
+    
+        let receiveItem = {
+            address: '',
+            name: '',
         };
-
-        const receiveItem = { address: addressMap[item.name] || addressMap[item.protocol] };
-
+    
+        switch (item.protocol) {
+            case 'brc-20':
+            case 'runes':
+                receiveItem = {
+                    address: account?.ordinalsAddress,
+                    name: 'Ordinals, RUNES and BRC20',
+                };
+                break;
+    
+            case 'btc':
+                receiveItem = {
+                    address: account?.btcAddress,
+                    name: 'Bitcoin',
+                };
+                break;
+    
+            case 'stacks':
+                receiveItem = {
+                    address: account?.stxAddress,
+                    name: 'Stacks and SIP-10',
+                };
+                break;
+    
+            default:
+                console.warn('Unknown protocol:', item.protocol);
+                break;
+        }
+    
         push(RouteType.VIEWQR, { item: receiveItem });
     };
+    
+
+    
     return (
         <View style={styles.walletBackground}>
             <ImageBackground
@@ -147,10 +177,19 @@ const RenderCardItem = ({ item, selectedItem, loader }) => {
                             </TouchableOpacity>}
 
 
-                        {item.name === 'Bitcoin' && network.type === 'Mainnet' &&
-                            <TouchableOpacity style={styles.actionButtonBg} onPress={() => openSale()} disabled={item.balance === '0'}>
+                        {item.name === 'Bitcoin' && network.type === 'Mainnet' && item.balance !== '0' && (
+                            <TouchableOpacity style={styles.actionButtonBg} onPress={openSale}>
                                 <Image source={localAssets.sell} style={styles.actionButtonIcon} />
-                            </TouchableOpacity>}
+                            </TouchableOpacity>
+                        )}
+                        {/* {item.name === 'Bitcoin' && network.type === 'Mainnet' &&
+                            <TouchableOpacity style={styles.actionButtonBg} onPress={() => push(RouteType.BORROW, { tokenDetails: selectedItem })}>
+                                <Image source={localAssets.borrow} style={styles.actionButtonIcon} />
+                            </TouchableOpacity>} */}
+                            {/* {item.name === 'Bitcoin' && network.type === 'Mainnet' &&
+                            <TouchableOpacity style={styles.actionButtonBg} onPress={() => push(RouteType.SWAP, { tokenDetails: selectedItem })}>
+                                <Image source={localAssets.borrow} style={styles.actionButtonIcon} />
+                            </TouchableOpacity>} */}
                     </View>
                     :
                     <TouchableOpacity style={styles.addCoinView} onPress={() => push(RouteType.ADDCOIN)}>

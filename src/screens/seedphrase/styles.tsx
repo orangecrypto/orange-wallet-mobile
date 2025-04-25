@@ -85,6 +85,7 @@ export const styles = StyleSheet.create({
     button: {
         backgroundColor: Color.backbackgroundbg,
         width: Responsive.size70,
+        height: Responsive.size40,
         justifyContent: "center",
         alignItems: "center",
         padding: Responsive.size10,
@@ -92,8 +93,8 @@ export const styles = StyleSheet.create({
     },
     buttonText: {
         color: Color.white,
-        fontSize: Responsive.size16,
-        fontFamily: Fonts.regular
+        fontSize: Responsive.size14,
+        fontFamily: Fonts.semibold
     },
     backImage:{
         height: Responsive.size18,

@@ -1,5 +1,6 @@
 import { Responsive } from "@utils/Responsive";
 import { Color } from "@values/color";
+import { Fonts } from "@values/fonts";
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
@@ -30,7 +31,8 @@ export const styles = StyleSheet.create({
     headerText: {
         fontSize: Responsive.size20,
         color: Color.white,
-        width: Responsive.size170
+        width: Responsive.size170,
+        fontFamily: Fonts.regular
     },
     headerClickableText: {
         padding: Responsive.size2

@@ -8,7 +8,7 @@ import { push } from "@routes/Navigator";
 import { RouteType } from "@routes/RouteType";
 import { Fonts } from '@values/fonts';
 import useSeedVault from '@hooks/useSeedVault';
-
+import DeviceInfo from 'react-native-device-info';
 const HomeScreen = () => {
 
     const { clearVaultStorage } = useSeedVault()
@@ -18,7 +18,7 @@ const HomeScreen = () => {
             <Image source={localAssets.pill} style={styles.topIcon} />
             <Text style={styles.topText}>{strings.orangeWallet}</Text>
             <View style={styles.versionView}>
-                <Text style={styles.versionText}>{strings.versionName}</Text>
+                <Text style={styles.versionText}>{`${strings.versionName} ${DeviceInfo.getVersion()}`}</Text>
             </View>
             <View style={styles.buttonContainer}>
                 <CommonButton

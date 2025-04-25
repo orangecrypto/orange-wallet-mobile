@@ -31,6 +31,7 @@ const Market = () => {
   const [selectedItem, setSelectedItem] = useState(null);
 
   console.log('Market', error)
+  console.log('Market', `assetList ${JSON.stringify(assetList)}`)
   useEffect(() => {
     if (!isLoading && assetList) {
       setSelectedItem(assetList[0]);
@@ -53,11 +54,11 @@ const Market = () => {
           id: 1,
           name: 'Market Cap',
           value: selectedItem?.market_cap
-            ? `$ ${selectedItem.market_cap.toFixed(2)}`
+            ? `$ ${selectedItem.market_cap}`
             : '$ 0',
           data: graphData.chart || [],
           percent: selectedItem?.percent_change_1h
-            ? `${selectedItem.percent_change_1h.toFixed(2)}%`
+            ? `${selectedItem.percent_change_1h}%`
             : '0%',
         },
         {
@@ -123,7 +124,7 @@ const Market = () => {
         onScroll={handleScroll}
         renderItem={({ item }) => (
           <View style={{ width: screenWidth }}>
-            <GraphSliderItem data={item} loading = {loadingMarketData}/>
+            <GraphSliderItem data={item} loading={loadingMarketData} />
           </View>
         )}
         showsHorizontalScrollIndicator={false}
@@ -156,9 +157,9 @@ const Market = () => {
         </View>
 
         <FlatList
-          data={filteredCoinsArray}
+          data={(filteredCoinsArray || []).filter(item => item?.market_cap !== null)}
           keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => <RenderAssets item={item} selectedItem={selectedItem} handleItemClick={handleItemClick} />}
+          renderItem={({ item }) => <RenderAssets item={item} selectedItem={selectedItem} handleItemClick={handleItemClick} clickDisable={loadingMarketData} />}
           contentContainerStyle={styles.listContainer} />
       </View>
     </View>

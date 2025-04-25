@@ -182,21 +182,7 @@ export const createTokenArray = async (
         })),
     ];
 
-    console.log('createTokenArray', `brc20Tokens ${JSON.stringify(brc20Tokens)}`)
-
-    
-    
-    console.log('createTokenArray', `updatedCryptoArray ${JSON.stringify(updatedCryptoArray)}`)
-    console.log('createTokenArray', `userTokens ${JSON.stringify(userTokens)}`)
-    console.log('createTokenArray', `addParnterTokens ${JSON.stringify(addParnterTokens)}`)
-   
-    
-
-
     let finalCryptoArray = [...updatedCryptoArray,...userTokens,...addParnterTokens];
-
-
-
     console.log('createTokenArray', `finalCryptoArray ${JSON.stringify(finalCryptoArray)}`)
     // Fetch missing token fiat rates & icons in parallel
     const newCryptoArray = await Promise.all(

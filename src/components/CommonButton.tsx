@@ -52,7 +52,7 @@ const CommonButton: React.FC<CommonButtonProps> = ({
 const styles = StyleSheet.create({
   button: {
     paddingVertical: 14,
-    borderRadius: 8,
+    borderRadius: Responsive.size12,
     alignItems: 'center',
     justifyContent: 'center',
     marginVertical: 10,

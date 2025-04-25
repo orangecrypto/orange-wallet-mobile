@@ -32,6 +32,7 @@ export const styles = StyleSheet.create({
     button: {
         backgroundColor: Color.backbackgroundbg,
         width: Responsive.size70,
+        height: Responsive.size40,
         justifyContent: "center",
         alignItems: "center",
         padding: Responsive.size10,
@@ -40,7 +41,7 @@ export const styles = StyleSheet.create({
     buttonText: {
         color: Color.white,
         fontSize: Responsive.size16,
-        fontFamily: Fonts.regular,
+        fontFamily: Fonts.semibold,
     },
     title: {
         color: Color.orangeButton,
@@ -63,12 +64,14 @@ export const styles = StyleSheet.create({
     },
     item: {
         flexDirection: "row",
-        padding: Responsive.size16,
+        padding: Responsive.size18,
         backgroundColor: Color.listBordercolor,
-        borderRadius: Responsive.size10,
+        borderRadius: Responsive.size12,
         marginVertical: Responsive.size10,
         justifyContent: "space-between",
-        borderWidth: Responsive.size2,
+        alignContent:'center',
+        alignItems:'center',
+        borderWidth: Responsive.size1,
         borderColor: Color.borderLineSeedphrase,
 
     },
@@ -203,14 +206,14 @@ export const styles = StyleSheet.create({
     },
     warningText: {
         fontFamily: Fonts.semibold,
-        fontSize: Responsive.size12,
+        fontSize: Responsive.size14,
         color: Color.orangeButton,
         margin: Responsive.size18,
-        lineHeight: Responsive.size14
+        lineHeight: Responsive.size16
     },
     warningMessage: {
-        fontFamily: Fonts.regular,
-        fontSize: Responsive.size12,
+        fontFamily: Fonts.semibold,
+        fontSize: Responsive.size14,
         color: Color.nftcategoryText
     },
     sendingHeader: {
@@ -243,15 +246,23 @@ export const styles = StyleSheet.create({
         color: Color.erroryellow,
         width: Responsive.size230
     },
-    balanceText: {
+    balanceContainer: {
+        height: Responsive.size25, 
+        justifyContent: 'center', 
+        alignItems: 'center',    
         borderRadius: Responsive.size5,
         borderWidth: Responsive.size1,
         borderColor: Color.borderLineSeedphrase,
         backgroundColor: Color.listBordercolor,
+        padding: Responsive.size4,
+      },
+      
+      balanceText: {
         fontSize: Responsive.size12,
         color: Color.white,
-        padding: Responsive.size4
-    },
+        textAlign: 'center', 
+      },
+      
     rightFeestext1: {
         fontFamily: Fonts.regular,
         fontSize: Responsive.size12,
@@ -358,13 +369,14 @@ export const styles = StyleSheet.create({
     },
     transactionItem: {
         flexDirection: "row",
-        padding: Responsive.size10,
+        padding: Responsive.size8,
         backgroundColor: Color.listBordercolor,
-        borderRadius: Responsive.size10,
+        borderRadius: Responsive.size12,
         marginTop: Responsive.size18,
         alignContent: 'center',
+        alignItems:'center',
         justifyContent: 'space-between',
-        borderWidth: Responsive.size2,
+        borderWidth: Responsive.size1,
         borderColor: Color.borderLineSeedphrase,
     },
     transactionTitleContainer: {

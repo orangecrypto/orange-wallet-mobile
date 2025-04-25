@@ -50,9 +50,11 @@ const ForgotPassword = () => {
             <View style={styles.switchContainer}>
                 <Switch
                     isEnable={isSwitchEnabled}
-                    height={Responsive.size35}
-                    width={Responsive.size70}
+                    height={Responsive.size30}
+                    width={Responsive.size60}
                     onToggle={handleToggle} />
+
+                    <Text numberOfLines={1} style={styles.switchText}>{strings.ConfirmBackupText}</Text>
             </View>
             <View style={styles.buttonContainer}>
                 <CommonButton
@@ -81,6 +83,7 @@ const styles = StyleSheet.create({
     button: {
         backgroundColor: Color.backbackgroundbg,
         width: Responsive.size70,
+        height: Responsive.size40,
         justifyContent: "center",
         alignItems: "center",
         padding: Responsive.size10,
@@ -89,8 +92,8 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         color: Color.white,
-        fontSize: Responsive.size16,
-        fontFamily: Fonts.regular
+        fontSize: Responsive.size14,
+        fontFamily: Fonts.semibold
     },
     title: {
         color: Color.orangeButton,
@@ -102,12 +105,20 @@ const styles = StyleSheet.create({
         color: Color.white,
         fontSize: Responsive.size18,
         fontFamily: Fonts.regular,
-        lineHeight: Responsive.size20,
-        marginTop: Responsive.size10
+        lineHeight: Responsive.size22,
+        marginTop: Responsive.size12
     },
     switchContainer: {
-        justifyContent: 'flex-end',
-        padding: Responsive.size18
+        flexDirection:'row',
+        padding: Responsive.size18,
+        alignContent:'center',
+        alignItems:'center'
+    },
+    switchText: {
+        color: Color.white,
+        fontSize: Responsive.size14,
+        fontFamily: Fonts.regular,
+        marginLeft: Responsive.size10
     },
     buttonContainer: {
         justifyContent: 'flex-end',

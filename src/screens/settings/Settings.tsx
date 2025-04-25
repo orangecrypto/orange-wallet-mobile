@@ -6,13 +6,15 @@ import React, { useCallback, useState } from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import SettingsItem from "./SettingsItem";
 import { styles } from "./styles";
-
+import DeviceInfo from 'react-native-device-info';
 const Settings = () => {
     const [settingsArray, setSettingsArray] = useState([]);
-
+    console.log('Settings', DeviceInfo.getVersion())
     const loadSettings = () => {
+
+      
         setSettingsArray([
-            { id: 1, name: "Version", value: "1.1.7" },
+            { id: 1, name: "Version", value: `${DeviceInfo.getVersion()}` },
             { id: 2, name: "Network", value: store.getState().appReducer.network?.type },
             { id: 3, name: "Currency", value: store.getState().appReducer.currency.type},
             { id: 5, name: "Update Password", value: "" },

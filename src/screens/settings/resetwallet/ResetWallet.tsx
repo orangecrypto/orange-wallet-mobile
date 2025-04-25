@@ -18,7 +18,7 @@ const ResetWallet = () => {
         setIsSwitchEnabled((prev) => !prev);
     };
 
-   
+
 
     return (
         <View style={styles.container}>
@@ -31,16 +31,18 @@ const ResetWallet = () => {
 
             </View>
             <View style={styles.switchContainer}>
-            <Switch
-                isEnable={isSwitchEnabled}
-                height={Responsive.size35}
-                width={Responsive.size70}
-                onToggle={handleToggle}/>
-                </View>
+                <Switch
+                    isEnable={isSwitchEnabled}
+                    height={Responsive.size30}
+                    width={Responsive.size60}
+                    onToggle={handleToggle} />
+
+                <Text numberOfLines={1} style={styles.switchText}>{strings.iUnderstand}</Text>
+            </View>
             <View style={styles.buttonContainer}>
                 <CommonButton
                     title={strings.RESETWALLET}
-                    onPress={() =>push(RouteType.RESETWALLETPASSWORD) }
+                    onPress={() => push(RouteType.RESETWALLETPASSWORD)}
                     backgroundColor={Color.orangeButton}
                     textColor={Color.white}
                     disabled={!isSwitchEnabled}
