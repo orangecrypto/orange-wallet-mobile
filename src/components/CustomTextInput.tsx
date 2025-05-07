@@ -7,6 +7,7 @@ import { TextInput, View, TouchableOpacity, StyleSheet, Text, FlatList, Image, P
 const CustomTextInput = ({
   placeholder,
   editable,
+  isDropDownClicable,
   value,
   onChangeText,
   secureTextEntry = false,
@@ -75,6 +76,7 @@ const CustomTextInput = ({
           <TouchableOpacity
             style={styles.dropdownContainer}
             onPress={() => setShowDropdown(!showDropdown)}
+            disabled={isDropDownClicable}
           >
             <Text style={styles.dropdownText}>{selectedDropdownValue}</Text>
             <Image

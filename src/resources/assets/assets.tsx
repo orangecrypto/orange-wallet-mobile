@@ -157,6 +157,9 @@ const localAssets = {
   best: require('./images/best.png'),
   swaparrows: require('./images/swaparrows.png'),
   bottomloan: require('./images/bottomloan.png'),
+  swapcard: require('./images/swapcard.png'),
+  runedex: require('./images/runedex.png'),
+  dotswap: require('./images/dotswap.png'),
   
 
 };

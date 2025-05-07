@@ -48,6 +48,7 @@ export enum RouteType {
     REVIEWSWAPTRANSACTION='ReviewSwapTransaction',
     CONFIRMSWAPTRANSACTION='ConfirmSwapTransaction',
     REPAY='Repay',
+    EDITSLIPPAGE='EditSlippage'
     
 
   }

@@ -89,6 +89,7 @@ export default {
     send:'Send',
     apply:'Apply',
     editFees:'Edit Fees',
+    editSlippage:'Edit Slippage',
     edit:'Edit',
     editFeesMessage:'A faster confirmation on the network is achieved by increasing the transaction fee.',
     editNonce:'Edit Nonce',
@@ -188,9 +189,16 @@ export default {
     warningMessageSwapDetails:'Swap transactions are irreversible.',
     warningMessageSwapTransaction:'This swap quote will expire after 30 seconds.',
     repay:'Repay',
-    repayLoan:'Repay Loan'
+    repayLoan:'Repay Loan',
     
-
+    youSend:'YOU SEND',
+    youReceive:'YOU RECEIVE',
+    slippage:'Slippage',
+    minimumReceived:'Minimum Received',
+    liquidityFees:'Liquidity Fees',
+    feeRate:'Fee Rate',
+    sponseredTx:'Sponsor TX (NO FEES)',
+    maxSlippageMessage:'maximum slippage should be'
 
 
 }   

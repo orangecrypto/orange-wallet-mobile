@@ -2,12 +2,14 @@ import { createSlice } from '@reduxjs/toolkit';
 
 export interface walletReducerType {
     headerAddress: string
-    tokenList: []
+    tokenList: [],
+    cardIndex: number,
 }
 
 const initialState: walletReducerType = {
     headerAddress: '',
-    tokenList: []
+    tokenList: [],
+    cardIndex: -1,
 };
 
 export const walletReducer = createSlice({
@@ -20,12 +22,16 @@ export const walletReducer = createSlice({
         setTokenList:(state, action) => {
             state.tokenList = action.payload
         },
+
+        setCardIndex:(state, action) => {
+            state.cardIndex = action.payload
+        },
         
         clearWalletReducer: () => initialState,
 
     },
 });
 
-export const { setHeaderAddress, setTokenList, clearWalletReducer} = walletReducer.actions;
+export const { setHeaderAddress, setTokenList,setCardIndex, clearWalletReducer} = walletReducer.actions;
 
 export default walletReducer.reducer;

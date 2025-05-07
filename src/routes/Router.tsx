@@ -49,9 +49,10 @@ import LoanStatus from '@screens/borrow/LoanStatus';
 import Swap from '@screens/swap/Swap';
 import ConfirmSwapTransaction from '@screens/swap/ConfirmSwapTransaction';
 import SwapProviders from '@screens/swap/SwapProviders';
-import SwapDetails from '@screens/swap/SwapDetails';
+import SwapDetails from '@screens/swap/swapdetails/SwapDetails';
 import ReviewTransactions from '@screens/swap/ReviewTransactions';
 import Repay from '@screens/mainwallet/loan/Repay';
+import EditSlippage from '@screens/swap/swapdetails/EditSlippage';
 
 const Stack = createNativeStackNavigator();
 
@@ -109,6 +110,7 @@ export default () => {
                 <Stack.Screen component={ReviewTransactions} name={RouteType.REVIEWSWAPTRANSACTION}/>
                 <Stack.Screen component={ConfirmSwapTransaction} name={RouteType.CONFIRMSWAPTRANSACTION}/>
                 <Stack.Screen component={Repay} name={RouteType.REPAY}/>
+                <Stack.Screen component={EditSlippage} name={RouteType.EDITSLIPPAGE}/>
             </Stack.Navigator>
         </NavigationContainer>
     );
