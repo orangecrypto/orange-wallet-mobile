@@ -10,7 +10,6 @@ import { localAssets } from "@assets/assets";
 import { appReducerType } from "@redux/slice/appReducer";
 import { useSelector } from "react-redux";
 import { useCalculateDotSwap } from "@hooks/swap/useCalculateDotSwap";
-import { useCalculateRuneDex } from "@hooks/swap/useCalculateRuneDex";
 import { getFiateValue } from "./SwapUtils";
 import TokenImage from "@components/TokenImage";
 import { SwapReducerType } from "@redux/slice/SwapReducer";
@@ -21,89 +20,139 @@ import Toast from "react-native-toast-message";
 import { useDotSwapSignedPsbt } from "@hooks/swap/useDotSwapSignedPsbt";
 import { SwapRequestBody, useGetRuneDexPsbt } from "@hooks/swap/useGetRuneDexPsbt";
 import { RouteType } from "@routes/RouteType";
+import { usePublishRuneDexTx } from "@hooks/swap/usePublishRuneDexTx";
 
 const ReviewTransactions = ({ route }) => {
-  const { selectedAccount: { ordinalsAddress, btcAddress, ordinalsPublicKey, btcPublicKey } = {}, network, accountList } = useSelector(
-    (state: { appReducer: appReducerType }) => state.appReducer
-  );
-  const { selectedProvider, exchangeToken, exchangeAmount, selectedReceiveAsset, receiveAmount } = route.params;
+  const {
+    selectedAccount: {
+      ordinalsAddress,
+      btcAddress,
+      ordinalsPublicKey,
+      btcPublicKey,
+    } = {},
+    network,
+    accountList,
+  } = useSelector((state: { appReducer: appReducerType }) => state.appReducer);
+  
   const { sllipage, liquidiumFee } = useSelector((state: { swapReducer: SwapReducerType }) => state.swapReducer);
-  const { calculateRuneDex, data, isPending, isError } = useCalculateRuneDex();
-  const { getReceiveAmount } = useCalculateDotSwap();
+  
+  const {
+    selectedProvider,
+    exchangeToken,
+    exchangeAmount,
+    selectedReceiveAsset,
+    receiveAmount,
+  } = route.params;
+  
   const [receiveFiateValue, setReceiveFiateValue] = useState(0);
   const [sendFiateValue, setSendFiateValue] = useState(0);
-
-  const { getDotSwapPsbt, loading, error, response } = useDotSwapPsbt();
-  const { sendSignedSwapPsbt, loading: signed, error: signederror, response: dotSwapSignedPsbt } = useDotSwapSignedPsbt();
-  const {  mutateAsync: getRuneDexPsbt,  isPending: RuneDexLoading, error: runeDexError, data: rundeDexResponce,} = useGetRuneDexPsbt();
+  
+  const { getReceiveAmount } = useCalculateDotSwap();
+  const { getDotSwapPsbt, loading: dotSwapLoading, error: dotSwapError, response } = useDotSwapPsbt();
+  const { sendSignedSwapPsbt, loading: signedLoading, error: signedError, response: dotSwapSignedPsbt } = useDotSwapSignedPsbt();
+  
+  const { mutateAsync: getRuneDexPsbt, isPending: runeDexLoading, error: runeDexError } = useGetRuneDexPsbt();
+  const { mutateAsync: publishRuneDexTx, data: publishRuneDexTxData, isPending: publishLoading, error: publishError } = usePublishRuneDexTx();
+  
   const handleConfirmTransaction = async () => {
-
-
-
-    if (selectedProvider.name === 'DotSwap') {
-
-
+    if (!selectedProvider?.name || !exchangeToken || !selectedReceiveAsset) return;
+  
+    try {
+      if (selectedProvider.name === 'DotSwap') {
+        await handleDotSwapTransaction();
+      } else if (selectedProvider.name === 'Runes DEX') {
+        await handleRuneDexTransaction();
+      }
+    } catch (err) {
+      console.error('Transaction Error:', err);
+    }
+  };
+  
+  const handleDotSwapTransaction = async () => {
+    try {
       const result = await getReceiveAmount({
         exchangeToken: exchangeToken?.ticker,
         receiveToken: selectedReceiveAsset?.name,
-        exchangeAmount: exchangeAmount,
+        exchangeAmount,
         address: ordinalsAddress,
       });
-
-      
+  
       const swapRequest = {
         send_amount: btcToSats(new BigNumber(exchangeAmount)),
-        send_coin_type: "btc",
+        send_coin_type: 'btc',
         send_tick: exchangeToken?.ticker,
         receive_amount: receiveAmount,
-        receive_coin_type: "runes",
+        receive_coin_type: 'runes',
         receive_tick: selectedReceiveAsset?.name,
         slipper: sllipage,
         fee_rate: liquidiumFee,
-        token:result?.token,
-        public_key: accountList[0].masterPubKey,
+        token: result?.token,
+        public_key: accountList[0]?.masterPubKey,
         address: ordinalsAddress,
-        btc_address: ordinalsAddress
+        btc_address: ordinalsAddress,
       };
-      console.log('handleConfirmTransaction', swapRequest)
-      await getDotSwapPsbt(swapRequest)
-      console.log('handleConfirmTransaction', response)
-      if(!response?.data?.data){
-         Toast.show({ type: 'error', text1: response?.data?.msg });
+  
+      console.log('DotSwap Swap Request:', swapRequest);
+  
+      await getDotSwapPsbt(swapRequest);
+  
+      if (!response?.data?.data) {
+        return Toast.show({ type: 'error', text1: response?.data?.msg || 'Failed to get PSBT' });
       }
-      sendSignedSwapPsbt({
-        order_id:response?.data?.data?.order_id,
-        psbt: response?.data?.data?.psbt 
+  
+      await sendSignedSwapPsbt({
+        order_id: response.data.data.order_id,
+        psbt: response.data.data.psbt,
       });
-      if(dotSwapSignedPsbt?.tx_id){
-          push(RouteType.CONFIRMSWAPTRANSACTION)
+  
+      if (dotSwapSignedPsbt?.tx_id) {
+        push(RouteType.CONFIRMSWAPTRANSACTION);
       }
+    } catch (err) {
+      console.error('DotSwap Error:', err);
+      Toast.show({ type: 'error', text1: 'DotSwap transaction failed' });
     }
-    if (selectedProvider.name === 'Runes DEX') {
-      const swapOrder: SwapRequestBody = {
-        ask_address: ordinalsAddress,
-        ask_amount: String(receiveAmount),
-        bid_address: btcAddress,
-        bid_address_pubkey: btcPublicKey,
-        bid_amount: String(btcToSats(new BigNumber(exchangeAmount))),
-        bid_asset: exchangeToken?.ticker,
-        fee_address: btcAddress,
-        fee_address_pubkey: btcPublicKey,
-        rate: liquidiumFee,
-        slippage: String(sllipage),
-        slippage_tolerance: true
+  };
+  
+  const handleRuneDexTransaction = async () => {
+    const pair = `${exchangeToken.ticker}-${selectedReceiveAsset.name.replace(/•/g, '')}`;
+  
+    const swapOrder: SwapRequestBody = {
+      ask_address: ordinalsAddress,
+      ask_amount: String(receiveAmount),
+      bid_address: btcAddress,
+      bid_address_pubkey: btcPublicKey,
+      bid_amount: String(btcToSats(new BigNumber(exchangeAmount))),
+      bid_asset: exchangeToken?.ticker,
+      fee_address: btcAddress,
+      fee_address_pubkey: btcPublicKey,
+      rate: liquidiumFee,
+      slippage: String(sllipage),
+      slippage_tolerance: true,
+    };
+  
+    try {
+      const response = await getRuneDexPsbt({ pair, body: swapOrder });
+  
+      if (!response?.psbt || !response?.request_id) {
+        throw new Error('Invalid RuneDex PSBT response');
+      }
+      const publishPayload = {
+        psbt: response.psbt,
+        request_id: response.request_id,
       };
-      console.log('handleConfirmTransaction', swapOrder)
-      const pair = `${exchangeToken.ticker}-${selectedReceiveAsset.name.replace(/•/g, "")}`;
-      try {
-        const response = await getRuneDexPsbt({ pair, body: swapOrder });
-        console.log('Swap PSBT response:', response);
-      } catch (err) {
-        console.error('Swap failed:', err);
+  
+      console.log('Publishing RuneDex Tx with payload:', publishPayload);
+      const publishResponse = await publishRuneDexTx(publishPayload);
+      if (publishResponse?.tx_id) {
+        push(RouteType.CONFIRMSWAPTRANSACTION);
       }
+    } catch (err) {
+      console.error('RuneDEX Transaction Error:', err);
+      Toast.show({ type: 'error', text1: 'Runes DEX transaction failed' });
     }
-
-  }
+  };
+  
   useEffect(() => {
     const fetchValue = async () => {
       console.log('setReceiveFiateValue', exchangeToken?.name);
@@ -114,9 +163,7 @@ const ReviewTransactions = ({ route }) => {
           console.log('setSendFiateValue', fiatAmount);
           setSendFiateValue(fiatAmount);
         }
-
       }
-
       if (selectedReceiveAsset.name && receiveAmount) {
         const value = await getFiateValue(selectedReceiveAsset?.name)
         if (value && !isNaN(selectedProvider?.value)) {
