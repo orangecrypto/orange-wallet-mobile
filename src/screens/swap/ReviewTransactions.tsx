@@ -21,6 +21,7 @@ import { useDotSwapSignedPsbt } from "@hooks/swap/useDotSwapSignedPsbt";
 import { SwapRequestBody, useGetRuneDexPsbt } from "@hooks/swap/useGetRuneDexPsbt";
 import { RouteType } from "@routes/RouteType";
 import { usePublishRuneDexTx } from "@hooks/swap/usePublishRuneDexTx";
+import Loader from "@components/Loader";
 
 const ReviewTransactions = ({ route }) => {
   const {
@@ -33,9 +34,9 @@ const ReviewTransactions = ({ route }) => {
     network,
     accountList,
   } = useSelector((state: { appReducer: appReducerType }) => state.appReducer);
-  
+
   const { sllipage, liquidiumFee } = useSelector((state: { swapReducer: SwapReducerType }) => state.swapReducer);
-  
+
   const {
     selectedProvider,
     exchangeToken,
@@ -43,20 +44,20 @@ const ReviewTransactions = ({ route }) => {
     selectedReceiveAsset,
     receiveAmount,
   } = route.params;
-  
+
   const [receiveFiateValue, setReceiveFiateValue] = useState(0);
   const [sendFiateValue, setSendFiateValue] = useState(0);
-  
+
   const { getReceiveAmount } = useCalculateDotSwap();
   const { getDotSwapPsbt, loading: dotSwapLoading, error: dotSwapError, response } = useDotSwapPsbt();
   const { sendSignedSwapPsbt, loading: signedLoading, error: signedError, response: dotSwapSignedPsbt } = useDotSwapSignedPsbt();
-  
+
   const { mutateAsync: getRuneDexPsbt, isPending: runeDexLoading, error: runeDexError } = useGetRuneDexPsbt();
   const { mutateAsync: publishRuneDexTx, data: publishRuneDexTxData, isPending: publishLoading, error: publishError } = usePublishRuneDexTx();
-  
+
   const handleConfirmTransaction = async () => {
     if (!selectedProvider?.name || !exchangeToken || !selectedReceiveAsset) return;
-  
+
     try {
       if (selectedProvider.name === 'DotSwap') {
         await handleDotSwapTransaction();
@@ -67,7 +68,7 @@ const ReviewTransactions = ({ route }) => {
       console.error('Transaction Error:', err);
     }
   };
-  
+
   const handleDotSwapTransaction = async () => {
     try {
       const result = await getReceiveAmount({
@@ -76,7 +77,7 @@ const ReviewTransactions = ({ route }) => {
         exchangeAmount,
         address: ordinalsAddress,
       });
-  
+
       const swapRequest = {
         send_amount: btcToSats(new BigNumber(exchangeAmount)),
         send_coin_type: 'btc',
@@ -91,20 +92,20 @@ const ReviewTransactions = ({ route }) => {
         address: ordinalsAddress,
         btc_address: ordinalsAddress,
       };
-  
+
       console.log('DotSwap Swap Request:', swapRequest);
-  
+
       await getDotSwapPsbt(swapRequest);
-  
+
       if (!response?.data?.data) {
         return Toast.show({ type: 'error', text1: response?.data?.msg || 'Failed to get PSBT' });
       }
-  
+
       await sendSignedSwapPsbt({
         order_id: response.data.data.order_id,
         psbt: response.data.data.psbt,
       });
-  
+
       if (dotSwapSignedPsbt?.tx_id) {
         push(RouteType.CONFIRMSWAPTRANSACTION);
       }
@@ -113,10 +114,10 @@ const ReviewTransactions = ({ route }) => {
       Toast.show({ type: 'error', text1: 'DotSwap transaction failed' });
     }
   };
-  
+
   const handleRuneDexTransaction = async () => {
     const pair = `${exchangeToken.ticker}-${selectedReceiveAsset.name.replace(/•/g, '')}`;
-  
+
     const swapOrder: SwapRequestBody = {
       ask_address: ordinalsAddress,
       ask_amount: String(receiveAmount),
@@ -130,10 +131,10 @@ const ReviewTransactions = ({ route }) => {
       slippage: String(sllipage),
       slippage_tolerance: true,
     };
-  
+
     try {
       const response = await getRuneDexPsbt({ pair, body: swapOrder });
-  
+
       if (!response?.psbt || !response?.request_id) {
         throw new Error('Invalid RuneDex PSBT response');
       }
@@ -141,7 +142,7 @@ const ReviewTransactions = ({ route }) => {
         psbt: response.psbt,
         request_id: response.request_id,
       };
-  
+
       console.log('Publishing RuneDex Tx with payload:', publishPayload);
       const publishResponse = await publishRuneDexTx(publishPayload);
       if (publishResponse?.tx_id) {
@@ -152,7 +153,7 @@ const ReviewTransactions = ({ route }) => {
       Toast.show({ type: 'error', text1: 'Runes DEX transaction failed' });
     }
   };
-  
+
   useEffect(() => {
     const fetchValue = async () => {
       console.log('setReceiveFiateValue', exchangeToken?.name);
@@ -178,6 +179,11 @@ const ReviewTransactions = ({ route }) => {
 
   return (
     <View style={styles.container}>
+
+      {dotSwapLoading && <Loader loading={dotSwapLoading} />}
+      {signedLoading && <Loader loading={signedLoading} />}
+      {runeDexLoading && <Loader loading={runeDexLoading} />}
+      {publishLoading && <Loader loading={publishLoading} />}
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.contentContainer}>
           <TouchableOpacity style={styles.button} onPress={() => goBack()}>
@@ -205,13 +211,11 @@ const ReviewTransactions = ({ route }) => {
                 <Text style={styles.providerName}>{`${exchangeToken?.name}`}</Text>
               </View>
             </View>
-            <View style={styles.reviewTransactionContainer}>
+           
               <View style={styles.reviewTransactionValueContainer}>
                 <Text style={styles.reviewValue}>{`${exchangeAmount} ${exchangeToken?.ticker}`}</Text>
                 <Text style={styles.reviewFiat}>{`$${sendFiateValue} USD`}</Text>
               </View>
-
-            </View>
           </View>
 
           <View style={styles.swapIconBakcground}>
@@ -222,7 +226,6 @@ const ReviewTransactions = ({ route }) => {
             <View style={styles.reviewTransactionContainer}>
               <Text style={styles.sendText}>{strings.youReceive}</Text>
               <View style={[styles.sendCardConatiner, { marginTop: Responsive.size10 }]}>
-
                 {selectedProvider.receiveIcon ? <Image source={selectedProvider.receiveIcon} style={styles.swapProviderIcon} /> :
                   <TokenImage
                     fungibleToken={{
@@ -236,13 +239,12 @@ const ReviewTransactions = ({ route }) => {
                 <Text style={styles.providerName} >{` ${selectedReceiveAsset?.name}`}</Text>
               </View>
             </View>
-            <View style={styles.reviewTransactionContainer}>
+            
               <View style={styles.reviewTransactionValueContainer}>
                 <Text style={styles.reviewValue} >{`${Number(Math.floor(receiveAmount))} ${selectedReceiveAsset?.ticker}`}</Text>
                 <Text style={styles.reviewFiat}>{`$${receiveFiateValue} USD`}</Text>
               </View>
 
-            </View>
           </View>
         </View>
       </ScrollView>

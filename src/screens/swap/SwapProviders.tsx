@@ -14,17 +14,22 @@ import { styles } from "./styles";
 import SwapProviderItem from "./SwapProviderItem";
 import { getFiateValue } from "./SwapUtils";
 import { getImageSource } from "@utils/cryptoUtils";
+import Loader from "@components/Loader";
+import { Dispatch } from "@reduxjs/toolkit";
+import { useAppDispatch } from "@redux/store";
+import { setSlippage } from "@redux/slice/SwapReducer";
 
 const SwapProviders = ({ route }) => {
 
   const { exchangeAmount, exchangeToken, selectedReceiveAsset, receiveAmount } = route.params;
-  const { calculateRuneDex, data, isPending, isError } = useCalculateRuneDex();
+  const { calculateRuneDex, data, isPending : loadRuneDex, isError } = useCalculateRuneDex();
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [dotSwapFiatValue, setDotSwapFiatValue] = useState(null);
   const [runeDexFiatValue, setRuneDexFiatValue] = useState(null);
   const [runeDexValue, setRuneDexValue] = useState(null);
   const [swapProvidersArray, setSwapProvidersArray] = useState([]);
 
+  const dispatch: Dispatch = useAppDispatch();
 
   useEffect(() => {
     const fetchValue = async () => {
@@ -74,7 +79,7 @@ const SwapProviders = ({ route }) => {
           name: 'DotSwap',
           fiatRate: dotSwapFiatValue,
           ticker: selectedReceiveAsset?.ticker,
-          value: receiveAmount,
+          value: Math.ceil(receiveAmount),
           icon: localAssets.dotswap,
           receiveIcon,
           sendIcon
@@ -86,7 +91,7 @@ const SwapProviders = ({ route }) => {
           name: 'Runes DEX',
           fiatRate: runeDexFiatValue,
           ticker: selectedReceiveAsset?.ticker,
-          value: runeDexValue,
+          value: Math.ceil(runeDexValue),
           icon: localAssets.runedex,
           receiveIcon,
 
@@ -96,6 +101,10 @@ const SwapProviders = ({ route }) => {
       array.sort((a, b) => parseFloat(b.fiatRate) - parseFloat(a.fiatRate));
       if (array[0]) array[0].label = 'Recommended';
       if (array[1]) array[1].label = 'Best';
+      if (array[0]) {
+        const slippageValue = array[0].name === 'Runes DEX' ? 0.02 : 4;
+        dispatch(setSlippage(slippageValue));
+      }
       setSwapProvidersArray(array);
     };
 
@@ -112,6 +121,7 @@ const SwapProviders = ({ route }) => {
 
   return (
     <View style={styles.container}>
+      {loadRuneDex && <Loader loading={loadRuneDex} />}
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.contentContainer}>
           <TouchableOpacity style={styles.button} onPress={() => goBack()}>

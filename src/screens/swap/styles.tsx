@@ -25,8 +25,6 @@ export const styles = StyleSheet.create({
     backgroundColor: Color.orangeButton,
     padding: Responsive.size16,
     alignContent: 'center',
-    borderTopLeftRadius: Responsive.size16,
-    borderTopRightRadius: Responsive.size16
   },
   topContainer: {
     flexDirection: 'row',
@@ -81,18 +79,18 @@ export const styles = StyleSheet.create({
 
   warningText: {
     fontFamily: Fonts.semibold,
-    fontSize: Responsive.size12,
+    fontSize: Responsive.size14,
     color: Color.orangeButton,
-    marginTop: Responsive.size18,
-    paddingHorizontal: Responsive.size18,
-    lineHeight: Responsive.size14,
-    
-  },
-  warningMessage: {
+    margin: Responsive.size18,
+   
+},
+warningMessage: {
     fontFamily: Fonts.semibold,
     fontSize: Responsive.size14,
-    color: Color.nftcategoryText
-  },
+    color: Color.nftcategoryText,
+    lineHeight:Responsive.size20,
+    textAlign:'justify',
+},
   sendIconBakcground: {
     height: Responsive.size40,
     width: Responsive.size40,
@@ -250,6 +248,7 @@ export const styles = StyleSheet.create({
   },
   reviewTransactionContainer: {
    marginVertical: Responsive.size8,
+   flex:1,
   },
   reviewTransactionValueContainer: {
     marginVertical: Responsive.size8,
@@ -265,7 +264,7 @@ export const styles = StyleSheet.create({
   sendCardConatiner: {
     flexDirection: 'row',
     alignContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   sendSummaryCardConatiner: {
     marginRight: Responsive.size6
@@ -285,12 +284,12 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     alignContent: 'center',
-    justifyContent: 'space-between'
+    justifyContent:'space-between'
   },
   itemRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    alignContent: 'center'
+    alignContent: 'center',
   },
   itemRowRecomendation: {
     flexDirection: 'row',
@@ -299,7 +298,7 @@ export const styles = StyleSheet.create({
     backgroundColor: Color.toastSucessImagebg,
     borderRadius: Responsive.size12,
     paddingVertical: Responsive.size6,
-    paddingHorizontal: Responsive.size8
+    paddingHorizontal: Responsive.size8,
   },
   recomendIcon: {
     height: Responsive.size16,
@@ -340,7 +339,7 @@ export const styles = StyleSheet.create({
     color: Color.white,
     fontFamily: Fonts.semibold,
     marginLeft: Responsive.size6,
-    width: Responsive.size120
+    width:'auto'
   },
   tick: {
     fontSize: Responsive.size12,

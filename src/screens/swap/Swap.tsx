@@ -1,7 +1,14 @@
 import { localAssets } from "@assets/assets";
 import CommonButton from "@components/CommonButton";
+import CustomTextInput from "@components/CustomTextInput";
+import Loader from "@components/Loader";
 import SendingHeader from "@components/SendingHeader";
+import { useExchangeAmountValidation } from "@hooks/useExchangeAmountValidation";
+import { useReceiveAssets } from "@hooks/useReceiveAssets";
+import { appReducerType } from "@redux/slice/appReducer";
+import { walletReducerType } from "@redux/slice/WalletReducer";
 import { goBack, push } from "@routes/Navigator";
+import { RouteType } from "@routes/RouteType";
 import { strings } from "@strings/i18n";
 import { Responsive } from "@utils/Responsive";
 import { Color } from "@values/color";
@@ -9,15 +16,7 @@ import React, { useEffect, useState } from "react";
 import { Image, Keyboard, KeyboardAvoidingView, Platform, ScrollView, Text, View } from "react-native";
 import { useSelector } from "react-redux";
 import { styles } from "./styles";
-import { RouteType } from "@routes/RouteType";
-import CustomTextInput from "@components/CustomTextInput";
-import { walletReducerType } from "@redux/slice/WalletReducer";
 import { filterVisibleTokens, getReceiveAmount } from "./SwapUtils";
-import { useExchangeAmountValidation } from "@hooks/useExchangeAmountValidation";
-import { useReceiveAssets } from "@hooks/useReceiveAssets";
-import { appReducerType } from "@redux/slice/appReducer";
-import { btcToSats } from "@orangecryptohq/orangeseed";
-import { BigNumber } from "@orangecryptohq/orangeseed/dist/utils/bignumber";
 
 const Swap = ({ route }) => {
 
@@ -25,6 +24,7 @@ const Swap = ({ route }) => {
     const [selectedCoin, setSelectedCoin] = useState(route?.params?.tokenDetails);
     const [selectedReceiveAsset, setselectedReceiveAsset] = useState({});
     const [receiveAmount, setReceiveAmount] = useState('')
+    const [loadReceiveAmount, setloadReceiveAmount] = useState(false)
     const { tokenList } = useSelector((state: { walletReducer: walletReducerType }) => state.walletReducer);
     const { selectedAccount: { ordinalsAddress } = {}, network } = useSelector(
         (state: { appReducer: appReducerType }) => state.appReducer
@@ -38,7 +38,7 @@ const Swap = ({ route }) => {
         fiatValue
     } = useExchangeAmountValidation(selectedCoin);
 
-    const { assets: receiveAssets, loading, error } = useReceiveAssets();
+    const { assets: receiveAssets, loading : loadReceiveAssets, error } = useReceiveAssets();
 
     console.log('useReceiveAssets', receiveAssets)
     console.log('useExchangeAmountValidation', `isValid ${isValid}`)
@@ -63,6 +63,7 @@ const Swap = ({ route }) => {
     }, [selectedReceiveAsset, exchangeAmount]);
 
     const handleGetReceiveAmount = async (exchangeAmount) => {
+        setloadReceiveAmount(true)
         try {
             const result = await getReceiveAmount({
                 exchangeToken: selectedCoin?.ticker,
@@ -70,16 +71,19 @@ const Swap = ({ route }) => {
                 exchangeAmount: exchangeAmount,
                 address: ordinalsAddress,
             });
-
             console.log('getReceiveAmount result', result); // Should be a number string like "76.64"
             setReceiveAmount(result);
+            setloadReceiveAmount(false)
         } catch (e) {
             console.error("Failed to get receive amount", e);
+            setloadReceiveAmount(false)
         }
     };
 
     return (
         <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : "height"}>
+             {loadReceiveAssets && <Loader loading={loadReceiveAssets} />}
+             {loadReceiveAmount && <Loader loading={loadReceiveAmount} />}
             <ScrollView contentContainerStyle={styles.scrollContainer}>
                 <SendingHeader
                     title={`${Number(selectedCoin.balance || 0)}`}

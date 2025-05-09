@@ -1,10 +1,9 @@
-import React from "react";
-import { View, Text, Image } from "react-native";
-import { styles } from "../styles";
-import { Responsive } from "@utils/Responsive";
-import { strings } from "@strings/i18n";
 import TokenImage from "@components/TokenImage";
-import { localAssets } from "@assets/assets";
+import { strings } from "@strings/i18n";
+import { Responsive } from "@utils/Responsive";
+import React from "react";
+import { Image, Text, View } from "react-native";
+import { styles } from "../styles";
 
 const SendSummaryCard = ({
     exchangeAmount,
@@ -15,8 +14,7 @@ const SendSummaryCard = ({
     return (
         <View style={[styles.card, styles.sendCard]}>
             <View style={styles.sendCardConatiner}>
-
-            {selectedProvider.sendIcon ? <Image source={selectedProvider.sendIcon} style={styles.sendbtcIcon} /> :
+           {selectedProvider.sendIcon ? <Image source={selectedProvider.sendIcon} style={styles.sendbtcIcon} /> :
                     <TokenImage
                         fungibleToken={{
                             ticker: exchangeToken?.ticker
@@ -25,7 +23,6 @@ const SendSummaryCard = ({
                         round
                         variant="dark" />
                 }
-               
                 <View>
                     <Text style={styles.sendText}>{strings.youSend}</Text>
                     <Text style={[styles.providerName, { marginTop: Responsive.size5 }]}>
@@ -39,9 +36,9 @@ const SendSummaryCard = ({
                 <View style={styles.sendSummaryCardConatiner}>
                     <Text style={[styles.sendText, { textAlign: "right" }]}>{strings.youReceive}</Text>
                     <Text style={[styles.providerName, { marginTop: Responsive.size5, textAlign: "right" }]}>
-  {`${Number(selectedProvider?.value || 0).toFixed(2)}`}
-  <Text style={styles.tick}>{` ${selectedProvider?.ticker}`}</Text>
-</Text>
+                        {`${Number(selectedProvider?.value || 0)}`}
+                        <Text style={styles.tick}>{` ${selectedProvider?.ticker}`}</Text>
+                    </Text>
                 </View>
                 {receiveIcon ? <Image source={receiveIcon} style={styles.btcIcon} /> :
                     <TokenImage

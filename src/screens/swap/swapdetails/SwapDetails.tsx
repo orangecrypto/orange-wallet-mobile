@@ -20,6 +20,7 @@ import { BigNumber } from "@orangecryptohq/orangeseed/dist/utils/bignumber";
 import { useCalculateDotSwap } from "@hooks/swap/useCalculateDotSwap";
 import { Dispatch } from "@reduxjs/toolkit";
 import { useAppDispatch } from "@redux/store";
+import Loader from "@components/Loader";
 
 const SwapDetails = ({ route }) => {
 
@@ -34,7 +35,7 @@ const SwapDetails = ({ route }) => {
   const { sllipage, liquidiumFee } = useSelector((state: { swapReducer: SwapReducerType }) => state.swapReducer);
   const [priorityFeeRate, setPriorityFeeRate] = useState<number | null>(null);
   const [minimumReceive, setMinimumReceive] = useState<number | null>(null);
-  const { calculateRuneDex, data, isPending, isError } = useCalculateRuneDex();
+  const { calculateRuneDex, data, isPending: loadingRunedex, isError } = useCalculateRuneDex();
   const { getReceiveAmount } = useCalculateDotSwap();
   const dispatch: Dispatch = useAppDispatch();
   if (priorityFeeRate === null) {
@@ -102,6 +103,7 @@ useEffect(() => {
 
   return (
     <View style={styles.container}>
+       {loadingRunedex && <Loader loading={loadingRunedex} />}
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.contentContainer}>
           <TouchableOpacity style={styles.button} onPress={() => goBack()}>
