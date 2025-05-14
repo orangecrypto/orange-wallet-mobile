@@ -113,7 +113,7 @@ const toastConfig = {
           <Image style={toastStyles.imageIcon} source={localAssets.whitecross} tintColor={Color.red} />
         </View>
         <View style={{ flex: 1 }}>
-          {text1 && <Text style={[toastStyles.text1Success, { color: Color.red }]}>{text1}</Text>}
+          {text1 && <Text  style={[toastStyles.text1Success, { color: Color.red }]}>{text1}</Text>}
           {text2 && <Text style={toastStyles.text2}>{text2}</Text>}
         </View>
       </View>

@@ -160,7 +160,9 @@ const styles = StyleSheet.create({
   },
   dropdownText: {
     color: Color.white,
-    fontSize: Responsive.size16,
+    fontSize: Responsive.size18,
+    fontFamily:Fonts.semibold,
+
   },
   dropdownIcon: {
     width: Responsive.size18,
