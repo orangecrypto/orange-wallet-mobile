@@ -1,9 +1,10 @@
 import { Config } from '@config/Config';
 import { signBitcoinMessage } from '@screens/borrow/authentication/GenrateSignature';
 import axios from 'axios';
+import AppConfig from 'react-native-config';
 
-const PREPARE_URL = 'https://alpha.liquidium.fi/api/v1/auth/prepare';
-const SUBMIT_URL = 'https://alpha.liquidium.fi/api/v1/auth/submit';
+const PREPARE_URL = `${Config.LIQUIDIUM_BASE_URL}/api/v1/auth/prepare`;
+const SUBMIT_URL = `${Config.LIQUIDIUM_BASE_URL}/api/v1/auth/submit`;
 
 
 export const fetchAuthData = async (btcAddress, ordinalsAddress, seed) => {
@@ -16,7 +17,7 @@ export const fetchAuthData = async (btcAddress, ordinalsAddress, seed) => {
       },
       {
         headers: {
-          Authorization: `Bearer ${Config.LIQUIDIUM_API_KEY}`,
+          Authorization: `Bearer ${AppConfig.LIQUIDIUM_API_KEY}`,
           'Content-Type': 'application/json',
         },
       }
@@ -47,7 +48,7 @@ export const fetchAuthData = async (btcAddress, ordinalsAddress, seed) => {
 export const submitAuthData =async (finalPayload)=>{
   const { data } = await axios.post(SUBMIT_URL, finalPayload, {
     headers: {
-      Authorization: `Bearer ${Config.LIQUIDIUM_API_KEY}`,
+      Authorization: `Bearer ${AppConfig.LIQUIDIUM_API_KEY}`,
       'Content-Type': 'application/json',
     },
   });

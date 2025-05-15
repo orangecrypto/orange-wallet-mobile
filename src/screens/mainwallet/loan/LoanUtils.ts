@@ -1,8 +1,8 @@
 import { satsToBtc } from '@orangecryptohq/orangeseed';
 import BigNumber from 'bignumber.js';
-
-import axios from 'axios';
+import AppConfig from 'react-native-config';
 import { Config } from '@config/Config';
+
 export const getFiateValue = async (value: string | number, symbol = 'BTC'): Promise<string > => {
   try {
     const finalValue: any = satsToBtc(new BigNumber(value));
@@ -60,12 +60,12 @@ export const getTimeProgressPercentage = async(endDateISOString: string, totalDa
 
 export const fetchRuneCollateral = async (runeId: string, liquidiumToken: string) => {
      try {
-            const url = `https://alpha.liquidium.fi/api/v1/borrower/collateral/runes/${runeId}`;
+            const url = `${Config.LIQUIDIUM_BASE_URL}/api/v1/borrower/collateral/runes/${runeId}`;
 
             const res = await fetch(url, {
                 method: 'GET',
                 headers: {
-                    Authorization: 'Bearer a98a89a4-1a97-4a62-85d0-474fc2b8a9b6',
+                    Authorization:  `Bearer ${AppConfig.LIQUIDIUM_API_KEY}`,
                     'Content-Type': 'application/json',
                     'x-user-token': liquidiumToken,
                 },

@@ -1,7 +1,7 @@
 import { Config } from '@config/Config';
 import axios from 'axios';
 
-const BASE_URL = 'https://alpha.liquidium.fi';
+import AppConfig from 'react-native-config';
 
 interface PrepareLoanParams {
     instantOfferId: string;
@@ -24,7 +24,7 @@ export async function prepareLoanRequest({
     ordinalsPublicKey,
     liquidiumToken,
 }: PrepareLoanParams) {
-    const url = `${BASE_URL}/api/v1/borrower/loans/start/prepare`;
+    const url = `${Config.LIQUIDIUM_BASE_URL}/api/v1/borrower/loans/start/prepare`;
 
     const body = {
         instant_offer_id: instantOfferId,
@@ -37,7 +37,7 @@ export async function prepareLoanRequest({
     };
 
     const headers = {
-        Authorization: `Bearer ${Config.LIQUIDIUM_API_KEY}`,
+        Authorization: `Bearer ${AppConfig.LIQUIDIUM_API_KEY}`,
         'Content-Type': 'application/json',
         'x-user-token': liquidiumToken,
     };
@@ -45,7 +45,7 @@ export async function prepareLoanRequest({
     try {
         const response = await axios.post(url, body, {
             headers: {
-                Authorization: `Bearer ${Config.LIQUIDIUM_API_KEY}`,
+                Authorization: `Bearer ${AppConfig.LIQUIDIUM_API_KEY}`,
                 'Content-Type': 'application/json',
                 'x-user-token': liquidiumToken,
             }

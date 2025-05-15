@@ -9,7 +9,6 @@ import { initEccLib } from 'bitcoinjs-lib';
 initEccLib(ecc);
 const ECPair = ECPairFactory(ecc);
 const bip32 = BIP32Factory(ecc);
-
 export async function signBitcoinMessage(message: string, mnemonic: string) {
   const seed = await bip39.mnemonicToSeed(mnemonic);
   const root = bip32.fromSeed(seed);

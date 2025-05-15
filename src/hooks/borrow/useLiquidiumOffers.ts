@@ -5,6 +5,7 @@ import { useAuthLiquidium } from './useAuthLiquidium'
 import { store, useAppDispatch } from '@redux/store'
 import { Dispatch } from '@reduxjs/toolkit'
 import { setLiquidiumToken } from '@redux/slice/appReducer'
+import AppConfig from 'react-native-config';
 
 interface OfferParams {
   runeId: string
@@ -27,12 +28,12 @@ export const useLiquidiumOffers = () => {
 
     const initialToken = store.getState().appReducer.liquidiumToken
 
-    const url = `https://alpha.liquidium.fi/api/v1/borrower/collateral/runes/${runeId}/offers?rune_amount=${runeAmount}`
+    const url = `${Config.LIQUIDIUM_BASE_URL}/api/v1/borrower/collateral/runes/${runeId}/offers?rune_amount=${runeAmount}`
 
     const fetchData = async (token: string) => {
       const response = await axios.get(url, {
         headers: {
-          Authorization: `Bearer ${Config.LIQUIDIUM_API_KEY}`,
+          Authorization: `Bearer ${AppConfig.LIQUIDIUM_API_KEY}`,
           'Content-Type': 'application/json',
           'x-user-token': token,
         },

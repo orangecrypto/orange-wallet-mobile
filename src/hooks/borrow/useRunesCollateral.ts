@@ -2,6 +2,7 @@ import { Config } from '@config/Config';
 import { useQuery } from '@tanstack/react-query';
 import { getTicker } from '@utils/cryptoUtils';
 import axios from 'axios';
+import AppConfig from 'react-native-config';
 
 interface RuneItem {
   rune_id: string;
@@ -16,10 +17,10 @@ interface ExtendedRuneItem extends RuneItem {
 
 const fetchRunesCollateral = async (): Promise<ExtendedRuneItem[]> => {
   const { data } = await axios.get<{ runes: RuneItem[] }>(
-    'https://alpha.liquidium.fi/api/v1/borrower/collateral/runes',
+    `${Config.LIQUIDIUM_BASE_URL}/api/v1/borrower/collateral/runes`,
     {
       headers: {
-        Authorization: `Bearer ${Config.LIQUIDIUM_API_KEY}`,
+        Authorization: `Bearer ${AppConfig.LIQUIDIUM_API_KEY}`,
       },
     }
   );

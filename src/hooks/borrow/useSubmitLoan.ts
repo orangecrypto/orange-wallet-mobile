@@ -2,6 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import { Config } from '@config/Config';
 import Toast from 'react-native-toast-message';
+import AppConfig from 'react-native-config';
 
 interface SubmitLoanParams {
   signed_psbt_base_64: string;
@@ -25,7 +26,7 @@ export function useSubmitLoan() {
     };
 
     const headers = {
-      Authorization: `Bearer ${Config.LIQUIDIUM_API_KEY}`,
+      Authorization: `Bearer ${AppConfig.LIQUIDIUM_API_KEY}`,
       'Content-Type': 'application/json',
     };
 

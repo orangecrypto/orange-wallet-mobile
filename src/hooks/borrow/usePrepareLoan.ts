@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import Toast from 'react-native-toast-message';
 import axios from 'axios';
 import { Config } from '@config/Config';
+import AppConfig from 'react-native-config';
 
 interface PrepareLoanParams {
   instantOfferId: string;
@@ -50,7 +51,7 @@ async function prepareLoanRequest({
   };
 
   const headers = {
-    Authorization: `Bearer ${Config.LIQUIDIUM_API_KEY}`,
+    Authorization: `Bearer ${AppConfig.LIQUIDIUM_API_KEY}`,
     'Content-Type': 'application/json',
     'x-user-token': liquidiumToken,
   };

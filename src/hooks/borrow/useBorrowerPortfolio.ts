@@ -6,6 +6,7 @@ import { useAuthLiquidium } from './useAuthLiquidium';
 import { Dispatch } from '@reduxjs/toolkit';
 import { setLiquidiumToken } from '@redux/slice/appReducer';
 import { ApiError, PortfolioResponse } from '@services/network/ApiResponce';
+import AppConfig from 'react-native-config';
 
 export const useBorrowerPortfolio = () => {
   const { getAuthToken } = useAuthLiquidium();
@@ -26,7 +27,7 @@ export const useBorrowerPortfolio = () => {
     const fetchData = async (token: string): Promise<PortfolioResponse> => {
       const response = await axios.get<PortfolioResponse>(url, {
         headers: {
-          Authorization: `Bearer ${Config.LIQUIDIUM_API_KEY}`,
+          Authorization: `Bearer ${AppConfig.LIQUIDIUM_API_KEY}`,
           'Content-Type': 'application/json',
           'x-user-token': token,
         },
