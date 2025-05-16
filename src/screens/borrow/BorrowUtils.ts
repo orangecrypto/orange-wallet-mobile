@@ -1,3 +1,7 @@
+import { NetworkType } from "@orangecryptohq/orangeseed";
+import { getUTXOs } from "@screens/swap/CreatePSBT";
+
+import * as bitcoin from "bitcoinjs-lib";
 /**
  * Validates if the amount falls within any of the valid ranges.
  * Returns true if valid, or an error message string if not.
@@ -66,7 +70,7 @@ export const getFiateValue = async (value, symbol = 'BTC') => {
   }
 };
 
-export function formatDueDate(isoString : string) {
+export function formatDueDate(isoString: string) {
   const date = new Date(isoString);
 
   let hours = date.getHours();
@@ -94,3 +98,63 @@ export function getRawRuneAmount(amount: number, divisibility: number): string {
   return rawAmount.toString();
 }
 
+export async function getTransactionSize(network: NetworkType | string, address: string, repayment: number) {
+  const txUtxo = await getUTXOs(network, address);
+  console.log('getTransactionSize', `txUtxo ${JSON.stringify(txUtxo)}`)
+  const txSize = await estimateTxSizeFromUtxos(txUtxo, repayment)
+  console.log('getTransactionSize', `txSize ${txSize}`)
+  return txSize
+}
+
+
+function serializeWitness(witness: Buffer[]): Buffer {
+  const bufferArray = [];
+  bufferArray.push(Buffer.from([witness.length]));
+  for (const item of witness) {
+    bufferArray.push(Buffer.from([item.length]));
+    bufferArray.push(item);
+  }
+  return Buffer.concat(bufferArray);
+}
+
+async function estimateTxSizeFromUtxos(utxos: any, repayment:any) {
+  const network = bitcoin.networks.bitcoin;
+  const dummyAddress = '3MwySGKUN4QFomvgiJcbKPG68EA4QyuhkA'; // P2WPKH mainnet
+
+  const psbt = new bitcoin.Psbt({ network });
+  const script = bitcoin.address.toOutputScript(dummyAddress, network);
+
+  utxos.forEach((utxo) => {
+    psbt.addInput({
+      hash: utxo.txid,
+      index: utxo.vout,
+      witnessUtxo: {
+        script,
+        value: utxo.value,
+      },
+    });
+  });
+
+  const totalValue = utxos.reduce((acc, u) => acc + u.value, 0);
+
+  console.log('estimateTxSizeFromUtxos',`repayment ${repayment}`)
+  psbt.addOutput({
+    address: dummyAddress,
+    value: totalValue , // some fee estimation
+  });
+
+  utxos.forEach((_, i) => {
+    psbt.finalizeInput(i, () => {
+      const dummySignature = Buffer.alloc(72, 0x00);
+      const dummyPubkey = Buffer.alloc(33, 0x02);
+      return {
+        finalScriptWitness: serializeWitness([dummySignature, dummyPubkey]),
+      };
+    });
+  });
+
+  const tx = psbt.extractTransaction();
+  const vSize = tx.virtualSize();
+
+  return vSize;
+}

@@ -32,7 +32,7 @@ const Borrow = ({ route }) => {
     const { data: runOffer, getOffer: getRuneOffer, isLoading: isRuneLoading, error: OfferError } = useLiquidiumOffers()
     const dispatch: Dispatch = useAppDispatch();
     const [runeOffers, setRuneOffers] = useState();
-
+    
     const debouncedHandleAmountChange = useCallback(
         debounce(async (value: string, rune_id: string) => {
             try {
