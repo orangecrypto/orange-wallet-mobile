@@ -45,7 +45,7 @@ const EnterPassword = ({ type, onPasswordChange }: { type: "enter" | "confirm"; 
                     passwordIconHidden={localAssets.eyeoff}
                     style={styles.input} />
 
-                {password !== "" && error !== strings.strongPassword && (
+                {error !== strings.strongPassword && (
                     <Text style={styles.passwordError}>{strings.passwordValidationMessage}</Text>
                 )}
 

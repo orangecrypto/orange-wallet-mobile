@@ -215,7 +215,7 @@ export const formatCurrencyWithCommas = (
 
   if (isNaN(amount)) return `${currencySymbol}0.0000`;
 
-  const fixed = amount.toFixed(decimals);
+  const fixed = amount.toFixed(2);
   const [integerPart, decimalPart] = fixed.split('.');
   const withCommas = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 

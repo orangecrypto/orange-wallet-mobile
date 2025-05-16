@@ -11,7 +11,7 @@ import Wallet from './wallet/Wallet';
 import { push } from '@routes/Navigator';
 import { RouteType } from '@routes/RouteType';
 import { useSelector } from 'react-redux';
-import { setHeaderAddress, walletReducerType } from '@redux/slice/WalletReducer';
+import { setCardIndex, setHeaderAddress, walletReducerType } from '@redux/slice/WalletReducer';
 import { Dispatch } from '@reduxjs/toolkit';
 import { useAppDispatch } from "@redux/store";
 import { store } from '@redux/store';
@@ -63,15 +63,15 @@ const MainWallet = () => {
                 </TouchableOpacity>
                 <View style={styles.iconsContainer}>
 
-                    <TouchableOpacity onPress={handleCopyPress}>
+                    <TouchableOpacity onPress={handleCopyPress} style={styles.headerClickableIcon}>
                         <Image source={localAssets.copy} style={styles.headerIcon} />
                     </TouchableOpacity>
 
-                    <TouchableOpacity onPress={handleQrPress}>
+                    <TouchableOpacity onPress={handleQrPress} style={styles.headerClickableIcon}>
                         <Image source={localAssets.qr} style={styles.headerIcon} />
                     </TouchableOpacity>
 
-                    <TouchableOpacity onPress={handleSettingsPress}>
+                    <TouchableOpacity onPress={handleSettingsPress} style={styles.headerClickableIcon}>
                         <Image source={localAssets.settings} style={styles.headerIcon} />
                     </TouchableOpacity>
                 </View>
@@ -85,11 +85,13 @@ const MainWallet = () => {
                         borderRadius: Responsive.size10,
                         borderWidth: Responsive.size1,
                         borderColor: Color.gray,
-                        height: Responsive.size56,
+                        height: Responsive.size56   ,
                         justifyContent: 'center',
                         marginHorizontal: Responsive.size16,
-                        marginBottom: Responsive.size5,
+                        marginBottom:Responsive.size6,
+                        paddingTop: Platform.OS === 'android'? Responsive.size14:0,
                         alignItems: 'center',
+                        alignContent:'center',
                         position: 'absolute',
                         bottom: 0,
                     },
@@ -140,18 +142,18 @@ const MainWallet = () => {
         
                 })}>
                 <Tab.Screen name="Wallet" component={Wallet}
-
                     listeners={({ navigation, route }) => ({
                         tabPress: (e) => {
                             dispatch(setHeaderAddress(account?.btcAddress))
+                            dispatch(setCardIndex(0))
                         },
-                    })}
-                />
+                    })}/>
 
                 <Tab.Screen name="NFT" component={Nft}
                     listeners={({ navigation, route }) => ({
                         tabPress: (e) => {
                             dispatch(setHeaderAddress(account?.ordinalsAddress))
+
                         },
                     })} />
 
@@ -162,12 +164,12 @@ const MainWallet = () => {
                         },
                     })} />
 
-                {/* <Tab.Screen name="Loan" component={Loan}
+                <Tab.Screen name="Loan" component={Loan}
                     listeners={({ navigation, route }) => ({
                         tabPress: (e) => {
                             dispatch(setHeaderAddress(account?.btcAddress))
                         },
-                    })} /> */}
+                    })} />
                 {/* <Tab.Screen name="Assistant" component={Assistant} /> */}
             </Tab.Navigator>
         </View>

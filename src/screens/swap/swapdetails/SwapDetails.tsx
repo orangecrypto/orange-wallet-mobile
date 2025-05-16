@@ -26,8 +26,8 @@ const SwapDetails = ({ route }) => {
 
   const { selectedProvider, exchangeToken, exchangeAmount, selectedReceiveAsset } = route.params;
   const { selectedAccount: { ordinalsAddress } = {}, network } = useSelector(
-          (state: { appReducer: appReducerType }) => state.appReducer
-      );
+    (state: { appReducer: appReducerType }) => state.appReducer
+  );
   const [isEnable, setIsEnable] = useState(false)
   const toggleSwitch = () => {
     setIsEnable(!isEnable)
@@ -50,16 +50,16 @@ const SwapDetails = ({ route }) => {
     const safeMinimum = Number(minimumReceive) || 0;
     const safeFee = Number(liquidiumFee) || 0;
     const finalReceiveAmount = safeMinimum - safeFee;
-    push(RouteType.REVIEWSWAPTRANSACTION,{
+    push(RouteType.REVIEWSWAPTRANSACTION, {
       selectedProvider: selectedProvider,
-      exchangeToken:exchangeToken,
+      exchangeToken: exchangeToken,
       selectedReceiveAsset: selectedReceiveAsset,
       exchangeAmount: exchangeAmount,
       receiveAmount: finalReceiveAmount
     })
   }
 
-useEffect(() => {
+  useEffect(() => {
     const fetchRuneDexQuote = async () => {
       if (selectedProvider?.value && sllipage !== null) {
         if (selectedProvider.name === 'Runes DEX') {
@@ -72,7 +72,7 @@ useEffect(() => {
             setMinimumReceive(result?.data?.min_received_amount)
             const feePercentage = result?.data?.dex_fee_percent / 100;  // Convert percentage to decimal
             const feeValue = Math.ceil(selectedProvider?.value * feePercentage);
-          
+
             dispatch(setLiquidiumFee(feeValue))
           } catch (err) {
             console.error('RuneDex error:', err);
@@ -84,15 +84,15 @@ useEffect(() => {
             const dotSwapEffectiveValue = Math.floor(selectedProvider?.value * (1 - sllipage / 100));
             setMinimumReceive(dotSwapEffectiveValue);
             const result = await getReceiveAmount({
-                            exchangeToken: exchangeToken?.ticker,
-                            receiveToken: selectedReceiveAsset?.name,
-                            exchangeAmount: exchangeAmount,
-                            address: ordinalsAddress,
-                        });          
-            const feePercentage = result?.liquider_service_fee_percent / 100; 
+              exchangeToken: exchangeToken?.ticker,
+              receiveToken: selectedReceiveAsset?.name,
+              exchangeAmount: exchangeAmount,
+              address: ordinalsAddress,
+            });
+            const feePercentage = result?.liquider_service_fee_percent / 100;
             const feeValue = Math.ceil(selectedProvider?.value * feePercentage);
             dispatch(setLiquidiumFee(feeValue))
-            
+
           }
         }
       }
@@ -103,8 +103,11 @@ useEffect(() => {
 
   return (
     <View style={styles.container}>
-       {loadingRunedex && <Loader loading={loadingRunedex} />}
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
+      {loadingRunedex && <Loader loading={loadingRunedex} />}
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContainer}>
         <View style={styles.contentContainer}>
           <TouchableOpacity style={styles.button} onPress={() => goBack()}>
             <Text style={styles.buttonText}>{strings.back}</Text>

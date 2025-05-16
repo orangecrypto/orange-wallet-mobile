@@ -21,7 +21,7 @@ export const styles = StyleSheet.create({
     },
 
     walletBackground: {
-        width: Dimensions.get('window').width - 40, 
+        width: Dimensions.get('window').width - 24, 
         alignSelf:'center',
         padding: Responsive.size24,
     },

@@ -84,7 +84,10 @@ const Swap = ({ route }) => {
         <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : "height"}>
              {loadReceiveAssets && <Loader loading={loadReceiveAssets} />}
              {loadReceiveAmount && <Loader loading={loadReceiveAmount} />}
-            <ScrollView contentContainerStyle={styles.scrollContainer}>
+            <ScrollView 
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.scrollContainer}>
                 <SendingHeader
                     title={`${Number(selectedCoin.balance || 0)}`}
                     subtitle={`$${selectedCoin.tokenFiatRate}`}

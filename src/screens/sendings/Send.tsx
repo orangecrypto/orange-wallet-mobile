@@ -66,7 +66,7 @@ const Send = ({ route }) => {
     const { btcClient } = useBtcClient();
     useEffect(() => {
         const handleTransaction = (transactionData, transactionError, type) => {
-            if (transactionData) {
+            if (transactionData) {               
                 push(RouteType.SENDCONFIRMATION, {
                     transactionData,
                     confirmData: {
@@ -80,10 +80,9 @@ const Send = ({ route }) => {
                 console.log(`${type} Transaction Error:`, transactionError);
             }
         };
-
         handleTransaction(transactionData, transactionError, "BTC");
         handleTransaction(stxTransactionData, stxTransactionDataError, "STX");
-
+        console.log('handleTransaction', `transactionData ${transactionData}`)
     }, [transactionData, transactionError, stxTransactionData, stxTransactionDataError]);
 
     useEffect(() => {
@@ -117,6 +116,7 @@ const Send = ({ route }) => {
     const getSignedTransaction = async () => {
         if (selectedCoin.protocol === 'btc') {
             generateSignedTransactionBtc(walletAddress, amount);
+            console.log('generateSignedTransactionBtc','call')
         } else if (selectedCoin.protocol === 'stacks') {
             generateUnsignedTransaction({
                 associatedAddress: walletAddress,
@@ -167,7 +167,10 @@ const Send = ({ route }) => {
             {isPending && <Loader loading={isPending} />}
             {stxIsPending && <Loader loading={stxIsPending} />}
             {isRuneLoading && <Loader loading={isRuneLoading} />}
-            <ScrollView contentContainerStyle={styles.scrollContainer}>
+            <ScrollView 
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.scrollContainer}>
                 <SendingHeader
                     title={`${Number(selectedCoin.balance || 0)}`}
                     subtitle={`$${selectedCoin.tokenFiatRate}`}

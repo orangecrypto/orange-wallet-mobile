@@ -69,8 +69,8 @@ export const styles = StyleSheet.create({
         borderRadius: Responsive.size12,
         marginVertical: Responsive.size10,
         justifyContent: "space-between",
-        alignContent:'center',
-        alignItems:'center',
+        alignContent: 'center',
+        alignItems: 'center',
         borderWidth: Responsive.size1,
         borderColor: Color.borderLineSeedphrase,
 
@@ -79,7 +79,6 @@ export const styles = StyleSheet.create({
         marginTop: Responsive.size18,
         borderRadius: Responsive.size10,
         backgroundColor: Color.listBordercolor,
-        borderWidth: Responsive.size2,
         borderColor: Color.borderLineSeedphrase,
     },
     assetItem: {
@@ -209,12 +208,14 @@ export const styles = StyleSheet.create({
         fontSize: Responsive.size14,
         color: Color.orangeButton,
         margin: Responsive.size18,
-        lineHeight: Responsive.size16
+       
     },
     warningMessage: {
         fontFamily: Fonts.semibold,
         fontSize: Responsive.size14,
-        color: Color.nftcategoryText
+        color: Color.nftcategoryText,
+        lineHeight:Responsive.size20,
+        textAlign:'justify',
     },
     sendingHeader: {
         flexDirection: 'row',
@@ -222,8 +223,7 @@ export const styles = StyleSheet.create({
         backgroundColor: Color.orangeButton,
         padding: Responsive.size16,
         alignContent: 'center',
-        borderTopLeftRadius: Responsive.size16,
-        borderTopRightRadius: Responsive.size16
+
     },
 
     pasteText: {
@@ -247,22 +247,23 @@ export const styles = StyleSheet.create({
         width: Responsive.size230
     },
     balanceContainer: {
-        height: Responsive.size25, 
-        justifyContent: 'center', 
-        alignItems: 'center',    
+        height: Responsive.size25,
+        justifyContent: 'center',
+        alignItems: 'center',
         borderRadius: Responsive.size5,
         borderWidth: Responsive.size1,
         borderColor: Color.borderLineSeedphrase,
         backgroundColor: Color.listBordercolor,
         padding: Responsive.size4,
-      },
-      
-      balanceText: {
-        fontSize: Responsive.size12,
+    },
+
+    balanceText: {
+        fontSize: Responsive.size14,
+        fontFamily: Fonts.semibold,
         color: Color.white,
-        textAlign: 'center', 
-      },
-      
+        textAlign: 'center',
+    },
+
     rightFeestext1: {
         fontFamily: Fonts.regular,
         fontSize: Responsive.size12,
@@ -374,7 +375,7 @@ export const styles = StyleSheet.create({
         borderRadius: Responsive.size12,
         marginTop: Responsive.size18,
         alignContent: 'center',
-        alignItems:'center',
+        alignItems: 'center',
         justifyContent: 'space-between',
         borderWidth: Responsive.size1,
         borderColor: Color.borderLineSeedphrase,
@@ -609,7 +610,7 @@ export const styles = StyleSheet.create({
     emprtyViewStyle: {
         justifyContent: 'center',
         alignItems: 'center',
-        paddingVertical: Responsive.size100,    
+        paddingVertical: Responsive.size100,
     },
     emprtyViewText: {
         fontFamily: Fonts.regular,

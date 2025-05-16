@@ -46,7 +46,10 @@ const ViewQr = ({ route }) => {
 
     return (
         <View style={styles.container}>
-            <ScrollView>
+            <ScrollView
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+            >
                 <View style={styles.contentContainer}>
                     <TouchableOpacity style={styles.button} onPress={() => goBack()}>
                         <Text style={styles.buttonText}>{strings.back}</Text>

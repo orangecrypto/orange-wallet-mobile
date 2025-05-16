@@ -184,7 +184,10 @@ const ReviewTransactions = ({ route }) => {
       {signedLoading && <Loader loading={signedLoading} />}
       {runeDexLoading && <Loader loading={runeDexLoading} />}
       {publishLoading && <Loader loading={publishLoading} />}
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContainer}>
         <View style={styles.contentContainer}>
           <TouchableOpacity style={styles.button} onPress={() => goBack()}>
             <Text style={styles.buttonText}>{strings.back}</Text>
@@ -211,11 +214,11 @@ const ReviewTransactions = ({ route }) => {
                 <Text style={styles.providerName}>{`${exchangeToken?.name}`}</Text>
               </View>
             </View>
-           
-              <View style={styles.reviewTransactionValueContainer}>
-                <Text style={styles.reviewValue}>{`${exchangeAmount} ${exchangeToken?.ticker}`}</Text>
-                <Text style={styles.reviewFiat}>{`$${sendFiateValue} USD`}</Text>
-              </View>
+
+            <View style={styles.reviewTransactionValueContainer}>
+              <Text style={styles.reviewValue}>{`${exchangeAmount} ${exchangeToken?.ticker}`}</Text>
+              <Text style={styles.reviewFiat}>{`$${sendFiateValue} USD`}</Text>
+            </View>
           </View>
 
           <View style={styles.swapIconBakcground}>
@@ -239,11 +242,11 @@ const ReviewTransactions = ({ route }) => {
                 <Text style={styles.providerName} >{` ${selectedReceiveAsset?.name}`}</Text>
               </View>
             </View>
-            
-              <View style={styles.reviewTransactionValueContainer}>
-                <Text style={styles.reviewValue} >{`${Number(Math.floor(receiveAmount))} ${selectedReceiveAsset?.ticker}`}</Text>
-                <Text style={styles.reviewFiat}>{`$${receiveFiateValue} USD`}</Text>
-              </View>
+
+            <View style={styles.reviewTransactionValueContainer}>
+              <Text style={styles.reviewValue} >{`${Number(Math.floor(receiveAmount))} ${selectedReceiveAsset?.ticker}`}</Text>
+              <Text style={styles.reviewFiat}>{`$${receiveFiateValue} USD`}</Text>
+            </View>
 
           </View>
         </View>

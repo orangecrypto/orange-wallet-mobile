@@ -3,8 +3,11 @@ import { getCardItems } from "../walletutils/TokenUtils";
 import { styles } from "../styles";
 import { Responsive } from "@utils/Responsive";
 import { useSelector } from "react-redux";
+import { walletReducerType } from "@redux/slice/WalletReducer";
 
 const WalletSlider = ({ cryptoArray, flatListRef, handleScroll, renderItem }) => {
+
+    
     const coinSettings = useSelector((state) => state.coinSettingsSlice.coinSettings);
     const namesToAlwaysShow = ["Bitcoin", "Orange", "Stacks"];
     const visibleItems = [];
@@ -28,6 +31,7 @@ const WalletSlider = ({ cryptoArray, flatListRef, handleScroll, renderItem }) =>
             horizontal
             style={styles.flatList}
             pagingEnabled={true} 
+            nestedScrollEnabled={true}
             keyExtractor={(item, index) => index.toString()}
             onMomentumScrollEnd={handleScroll}
             showsHorizontalScrollIndicator={false}

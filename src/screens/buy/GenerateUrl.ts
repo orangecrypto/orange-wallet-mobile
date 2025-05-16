@@ -2,7 +2,7 @@ import axios from 'axios';
 import { ApiEndpoints } from '@services/network/ApiEndpoints';
 import { getMoonPaySignedUrl } from '@orangecryptohq/orangeseed';
 import { Config } from '@config/Config';
-
+import AppConfig from 'react-native-config';
 export const getCoinBaseUrl = async (address) => {
     try {
         const response = await axios.post(`${ApiEndpoints.CDPTOKEN}`, { address });
@@ -24,7 +24,7 @@ export const getCoinBaseUrl = async (address) => {
 export const getMoonPayUrl = async (address, networkType) => {
     try {
         const moonPayUrl = new URL(ApiEndpoints.MOONPAY_BUY_URL);
-        moonPayUrl.searchParams.append('apiKey', Config.MOONPAY_API_KEY);
+        moonPayUrl.searchParams.append('apiKey', `${AppConfig.MOONPAY_API_KEY}`);
         moonPayUrl.searchParams.append('currencyCode', 'USD');
         moonPayUrl.searchParams.append('walletAddress', address);
         moonPayUrl.searchParams.append('colorCode', '#5546FF');
@@ -41,7 +41,7 @@ export const getMoonPayUrl = async (address, networkType) => {
 export const getTanStackUrl = async (address) => {
     try {
         const transakUrl = new URL(ApiEndpoints.TRANSAK_URL);
-        transakUrl.searchParams.append('apiKey', Config.TRANSAK_API_KEY as string);
+        transakUrl.searchParams.append('apiKey',`${AppConfig.TRANSAK_API_KEY}`);
         transakUrl.searchParams.append('cryptoCurrencyList', 'USD');
         transakUrl.searchParams.append('defaultCryptoCurrency', 'USD');
         transakUrl.searchParams.append('walletAddress', address);

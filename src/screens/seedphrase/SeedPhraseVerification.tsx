@@ -25,16 +25,20 @@ const SeedPhraseVerification = () => {
     const { getSeed, init: initSeedVault, storeSeed, hasSeed, clearVaultStorage } = useSeedVault()
 
     const handlePaste = async () => {
-        const words = await Clipboard.getString()
-        const splitWords = words.split(' ');
+        const words = await Clipboard.getString();
+        const splitWords = words
+            .trim() // remove leading/trailing spaces from the full string
+            .split(/\s+/) // split on any whitespace (space, tabs, multiple spaces)
+            .map(word => word.trim()); // trim individual words (extra safe)
+    
         const newData = data.map((item, index) => ({
             ...item,
             word: splitWords[index] || ''
         }));
+    
         setData(newData);
         setIsPasted(true);
     };
-
     const validateMnemonic = useCallback(
         (seed: string[]) => {
             const seedStr = seed.map((e) => e.trim()).join(' ');

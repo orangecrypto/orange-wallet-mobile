@@ -211,6 +211,7 @@ export const getCardItems = (cryptoArray) => {
         return acc + (parseFloat(item.tokenFiatRate) || 0);
     }, 0);
 
+    console.log('getCardItems totalFiatRate', totalFiatRate)
     const newItem = {
         id: 1,
         image: localAssets.walletbalance,

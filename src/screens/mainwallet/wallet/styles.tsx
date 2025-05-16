@@ -6,7 +6,7 @@ import { Fonts } from "@values/fonts";
 export const styles = StyleSheet.create({
     container: {
         backgroundColor: Color.black,
-        flex:1,
+        flex: 1,
     },
     button: {
         backgroundColor: Color.backbackgroundbg,
@@ -24,14 +24,14 @@ export const styles = StyleSheet.create({
     },
     flatList: {
         marginTop: Responsive.size10,
-        alignContent:'center',
-        height:'auto'
+        alignContent: 'center',
+        height: 'auto'
     },
     contentContainer: {
         justifyContent: 'center',
         paddingHorizontal: 0,
     },
-   
+
     progressBarContainer: {
         height: Responsive.size5,
         width: "30%",
@@ -50,16 +50,16 @@ export const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         alignItems: 'center',
         paddingHorizontal: Responsive.size20,
-       
+
         width: '100%',
         paddingTop: Responsive.size16,
         paddingBottom: Responsive.size50,
         backgroundColor: Color.transactionListBackground,
-        borderTopLeftRadius:Responsive.size20,
+        borderTopLeftRadius: Responsive.size20,
         borderTopRightRadius: Responsive.size20
     },
 
-    walletContainer :{
+    walletContainer: {
         height: 'auto'
     },
 
@@ -71,7 +71,7 @@ export const styles = StyleSheet.create({
         width: '100%',
         paddingTop: Responsive.size16,
         backgroundColor: Color.transactionListBackground,
-        borderTopLeftRadius:Responsive.size20,
+        borderTopLeftRadius: Responsive.size20,
         borderTopRightRadius: Responsive.size20
     },
     contentText: {
@@ -79,7 +79,7 @@ export const styles = StyleSheet.create({
         fontFamily: Fonts.semibold,
         color: Color.white,
     },
-   
+
     stepImage: {
         width: Responsive.size100,
         height: Responsive.size100,
@@ -97,8 +97,8 @@ export const styles = StyleSheet.create({
         backgroundColor: Color.orangeOpacityBg,
         borderRadius: Responsive.size16,
         marginRight: Responsive.size8,
-        alignContent:'center',
-        justifyContent:'center'
+        alignContent: 'center',
+        justifyContent: 'center'
     },
     selectedCategory: {
         backgroundColor: Color.selectedCategory,
@@ -113,8 +113,8 @@ export const styles = StyleSheet.create({
         fontFamily: Fonts.semibold
     },
     listContainer: {
-       flex:1,
-       
+        flex: 1,
+
     },
     listItem: {
         width: '100%',
@@ -133,8 +133,8 @@ export const styles = StyleSheet.create({
         marginBottom: Responsive.size10,
         paddingHorizontal: Responsive.size8,
         width: '100%',
-        marginTop:Responsive.size8,
-        
+        marginTop: Responsive.size8,
+
     },
     headerText: {
         color: Color.grayText,
@@ -142,32 +142,33 @@ export const styles = StyleSheet.create({
         fontFamily: Fonts.bold,
     },
 
-    headerTitleContainer :{
+    headerTitleContainer: {
         width: '100%',
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        paddingHorizontal: Responsive.size6,
+        paddingHorizontal: Responsive.size8,
         paddingVertical: Responsive.size8,
         borderBottomColor: Color.seedPhraseItemBackground,
-        borderBottomWidth: Responsive.size1
+        borderBottomWidth: Responsive.size1,
+
     },
 
-    headerTitle:{
+    headerTitle: {
         color: Color.nftcategoryText,
         fontFamily: Fonts.semibold,
         fontSize: Responsive.size14
     },
-    assetsTitle:{
+    assetsTitle: {
         color: Color.grayText,
         fontFamily: Fonts.semibold,
         fontSize: Responsive.size14
     },
-    
 
-    assetContainer:{
-        flexDirection:'row',
-        alignContent:'center'
+
+    assetContainer: {
+        flexDirection: 'row',
+        alignContent: 'center'
     },
     assetDetails: {
         flexDirection: "column",
@@ -183,7 +184,7 @@ export const styles = StyleSheet.create({
         color: Color.grayText,
         fontSize: Responsive.size14,
         fontFamily: Fonts.regular,
-        marginTop: Platform.OS ==='ios' ? Responsive.size4:0
+        marginTop: Platform.OS === 'ios' ? Responsive.size4 : 0
     },
     assetValues: {
         flexDirection: "column",
@@ -200,29 +201,30 @@ export const styles = StyleSheet.create({
         fontFamily: Fonts.regular
     },
 
-    letIcon:{
+    letIcon: {
         height: Responsive.size32,
         width: Responsive.size32
     },
     walletBackground: {
-    width: Dimensions.get('window').width - Responsive.size20, 
-    marginHorizontal: Responsive.size10, 
-    overflow: 'hidden',
-    backgroundColor:'red',
-    borderRadius: Responsive.size12,
-        
-    },
-    walletCardBackground:{
-        padding : Responsive.size24,
+        width: Dimensions.get('window').width - Responsive.size20,
+        marginHorizontal: Responsive.size10,
+        overflow: 'hidden',
+        backgroundColor: 'red',
         borderRadius: Responsive.size12,
-        height: Responsive.size180
+
     },
-    
+    walletCardBackground: {
+        borderRadius: Responsive.size12,
+        height: Responsive.size180,
+        paddingHorizontal: Responsive.size24,
+        paddingTop: Responsive.size24
+    },
+
     walletText: {
         fontSize: Responsive.size32,
         color: Color.white,
         fontFamily: Fonts.semibold,
-        textAlign:'right'
+        textAlign: 'right'
     },
 
     walletTextView: {
@@ -239,7 +241,7 @@ export const styles = StyleSheet.create({
         color: Color.white,
         paddingVertical: Responsive.size4,
         paddingHorizontal: Responsive.size8,
-        textAlign:'center',
+        textAlign: 'center',
         marginLeft: Responsive.size10,
     },
 
@@ -257,13 +259,13 @@ export const styles = StyleSheet.create({
         backgroundColor: Color.viewbutton,
         borderRadius: Responsive.size20,
         alignContent: 'center',
-        alignItems:'center',
+        alignItems: 'center',
         justifyContent: 'center',
         paddingVertical: Responsive.size12,
         width: Responsive.size147,
         flexDirection: 'row',
         alignSelf: 'center',
-        marginTop: Platform.OS === 'ios'? Responsive.size30 : Responsive.size24,
+        marginTop: Platform.OS === 'ios' ? Responsive.size30 : Responsive.size24,
     },
 
     addCoinIcon: {
@@ -272,48 +274,54 @@ export const styles = StyleSheet.create({
     },
 
     addCoinText: {
-        fontFamily: Fonts.light,
+        fontFamily: Fonts.regular,
         fontSize: Responsive.size14,
         color: Color.white,
         marginLeft: Responsive.size5,
     },
 
-    horizontalActions :{
-        flexDirection:'row',
-        marginTop: Platform.OS === 'ios'? Responsive.size30 : Responsive.size20,
-        alignContent:'center',
-        paddingHorizontal: Responsive.size10,
-        justifyContent:'center',
-        
+    horizontalActions: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+
     },
-    
-    actionButtonBg:{
+
+    horizontalActionsScrol: {
+        marginTop: Platform.OS === 'ios' ? Responsive.size30 : Responsive.size20,
+
+    },
+    scrollContentContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',   
+        flexGrow: 1,
+    },
+    actionButtonBg: {
         height: Responsive.size48,
         width: Responsive.size48,
         borderRadius: Responsive.size24,
         backgroundColor: Color.viewbutton,
-        alignItems:'center',
-        justifyContent:'center',
-        marginHorizontal: Responsive.size8
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginHorizontal: Responsive.size4
     },
 
-    actionButtonIcon:{
+    actionButtonIcon: {
         height: Responsive.size24,
-        width: Responsive.size24,      
+        width: Responsive.size24,
     },
-    emptyListContainer:{
-        justifyContent:'center',
-        alignItems:'center',
-        alignContent:'center',
-        height:Responsive.size200
+    emptyListContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        alignContent: 'center',
+        height: Responsive.size200
     },
-    emptyListText:{
+    emptyListText: {
         fontSize: Responsive.size16,
         fontFamily: Fonts.regular,
         color: Color.white,
-        textAlign:'center'
+        textAlign: 'center'
     },
-    transactionTitle:{
+    transactionTitle: {
         color: Color.orangeButton,
         fontFamily: Fonts.bold,
         fontSize: Responsive.size18
@@ -322,16 +330,16 @@ export const styles = StyleSheet.create({
         width: '100%',
         paddingVertical: 10,
         paddingHorizontal: 16,
-      },
-      skeletonItem: {
+    },
+    skeletonItem: {
         height: 50,
         width: '100%',
         borderRadius: 10,
         marginBottom: 10,
-      },
-      lineSaperator:{
+    },
+    lineSaperator: {
         backgroundColor: Color.red,
         height: Responsive.size1,
         marginVertical: Responsive.size10
-      },
+    },
 });

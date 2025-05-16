@@ -92,12 +92,14 @@ export const styles = StyleSheet.create({
         fontSize: Responsive.size14,
         color: Color.orangeButton,
         margin: Responsive.size18,
-        lineHeight: Responsive.size14,
+       
     },
     warningMessage: {
         fontFamily: Fonts.semibold,
         fontSize: Responsive.size14,
-        color: Color.nftcategoryText
+        color: Color.nftcategoryText,
+        lineHeight:Responsive.size20,
+        textAlign:'justify',
     },
     qrcodeContainer:{
         height: Responsive.size130,

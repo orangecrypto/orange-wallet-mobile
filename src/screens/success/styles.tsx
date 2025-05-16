@@ -56,4 +56,11 @@ export const styles = StyleSheet.create({
         paddingBottom: Responsive.size20,
         marginHorizontal: Responsive.size24
     },
+     horizontalButtonContainer: {
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        flexDirection: 'row',
+        marginBottom: Responsive.size20,
+        marginHorizontal: Responsive.size18
+    },
 });

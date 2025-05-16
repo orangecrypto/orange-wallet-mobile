@@ -43,7 +43,7 @@ const SeedPhraseView = () => {
 
     const renderItem = ({ item }) => (
         <View style={[styles.itemContainer, { borderColor: Color.black }]}>
-            <Text style={[styles.itemText, { textAlign: 'center'}]}>{item.word}</Text>
+            <Text style={styles.itemText}>{item.word}</Text>
         </View>
     );
 
@@ -51,8 +51,8 @@ const SeedPhraseView = () => {
         <View style={styles.container}>
             <View style={styles.contentContainer}>
                 <Text style={styles.title}>{strings.speedPhrase}</Text>
-                <Text style={styles.reviewText}>{strings.speedPhraseVerificationDes} </Text>
-                <View style={{ flex: 1 }}>
+                <Text style={styles.reviewText}>{strings.speedPhraseDescription} </Text>
+                <View style={{ flex: 1 , marginTop: Responsive.size10}}>
                     <FlatList
                         data={seedPhrase}
                         renderItem={renderItem}

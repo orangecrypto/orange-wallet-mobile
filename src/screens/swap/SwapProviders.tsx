@@ -22,7 +22,7 @@ import { setSlippage } from "@redux/slice/SwapReducer";
 const SwapProviders = ({ route }) => {
 
   const { exchangeAmount, exchangeToken, selectedReceiveAsset, receiveAmount } = route.params;
-  const { calculateRuneDex, data, isPending : loadRuneDex, isError } = useCalculateRuneDex();
+  const { calculateRuneDex, data, isPending: loadRuneDex, isError } = useCalculateRuneDex();
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [dotSwapFiatValue, setDotSwapFiatValue] = useState(null);
   const [runeDexFiatValue, setRuneDexFiatValue] = useState(null);
@@ -122,7 +122,10 @@ const SwapProviders = ({ route }) => {
   return (
     <View style={styles.container}>
       {loadRuneDex && <Loader loading={loadRuneDex} />}
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContainer}>
         <View style={styles.contentContainer}>
           <TouchableOpacity style={styles.button} onPress={() => goBack()}>
             <Text style={styles.buttonText}>{strings.back}</Text>
@@ -156,7 +159,7 @@ const SwapProviders = ({ route }) => {
               selectedProvider: swapProvidersArray[selectedIndex],
               exchangeToken: exchangeToken,
               exchangeAmount: exchangeAmount,
-              selectedReceiveAsset:selectedReceiveAsset
+              selectedReceiveAsset: selectedReceiveAsset
             })}
           backgroundColor={Color.orangeButton}
           textColor={Color.white}

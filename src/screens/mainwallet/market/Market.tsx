@@ -58,7 +58,7 @@ const Market = () => {
             : '$ 0',
           data: graphData.chart || [],
           percent: selectedItem?.percent_change_1h
-            ? `${selectedItem.percent_change_1h}%`
+            ? `${selectedItem.percent_change_1h.toFixed(2)}%`
             : '0%',
         },
         {

@@ -4,7 +4,7 @@ import useSelectedNetwork from '@hooks/useSelectedNetwork';
 import useStxData from '@hooks/useStxData';
 import { getFtData, getOrdinalsFtBalance, HIRO_MAINNET_DEFAULT, StacksMainnet } from '@orangecryptohq/orangeseed';
 import { resetCoinNames, setAddCoinSettings } from '@redux/slice/CoinSettings';
-import { setHeaderAddress, setTokenList } from '@redux/slice/WalletReducer';
+import { setCardIndex, setHeaderAddress, setTokenList, walletReducerType } from '@redux/slice/WalletReducer';
 import { store, useAppDispatch } from "@redux/store";
 import { Dispatch } from '@reduxjs/toolkit';
 import { strings } from '@strings/i18n';
@@ -33,7 +33,7 @@ const Wallet = () => {
     const flatListRef = useRef(null);
     const account = store.getState().appReducer.selectedAccount
     const coinSettings = useSelector((state) => state.coinSettingsSlice.coinSettings);
-    const stackNetworkMainnet = new StacksMainnet({ url: HIRO_MAINNET_DEFAULT })
+    const { cardIndex } = useSelector((state: { walletReducer: walletReducerType }) => state.walletReducer);
     const stackNetwork = useSelectedNetwork()
     const dispatch: Dispatch = useAppDispatch();
     const [currentStep, setCurrentStep] = useState(1);
@@ -115,7 +115,7 @@ const Wallet = () => {
             getFtData(stxAddress, stackNetwork),
         ]);
 
-        console.log('getBalance brc20Res', brc20Res)
+        console.log('getBalance btcRes', btcRes)
         const btcBalance = btcRes.status === 'fulfilled' ? btcRes.value : 0;
         const brc20Tokens = brc20Res.status === 'fulfilled' ? brc20Res.value : [];
         const runesTokens = runesRes.status === 'fulfilled' ? runesRes.value : [];
@@ -144,6 +144,14 @@ const Wallet = () => {
             setIsResetting(false); // Reset flag after execution
         }
     }, [coinSettings]);
+    useEffect(() => {
+        if (flatListRef?.current && cardIndex !== -1 ) {
+            setCurrentStep(1);
+            setTransactionProtocol('all')
+            flatListRef.current && flatListRef.current.scrollToIndex({ index: 0, animated: true });
+             dispatch(setCardIndex(-1))
+        }
+      }, [cardIndex]);
 
     const addCoinSettings = async (newCryptoArray) => {
 
@@ -191,9 +199,6 @@ const Wallet = () => {
           dispatch(setHeaderAddress(address));
         }
     };
-
-
-
     const setHeaderAddressByProtocol = async (protocol: string): string | undefined => {
         console.log('setHeaderAddressByProtocol',  `protocol ${protocol}`)
         if (protocol === 'runes' || protocol === 'brc-20') {
@@ -255,6 +260,8 @@ const Wallet = () => {
     return (
         <ScrollView
             style={styles.container}
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
             contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps="handled"
             refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
             {transactionProtocol !== 'all' && (
@@ -262,19 +269,14 @@ const Wallet = () => {
                     {categories.map((category) => categoryItem(category, selectedCategory, handlecategoryChange))}
                 </View>
             )}
-
-            {/* {isLoading && !refreshing && <Loader loading={isLoading} />} */}
-
             <View style={styles.walletContainer}>
                 <WalletSlider
                     cryptoArray={cryptoArray}
                     flatListRef={flatListRef}
                     handleScroll={handleScroll}
                     renderItem={renderItem} />
-
                 <ProgressBar progressPercentage={progressPercentage} />
             </View>
-
             {!isLoading ? (
                 transactionProtocol === 'all' ? (
                     <View style={styles.contentArea}>
@@ -286,9 +288,9 @@ const Wallet = () => {
                         <View
                             style={[
                                 styles.headerTitleContainer,
-                                { backgroundColor: Color.black },
-                            ]}
-                        >
+                                { backgroundColor: Color.black ,
+                                  borderRadius: Responsive.size8
+                                },]}>
                             <Text style={styles.assetsTitle}>{strings.assets}</Text>
                             <Text style={styles.assetsTitle}>{strings.quantity}</Text>
                         </View>
@@ -304,10 +306,7 @@ const Wallet = () => {
                             <Text style={styles.transactionTitle}>
                                 {`${transactionProtocol} ${strings.transactions}`}
                             </Text>
-                         
                         </View>
-                        
-                        
                         <TransactionList
                             transaction={transaction}
                             isLoading={isLoading || refreshing}
@@ -320,8 +319,6 @@ const Wallet = () => {
                     </View>
                 )
             ) : null}
-
-
         </ScrollView>
     );
 };
