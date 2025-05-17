@@ -1,23 +1,23 @@
 import { localAssets } from "@assets/assets";
 import CommonButton from "@components/CommonButton";
+import Loader from "@components/Loader";
 import { useCalculateRuneDex } from "@hooks/swap/useCalculateRuneDex";
 import { btcToSats } from "@orangecryptohq/orangeseed";
 import { BigNumber } from "@orangecryptohq/orangeseed/dist/utils/bignumber";
+import { setSlippage } from "@redux/slice/SwapReducer";
+import { useAppDispatch } from "@redux/store";
+import { Dispatch } from "@reduxjs/toolkit";
 import { goBack, push } from "@routes/Navigator";
 import { RouteType } from "@routes/RouteType";
 import { strings } from "@strings/i18n";
+import { getImageSource } from "@utils/cryptoUtils";
 import { Responsive } from "@utils/Responsive";
 import { Color } from "@values/color";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FlatList, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { styles } from "./styles";
 import SwapProviderItem from "./SwapProviderItem";
 import { getFiateValue } from "./SwapUtils";
-import { getImageSource } from "@utils/cryptoUtils";
-import Loader from "@components/Loader";
-import { Dispatch } from "@reduxjs/toolkit";
-import { useAppDispatch } from "@redux/store";
-import { setSlippage } from "@redux/slice/SwapReducer";
 
 const SwapProviders = ({ route }) => {
 

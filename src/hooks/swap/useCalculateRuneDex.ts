@@ -1,6 +1,7 @@
 import { BigNumber } from '@orangecryptohq/orangeseed/dist/utils/bignumber';
 import axios from 'axios';
 import { useMutation } from '@tanstack/react-query';
+import { Config } from '@config/Config';
 
 type CalculateRuneDexParams = {
   pair: string;
@@ -30,7 +31,7 @@ export const useCalculateRuneDex = () => {
         throw new Error('Invalid pair or bidAmount');
       }
 
-      const url = `https://app.runesdex.com/v1/pairs/${pair}/calculate?bid_amount=${bidAmount.toString()}&slippage=${slippage}`;
+      const url = `${Config.RUNEDEX_BASE_URL}/v1/pairs/${pair}/calculate?bid_amount=${bidAmount.toString()}&slippage=${slippage}`;
 
       const response = await fetchRuneDexData(url);
 

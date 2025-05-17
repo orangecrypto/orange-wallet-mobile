@@ -1,17 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { localAssets } from '@assets/assets';
 import { push } from '@routes/Navigator';
 import { RouteType } from '@routes/RouteType';
 import { Offer } from '@services/network/ApiResponce';
-import { Color } from '@values/color';
-import { styles } from './styles';
 import { strings } from '@strings/i18n';
-import { fetchRuneCollateral, getFiateValue, getRemainingTime, getTimeProgressPercentage } from './LoanUtils';
-import { useGetTokenName } from '@hooks/borrow/useGetTokenName';
-import axios from 'axios';
-import { Config } from '@config/Config';
+import { Color } from '@values/color';
+import React, { useEffect, useState } from 'react';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
+import { fetchRuneCollateral, getFiateValue, getRemainingTime, getTimeProgressPercentage } from './LoanUtils';
+import { styles } from './styles';
 
 const statusColors = {
     OFFERED: Color.viewbutton,

@@ -29,12 +29,9 @@ const Login = () => {
         console.log(strengthMessage)
         dispatch(setPasswordError(strengthMessage))
         dispatch(setPasswordFeedback(feedback))
-
     };
 
     const handleSubmit = async () => {
-       
-
             try {
                 await unlockVault(str2buf(password))
                 dispatch(clearLoginReducer())
@@ -87,8 +84,6 @@ const Login = () => {
                             passwordIconVisible={localAssets.eye}
                             passwordIconHidden={localAssets.eyeoff}
                             style={styles.input} />
-                        {/* <Text style={[styles.passwordError, { color: passwordError === strings.strongPassword ? Color.green : Color.red }]}>{passwordError}</Text>
-                        <Text style={styles.passwordError}>{passwordFeedback}</Text> */}
                         <TouchableOpacity onPress={() => push(RouteType.FORGOTPASSWORD)}>
                             <Text style={styles.forgotPassword}>{strings.forgotPassword}</Text>
                         </TouchableOpacity>
@@ -127,7 +122,7 @@ const styles = StyleSheet.create({
     contentContainer: {
         justifyContent: 'flex-start',
         marginTop: Responsive.size100,
-        paddingBottom: Responsive.size100,  // Adds bottom padding to ensure the button doesn't overlap
+        paddingBottom: Responsive.size100,  
     },
     buttonContainer: {
         justifyContent: 'flex-end',
@@ -166,5 +161,4 @@ const styles = StyleSheet.create({
         lineHeight: Responsive.size18
     }
 });
-
 export default Login;

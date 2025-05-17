@@ -1,11 +1,9 @@
-import { useEffect, useState } from "react";
-import { Image, Text, TouchableOpacity, View } from "react-native";
-import { localAssets } from "@assets/assets";
-import { Responsive } from "@utils/Responsive";
-import { Color } from "@values/color";
-import { styles } from './styles';
 import TokenImage from "@components/TokenImage";
 import { formatCurrencyWithCommas, getImageSource } from "@utils/cryptoUtils";
+import { Color } from "@values/color";
+import { useEffect, useState } from "react";
+import { Image, Text, TouchableOpacity, View } from "react-native";
+import { styles } from './styles';
 
 const RenderAssets = ({ item, selectedItem, handleItemClick, clickDisable }) => {
     const [imageSource, setImageSource] = useState(null);

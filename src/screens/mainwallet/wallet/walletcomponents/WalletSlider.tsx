@@ -1,13 +1,10 @@
-import { Dimensions, FlatList } from "react-native";
-import { getCardItems } from "../walletutils/TokenUtils";
-import { styles } from "../styles";
-import { Responsive } from "@utils/Responsive";
+import { FlatList } from "react-native";
 import { useSelector } from "react-redux";
-import { walletReducerType } from "@redux/slice/WalletReducer";
+import { styles } from "../styles";
+import { getCardItems } from "../walletutils/TokenUtils";
 
 const WalletSlider = ({ cryptoArray, flatListRef, handleScroll, renderItem }) => {
 
-    
     const coinSettings = useSelector((state) => state.coinSettingsSlice.coinSettings);
     const namesToAlwaysShow = ["Bitcoin", "Orange", "Stacks"];
     const visibleItems = [];

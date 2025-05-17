@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { ApiEndpoints } from '@services/network/ApiEndpoints';
 import { getMoonPaySignedUrl } from '@orangecryptohq/orangeseed';
-import { Config } from '@config/Config';
 import AppConfig from 'react-native-config';
 export const getCoinBaseUrl = async (address) => {
     try {

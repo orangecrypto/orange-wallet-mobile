@@ -6,20 +6,19 @@ import { Image } from 'react-native';
 const TabNavigatorConfig = {
     tabBarStyle: {
         backgroundColor: Color.black,
-        borderTopLeftRadius: 30,
-        borderTopRightRadius: 30,
-        height: 70,
-        paddingBottom: 10,
+        borderTopLeftRadius: Responsive.size30,
+        borderTopRightRadius: Responsive.size30,
+        height: Responsive.size70,
+        paddingBottom: Responsive.size10,
         position: 'absolute',
     },
     tabBarIcon: ({ focused, route }) => {
         let iconSize = { width: Responsive.size24, height: Responsive.size24 };
 
-        // Set the appropriate icon for the focused state
         let iconSource;
         switch (route.name) {
             case 'Wallet':
-                iconSource = focused ? localAssets.eye : localAssets.bottomwallet; // Change to your desired icon for active/inactive
+                iconSource = focused ? localAssets.eye : localAssets.bottomwallet; 
                 break;
             case 'Market':
                 iconSource = focused ? localAssets.marketbottom : localAssets.marketbottom;
@@ -34,18 +33,15 @@ const TabNavigatorConfig = {
                 iconSource = null;
                 break;
         }
-
-        // Render the icon for each tab
         return iconSource ? <Image source={localAssets.eyeoff} style={iconSize} /> : null;
     },
     tabBarActiveTintColor: 'red',
     tabBarInactiveTintColor: 'gray',
-    tabBarShowLabel: false, // Hide text labels
+    tabBarShowLabel: false, 
     tabBarIconStyle: {
-        padding: 100,
-        borderRadius: 20,
-        backgroundColor: '#fff', // Optional background color around icons
+        padding: Responsive.size100,
+        borderRadius: Responsive.size20,
+        backgroundColor: '#fff', 
     },
 };
-
 export default TabNavigatorConfig;

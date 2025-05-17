@@ -1,3 +1,4 @@
+import { Config } from '@config/Config';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 
@@ -23,7 +24,7 @@ const postSwap = async ({
   body: SwapRequestBody;
 }) => {
   const response = await axios.post(
-    `https://app.runesdex.com/v1/pairs/${pair}/swap`,
+    `${Config.RUNEDEX_BASE_URL}/v1/pairs/${pair}/swap`,
     body,
     {
       headers: {

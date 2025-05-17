@@ -16,9 +16,6 @@ import Toast from "react-native-toast-message";
 
 const ViewQr = ({ route }) => {
     const qrRef = useRef(null);
-
-    console.log('ViewQr', `Name : ${route?.params?.item.name}`)
-
     const captureAndShare = async () => {
         try {
             const uri = await captureRef(qrRef, {

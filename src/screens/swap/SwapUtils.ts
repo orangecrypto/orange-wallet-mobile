@@ -1,7 +1,6 @@
 
-import { btcToSats, satsToBtc } from "@orangecryptohq/orangeseed";
+import { Config } from "@config/Config";
 import { BigNumber } from "@orangecryptohq/orangeseed/dist/utils/bignumber";
-import { fetchPrice } from "@utils/cryptoUtils";
 import axios from "axios";
 import Toast from 'react-native-toast-message';
 export const filterVisibleTokens = (
@@ -48,9 +47,7 @@ type GetReceiveAmountParams = {
         address,
       };
   
-      console.log("getReceiveAmount request", requestData);
-  
-      const response = await axios.post("https://api.dotswap.app/brc20swap/swap_info", requestData);
+      const response = await axios.post(`${Config.DOTSWAP_BASE_URL}/brc20swap/swap_info`, requestData);
   
       // Handle API-level errors
       if (!response.data || !response.data.data) {

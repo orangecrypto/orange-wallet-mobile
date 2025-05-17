@@ -117,13 +117,13 @@ export function usePrepareLoan() {
   });
 
   return {
-    prepareLoan: mutate,         // for callback-style usage
-    prepareLoanAsync: mutateAsync, // for await-style usage
+    prepareLoan: mutate,       
+    prepareLoanAsync: mutateAsync, 
     isPending,
     isSuccess,
     isError,
     error,
     data,
-    reset, // to manually reset mutation state
+    reset, 
   };
 }

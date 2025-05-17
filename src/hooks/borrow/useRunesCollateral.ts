@@ -25,7 +25,15 @@ const fetchRunesCollateral = async (): Promise<ExtendedRuneItem[]> => {
     }
   );
 
-  return data.runes.map((item) => ({
+  const uniqueRunesMap = new Map<string, RuneItem>();
+
+  data.runes.forEach((item) => {
+    if (!uniqueRunesMap.has(item.rune_id)) {
+      uniqueRunesMap.set(item.rune_id, item);
+    }
+  });
+
+  return Array.from(uniqueRunesMap.values()).map((item) => ({
     ...item,
     name: item.slug,
     ticker: getTicker(item.slug),

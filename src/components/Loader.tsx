@@ -1,17 +1,17 @@
 import React from 'react';
 import { ActivityIndicator, Modal, View, StyleSheet } from 'react-native';
-import { Color } from '@values/color'; // You can customize this based on your theme
+import { Color } from '@values/color';
 
 interface CommonLoaderProps {
-  loading: boolean; // If true, the loader is visible
-  size?: 'small' | 'large'; // Optional size for the ActivityIndicator
-  color?: string; // Optional color for the ActivityIndicator
+  loading: boolean; 
+  size?: 'small' | 'large'; 
+  color?: string; 
 }
 
 const Loader: React.FC<CommonLoaderProps> = ({
   loading,
   size = 'large',
-  color = Color.orangeButton, // Default to orangeButton color
+  color = Color.orangeButton, 
 }) => {
   return (
     <Modal transparent={true} animationType="fade" visible={loading} onRequestClose={() => {}}>
@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', 
   },
 });
 

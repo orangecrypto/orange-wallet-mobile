@@ -21,14 +21,14 @@ const SendingHeader = ({
                     <Text numberOfLines={1} style={styles.headerTitle}>{title}</Text>
                     <View style={styles.tokenContainer}>
                         {ticker && (
-                           <View style={styles.categoryTextBackground}>
-                           <Text style={styles.categoryText}>{ticker}</Text>
-                         </View>
+                            <View style={styles.categoryTextBackground}>
+                                <Text style={styles.categoryText}>{ticker}</Text>
+                            </View>
                         )}
                         {type && (
-                           <View style={styles.categoryTextBackground}>
-                           <Text style={styles.categoryText}>{type}</Text>
-                         </View>
+                            <View style={styles.categoryTextBackground}>
+                                <Text style={styles.categoryText}>{type}</Text>
+                            </View>
                         )}
                     </View>
                 </View>
@@ -38,11 +38,9 @@ const SendingHeader = ({
                     </Text>
                 )}
             </View>
-            {/* <Image source={iconSource} style={styles.headerIcon} /> */}
-
             {ticker === 'Ordinals' ? (
                 <View style={styles.nftBackground}>
-                <Image source={nftIcons} style={styles.nftIcon}/>
+                    <Image source={nftIcons} style={styles.nftIcon} />
                 </View>
             ) : (
                 iconSource?.image ? (
@@ -52,12 +50,9 @@ const SendingHeader = ({
                         fungibleToken={iconSource}
                         size={Responsive.size40}
                         round
-                        variant="send"
-                    />
+                        variant="send" />
                 )
             )}
-
-
         </View>
     );
 };
@@ -88,7 +83,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignContent: 'center',
         backgroundColor: 'transparent',
-        
+
     },
     categoryTextBackground: {
         height: Responsive.size18,
@@ -96,37 +91,37 @@ const styles = StyleSheet.create({
         backgroundColor: Color.viewbutton,
         marginLeft: Responsive.size8,
         paddingHorizontal: Responsive.size6,
-        justifyContent: 'center', 
-        alignItems: 'center',    
+        justifyContent: 'center',
+        alignItems: 'center',
         flexDirection: 'row',
-      },
-      
-      categoryText: {
+    },
+
+    categoryText: {
         fontFamily: Fonts.semibold,
         fontSize: Responsive.size12,
         color: Color.white,
-        textAlign: 'center', 
-       
-      },
-      
+        textAlign: 'center',
+
+    },
+
     headerIcon: {
         height: Responsive.size36,
         width: Responsive.size36,
     },
 
-    nftIcon:{
+    nftIcon: {
         height: Responsive.size20,
-        width: Responsive.size20,   
+        width: Responsive.size20,
     },
-    nftBackground :{
+    nftBackground: {
         height: Responsive.size36,
         width: Responsive.size36,
         borderRadius: Responsive.size18,
         backgroundColor: Color.white,
-        justifyContent:'center',
-        alignItems:'center'
+        justifyContent: 'center',
+        alignItems: 'center'
     }
-    
+
 });
 
 export default SendingHeader;

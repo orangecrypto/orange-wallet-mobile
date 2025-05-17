@@ -14,13 +14,10 @@ const NftItem = ({ item }) => {
         }
     };
 
-
     return (
         <TouchableOpacity
             style={styles.itemContainer}
             onPress={handlePress}>
-
-
             {item.thumbnail_inscriptions[0].content_type?.startsWith('image/') ?
                 <Image
                     source={{

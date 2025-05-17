@@ -51,11 +51,11 @@ const CommonButton: React.FC<CommonButtonProps> = ({
 
 const styles = StyleSheet.create({
   button: {
-    paddingVertical: 14,
+    paddingVertical: Responsive.size14,
     borderRadius: Responsive.size12,
     alignItems: 'center',
     justifyContent: 'center',
-    marginVertical: 10,
+    marginVertical: Responsive.size10,
   },
   text: {
     fontSize: Responsive.size16,

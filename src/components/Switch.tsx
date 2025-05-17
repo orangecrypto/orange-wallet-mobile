@@ -23,18 +23,13 @@ const Switch = ({ isEnable, height, width, onToggle }) => {
           style={[
             styles.handle,
             {
-
              backgroundColor: isEnable ?Color.orangeButton :Color.disableSwitch,
              marginLeft:isEnable ? 0 :Responsive.size2,
-              width: handleSize,
-              height: handleSize,
-              borderRadius: handleSize / 2,
-              transform: [{ translateX: handlePosition }],
-             
-              
-            },
-          ]}
-        />
+             width: handleSize,
+             height: handleSize,
+             borderRadius: handleSize / 2,
+             transform: [{ translateX: handlePosition }],
+             },]}/>
       </View>
     </TouchableWithoutFeedback>
   );
@@ -46,12 +41,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: Responsive.size2,
     borderColor:Color.orangeButton,
-    borderWidth:1
+    borderWidth:Responsive.size1
   },
   handle: {
     position: 'absolute',
     backgroundColor:  Color.orangeOpacityBg, 
   },
 });
-
 export default Switch;
