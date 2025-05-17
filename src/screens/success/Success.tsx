@@ -52,14 +52,12 @@ const Success = () => {
 
     const totalSteps = contentArray.length;
 
-    // Update percentage when currentStep changes
     useEffect(() => {
         const progressPercentage =
             totalSteps > 1 ? ((currentStep - 1) / (totalSteps - 1)) * 100 : 0;
         setProgressPercentage(progressPercentage);
     }, [currentStep]);
 
-    // Animate when percentage changes
     useEffect(() => {
         Animated.timing(animatedValue, {
             toValue: progressPercentage,
@@ -83,7 +81,6 @@ const Success = () => {
         if (currentStep < totalSteps) {
             const screenWidth = Dimensions.get("window").width;
             scrollViewRef.current?.scrollTo({ x: screenWidth * currentStep, animated: true });
-            // currentStep will auto-increment via handleScroll onScrollEnd
         } else {
             resetNavigation(RouteType.WALLETBALANCE);
         }
@@ -99,8 +96,7 @@ const Success = () => {
                 showsHorizontalScrollIndicator={false}
                 showsVerticalScrollIndicator={false}
                 scrollEventThrottle={16}
-                contentContainerStyle={styles.scrollViewContainer}
-            >
+                contentContainerStyle={styles.scrollViewContainer}>
                 {contentArray.map((item) => (
                     <View key={item.id} style={styles.contentPage}>
                         <Image source={item.icon} style={styles.icon} resizeMode="contain" />
@@ -114,8 +110,7 @@ const Success = () => {
                 style={styles.progressBarContainer}
                 onLayout={(event) => {
                     setProgressBarWidth(event.nativeEvent.layout.width);
-                }}
-            >
+                }}>
                 {progressBarWidth > 0 && (
                     <Animated.View
                         style={{
@@ -126,8 +121,7 @@ const Success = () => {
                             position: "absolute",
                             left: 0,
                             transform: [{ translateX }],
-                        }}
-                    />
+                        }}/>
                 )}
             </View>
             <View style={styles.horizontalButtonContainer}>

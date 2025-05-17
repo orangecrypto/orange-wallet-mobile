@@ -31,7 +31,7 @@ export const loadAccount = async (
         return accounts;
     } catch (err) {
         console.error('Error loading account:', err);
-        throw err; // rethrow if you want to handle it higher up
+        throw err; 
     }
 };
 
@@ -94,7 +94,7 @@ const restoreWalletWithAccounts = async (mnemonic, selectedNetwork, networkObjec
                         master,
                     });
                 } catch (error) {
-                    return null;  // Handle error by returning null or an error object
+                    return null;  
                 }
                 const username = await getBnsName(response.stxAddress, networkObject);
                 existingAccount = {
@@ -156,7 +156,7 @@ const getOrCreateWalletConfig = async ({
         return newConfig;
     } catch (error) {
         console.error("Error creating wallet config:", error);
-        throw error; // Re-throw to allow handling at a higher level if needed
+        throw error; 
     }
 };
 
@@ -243,12 +243,10 @@ function decryptECIES(payload: any, privateKeyHex: string) {
         console.log('decryptECIES', 'decipher :' + JSON.stringify(decipher))
         let decrypted = decipher.update(cipherText);
         decrypted = Buffer.concat([decrypted, decipher.final()]);
-
         return payload.wasString ? decrypted.toString('utf8') : decrypted;
 
     } catch (error) {
         console.log('decryptECIES', 'ephemeralPK :' + error)
-
     }
 }
 

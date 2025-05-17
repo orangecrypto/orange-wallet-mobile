@@ -3,7 +3,6 @@ import { BigNumber } from "@orangecryptohq/orangeseed/dist/utils/bignumber";
 import { getImageSourceOrange, microStxToStx, truncateAddress } from "@utils/cryptoUtils";
 
 
-
 export const gnerateDataForBtc = async (transactionData, networkType, rate, confirmData) => {
     return [
         {

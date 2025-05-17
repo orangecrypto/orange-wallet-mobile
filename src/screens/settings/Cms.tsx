@@ -8,7 +8,6 @@ import { Responsive } from "@utils/Responsive";
 
 const Cms = ({ route }) => {
     const { url } = route.params;
-
    
     return (
         <View style={styles.cmsContainer}>
@@ -22,8 +21,7 @@ const Cms = ({ route }) => {
                 javaScriptEnabled={true}
                 domStorageEnabled={true}
                 allowFileAccess={true}
-                mixedContentMode="always"
-            />
+                mixedContentMode="always"/>
         </View>
     );
 };

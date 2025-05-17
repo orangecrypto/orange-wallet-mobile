@@ -1,4 +1,6 @@
 import { localAssets } from '@assets/assets';
+import useSeedVault from '@hooks/useSeedVault';
+import { store } from '@redux/store';
 import { resetNavigation } from '@routes/Navigator';
 import { RouteType } from '@routes/RouteType';
 import { Responsive } from '@utils/Responsive';
@@ -6,9 +8,6 @@ import { Color } from '@values/color';
 import { Fonts } from '@values/fonts';
 import React, { useEffect } from 'react';
 import { Image, StyleSheet, View } from 'react-native';
-import useSeedVault from '@hooks/useSeedVault';
-import { store } from '@redux/store';
-import { validateBtcAddress, validateStxAddress } from '@orangecryptohq/orangeseed';
 
 const SplashScreen = () => {
   
@@ -27,20 +26,13 @@ const SplashScreen = () => {
           if (await isVaultUnlocked()) {
             startTimer(RouteType.WALLETBALANCE);
           }
-          else {
-
-        
+          else {        
             startTimer(RouteType.LOGIN)
           }
-  
-          
         }, 500);
-
-       
       } else {
         startTimer(RouteType.HOME_SCREEN);
       }
-      
     };
     initializeSeedVault();
  }, []);

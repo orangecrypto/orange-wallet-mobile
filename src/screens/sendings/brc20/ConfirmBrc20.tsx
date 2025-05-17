@@ -22,7 +22,6 @@ const ConfirmBrc20 = ({ route }) => {
     const [isProgressCompleted, setIsProgressCompleted] = useState(false);
     const [progressWidth, setProgressWidth] = useState(0);
     const { getSeed } = useSeedVault();
-    const [seedPhrase, setSeedPhrase] = useState<string | null>(null);
     const [hasError, setHasError] = useState(false);
     const { complete, executeTransfer, transferTransactionId, errorCode, progress } =
         useBrc20TransferExecute({

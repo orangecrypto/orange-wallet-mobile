@@ -20,8 +20,6 @@ const ConfirmationItem = ({ item, availableRoutes, type }) => {
     const { selectedAccount } = useSelector((state: { seedPhraseReducer: appReducerType }) => state.appReducer);
     const [isModalVisible, setModalVisible] = useState(false);
     const [selectedScripts, setSelectedScripts] = useState([]);
-
-    console.log('ConfirmationItem', type)
     const openBottomSheet = (scripts) => {
         setSelectedScripts(scripts);
         setModalVisible(true);
@@ -146,7 +144,6 @@ const ConfirmationItem = ({ item, availableRoutes, type }) => {
                     </View>
                 </View>
             )}
-
             <ScriptModal visible={isModalVisible} scripts={selectedScripts} onClose={() => setModalVisible(false)} />
         </View>
     );

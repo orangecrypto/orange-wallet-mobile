@@ -31,7 +31,7 @@ const EditFees = () => {
     const renderCategory = (category) => (
         <TouchableOpacity
             key={category}
-            onPress={() => setSelectedCategory(category)} // Update the selected category
+            onPress={() => setSelectedCategory(category)}
             style={[
                 styles.categoryButton,
                 selectedCategory === category && styles.selectedCategory,

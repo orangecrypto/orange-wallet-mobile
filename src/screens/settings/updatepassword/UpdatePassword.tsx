@@ -109,8 +109,7 @@ const UpdatePassword = () => {
                         textColor={Color.white}
                         disabled={errorMessage != strings.strongPassword}
                         width={'100%'}
-                        height={Responsive.size50}
-                    />
+                        height={Responsive.size50}/>
                 </View>
             )}
         </KeyboardAvoidingView>

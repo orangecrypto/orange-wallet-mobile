@@ -34,12 +34,6 @@ const BackupYourWallet = () => {
         }
      };
 
-    const handlePasswordChange = (inputPassword) => {
-        const { strengthMessage, feedback } = validatePasswordStrength(inputPassword);
-        console.log(strengthMessage);
-        setPasswordError(strengthMessage);
-        setPasswordFeedback(feedback);
-    };
     useEffect(() => {
         const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
             setIsKeyboardVisible(true);
@@ -77,7 +71,7 @@ const BackupYourWallet = () => {
                         placeholder={''}
                         value={password}
                         onChangeText={(text) => {
-                            setPassword(text); // Update local password state
+                            setPassword(text); 
                            
                         }}
                         secureTextEntry={true}

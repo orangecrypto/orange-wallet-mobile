@@ -47,8 +47,6 @@ const VerifyPassword = () => {
         } catch (error) {
             Toast.show({ type: 'error', text1: error.message });
         }
-
-
     };
 
     useEffect(() => {
@@ -101,7 +99,6 @@ const VerifyPassword = () => {
                         {password !== "" && error !== strings.strongPassword && (
                             <Text style={styles.passwordError}>{strings.passwordValidationMessage}</Text>
                         )}
-                        {/* <Text style={styles.passwordError}>{feedback}</Text> */}
                     </View>
                 </View>
             </ScrollView>

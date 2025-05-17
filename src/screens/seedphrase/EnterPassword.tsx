@@ -1,14 +1,13 @@
 import { localAssets } from "@assets/assets";
 import CustomTextInput from "@components/CustomTextInput";
+import { setDisabled } from "@redux/slice/SeedPhraseReducer";
+import { useAppDispatch } from "@redux/store";
+import { Dispatch } from "@reduxjs/toolkit";
 import { strings } from "@strings/i18n";
 import { validatePasswordStrength } from "@utils/Validations";
-import { Color } from "@values/color";
 import { useEffect, useState } from "react";
 import { Image, Text, View } from "react-native";
 import { styles } from "./styles";
-import { Dispatch } from "@reduxjs/toolkit";
-import { useAppDispatch } from "@redux/store";
-import { setDisabled } from "@redux/slice/SeedPhraseReducer";
 
 const EnterPassword = ({ type, onPasswordChange }: { type: "enter" | "confirm"; onPasswordChange: (password: string) => void }) => {
     const [password, setPassword] = useState("");

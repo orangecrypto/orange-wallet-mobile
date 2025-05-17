@@ -16,13 +16,11 @@ import { gnerateDataForBrc20 } from "../ConfirmTransactionUtils";
 import { getFeeValuesForBrc20OneStepTransfer } from "./Brc20Utils";
 
 const SendBrc20Confirmation = ({ route }) => {
-    const { network, selectedAccount } = useSelector((state) => state.appReducer);
+    const { network } = useSelector((state) => state.appReducer);
     const confirmData = route?.params?.confirmData;
     const [confirmationArray, setConfirmationArray] = useState([]);
     const availableRoutes = ["Edit Fees", "Edit Nonce"];
-
     const { commitValue, commitValueBreakdown, isLoading } = useBrc20TransferFees(confirmData?.estimateFeesParams);
-
     const { txFee, inscriptionFee, totalFee, transferUtxoValue } =
     getFeeValuesForBrc20OneStepTransfer(commitValueBreakdown ?? confirmData?.estimatedFees.valueBreakdown);
     
@@ -65,8 +63,7 @@ const SendBrc20Confirmation = ({ route }) => {
                     keyExtractor={(_, index) => index.toString()}
                     renderItem={({ item }) => (
                         <ConfirmationItemBrc20 item={item} availableRoutes={availableRoutes} type={confirmData.transactionType} />
-                    )}
-                />
+                    )}/>
             </View>
             <View style={styles.horizontalButtonContainer}>
                 <CommonButton
@@ -76,19 +73,16 @@ const SendBrc20Confirmation = ({ route }) => {
                     textColor={Color.white}
                     borderColor={Color.blackBorder}
                     width={'45%'}
-                    height={Responsive.size50} 
-                />
+                    height={Responsive.size50}/>
                 <CommonButton
                     title={strings.confirm}
                     onPress={confirmTransaction}
                     backgroundColor={Color.orangeButton}
                     textColor={Color.white}
                     width={'45%'}
-                    height={Responsive.size50} 
-                />
+                    height={Responsive.size50}/>
             </View>
         </View>
     );
 };
-
 export default SendBrc20Confirmation;

@@ -45,8 +45,7 @@ const ViewQr = ({ route }) => {
         <View style={styles.container}>
             <ScrollView
             showsVerticalScrollIndicator={false}
-            showsHorizontalScrollIndicator={false}
-            >
+            showsHorizontalScrollIndicator={false}>
                 <View style={styles.contentContainer}>
                     <TouchableOpacity style={styles.button} onPress={() => goBack()}>
                         <Text style={styles.buttonText}>{strings.back}</Text>
@@ -58,8 +57,7 @@ const ViewQr = ({ route }) => {
                         <QRCode
                             value={route?.params?.item?.address}
                             size={Platform.OS === 'ios' ? Responsive.size164 : Responsive.size164}
-                            backgroundColor={Color.white}
-                        />
+                            backgroundColor={Color.white}/>
                     </ViewShot>
 
                     <Text

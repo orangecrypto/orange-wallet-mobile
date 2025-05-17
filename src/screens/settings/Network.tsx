@@ -101,8 +101,7 @@ const Network = () => {
                     textColor={Color.white}
                     disabled={!selecteNetwork}
                     width={'100%'}
-                    height={Responsive.size50}
-                />
+                    height={Responsive.size50}/>
             </View>
         </View>
     );

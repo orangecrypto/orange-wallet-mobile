@@ -1,26 +1,24 @@
 import { localAssets } from '@assets/assets';
+import Clipboard from "@react-native-clipboard/clipboard";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { setCardIndex, setHeaderAddress, walletReducerType } from '@redux/slice/WalletReducer';
+import { store, useAppDispatch } from "@redux/store";
+import { Dispatch } from '@reduxjs/toolkit';
+import { push } from '@routes/Navigator';
+import { RouteType } from '@routes/RouteType';
+import { strings } from '@strings/i18n';
+import { truncateAddress } from '@utils/cryptoUtils';
 import { Responsive } from '@utils/Responsive';
 import { Color } from '@values/color';
 import React, { useEffect } from 'react';
-import { Image, StyleSheet, Text, View, TouchableOpacity, Platform } from 'react-native';
-import Assistant from './assistant/Assistant';
+import { Image, Platform, Text, TouchableOpacity, View } from 'react-native';
+import Toast from 'react-native-toast-message';
+import { useSelector } from 'react-redux';
+import Loan from './loan/Loan';
 import Market from './market/Market';
 import Nft from './nft/Nft';
-import Wallet from './wallet/Wallet';
-import { push } from '@routes/Navigator';
-import { RouteType } from '@routes/RouteType';
-import { useSelector } from 'react-redux';
-import { setCardIndex, setHeaderAddress, walletReducerType } from '@redux/slice/WalletReducer';
-import { Dispatch } from '@reduxjs/toolkit';
-import { useAppDispatch } from "@redux/store";
-import { store } from '@redux/store';
-import Clipboard from "@react-native-clipboard/clipboard";
-import { truncateAddress } from '@utils/cryptoUtils';
 import { styles } from './styles';
-import Toast from 'react-native-toast-message';
-import { strings } from '@strings/i18n';
-import Loan from './loan/Loan';
+import Wallet from './wallet/Wallet';
 
 const MainWallet = () => {
     const account = store.getState().appReducer.selectedAccount
@@ -56,21 +54,17 @@ const MainWallet = () => {
 
     return (
         <View style={styles.container}>
-
             <View style={styles.header}>
                 <TouchableOpacity onPress={handleAddAddress} style={styles.headerClickableText}>
                     <Text style={styles.headerText} numberOfLines={1}>{truncateAddress(headerAddress)}</Text>
                 </TouchableOpacity>
                 <View style={styles.iconsContainer}>
-
                     <TouchableOpacity onPress={handleCopyPress} style={styles.headerClickableIcon}>
                         <Image source={localAssets.copy} style={styles.headerIcon} />
                     </TouchableOpacity>
-
                     <TouchableOpacity onPress={handleQrPress} style={styles.headerClickableIcon}>
                         <Image source={localAssets.qr} style={styles.headerIcon} />
                     </TouchableOpacity>
-
                     <TouchableOpacity onPress={handleSettingsPress} style={styles.headerClickableIcon}>
                         <Image source={localAssets.settings} style={styles.headerIcon} />
                     </TouchableOpacity>
@@ -78,8 +72,7 @@ const MainWallet = () => {
             </View>
 
             <Tab.Navigator
-                screenOptions={({ route }) => ({
-                    
+                screenOptions={({ route }) => ({                    
                     tabBarStyle: {
                         backgroundColor: Color.black,
                         borderRadius: Responsive.size10,
@@ -97,7 +90,6 @@ const MainWallet = () => {
                     },
                     tabBarIcon: ({ focused, color, size }) => {
                         let iconSource;
-
                         switch (route.name) {
                             case 'Wallet':
                                 iconSource = localAssets.bottomwallet;
@@ -125,8 +117,7 @@ const MainWallet = () => {
                                     styles.icon,
                                     focused && styles.iconFocused,
                                     { tintColor: focused ? Color.orangeButton : '#2D3242' },
-                                ]}
-                            />
+                                ]}/>
                         );
                     },
                     tabBarActiveTintColor: Color.orangeButton,
@@ -175,5 +166,4 @@ const MainWallet = () => {
         </View>
     );
 };
-
 export default MainWallet;

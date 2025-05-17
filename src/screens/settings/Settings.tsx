@@ -12,7 +12,6 @@ const Settings = () => {
     console.log('Settings', DeviceInfo.getVersion())
     const loadSettings = () => {
 
-      
         setSettingsArray([
             { id: 1, name: "Version", value: `${DeviceInfo.getVersion()}` },
             { id: 2, name: "Network", value: store.getState().appReducer.network?.type },

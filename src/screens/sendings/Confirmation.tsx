@@ -17,11 +17,9 @@ const Confirmation = ({ route }) => {
                 <ImageBackground style={styles.transactionVectorBackground} source={localAssets.transactionvector}>
                     <Image source={localAssets.transactiondone } style={ styles.transactionVectorIconDone} />
                 </ImageBackground>
-
                 <Text style={styles.transactionTitle}>{strings.transactionSend }</Text>
                 <Text style={styles.transactionDescription}>{ strings.transactionSendMessage }</Text>
             </View>
-
             <View style={styles.transactionIdContainer}>
             <Text style={styles.transactionIdLabel} >{strings.transactionId}</Text>
             <Text style={styles.transactionIdValue}>{`${route?.params?.transactionId}`}</Text>

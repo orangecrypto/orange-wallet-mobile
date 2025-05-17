@@ -1,6 +1,6 @@
 import { localAssets } from "@assets/assets";
 import CommonButton from "@components/CommonButton";
-import { push, resetNavigation } from "@routes/Navigator";
+import { resetNavigation } from "@routes/Navigator";
 import { RouteType } from "@routes/RouteType";
 import { strings } from "@strings/i18n";
 import { Responsive } from '@utils/Responsive';

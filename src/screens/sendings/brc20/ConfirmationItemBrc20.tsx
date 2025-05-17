@@ -1,22 +1,14 @@
 import { localAssets } from "@assets/assets";
-import { satsToBtc, validateBtcAddressIsTaproot } from "@orangecryptohq/orangeseed";
-import { BigNumber } from "@orangecryptohq/orangeseed/dist/utils/bignumber";
-import Clipboard from "@react-native-clipboard/clipboard";
-import { strings } from "@strings/i18n";
-import { truncateAddress } from "@utils/cryptoUtils";
-import { Responsive } from "@utils/Responsive";
+import TokenImage from "@components/TokenImage";
 import React, { useState } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import { styles } from "../styles";
-import TokenImage from "@components/TokenImage";
 
 const ConfirmationItemBrc20 = ({ item, availableRoutes, type }) => {
     const [isDropdownOpen, setDropdownOpen] = useState(false);
 
     const handlePress = () => {
-
         setDropdownOpen(!isDropdownOpen);
-
     };
 
     return (

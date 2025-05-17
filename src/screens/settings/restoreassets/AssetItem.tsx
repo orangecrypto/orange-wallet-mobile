@@ -1,8 +1,7 @@
-import { Color } from "@values/color";
-import { TouchableOpacity, View, Image, Text } from "react-native";
-import { styles } from "../styles";
-import { localAssets } from "@assets/assets";
 import { Responsive } from "@utils/Responsive";
+import { Color } from "@values/color";
+import { Image, Text, TouchableOpacity, View } from "react-native";
+import { styles } from "../styles";
 
 const AssetItem = ({ item, onSelect, isSelected }) => {
 
@@ -33,7 +32,6 @@ const AssetItem = ({ item, onSelect, isSelected }) => {
                 </View>
             </View>
             <View style={styles.assetValues}>
-                {/* <Text style={styles.assetQuantity}>{item.quantity}</Text> */}
                 <Text style={styles.assetValue}>{item.value + ' sats'}</Text>
             </View>
         </TouchableOpacity>
