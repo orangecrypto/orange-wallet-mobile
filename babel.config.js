@@ -16,7 +16,8 @@ module.exports = {
           "@strings": "./src/resources/locale",
           "@redux": "./src/redux",
           "@hooks": "./src/hooks",
-          "@services": "./src/services"
+          "@services": "./src/services",
+           "@config": "./src/config"
 
         },
       },

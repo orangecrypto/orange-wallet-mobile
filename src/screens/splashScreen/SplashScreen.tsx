@@ -11,6 +11,7 @@ import { store } from '@redux/store';
 
 const SplashScreen = () => {
 
+ 
  const { isVaultUnlocked} = useSeedVault()
   const startTimer = (routeName: string) => {
     setTimeout(() => {
@@ -22,14 +23,20 @@ const SplashScreen = () => {
     const initializeSeedVault = async () => {
       if (store.getState().appReducer.isWalletCreated) {
       
-        
-        if (await isVaultUnlocked()) {
-          startTimer(RouteType.WALLETBALANCE);
-        }
-        else {
-          startTimer(RouteType.LOGIN)
-        }
+        setTimeout(async () => {
+          if (await isVaultUnlocked()) {
+            startTimer(RouteType.WALLETBALANCE);
+          }
+          else {
 
+        
+            startTimer(RouteType.LOGIN)
+          }
+  
+          
+        }, 500);
+
+       
       } else {
         startTimer(RouteType.HOME_SCREEN);
       }

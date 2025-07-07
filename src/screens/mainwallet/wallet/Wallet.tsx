@@ -3,7 +3,7 @@ import useBtcClient from '@hooks/useBtcClient';
 import useRunesApi from '@hooks/useRunesApi';
 import useSelectedNetwork from '@hooks/useSelectedNetwork';
 import useStxData from '@hooks/useStxData';
-import { getFtData, getOrdinalsFtBalance, HIRO_MAINNET_DEFAULT, StacksMainnet } from '@orangecryptohq/orangeseed';
+import { getFtData, getMoonPaySignedUrl, getOrdinalsFtBalance, HIRO_MAINNET_DEFAULT, StacksMainnet } from '@orangecryptohq/orangeseed';
 import { setHeaderAddress } from '@redux/slice/WalletReducer';
 import { store, useAppDispatch } from "@redux/store";
 import { Dispatch } from '@reduxjs/toolkit';
@@ -198,6 +198,8 @@ const Wallet = () => {
                         handleTransactionClick={handleTransactionClick} />
                 </View>}
         </View>
+
+
     );
 };
 export default Wallet;
