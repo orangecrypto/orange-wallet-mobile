@@ -76,6 +76,23 @@ export const createTokenArray = async (
                 ticker: 'STX',
             };
         } else if (item.category === 'BRC20') {
+
+            const ornjToken = brc20Tokens.find(token => token.ticker?.trim().toUpperCase() === 'ORNJ');
+            if(ornjToken){
+                const balance = ornjToken.balance;
+                const formattedBalance = parseFloat(balance.toString());
+                return {
+                    ...item,
+                    image: localAssets.orangetransaction,
+                    balance: formattedBalance,
+                    total_sent: '0.00',
+                    total_received: '0.00',
+                    tokenFiatRate: '0.00',
+                    protocol: 'brc-20',
+                    ticker: getFtTicker(item),
+                };
+                
+            }else {
             return {
                 ...item,
                 image: localAssets.orangetransaction,
@@ -86,6 +103,7 @@ export const createTokenArray = async (
                 protocol: 'brc-20',
                 ticker: getFtTicker(item),
             };
+        }
         }
         return item;
     });
@@ -150,7 +168,12 @@ export const createTokenArray = async (
             id: generateUniqueId(),
             tokenFiatRate: '0.00',
         })),
-        ...brc20Tokens.map(token => ({
+        ...brc20Tokens
+        .filter(token => {
+            console.log("Checking token:", token.ticker); // Debugging log
+            return token.ticker?.trim().toUpperCase() !== 'ORNJ'; // Ensure case-insensitive check
+        })
+        .map(token => ({
             ...token,
             balance: getFtBalance(token),
             category: 'BRC20',
@@ -159,6 +182,10 @@ export const createTokenArray = async (
         })),
     ];
 
+    console.log('createTokenArray', `brc20Tokens ${JSON.stringify(brc20Tokens)}`)
+
+    
+    
     console.log('createTokenArray', `updatedCryptoArray ${JSON.stringify(updatedCryptoArray)}`)
     console.log('createTokenArray', `userTokens ${JSON.stringify(userTokens)}`)
     console.log('createTokenArray', `addParnterTokens ${JSON.stringify(addParnterTokens)}`)

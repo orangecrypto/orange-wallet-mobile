@@ -114,6 +114,7 @@ const Wallet = () => {
             getFtData(stxAddress, stackNetwork),
         ]);
 
+        console.log('getBalance brc20Res', brc20Res)
         const btcBalance = btcRes.status === 'fulfilled' ? btcRes.value : 0;
         const brc20Tokens = brc20Res.status === 'fulfilled' ? brc20Res.value : [];
         const runesTokens = runesRes.status === 'fulfilled' ? runesRes.value : [];

@@ -51,7 +51,7 @@ const EditFees = () => {
     return (
         <View style={styles.container}>
             <View style={styles.contentContainer}>
-                <TouchableOpacity style={styles.button} onPress={() => goBack()}>
+                <TouchableOpacity style={[styles.button,{marginTop:Responsive.size50}]} onPress={() => goBack()}>
                     <Text style={styles.buttonText}>{strings.back}</Text>
                 </TouchableOpacity>
                 <Text style={styles.title}>{strings.editFees}</Text>

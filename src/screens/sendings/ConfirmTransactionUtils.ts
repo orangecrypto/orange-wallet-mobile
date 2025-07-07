@@ -144,3 +144,93 @@ export const gnerateDataForRunes = async(transactionData, networkType, rate, con
        
     ];
 }
+
+export const gnerateDataForBrc20 = async(networkType, rate, confirmData, txFee,inscriptionFee) =>{
+
+    const totalFee = Number(txFee)+ Number(inscriptionFee) 
+
+    const totalFeeFiateValue = Number(satsToBtc(new BigNumber(totalFee)) ) * rate
+    const formattedtotal = totalFeeFiateValue > 0 && totalFeeFiateValue < 0.01 ? '<$0.01 USD' : `$${totalFeeFiateValue.toFixed(2)} USD`;
+    return [
+        {
+            id: 1,
+            name: "Amount",
+            value: `${confirmData.sendAmount} ${confirmData.token.ticker}`,
+            
+        },
+        {
+            id: 2,
+            name: "Inscribing and Sending",
+            value: `${confirmData.sendAmount} ${confirmData.token.ticker}`,
+            token: confirmData?.token,
+            feeFiateValue: `$${confirmData.token.tokenFiatRate} USD`
+        },
+        {
+            id: 3,
+            name: "Recipient",
+            value: `${truncateAddress(confirmData.recipientAddress)}`,
+            subvalue: ''
+        },
+        
+        {
+            id: 4,
+            name: "Network",
+            value: `${networkType}`,
+            subvalue: ''
+        },
+        {
+            id: 5,
+            name: "Fees",
+            value: `${txFee} ${'sats'}`,      
+        },
+        {
+            id: 6,
+            name: "Inscription Fee",
+            value: `${inscriptionFee} ${'sats'}`,     
+        },
+        {
+            id: 7,
+            name: "Total Fee",
+            value: totalFee +' sats',
+            subvalue: `~ $${formattedtotal} `
+        },
+       
+        { id: 8, name: "Edit Fees", value: '', subvalue: '' },
+    ];
+}
+
+export const gnerateDataForOrdinals = async (transactionData, networkType, rate, confirmData) => {
+    return [
+        // {
+        //     id: 1,
+        //     name: "Amount",
+        //     value: `${confirmData.sendAmount} ${confirmData.transactionType}`,
+        //     subvalue: `~ $${(confirmData.sendAmount * rate).toFixed(2)} USD`
+        // },
+        {
+            id: 2,
+            name: "Recipient",
+            value: `${truncateAddress(confirmData.recipientAddress)}`,
+            subvalue: ''
+        },
+        {
+            id: 3,
+            name: "Network",
+            value: `${networkType}`,
+            subvalue: ''
+        },
+        {
+            id: 4,
+            name: "Fees",
+            value: `${transactionData.fee} sats`,
+            subvalue: `$${(satsToBtc(new BigNumber(transactionData.fee)) * rate).toFixed(2)} USD`
+        },
+        {
+            id: 5,
+            name: "Total",
+            value: `${satsToBtc(new BigNumber(transactionData.total)).toFixed(8)} ${confirmData.transactionType}`,
+            subvalue: `~ $${(satsToBtc(new BigNumber(transactionData.total)) * rate).toFixed(2)} USD`
+        },
+        { id: 6, name: "Edit Fees", value: '', subvalue: '' },
+    ];
+};
