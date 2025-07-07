@@ -7,7 +7,7 @@ import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 interface TokenImageProps {
   token?: string;
   loading?: boolean;
-  fungibleToken?: { name?: string; ticker?: string };
+  fungibleToken?: { name?: string; ticker?: string, tick?: string };
   size?: number;
   round?: boolean;
   variant?: 'default' | 'dark' | 'send';
@@ -29,7 +29,7 @@ export default function TokenImage({
         : Color.selectedCategory;
 
   const displayedTicker = useMemo(() => {
-    const ticker = fungibleToken?.ticker || fungibleToken?.name || token || '?';
+    const ticker = fungibleToken?.ticker || fungibleToken?.name || fungibleToken?.tick || token || '?';
     return ticker.substring(0, 2).toUpperCase();
   }, [fungibleToken, token]);
 

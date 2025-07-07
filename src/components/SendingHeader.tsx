@@ -11,6 +11,7 @@ const SendingHeader = ({
     ticker,
     type,
     iconSource,
+    nftIcons,
     containerStyle = {}
 }) => {
     return (
@@ -39,13 +40,23 @@ const SendingHeader = ({
             </View>
             {/* <Image source={iconSource} style={styles.headerIcon} /> */}
 
-            {iconSource?.image ? <Image source={iconSource.image} style={styles.headerIcon} /> :
-                <TokenImage
-                    fungibleToken={iconSource}
-                    size={Responsive.size40}
-                    round
-                    variant="send" />
-            }
+            {ticker === 'Ordinals' ? (
+                <View style={styles.nftBackground}>
+                <Image source={nftIcons} style={styles.nftIcon}/>
+                </View>
+            ) : (
+                iconSource?.image ? (
+                    <Image source={iconSource.image} style={styles.headerIcon} />
+                ) : (
+                    <TokenImage
+                        fungibleToken={iconSource}
+                        size={Responsive.size40}
+                        round
+                        variant="send"
+                    />
+                )
+            )}
+
 
         </View>
     );
@@ -91,6 +102,20 @@ const styles = StyleSheet.create({
         height: Responsive.size36,
         width: Responsive.size36,
     },
+
+    nftIcon:{
+        height: Responsive.size20,
+        width: Responsive.size20,   
+    },
+    nftBackground :{
+        height: Responsive.size36,
+        width: Responsive.size36,
+        borderRadius: Responsive.size18,
+        backgroundColor: Color.white,
+        justifyContent:'center',
+        alignItems:'center'
+    }
+    
 });
 
 export default SendingHeader;

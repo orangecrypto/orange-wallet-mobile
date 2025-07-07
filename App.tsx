@@ -113,7 +113,15 @@ const App = () => {
       },
     },
     queryCache: new QueryCache({
-      onError: (error) => console.error('Error in query:', error),
+      
+      onError: (error) =>{
+        
+        Toast.show({
+          type: 'error',
+          text1: error?.message || 'Something went wrong.',
+        });
+        console.error('Error in query:', error)},
+
     }),
     mutationCache: new MutationCache({
       onError: (error) => console.error('Error in mutation:', error),

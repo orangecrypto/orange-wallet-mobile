@@ -144,7 +144,7 @@ const MainWallet = () => {
                             dispatch(setHeaderAddress(account?.ordinalsAddress))
                         },
                     })} />
-                <Tab.Screen name="Assistant" component={Assistant} />
+                {/* <Tab.Screen name="Assistant" component={Assistant} /> */}
             </Tab.Navigator>
         </View>
     );
