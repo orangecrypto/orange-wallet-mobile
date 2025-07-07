@@ -10,18 +10,23 @@ interface TokenImageProps {
   fungibleToken?: { name?: string; ticker?: string };
   size?: number;
   round?: boolean;
-  variant?: 'default' | 'dark';
+  variant?: 'default' | 'dark' | 'send';
 }
 
-export default  function TokenImage({
+export default function TokenImage({
   token,
   loading,
   fungibleToken,
-  size ,
+  size,
   round = true,
   variant = 'default',
 }: TokenImageProps) {
-  const background = variant === 'dark' ? Color.tokenImageDarkBg : Color.selectedCategory;
+  const background =
+    variant === 'dark'
+      ? Color.tokenImageDarkBg
+      : variant === 'send'
+        ? Color.white
+        : Color.selectedCategory;
 
   const displayedTicker = useMemo(() => {
     const ticker = fungibleToken?.ticker || fungibleToken?.name || token || '?';
@@ -36,9 +41,12 @@ export default  function TokenImage({
     );
   }
 
-  return  (
-   <View style={[styles.placeholder, { backgroundColor: background, width: size, height: size, borderRadius: round ? size / 2 : 8 }]}>
-      <Text style={[styles.text, variant === 'dark' ? styles.darkText : styles.defaultText]}>
+  return (
+    <View style={[styles.placeholder, { backgroundColor: background, width: size, height: size, borderRadius: round ? size / 2 : 8 }]}>
+      <Text style={[
+        styles.text,
+        variant === 'dark' ? styles.darkText : variant === 'send' ? styles.sendText : styles.defaultText
+      ]}>
         {displayedTicker}
       </Text>
     </View>
@@ -61,7 +69,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: Responsive.size13,
     fontFamily: Fonts.semibold,
-   
+
   },
   defaultText: {
     color: Color.white,
@@ -70,5 +78,10 @@ const styles = StyleSheet.create({
   },
   darkText: {
     color: Color.tokenImageDarkText,
+  },
+  sendText: {
+    color: Color.orangeButton,
+    fontSize: Responsive.size14, 
+    fontFamily: Fonts.bold, 
   },
 });

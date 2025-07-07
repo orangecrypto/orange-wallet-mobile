@@ -18,6 +18,7 @@ const TransactionList = ({ transaction, isLoading, selectedToken, limit, fetchTr
             onEndReached={() => {
                 if ((selectedToken.protocol === 'runes' || selectedToken.protocol === 'stacks') && transaction.length >= limit) {
                     fetchTransactions(selectedToken, walletContext);
+                    console.log('TransactionList ','fetchTransactions')
                 }
             }}
         />

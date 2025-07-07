@@ -9,12 +9,13 @@ import React, { useState, useEffect } from "react";
 import { Image, ImageBackground, Text, View } from "react-native";
 import { styles } from "./styles";
 
-const Confirmation = () => {
+const Confirmation = ({ route }) => {
 
     const [progress, setProgress] = useState(false);
     const [progressWidth, setProgressWidth] = useState(0); 
 
     useEffect(() => {
+        console.log('Confirmation', route?.params?.transactionData)
         const interval = setInterval(() => {
             setProgressWidth(prev => {
                 if (prev < 100) {
@@ -46,6 +47,10 @@ const Confirmation = () => {
                 <Text style={styles.transactionDescription}>{progress ? strings.transactionSendMessage : strings.sendingTransactionMessage}</Text>
             </View>
 
+           {progress && <View style={styles.transactionIdContainer}>
+            <Text style={styles.transactionIdLabel} >{strings.transactionId}</Text>
+            <Text style={styles.transactionIdValue}>{`${route?.params?.transactionId}`}</Text>
+            </View>}
             <View style={styles.buttonContainer}>
                 <CommonButton
                     title={strings.close}

@@ -17,12 +17,14 @@ const SendOrdinals = () => {
     return (
         <View style={styles.container}>
 
-            <SendingHeader
-                title="0.02832"
-                subtitle="0.02832"
-                tokens={['Ordinals']}
-                iconSource={localAssets.assetbitcoin}
-                containerStyle={styles.sendingHeader} />
+                <SendingHeader
+                    title="0.02832"
+                    subtitle="0.02832"
+                    ticker={'BTC'}
+                    type={'BRC-20'}
+                    iconSource={localAssets.assetbitcoin}
+                    containerStyle={styles.sendingHeader}
+                />
 
             <View style={styles.contentContainer}>
                 <View style={styles.topContainer}>

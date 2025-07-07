@@ -40,7 +40,6 @@ import {
       },
       timeout: API_TIMEOUT_MILLI,
     });
-    console.log('getTransferTransactions', response.data.total)
     return response.data.results;
   }
   

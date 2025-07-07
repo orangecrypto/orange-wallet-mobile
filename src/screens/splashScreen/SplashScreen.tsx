@@ -8,11 +8,11 @@ import React, { useEffect } from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 import useSeedVault from '@hooks/useSeedVault';
 import { store } from '@redux/store';
+import { validateBtcAddress, validateStxAddress } from '@orangecryptohq/orangeseed';
 
 const SplashScreen = () => {
-
- 
- const { isVaultUnlocked} = useSeedVault()
+  
+  const { isVaultUnlocked} = useSeedVault()
   const startTimer = (routeName: string) => {
     setTimeout(() => {
       resetNavigation(routeName);

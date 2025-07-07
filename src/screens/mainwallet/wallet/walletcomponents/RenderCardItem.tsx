@@ -91,7 +91,7 @@ const RenderCardItem = ({ item, selectedItem }) => {
                     </TouchableOpacity>
                     :
                     <View style={styles.horizontalActions}>
-                        <TouchableOpacity style={styles.actionButtonBg} onPress={() => push(RouteType.SEND)}>
+                        <TouchableOpacity style={styles.actionButtonBg} onPress={() => push(RouteType.SEND,{tokenDetails : selectedItem})}>
                             <Image source={localAssets.send} style={styles.actionButtonIcon} />
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.actionButtonBg} onPress={() => handleReceive(item)}>
