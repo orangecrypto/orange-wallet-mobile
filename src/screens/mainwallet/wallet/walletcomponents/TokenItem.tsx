@@ -8,7 +8,7 @@ const TokenItem = ({ item, selectedItem, handleItemClick }) => {
     return (
         <TouchableOpacity onPress={() => handleItemClick(item)} style={[
             styles.listItem,
-            selectedItem?.id === item.id && { backgroundColor: Color.transactionListBackground },
+            selectedItem?.name === item.name && { backgroundColor: Color.transactionListBackground },
         ]}>
             <View style={styles.assetContainer}>
                 {item?.icon ? <Image source={item.icon} style={styles.letIcon} /> :

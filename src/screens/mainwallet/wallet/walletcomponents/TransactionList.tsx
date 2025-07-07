@@ -7,6 +7,7 @@ const TransactionList = ({ transaction, isLoading, selectedToken, limit, fetchTr
     return (
         <FlatList
             data={transaction}
+            nestedScrollEnabled={false}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }) => <TransactionItem item={item} handleTransactionClick={handleTransactionClick} />}
             ListEmptyComponent={
@@ -18,9 +19,10 @@ const TransactionList = ({ transaction, isLoading, selectedToken, limit, fetchTr
             onEndReached={() => {
                 if ((selectedToken.protocol === 'runes' || selectedToken.protocol === 'stacks') && transaction.length >= limit) {
                     fetchTransactions(selectedToken, walletContext);
-                    console.log('TransactionList ','fetchTransactions')
+                    console.log('OnReachEnd','fetchTransactions')
                 }
             }}
+           
         />
     );
 };

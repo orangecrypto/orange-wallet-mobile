@@ -6,8 +6,6 @@ import { Fonts } from "@values/fonts";
 export const styles = StyleSheet.create({
     container: {
         backgroundColor: Color.black,
-        alignItems: 'center',
-        paddingBottom: Responsive.size62,
         flex:1,
     },
     button: {
@@ -51,19 +49,24 @@ export const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         alignItems: 'center',
         paddingHorizontal: Responsive.size20,
-        height: '60%',
+       
         width: '100%',
         paddingTop: Responsive.size16,
+        paddingBottom: Responsive.size50,
         backgroundColor: Color.transactionListBackground,
         borderTopLeftRadius:Responsive.size20,
         borderTopRightRadius: Responsive.size20
     },
+
+    walletContainer :{
+        height: 'auto'
+    },
+
     transactionContainer: {
         marginTop: Responsive.size15,
         justifyContent: 'flex-start',
         alignItems: 'center',
         paddingHorizontal: Responsive.size20,
-        height: '50%',
         width: '100%',
         paddingTop: Responsive.size16,
         backgroundColor: Color.transactionListBackground,
@@ -109,7 +112,7 @@ export const styles = StyleSheet.create({
         fontFamily: Fonts.semibold
     },
     listContainer: {
-        paddingBottom: Responsive.size16,
+       
        
     },
     listItem: {
@@ -290,7 +293,7 @@ export const styles = StyleSheet.create({
         justifyContent:'center',
         alignItems:'center',
         alignContent:'center',
-        marginTop: Responsive.size50
+        height:Responsive.size200
     },
     emptyListText:{
         fontSize: Responsive.size16,
