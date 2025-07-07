@@ -6,7 +6,6 @@ import { useSelector } from 'react-redux';
 import { styles } from './styles';
 import { truncateAddress } from '@utils/cryptoUtils';
 import useSeedVault from '@hooks/useSeedVault';
-import { createWalletAccount, StacksMainnet } from '@orangecryptohq/orangeseed';
 import { store, useAppDispatch } from '@redux/store';
 import { useState } from 'react';
 import Loader from '@components/Loader';
@@ -14,10 +13,13 @@ import Toast from 'react-native-toast-message';
 import { Dispatch } from '@reduxjs/toolkit';
 import { RouteType } from '@routes/RouteType';
 import useSelectedNetwork from '@hooks/useSelectedNetwork';
+import { createWalletAccount } from './AddAddressUtils';
 
 const AddAddress = () => {
     const { getSeed }= useSeedVault()
     const { accountList } = useSelector((state: { seedPhraseReducer: appReducerType }) => state.appReducer);
+
+    console.log('AddAddress', accountList)
     const network =store.getState().appReducer?.network
     const selectedNetwork= useSelectedNetwork()
     
@@ -77,7 +79,7 @@ const AddAddress = () => {
                     renderItem={renderItem} />
 
                 {/* add address is disabled due to loadactive account issue */}
-                <TouchableOpacity disabled={true} style={styles.addAddressButton} onPress={() => { addAddress() }}>
+                <TouchableOpacity  style={styles.addAddressButton} onPress={() => { addAddress() }}>
                     <Text style={styles.addAddressButtonText}>{strings.addNewAddress}</Text>
                 </TouchableOpacity>
             </View>          
