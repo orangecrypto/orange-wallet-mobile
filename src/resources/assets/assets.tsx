@@ -141,7 +141,9 @@ const localAssets = {
   AlexgoOrange: require('./images/AlexgoOrange.png'),
   ORDIOrange: require('./images/ORDIOrange.png'),
   SATSOrange: require('./images/SATSOrange.png'),
-
+  nft: require('./images/nft.png'),
+  dropupArrow: require('./images/dropupArrow.png'),
+  
 
 };
 // Exporting IMAGES

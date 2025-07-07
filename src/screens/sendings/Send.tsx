@@ -6,37 +6,31 @@ import SendingHeader from "@components/SendingHeader";
 import useAddressValidation from "@hooks/useAddressValidation";
 import useGenerateSignedBtcTransaction from "@hooks/useGenerateSignedBtcTransaction";
 import useSendValidation from "@hooks/useSendValidation";
+import useTransactionContext from "@hooks/useTransactionContext";
 import useUnsignedStxTransaction from "@hooks/useUnsignedStxTransaction";
+import { btcTransaction } from "@orangecryptohq/orangeseed";
 import Clipboard from "@react-native-clipboard/clipboard";
+import { appReducerType } from "@redux/slice/appReducer";
 import { walletReducerType } from "@redux/slice/WalletReducer";
 import { goBack, push } from "@routes/Navigator";
 import { RouteType } from "@routes/RouteType";
 import { strings } from "@strings/i18n";
 import { Responsive } from "@utils/Responsive";
 import { Color } from "@values/color";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Image, KeyboardAvoidingView, Platform, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { useSelector } from "react-redux";
+import { generateTransactionAndSummary } from "./RuneUtils";
 import { styles } from "./styles";
-import { generateTransaction } from "./RuneUtils";
-import { btcTransaction, getBtcFeeRate } from "@orangecryptohq/orangeseed";
-import { appReducerType } from "@redux/slice/appReducer";
-import { BigNumber } from "@orangecryptohq/orangeseed/dist/utils/bignumber";
-import useTransactionContext from "@hooks/useTransactionContext";
-import { getFtBalance } from "@utils/cryptoUtils";
 
 const Send = ({ route }) => {
 
     const { network } = useSelector((state: { seedPhraseReducer: appReducerType }) => state.appReducer);
-
     const { tokenList } = useSelector((state: { walletReducer: walletReducerType }) => state.walletReducer);
     const [selectedCoin, setSelectedCoin] = useState(route?.params?.tokenDetails);
     const [walletAddress, setWalletAddress] = useState("");
+    const [isRuneLoading, setisRuneLoading] = useState(false);
     const { isValidAddress, errorMessage } = useAddressValidation(walletAddress, selectedCoin);
-
-
-
-
     const {
         amount,
         sendFiatRate,
@@ -72,6 +66,23 @@ const Send = ({ route }) => {
 
     }, [transactionData, transactionError, stxTransactionData, stxTransactionDataError]);
 
+
+    const handleRuneTransaction = async (TransactionSummary) =>{
+
+        console.log('handleRuneTransaction', TransactionSummary)
+        if (TransactionSummary) {
+            push(RouteType.SENDCONFIRMATION, {
+                transactionData: TransactionSummary,
+                confirmData: {
+                    transactionType: 'runes',
+                    recipientAddress: walletAddress,
+                    sendAmount: amount,
+                    ticker: selectedCoin.ticker
+                }
+            });
+        }
+    }
+
     const getSignedTransaction = async () => {
         if (selectedCoin.protocol === 'btc') {
             generateSignedTransactionBtc(walletAddress, amount);
@@ -82,49 +93,13 @@ const Send = ({ route }) => {
                 memo: " ",
             });
         } else if (selectedCoin.protocol === 'runes') {
-            console.log('generateTransactionAndSummary', await generateTransactionAndSummary())
-        }
-
-
-    };
-    const generateTransactionAndSummary = useCallback(
-
-        async (feeRateOverride?: number) => {
-            const balance = BigNumber(getFtBalance(selectedCoin));
-            const decimalsToBase = BigNumber(10 ** (selectedCoin.decimals || 0));
-            console.log('decimalsToBase', decimalsToBase)
-            // get real balance after accounting for rune divisibility
-            const realBalance = balance.multipliedBy(selectedCoin.decimals);
-            const realAmountToSend = BigNumber(amount || 0).multipliedBy(decimalsToBase);
-
-
-            const feeRate= (await getBtcFeeRate(network.type)).regular
-            // if (realBalance.isLessThan(realAmountToSend)) {
-            //     // setAmountError(t('SEND.ERRORS.INSUFFICIENT_BALANCE'));
-
-            //     console.log('SEND.ERRORS.INSUFFICIENT_BALANCE')
-            // } else {
-            //     // setAmountError('');
-            //     console.log(' ')
-            // }
-
-
+            setisRuneLoading(true)
             
-
-            console.log("feeRate value:", feeRate);
-            return generateTransaction(
-                transactionContext,
-                selectedCoin.name,
-                walletAddress,
-                BigInt(realAmountToSend.toFixed()),
-                feeRateOverride !== undefined ? feeRateOverride : feeRate
-            );
-        },
-        [amount, selectedCoin, walletAddress, transactionContext],
-    );
-
-
-
+            await handleRuneTransaction(await generateTransactionAndSummary(amount, selectedCoin, walletAddress, transactionContext, network))
+            setisRuneLoading(false)
+        }
+    };
+   
     const handlePaste = async () => {
         setWalletAddress(await Clipboard.getString())
     };
@@ -134,6 +109,7 @@ const Send = ({ route }) => {
         <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : undefined}>
             {isPending && <Loader loading={isPending} />}
             {stxIsPending && <Loader loading={stxIsPending} />}
+            {isRuneLoading && <Loader loading={isRuneLoading} />}
             <ScrollView contentContainerStyle={styles.scrollContainer}>
                 <SendingHeader
                     title={`${Number(selectedCoin.balance || 0)}`}
