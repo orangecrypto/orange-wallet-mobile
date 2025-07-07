@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "960767434605",
+    "project_id": "orangewallet-6823f",
+    "storage_bucket": "orangewallet-6823f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:960767434605:android:fca7be2eac654fa4414464",
+        "android_client_info": {
+          "package_name": "com.orangewallet"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBcysngKX5-dKhz_nwyu4uuskulAQICXoU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -17,10 +17,10 @@ module.exports = {
           "@redux": "./src/redux",
           "@hooks": "./src/hooks",
           "@services": "./src/services",
-           "@config": "./src/config"
-
+          "@config": "./src/config",
         },
       },
-    ]
+    ],
+    "react-native-reanimated/plugin", 
   ],
 };
