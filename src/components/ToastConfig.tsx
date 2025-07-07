@@ -2,7 +2,7 @@ import { Responsive } from '@utils/Responsive';
 import { Color } from '@values/color';
 import { Fonts } from '@values/fonts';
 import React from 'react';
-import { View, Text, StyleSheet, Image, Modal, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Image, Modal, Dimensions, Platform } from 'react-native';
 import { BaseToastProps } from 'react-native-toast-message';
 import LinearGradient from 'react-native-linear-gradient';
 import { localAssets } from '@assets/assets';
@@ -26,16 +26,17 @@ const toastStyles = StyleSheet.create({
     container: {
         flexDirection: 'row',
         alignItems: 'center',
+        alignContent:'center',
         width: '90%',
-        height: Responsive.size45,
+        height: Platform.OS === 'ios'?  Responsive.size80 : Responsive.size45,
         padding: Responsive.size12,
         borderRadius: Responsive.size8,
         position: 'absolute',
         bottom: Responsive.size50,
         alignSelf: 'center',
-
         borderWidth: Responsive.size1,
-        borderColor: Color.gray
+        borderColor: Color.gray,
+       
     },
     errorContainer: {
         borderColor: '#D92D20',
@@ -58,6 +59,7 @@ const toastStyles = StyleSheet.create({
         color: Color.successgreen,
         fontSize: Responsive.size14,
         fontFamily: Fonts.regular,
+        marginBottom: Platform.OS === 'ios' ? Responsive.size25: Responsive.size0
     },
     text2: {
         color: Color.black,
@@ -72,13 +74,15 @@ const toastStyles = StyleSheet.create({
         borderRadius: Responsive.size14,
         justifyContent: 'center',
         alignItems: 'center',
-        marginRight: Responsive.size10
+        marginRight: Responsive.size10,
+        marginBottom: Platform.OS === 'ios' ? Responsive.size25: Responsive.size0
     },
     imageIcon: {
         height: Responsive.size10,
         width: Responsive.size10
     }
 });
+
 
 const toastConfig = {
     error: ({ text1, text2 }: CustomToastProps) => (

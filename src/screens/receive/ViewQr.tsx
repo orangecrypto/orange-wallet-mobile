@@ -58,13 +58,16 @@ const ViewQr = ({ route }) => {
                 <Text style={styles.warningText}>{strings.warning}:
                     <Text style={styles.warningMessage}> {strings.receiveWarningMessage}</Text>
                 </Text>
-                <View style={styles.buttonContainer}>
+                
+               
+            </ScrollView>
+            <View style={styles.horizontalButtonContainer}>
                     <CommonButton
                         title={strings.close}
                         onPress={() => resetNavigation(RouteType.WALLETBALANCE)}
                         backgroundColor={Color.orangeButton}
                         textColor={Color.white}
-                        width={'100%'}
+                        width={'45%'}
                         height={Responsive.size50}
                     />
                     <CommonButton
@@ -72,11 +75,10 @@ const ViewQr = ({ route }) => {
                         onPress={captureAndShare}
                         backgroundColor={Color.orangeButton}
                         textColor={Color.white}
-                        width={'100%'}
+                        width={'45%'}
                         height={Responsive.size50}
                     />
-                </View>
-            </ScrollView>
+                </View> 
         </View>
     );
 };

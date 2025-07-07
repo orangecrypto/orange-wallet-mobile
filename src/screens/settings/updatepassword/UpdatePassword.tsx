@@ -6,7 +6,7 @@ import { strings } from "@strings/i18n";
 import { Responsive } from "@utils/Responsive";
 import { Color } from "@values/color";
 import React, { useEffect, useMemo, useState } from "react";
-import { Keyboard, Text, TouchableOpacity, View } from "react-native";
+import { Keyboard, KeyboardAvoidingView, Platform, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
 import { styles } from "../styles";
 import EnterPassword from "./EnterPassword";
@@ -82,13 +82,24 @@ const UpdatePassword = () => {
     const CurrentStepComponent = steps[currentStepIndex]?.component;
 
     return (
-        <View style={styles.container}>
+        <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.container}>
+        <ScrollView
+           contentContainerStyle={{
+            flexGrow: 1,
+            paddingBottom: isKeyboardVisible ? Responsive.size50 : 0,
+          }}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}>
             <View style={styles.contentContainer}>
                 <TouchableOpacity style={styles.button} onPress={handleBack}>
                     <Text style={styles.buttonText}>{strings.back}</Text>
                 </TouchableOpacity>
                 {CurrentStepComponent && <CurrentStepComponent />}
             </View>
+
+            </ScrollView>
             {!isKeyboardVisible && (
                 <View style={styles.buttonContainer}>
                     <CommonButton
@@ -102,8 +113,7 @@ const UpdatePassword = () => {
                     />
                 </View>
             )}
-        </View>
+        </KeyboardAvoidingView>
     );
 };
-
 export default UpdatePassword;

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { styles } from "../styles";
-import { Image, Keyboard, Text, TouchableOpacity, View } from "react-native";
+import { Image, Keyboard, KeyboardAvoidingView, Platform, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { goBack, push } from "@routes/Navigator";
 import { strings } from "@strings/i18n";
 import { localAssets } from "@assets/assets";
@@ -53,14 +53,24 @@ const BackupYourWallet = () => {
         };
     }, []);
     return (
-        <View style={styles.container}>
+       <KeyboardAvoidingView
+               behavior={Platform.OS === "ios" ? "padding" : "height"}
+               style={styles.container}>
+             
+               <ScrollView
+                  contentContainerStyle={{
+                   flexGrow: 1,
+                   paddingBottom: isKeyboardVisible ? Responsive.size50 : 0,
+                 }}
+                 keyboardShouldPersistTaps="handled"
+                 showsVerticalScrollIndicator={false}>
             <View style={styles.contentContainer}>
                 <TouchableOpacity style={styles.button} onPress={() => goBack()}>
                     <Text style={styles.buttonText}>{strings.back}</Text>
                 </TouchableOpacity>
                 <View style={styles.enterPasswordContainer}>
                     <Image source={localAssets.lock} style={styles.passwordIcon} />
-                    <Text style={styles.title}>{strings.backupYourWallet}</Text>
+                    <Text style={styles.enterPasswordtitle}>{strings.backupYourWallet}</Text>
                     <Text style={styles.description}>{strings.enterCurrentPassword}</Text>
 
                     <CustomTextInput
@@ -68,19 +78,17 @@ const BackupYourWallet = () => {
                         value={password}
                         onChangeText={(text) => {
                             setPassword(text); // Update local password state
-                            handlePasswordChange(text); // Validate password
+                           
                         }}
                         secureTextEntry={true}
                         showPasswordToggle={true}
                         passwordIconVisible={localAssets.eye}
                         passwordIconHidden={localAssets.eyeoff}
                         style={styles.input} />
-                    <Text style={[styles.passwordError, { color: passwordError === strings.strongPassword ? 'green' : 'red' }]}>
-                        {passwordError}
-                    </Text>
-                    <Text style={styles.passwordError}>{passwordFeedback}</Text>
+                  
                 </View>
-            </View>
+                </View>
+            </ScrollView>
             {!isKeyboardVisible && (
                 <View style={styles.buttonContainer}>
                     <CommonButton
@@ -88,13 +96,13 @@ const BackupYourWallet = () => {
                         onPress={() => handleSubmit()}
                         backgroundColor={Color.orangeButton}
                         textColor={Color.white}
-                        disabled={passwordError === strings.strongPassword ? false : true}
+                        disabled={password=== ''}
                         width={'100%'}
                         height={Responsive.size50}
                     />
                 </View>
             )}
-        </View>
+        </KeyboardAvoidingView>
     );
 };
 

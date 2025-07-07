@@ -65,8 +65,8 @@ export const styles = StyleSheet.create({
         color: Color.white,
     },
     progressBarContainer: {
-        height: Responsive.size8,
-        width: "20%",
+        height: Responsive.size4,
+        width: "35%",
         backgroundColor: Color.black,
         borderRadius: Responsive.size5,
         overflow: "hidden",
@@ -83,15 +83,21 @@ export const styles = StyleSheet.create({
         marginTop: Responsive.size20,
     },
     button: {
-        paddingVertical: Responsive.size5,
-        paddingHorizontal: Responsive.size10,
-        backgroundColor: Color.orangeButton,
-        borderRadius: Responsive.size5,
-        marginBottom: Responsive.size10,
+        backgroundColor: Color.backbackgroundbg,
+        width: Responsive.size70,
+        justifyContent: "center",
+        alignItems: "center",
+        padding: Responsive.size10,
+        borderRadius: Responsive.size8,
     },
     buttonText: {
         color: Color.white,
         fontSize: Responsive.size16,
+        fontFamily: Fonts.regular
+    },
+    backImage:{
+        height: Responsive.size18,
+        width: Responsive.size18
     },
     disabledButton: {
         backgroundColor: Color.grey,
@@ -111,24 +117,22 @@ export const styles = StyleSheet.create({
     },
     itemContainer: {
         flex: 1,
-        marginHorizontal: Responsive.size14,
+        marginHorizontal: Responsive.size4,
         marginVertical:Responsive.size5,
-        width: '30%', 
-        height: Responsive.size40, 
+        height: Responsive.size36,
         backgroundColor: Color.black,
         borderRadius: Responsive.size12,
-        alignItems: 'center',
-        justifyContent: 'center',
         borderColor: Color.borderLineSeedphrase,
         borderWidth: Responsive.size1,
         
     },
     itemInput: {
         color: Color.white,
-        fontSize: Responsive.size14,
+        fontSize: Responsive.size12,
         fontFamily:Fonts.regular,
         textAlign: 'center',
         width: '100%',
+        height:'100%'
     },
     orangeText: {
         fontSize: Responsive.size18,
@@ -152,8 +156,8 @@ export const styles = StyleSheet.create({
 
     copyButton: {
         backgroundColor: Color.orangeOpacityBg,
-        paddingHorizontal: Responsive.size8,
-        paddingVertical: Responsive.size4,
+        paddingHorizontal: Responsive.size20,
+        paddingVertical: Responsive.size8,
         borderRadius: Responsive.size20,
         alignSelf:'center'
     },

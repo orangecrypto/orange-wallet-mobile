@@ -19,7 +19,7 @@ const EnterPassword = ({ type, onPasswordChange, handleError }: { type: "oldPass
     const handlePasswordChange = (inputPassword: string) => {
         setPassword(inputPassword);
         onPasswordChange(inputPassword);
-        const { strengthMessage, feedback } = validatePasswordStrength(inputPassword);
+        const { strengthMessage, feedback , score} = validatePasswordStrength(inputPassword);
         handleError(strengthMessage)
         setError(strengthMessage);
         setFeedback(feedback);
@@ -33,8 +33,8 @@ const EnterPassword = ({ type, onPasswordChange, handleError }: { type: "oldPass
     return (
         <View style={styles.enterPasswordContainer}>
             <Image source={localAssets.lock} style={styles.passwordIcon} />
-            <Text style={styles.title}>{type === "oldPassword" ? strings.updatePassword : type === "newPassword" ? strings.enterPassword : strings.confirmPassword}</Text>
-            <Text style={[styles.description, { lineHeight: Responsive.size22 }]}>{type === "oldPassword" ? strings.enterCurrentPassword : type === "newPassword" ? strings.enterNewPassword : strings.confirmPasswordDec}</Text>
+            <Text style={styles.enterPasswordtitle}>{type === "oldPassword" ? strings.updatePassword : type === "newPassword" ? strings.enterPassword : strings.confirmPassword}</Text>
+            <Text style={styles.description}>{type === "oldPassword" ? strings.enterCurrentPassword : type === "newPassword" ? strings.enterNewPassword : strings.confirmPasswordDec}</Text>
 
             <CustomTextInput
                 placeholder=""
@@ -49,10 +49,8 @@ const EnterPassword = ({ type, onPasswordChange, handleError }: { type: "oldPass
                 passwordIconVisible={localAssets.eye}
                 passwordIconHidden={localAssets.eyeoff}
                 style={styles.input} />
-            <Text style={[styles.passwordError, { color: error === strings.strongPassword ? 'green' : 'red' }]}>
-                {error}
-            </Text>
-            <Text style={styles.passwordError}>{feedback}</Text>
+            {error !== strings.strongPassword && <Text style={styles.passwordError}>{strings.passwordValidationMessage}</Text>}
+            {/* <Text style={styles.passwordError}>{feedback}</Text> */}
         </View>
     );
 };

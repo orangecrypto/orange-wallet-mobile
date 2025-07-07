@@ -56,7 +56,7 @@ const BackupWallet = () => {
                     backgroundColor={Color.black}
                     textColor={Color.white}
                     borderColor={Color.blackBorder}
-                    width={'40%'}
+                    width={'45%'}
                     height={Responsive.size50} />
                 <CommonButton
                     title={strings.backupNow}
@@ -64,7 +64,7 @@ const BackupWallet = () => {
                     backgroundColor={Color.orangeButton}
                     textColor={Color.white}
                     borderColor={Color.orangeBorder}
-                    width={'40%'}
+                    width={'45%'}
                     height={Responsive.size50} />
               
             </View>

@@ -19,19 +19,19 @@ export const styles = StyleSheet.create({
         paddingHorizontal: Responsive.size20,
     },
     icon: {
-        width: Responsive.size156,
-        height: Responsive.size156,
+        width: Responsive.size185,
+        height: Responsive.size185,
         marginBottom: Responsive.size10,
     },
     contentTitle: {
-        fontSize: Responsive.size24,
+        fontSize: Responsive.size28,
         fontFamily:Fonts.semibold,
         color: Color.orangeButton,
         textAlign: "center",
         marginBottom: Responsive.size10,
     },
     contentDescription: {
-        fontSize: Responsive.size16,
+        fontSize: Responsive.size18,
         color: Color.white,
         textAlign: "center",
         fontFamily: Fonts.regular,

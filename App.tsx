@@ -21,8 +21,8 @@ if (typeof global.stream === "undefined") {
   global.stream = require("readable-stream");
 }
 import * as React from "react";
-import { SafeAreaView, View, StyleSheet, Text, AppState, Platform } from "react-native";
-import { Provider } from "react-redux";
+import { SafeAreaView, View, StyleSheet, Text, AppState, Platform, StatusBar } from "react-native";
+import { Provider, useSelector } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import AppContainer from "./src/services/app/AppContainer";
 import { persistor, store } from "./src/redux/store";
@@ -33,9 +33,10 @@ import { QueryClient, QueryClientProvider, QueryCache, MutationCache } from "@ta
 import Toast from "react-native-toast-message";
 import toastConfig from "./src/components/ToastConfig";
 import { useEffect, useState } from 'react';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const App = () => {
-
+  const [isWalletCreated, setIsWalletCreated] = useState(store.getState().appReducer.isWalletCreated)
   const [network, setNetwork] = useState(store.getState().appReducer.network);
   const [appState, setAppState] = useState(AppState.currentState);
   const { lockVault, isVaultUnlocked } = useSeedVault();
@@ -57,13 +58,19 @@ const App = () => {
     return () => unsubscribe();
   }, []);
 
-  const backgroundTimeRef = React.useRef(null); 
+  const backgroundTimeRef = React.useRef(null);
 
   useEffect(() => {
     const handleAppStateChange = async (nextAppState) => {
+      const value = await AsyncStorage.getItem('isWalletCreated');
+      const isWalletCreated = value === 'true';
+      console.log('isWalletCreated ', isWalletCreated)
+      if (!isWalletCreated) {
+        return
+      }
       if (appState === "active" && (nextAppState === "background" || nextAppState === "inactive")) {
 
-        backgroundTimeRef.current = performance.now(); 
+        backgroundTimeRef.current = performance.now();
         console.log(`🔴 App moved to background at ${new Date().toLocaleTimeString()}`);
       }
 
@@ -96,7 +103,6 @@ const App = () => {
 
     Platform.OS === 'ios' && handleAppStateChange(AppState.currentState);
     const subscription = AppState.addEventListener("change", handleAppStateChange);
-
     return () => {
       subscription.remove();
     };
@@ -113,15 +119,13 @@ const App = () => {
       },
     },
     queryCache: new QueryCache({
-      
-      onError: (error) =>{
-        
+      onError: (error) => {
         Toast.show({
           type: 'error',
           text1: error?.message || 'Something went wrong.',
         });
-        console.error('Error in query:', error)},
-
+        console.error('Error in query:', error)
+      },
     }),
     mutationCache: new MutationCache({
       onError: (error) => console.error('Error in mutation:', error),
@@ -132,6 +136,7 @@ const App = () => {
     <Provider store={store}>
       <PersistGate persistor={persistor}>
         <SafeAreaView style={styles.safeArea}>
+
           <QueryClientProvider client={queryClient}>
             {network?.type === 'Testnet' && (
               <View style={styles.headerViewTestNet}>
@@ -150,7 +155,8 @@ const App = () => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#000000",
+   
   },
   headerViewTestNet: {
     height: 45,

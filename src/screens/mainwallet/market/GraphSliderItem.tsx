@@ -3,11 +3,18 @@ import { Responsive } from '@utils/Responsive';
 import { Color } from '@values/color';
 import moment from 'moment';
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Text, View, ActivityIndicator } from 'react-native';
 import { LineChart } from 'react-native-gifted-charts';
 import { styles } from './styles';
 
-const GraphSliderItem = ({ data }) => {
+const GraphSliderItem = ({ data, loading }) => {
+  if (loading) {
+    return (
+      <View style={[styles.Graphcontainer, { justifyContent: 'center', alignItems: 'center' }]}>
+        <ActivityIndicator size="large" color={Color.orangeButton} />
+      </View>
+    );
+  }
 
   const processedData = data.data.map((item) => ({
     value: item.y,
@@ -15,9 +22,9 @@ const GraphSliderItem = ({ data }) => {
   }));
 
   const minValue = Math.min(...processedData.map((item) => item.value));
+
   const filterTimeData = (data) => {
     const timeSet = new Set();
-
     data.forEach((entry) => {
       const date = new Date(entry.x);
       let hour = date.getUTCHours();
@@ -37,7 +44,6 @@ const GraphSliderItem = ({ data }) => {
       <View style={styles.chartWrapper}>
         <LineChart
           data={processedData}
-
           initialSpacing={0}
           endSpacing={0}
           xAxisLabelsHeight={0}
@@ -75,6 +81,7 @@ const GraphSliderItem = ({ data }) => {
             <Text style={styles.infoText}>{strings.info}</Text>
           </View>
         </View>
+
         <View style={styles.overlayBalanceSection}>
           <Text style={styles.balanceText}>{data.value}</Text>
           <View style={styles.changeSection}>

@@ -231,7 +231,7 @@ export const getCardItems = (cryptoArray) => {
         name: "all",
         category: "USD",
         assetCount: cryptoArray.length,
-        balance: `$${totalFiatRate.toFixed(5)}`,
+        balance: totalFiatRate,
         total_sent: "0.00",
         total_received: "0.00",
         tokenFiatRate: totalFiatRate,

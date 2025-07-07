@@ -5,6 +5,12 @@ import { Image, Text, TouchableOpacity, View } from "react-native";
 import { styles } from "../styles";
 
 const TokenItem = ({ item, selectedItem, handleItemClick }) => {
+    function formatBalance(balance) {
+        let num = parseFloat(balance);
+        return num % 1 === 0 
+          ? num.toFixed(0) 
+          : parseFloat(num.toFixed(5)).toString();
+      }
     return (
         <TouchableOpacity onPress={() => handleItemClick(item)} style={[
             styles.listItem,
@@ -25,7 +31,7 @@ const TokenItem = ({ item, selectedItem, handleItemClick }) => {
                 </View>
             </View>
             <View style={styles.assetValues}>
-                <Text numberOfLines={1} style={[styles.assetQuantity, { width: Responsive.size100, textAlign: 'right' }]}>{item.balance !== undefined ? parseFloat(item.balance).toFixed(5) : '0.00000'}</Text>
+                <Text numberOfLines={1} style={[styles.assetQuantity, { width: Responsive.size100, textAlign: 'right' }]}>{item.balance !== undefined ? formatBalance(item.balance) : '0'}</Text>
                 <Text numberOfLines={1} style={styles.assetValue}>{item.tokenFiatRate !== undefined ? `$${item.tokenFiatRate}` : '$ 0.00'}</Text>
             </View>
         </TouchableOpacity>

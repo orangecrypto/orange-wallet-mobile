@@ -12,16 +12,18 @@ import { FlatList, Image, ImageBackground, Text, TouchableOpacity, View } from "
 import NftItem from './NftItem';
 import { filterIncriptionItems, getCollectionKey } from './NftUtils';
 import { styles } from './styels';
+import { store } from '@redux/store';
 
 const Nft = () => {
-
+    const account = store.getState().appReducer.selectedAccount
+    const item = { name: "Ordinals, RUNES and BRC20", address: account?.ordinalsAddress }
     const [totalAssets, setTotalAssets] = useState(0);
     const [brc20Transfer, setbrc20Transfer] = useState([]);
     const [incriptionList, setincriptionList] = useState([]);
-    const {isPending, fetchByIds } = useBrc20Inscriptions();
+    const { isPending, fetchByIds } = useBrc20Inscriptions();
     const { data: collectionsData, isLoading, isError, loadNextPage } = useGetCollectionsData();
     console.log('Nft useGetCollectionsData', isError)
-   
+
     const setIncriptionData = async (bbrc20TransferData) => {
 
         console.log('setIncriptionData', await filterIncriptionItems(collectionsData?.results, bbrc20TransferData))
@@ -29,7 +31,7 @@ const Nft = () => {
         setincriptionList([...incriptionList, ...newItems]);
     }
 
-    
+
 
     useEffect(() => {
         console.log('NFT tab First call')
@@ -43,7 +45,7 @@ const Nft = () => {
             console.log('NFT', `collectionIds ${ids}`);
             const brc20Data = await fetchByIds(ids)
             console.log('NFT', `fetchByIds `, brc20Data);
-           
+
             const totalInscriptions = collectionsData?.total_inscriptions || 0;
             const totalInscriptionsBrc20 = brc20Data?.total_inscriptions_brc_20 + brc20Transfer.length || 0;
             const totalInscriptionsNonBrc20 = totalInscriptions - totalInscriptionsBrc20;
@@ -54,7 +56,7 @@ const Nft = () => {
             console.log('NFT', `brc20InscriptionData ${JSON.stringify(brc20Data?.data)}`);
 
 
-            setbrc20Transfer([...brc20Transfer,...brc20Data.data]);
+            setbrc20Transfer([...brc20Transfer, ...brc20Data.data]);
 
             if (totalInscriptionsNonBrc20 > 0) {
                 console.log('setIncriptionData', 'call');
@@ -75,7 +77,7 @@ const Nft = () => {
 
     return (
         <View style={styles.container}>
-          {(isPending || isLoading) && !isError && <Loader loading={true} />}
+            {(isPending || isLoading) && !isError && <Loader loading={true} />}
 
             <View style={styles.contentContainer}>
                 <ImageBackground source={localAssets.walletbg} style={styles.walletBackground} borderRadius={12}>
@@ -95,8 +97,8 @@ const Nft = () => {
                             <Image style={styles.addCoinIcon} source={localAssets.transferarrow} />
                             <Text style={styles.addCoinText}>{strings.transfer}</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.addCoinView} 
-                        onPress={() => push(RouteType.VIEWQR)}
+                        <TouchableOpacity style={styles.addCoinView}
+                            onPress={() => push(RouteType.VIEWQR, { item: item })}
                         //onPress={() => push(RouteType.INCRIPTIONDETAILS)}
                         >
                             <Image style={styles.addCoinIcon} source={localAssets.transactionarrow} />
@@ -113,6 +115,11 @@ const Nft = () => {
                 style={styles.listConatiner}
                 columnWrapperStyle={styles.columnWrapper}
                 onEndReached={loadNextPage}
+                ListEmptyComponent={
+                    <View style={styles.emprtyViewStyle}>
+                        <Text style={styles.emprtyViewText}>{strings.nonfts}</Text>
+                    </View>
+                }
                 onEndReachedThreshold={0.5}
             />
         </View>

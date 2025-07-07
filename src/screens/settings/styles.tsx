@@ -8,6 +8,11 @@ export const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: Color.black,
     },
+    scrollContainer: {
+        flexGrow: 1,
+        justifyContent: 'flex-start',
+        paddingBottom: Responsive.size20,
+    },
     loaderContainer: {
         position: 'absolute',
         top: 0,
@@ -40,6 +45,12 @@ export const styles = StyleSheet.create({
     },
     title: {
         color: Color.orangeButton,
+        fontSize: Responsive.size32,
+        fontFamily: Fonts.bold,
+        marginTop: Responsive.size15,
+    },
+    enterPasswordtitle: {
+        color: Color.orangeButton,
         fontSize: Responsive.size24,
         fontFamily: Fonts.bold,
         marginTop: Responsive.size15,
@@ -53,8 +64,8 @@ export const styles = StyleSheet.create({
     description: {
         color: Color.white,
         fontSize: Responsive.size18,
-        fontFamily: Fonts.regular,
-        lineHeight: Responsive.size20,
+        fontFamily: Fonts.semibold,
+        lineHeight: Responsive.size22,
         marginTop: Responsive.size10
     },
     item: {
@@ -214,5 +225,29 @@ export const styles = StyleSheet.create({
         paddingVertical: Responsive.size4,
         borderRadius: Responsive.size20,
         alignSelf: 'center'
+    },
+    nonImageView: {
+        height: Responsive.size32,
+        width: Responsive.size32,
+        alignContent:'center',
+        justifyContent:'center'
+    },
+    nonImageViewText:{
+        fontSize: Responsive.size7,
+        fontFamily: Fonts.regular,
+        textAlign:'center',
+        color: Color.white
+    },
+    emptyListContainer:{
+        justifyContent:'center',
+        alignItems:'center',
+        alignContent:'center',
+        height:Responsive.size200
+    },
+    emptyListText:{
+        fontSize: Responsive.size16,
+        fontFamily: Fonts.regular,
+        color: Color.white,
+        textAlign:'center'
     },
 });
