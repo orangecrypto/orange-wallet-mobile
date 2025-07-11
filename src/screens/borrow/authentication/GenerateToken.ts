@@ -14,11 +14,13 @@ export const fetchAuthData = async (btcAddress, ordinalsAddress, seed) => {
       {
         payment_address: btcAddress,
         ordinals_address: ordinalsAddress,
+         "wallet": "orange"
       },
       {
         headers: {
           Authorization: `Bearer ${AppConfig.LIQUIDIUM_API_KEY}`,
           'Content-Type': 'application/json',
+         
         },
       }
     );

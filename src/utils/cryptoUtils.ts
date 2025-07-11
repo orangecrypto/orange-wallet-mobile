@@ -113,7 +113,6 @@ export const getImageSource = async (name: string) => {
       (key) => key.trim().toUpperCase() === lowerCaseName
   );
 
-  console.log("getImageSource "+name , matchingKey);
   return matchingKey ? localAssets[matchingKey] : null;
 };
 

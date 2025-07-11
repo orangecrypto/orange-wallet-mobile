@@ -30,11 +30,13 @@ const SwapProviders = ({ route }) => {
   const [swapProvidersArray, setSwapProvidersArray] = useState([]);
 
   const dispatch: Dispatch = useAppDispatch();
-
+console.log('SwapProviders', `selectedReceiveAsset ${JSON.stringify(selectedReceiveAsset)}`)
   useEffect(() => {
     const fetchValue = async () => {
-      if (selectedReceiveAsset?.name && receiveAmount) {
-        const value = await getFiateValue(selectedReceiveAsset.name);
+      if (selectedReceiveAsset?.name && selectedReceiveAsset?.ticker && receiveAmount) {
+        const value = await getFiateValue(selectedReceiveAsset?.category === 'Runes'? 
+                                          selectedReceiveAsset?.name:
+                                          selectedReceiveAsset?.ticker);
         if (value && !isNaN(receiveAmount)) {
           const fiatAmount = (value * parseFloat(receiveAmount)).toFixed(2);
           console.log('setDotSwapFiatValue', fiatAmount);

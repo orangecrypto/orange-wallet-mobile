@@ -183,7 +183,7 @@ export const createTokenArray = async (
     ];
 
     let finalCryptoArray = [...updatedCryptoArray,...userTokens,...addParnterTokens];
-    console.log('createTokenArray', `finalCryptoArray ${JSON.stringify(finalCryptoArray)}`)
+   // console.log('createTokenArray', `finalCryptoArray ${JSON.stringify(finalCryptoArray)}`)
     // Fetch missing token fiat rates & icons in parallel
     const newCryptoArray = await Promise.all(
         finalCryptoArray.map(async (item) => {
@@ -199,7 +199,6 @@ export const createTokenArray = async (
             return updates;
         })
     );
-    console.log('createTokenArray', `newCryptoArray ${JSON.stringify(newCryptoArray)}`)
     return { newCryptoArray, totalBalance, btcPrice, stxPrice };
 };
 

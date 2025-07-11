@@ -63,7 +63,9 @@ const BorrowOffers = ({ route }) => {
         <CommonButton
           title={strings.continue}
           onPress={() => {
-            push(RouteType.BORROWCONFIRMATION, { selectedOffer: loanOfferArray[selectedIndex] });
+            push(RouteType.BORROWCONFIRMATION, { selectedOffer: loanOfferArray[selectedIndex],
+                                                 selectedAmount: route?.params?.selectedAmount
+             });
           }}
           backgroundColor={Color.orangeButton}
           textColor={Color.white}

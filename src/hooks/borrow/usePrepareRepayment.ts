@@ -83,11 +83,11 @@ export function usePrepareRepayment() {
       });
     },
     onSuccess: (data) => {
-      Toast.show({
-        type: 'success',
-        text1: 'Repayment Prepared Successfully',
-        text2: `Offer ID: ${data.offer_id}`,
-      });
+      // Toast.show({
+      //   type: 'success',
+      //   text1: 'Repayment Prepared Successfully',
+      //   text2: `Offer ID: ${data.offer_id}`,
+      // });
     },
   });
 

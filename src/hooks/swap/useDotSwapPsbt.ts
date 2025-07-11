@@ -21,7 +21,7 @@ export function useDotSwapPsbt() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-         // 'Authorization': 'Bearer orange-wallet'
+          // 'Authorization': 'Bearer orange-wallet'
         },
         body: JSON.stringify(params),
       });
@@ -32,10 +32,14 @@ export function useDotSwapPsbt() {
         throw new Error(data.error || 'API request failed');
       }
 
-      setResponse({ success: true, data });
+      const result = { success: true, data };
+      setResponse(result);
+      return result; // 👈 Return result here
     } catch (err: any) {
+      const errorResult = { success: false, error: err.message };
       setError(err.message);
-      setResponse({ success: false, error: err.message });
+      setResponse(errorResult);
+      return errorResult; // 👈 Return error result
     } finally {
       setLoading(false);
     }
@@ -43,3 +47,4 @@ export function useDotSwapPsbt() {
 
   return { getDotSwapPsbt, loading, error, response };
 }
+

@@ -12,15 +12,17 @@ import { Color } from "@values/color";
 import React, { useEffect, useState } from "react";
 import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { useSelector } from "react-redux";
-import { formatDueDate, getFiateValue, getRawRuneAmount, getTransactionSize } from "./BorrowUtils";
+import { formatDueDate, getFiateValue, getRawRuneAmount, getTransactionSize, signPsbtWithMnemonic } from "./BorrowUtils";
 import { styles } from "./styles";
 import { usePrepareLoan } from "@hooks/borrow/usePrepareLoan";
 import Loader from "@components/Loader";
 import { useSubmitLoan } from "@hooks/borrow/useSubmitLoan";
 import { Dispatch } from "@reduxjs/toolkit";
 import { useAppDispatch } from "@redux/store";
+import useTransactionContext from "@hooks/useTransactionContext";
 
 const BorrowConfirmation = ({ route }) => {
+    const txnContext = useTransactionContext();
     const [loanOfferDetails, setloanOfferDetails] = useState(route?.params?.selectedOffer ?? {});
     const { network, selectedAccount } = useSelector((state: { appReducer: appReducerType }) => state.appReducer);
     const { medium, runeDivisiblity } = useSelector((state: { borrowReducer: BorrowReducerType }) => state.borrowReducer);
@@ -29,6 +31,7 @@ const BorrowConfirmation = ({ route }) => {
     const [totalNetworkFeeRate, settotalNetworkFeeRate] = useState<number>(0);
     const [totalNetworkFeFiateRate, settotalNetworkFeeFiateRate] = useState<number>(0);
     const [interestFiat, setInterestFiat] = useState(0);
+    const [loading, setLoading] =useState(false)
     const {
         prepareLoanAsync,
         isPending: prepareLoading
@@ -37,26 +40,40 @@ const BorrowConfirmation = ({ route }) => {
         submitLoanAsync,
         isLoading: submitLoading
     } = useSubmitLoan();
+
+    const {selectedAmount} = route.params;
     const dispatch: Dispatch = useAppDispatch();
     const [txSize, setTxSize] = useState<number | null>(null);
 
     const handleStartLoan = async () => {
+        console.log('handleStartLoan selectedAmount', selectedAmount)
         try {
             const details = await prepareLoanAsync({
                 instantOfferId: route?.params?.selectedOffer?.offer_id,
                 feeRate: Number(medium),
-                tokenAmount: getRawRuneAmount(loanOfferDetails?.loan_breakdown?.principal_sats, runeDivisiblity)
+                tokenAmount: selectedAmount
+            });
+
+            console.log('handleStartLoan', `details : ${JSON.stringify(details)}`)
+            console.log('handleStartLoan', `txnContext : ${txnContext}`)
+
+            setLoading(true)
+            const signed_psbt = await signPsbtWithMnemonic(details?.base64_psbt,txnContext )
+            setLoading(false)
+            console.log('handleStartLoan', `signPsbtWithMnemonic : ${JSON.stringify(signed_psbt)}`)
+
+            const result = await submitLoanAsync({
+                signed_psbt_base_64: signed_psbt,
+                prepare_offer_id: details?.prepare_offer_id,
             });
             try {
-                const result = await submitLoanAsync({
-                    signed_psbt_base_64: details?.base64_psbt,
-                    prepare_offer_id: details?.prepare_offer_id,
-                });
                 const loanTxId = result.loan_transaction_id;
                 handleSubmite(loanTxId)
             } catch (error) {
             }
+
         } catch (err) {
+             console.error('handleStartLoan', `signPsbtWithMnemonic : ${err}`)
         }
     };
     const handleSubmite = (txId: string) => {
@@ -65,15 +82,20 @@ const BorrowConfirmation = ({ route }) => {
 
     useEffect(() => {
         (async () => {
+
+            console.log('test')
             const breakdown = loanOfferDetails?.loan_breakdown || {};
             const sats = (val: any) => satsToBtc(new BigNumber(val || 0));
-
+            console.log('BorrowConfirmation', breakdown)
             const [repayment, loan, interest] = await Promise.all([
-                getFiateValue(sats(breakdown.total_repayment_sats)),
-                getFiateValue(sats(breakdown.principal_sats)),
-                getFiateValue(sats(breakdown.interest_sats)),
+                getFiateValue(sats(loanOfferDetails?.loan_breakdown?.total_repayment_sats)),
+                getFiateValue(sats(loanOfferDetails?.loan_breakdown?.principal_sats)),
+                getFiateValue(sats(loanOfferDetails?.loan_breakdown?.interest_sats)),
             ]);
-
+             console.log('test', breakdown)
+              console.log('repayment', repayment)
+               console.log('loan', loan)
+                console.log('interest', interest)
             setRepaymentFiat(Number(repayment.toFixed(0)));
             setLoanFiat(Number(loan.toFixed(0)));
             setInterestFiat(Number(interest.toFixed(0)));
@@ -83,10 +105,12 @@ const BorrowConfirmation = ({ route }) => {
                 breakdown.total_repayment_sats
             );
             setTxSize(size);
+
+            console.log('txsize', size)
             const feeRate = await getBtcFeeRate(network?.type);
             dispatch(setMedium(feeRate.priority));
         })();
-    }, []);
+    }, [loanOfferDetails]);
 
     useEffect(() => {
         (async () => {
@@ -103,6 +127,7 @@ const BorrowConfirmation = ({ route }) => {
     return (
         <View style={styles.container}>
             {prepareLoading && <Loader loading={prepareLoading} />}
+            {loading && <Loader loading={loading} />}
             {submitLoading && <Loader loading={submitLoading} />}
             <ScrollView
                 showsVerticalScrollIndicator={false}

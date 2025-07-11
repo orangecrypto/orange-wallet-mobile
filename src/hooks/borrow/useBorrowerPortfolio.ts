@@ -11,7 +11,7 @@ import AppConfig from 'react-native-config';
 export const useBorrowerPortfolio = () => {
   const { getAuthToken } = useAuthLiquidium();
 
-  const [data, setData] = useState<PortfolioResponse | null>(null);
+  const [data, setData] = useState<any | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [error, setError] = useState<ApiError | null>(null);
@@ -22,7 +22,7 @@ export const useBorrowerPortfolio = () => {
     setError(null);
 
     const initialToken = store.getState().appReducer.liquidiumToken;
-    const url = `${Config.LIQUIDIUM_BASE_URL}/api/v1/borrower/portfolio`;
+    const url = `${Config.LIQUIDIUM_BASE_URL}/api/v1/portfolio`;
 
     const fetchData = async (token: string): Promise<PortfolioResponse> => {
       const response = await axios.get<PortfolioResponse>(url, {

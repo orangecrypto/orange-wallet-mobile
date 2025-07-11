@@ -4,6 +4,8 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
+	<key>NSPasteboardTypePublicPlainText</key>
+	<string>Used to paste text when user taps paste button</string>
 	<key>CFBundleDisplayName</key>
 	<string>Orange Wallet</string>
 	<key>CFBundleExecutable</key>

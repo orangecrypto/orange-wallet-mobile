@@ -11,6 +11,8 @@ import { styles } from "./styles";
 
 const LoanStatus = ({ route }) => {
 
+    console.log('LoanStatus', route?.params)
+
     return (
         <View style={styles.container}>
             <View style={styles.transactionProgressContainer}>
@@ -21,7 +23,10 @@ const LoanStatus = ({ route }) => {
                 <Text style={styles.transactionTitle}>{strings.loanStarted }</Text>
                 <Text style={styles.transactionDescription}>{ strings.loanStartedMessage }</Text>
             </View>
-
+            <View style={styles.transactionIdContainer}>
+                        <Text style={styles.transactionIdLabel} >{strings.transactionId}</Text>
+                        <Text style={styles.transactionIdValue}>{`${route?.params?.txId}`}</Text>
+                        </View>
             <View style={styles.buttonContainer}>
                 <CommonButton
                     title={strings.viewLoan}

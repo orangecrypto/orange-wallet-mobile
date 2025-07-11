@@ -172,6 +172,8 @@ export async function signSwapWithPsbt(
    const transaction = psbt.extractTransaction();
    const txHex = transaction.toHex();
    console.log('Final signed txHex:', txHex);
+
+   
   // return txHex;
 }
 

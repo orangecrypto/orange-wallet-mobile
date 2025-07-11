@@ -1,4 +1,4 @@
-import { NavigationContainer } from '@react-navigation/native';
+import { LinkingOptions, NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { navigationRef } from '@routes/Navigator';
 import { RouteType } from '@routes/RouteType';
@@ -58,8 +58,18 @@ import EditMedium from '@screens/borrow/EditMedium';
 const Stack = createNativeStackNavigator();
 
 export default () => {
+
+  const linking: LinkingOptions<any> = {
+  prefixes: ['orangewallet://'],
+  config: {
+    screens: {
+      SplashScreen: RouteType.SPLASH,
+      WalletBalance: RouteType.WALLETBALANCE,
+    },
+  },
+};
     return (
-        <NavigationContainer ref={navigationRef}>
+        <NavigationContainer ref={navigationRef} linking={linking}>
             <Stack.Navigator
                 screenOptions={{ headerShown: false }} initialRouteName={RouteType.SPLASH}>
                 <Stack.Screen component={SplashScreen} name={RouteType.SPLASH} />

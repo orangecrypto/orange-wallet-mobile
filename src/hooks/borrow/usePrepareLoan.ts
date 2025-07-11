@@ -48,6 +48,7 @@ async function prepareLoanRequest({
     borrower_payment_pubkey: btcPublicKey,
     borrower_ordinal_address: ordinalsAddress,
     borrower_ordinal_pubkey: ordinalsPublicKey,
+    borrower_wallet:'orange'
   };
 
   const headers = {
@@ -65,7 +66,7 @@ async function prepareLoanRequest({
       error?.response?.data?.error ||
       error?.message ||
       'An unknown error occurred';
-    console.error('❌ Loan Prepare Failed:', errorMessage);
+    console.error('❌ Loan Prepare Failed:', JSON.stringify(error));
     throw new Error(errorMessage);
   }
 }
@@ -108,11 +109,11 @@ export function usePrepareLoan() {
       });
     },
     onSuccess: (data) => {
-      Toast.show({
-        type: 'success',
-        text1: 'Loan Prepared Successfully',
-        text2: `Offer ID: ${data.prepare_offer_id}`,
-      });
+      // Toast.show({
+      //   type: 'success',
+      //   text1: 'Loan Prepared Successfully',
+      //   text2: `Offer ID: ${data.prepare_offer_id}`,
+      // });
     },
   });
 

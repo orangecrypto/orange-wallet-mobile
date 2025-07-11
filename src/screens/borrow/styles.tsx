@@ -338,4 +338,17 @@ export const styles = StyleSheet.create({
         fontFamily: Fonts.semibold,
         color: Color.copytint,
       },
+       transactionIdContainer: {
+        padding: Responsive.size18
+    },
+    transactionIdLabel: {
+        color: Color.orangeButton,
+        fontSize: Responsive.size12,
+        fontFamily: Fonts.bold,
+    },
+    transactionIdValue: {
+        color: Color.white,
+        fontSize: Responsive.size12,
+        fontFamily: Fonts.bold,
+    },
 });
