@@ -155,12 +155,12 @@ const MainWallet = () => {
                         },
                     })} />
 
-                <Tab.Screen name="Loan" component={Loan}
+                {/* <Tab.Screen name="Loan" component={Loan}
                     listeners={({ navigation, route }) => ({
                         tabPress: (e) => {
                             dispatch(setHeaderAddress(account?.btcAddress))
                         },
-                    })} />
+                    })} /> */}
                 {/* <Tab.Screen name="Assistant" component={Assistant} /> */}
             </Tab.Navigator>
         </View>

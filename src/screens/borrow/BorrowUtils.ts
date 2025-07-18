@@ -95,6 +95,24 @@ export const getFiateValue = async (value, symbol = 'BTC') => {
   }
 };
 
+
+
+
+export const getFiateRate = async (symbol = 'BTC') => {
+  try {
+    const response = await fetch(
+      `https://api.orangemarketcap.com/coins/fiat?symbol=${symbol}&fiat_currency=USD`
+    );
+    const data = await response.json();
+    const price = data?.[symbol];
+    console.log('getFiateRate', price)
+    return price;
+  } catch (error) {
+    console.error('Error fetching fiat value:', error);
+    return 0;
+  }
+};
+
 export function formatDueDate(isoString: string) {
   const date = new Date(isoString);
 

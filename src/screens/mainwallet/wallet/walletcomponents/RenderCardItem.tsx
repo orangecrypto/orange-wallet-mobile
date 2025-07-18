@@ -194,10 +194,12 @@ const RenderCardItem = ({ item, selectedItem, loader }) => {
                             <TouchableOpacity style={styles.actionButtonBg} onPress={() => push(RouteType.SWAP, { tokenDetails: selectedItem })}>
                                 <Image source={localAssets.swapcard} style={styles.actionButtonIcon} />
                             </TouchableOpacity>}
-                            {item.name === 'Bitcoin' &&  network.type === 'Mainnet' &&
+
+                            
+                            {/* {item.name === 'Bitcoin' &&  network.type === 'Mainnet' &&
                             <TouchableOpacity style={styles.actionButtonBg} onPress={() => push(RouteType.BORROW, { tokenDetails: selectedItem })}>
                                 <Image source={localAssets.borrow} style={styles.actionButtonIcon} />
-                            </TouchableOpacity>}
+                            </TouchableOpacity>} */}
                     </View>
                     </ScrollView>
                     :
