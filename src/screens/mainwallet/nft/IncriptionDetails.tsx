@@ -5,8 +5,8 @@ import { RouteType } from "@routes/RouteType";
 import { strings } from "@strings/i18n";
 import { Responsive } from "@utils/Responsive";
 import { Color } from "@values/color";
-import React from "react";
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import React, { useState, useEffect, useRef } from "react";
+import { Image, Text, TouchableOpacity, View, ActivityIndicator } from "react-native";
 import { styles } from '../../sendings/styles'
 import useAddressInscription from "@hooks/useAddressInscription";
 import Loader from "@components/Loader";
@@ -15,11 +15,80 @@ import useOrdinalData from "@hooks/useOrdinalData";
 
 
 const IncriptionDetails = ({ route }) => {
+    const [imageLoading, setImageLoading] = useState(false);
+    const loadingTimeoutRef = useRef(null);
 
     const { data, isPending , isError} = useAddressInscription(route?.params?.item?.id)
     //const { data, error, isPending } = useOrdinalData('619e1911ebc96b2ebffdfe3c0a90bbc4cbebf92fae39f0910a41aef2bbf4ead1i0');
 
     console.log('IncriptionDetails', data)
+
+    useEffect(() => {
+        // Cleanup timeout on unmount
+        return () => {
+            if (loadingTimeoutRef.current) {
+                clearTimeout(loadingTimeoutRef.current);
+            }
+        };
+    }, []);
+
+    const handleLoadStart = () => {
+        setImageLoading(true);
+        // Set timeout to force hide loader after 10 seconds
+        loadingTimeoutRef.current = setTimeout(() => {
+            console.log('Image loading timeout - forcing loader to hide');
+            setImageLoading(false);
+        }, 10000);
+    };
+
+    const handleLoadEnd = () => {
+        setImageLoading(false);
+        if (loadingTimeoutRef.current) {
+            clearTimeout(loadingTimeoutRef.current);
+        }
+    };
+
+    const handleLoadError = (error) => {
+        console.log('Image loading error:', error);
+        setImageLoading(false);
+        if (loadingTimeoutRef.current) {
+            clearTimeout(loadingTimeoutRef.current);
+        }
+    };
+
+    const renderContent = () => {
+        const contentType = route?.params?.item?.content_type;
+
+        // Use same /content URL for both images and text/html
+        const imageUri = `https://api.hiro.so/ordinals/v1/inscriptions/${data?.id}/content`;
+
+        // Render both images and text/html as images
+        if (contentType?.startsWith('image/') || contentType?.startsWith('text/html')) {
+            return (
+                <View style={styles.imageContainer}>
+                    <Image
+                        style={styles.incriptionImage}
+                        source={{ uri: imageUri }}
+                        resizeMode='contain'
+                        onLoadStart={handleLoadStart}
+                        onLoadEnd={handleLoadEnd}
+                        onError={handleLoadError} />
+                    {imageLoading && (
+                        <View style={styles.imageLoadingContainer}>
+                            <ActivityIndicator size="large" color={Color.orangeButton} />
+                        </View>
+                    )}
+                </View>
+            );
+        } else {
+            // For other content types (text/plain, application/json, etc.), show inscription number
+            return (
+                <View style={styles.nonImageView}>
+                    <Text style={styles.nonImageViewText}>{`#${route?.params?.item?.number}`}</Text>
+                </View>
+            );
+        }
+    };
 
     return (
         <View style={styles.container}>
@@ -30,17 +99,7 @@ const IncriptionDetails = ({ route }) => {
                 </TouchableOpacity>
                 <Text style={styles.title}>{strings.incriptionDetails}</Text>
 
-                {route?.params?.item?.content_type?.startsWith('image/') ?
-                    <Image style={styles.incriptionImage}
-
-                        source={{
-                            uri: `https://api.hiro.so/ordinals/v1/inscriptions/${data?.id}/content`
-                        }}
-                        resizeMode='contain' /> :
-                    <View style={styles.nonImageView}>
-                        <Text style={styles.nonImageViewText}>{`#${route?.params?.item?.number}`}</Text>
-                    </View>
-                }
+                {renderContent()}
                 <View style={styles.item}>
                     <Text style={styles.text}>{`Inscription ${data?.number}`}</Text>
                     <View style={styles.ordinalsContainer}>

@@ -605,4 +605,22 @@ export const styles = StyleSheet.create({
         color: Color.grayText,
         textAlign: 'center',
     },
+    imageContainer: {
+        width: Responsive.size200,
+        height: Responsive.size200,
+        position: 'relative',
+        alignSelf: 'center',
+        marginTop: Responsive.size10,
+    },
+    imageLoadingContainer: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.3)',
+        borderRadius: Responsive.size18,
+    },
 });
