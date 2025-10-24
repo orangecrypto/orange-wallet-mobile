@@ -105,6 +105,22 @@ export const styles = StyleSheet.create({
         height: Responsive.size140,
         borderRadius: Responsive.size8,
     },
+    imageContainer: {
+        width: '100%',
+        height: Responsive.size140,
+        position: 'relative',
+    },
+    imageLoadingContainer: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.3)',
+        borderRadius: Responsive.size8,
+    },
     buttonText: {
         color: Color.white,
         fontSize: Responsive.size16,
