@@ -30,11 +30,15 @@ const ReviewTransactions = ({ route }) => {
       btcAddress,
       ordinalsPublicKey,
       btcPublicKey,
+      masterPubKey
     } = {},
     network,
     accountList,
   } = useSelector((state: { appReducer: appReducerType }) => state.appReducer);
-
+  console.log('ReviewTransactions', `btcAddress ${btcAddress}`)
+console.log('ReviewTransactions', `btcPublicKey ${btcPublicKey}`)
+console.log('ReviewTransactions', `ordinalsPublicKey ${ordinalsPublicKey}`)
+console.log('ReviewTransactions', `masterPubKey ${masterPubKey}`)
   const { sllipage, liquidiumFee } = useSelector((state: { swapReducer: SwapReducerType }) => state.swapReducer);
 
   const {
@@ -43,13 +47,15 @@ const ReviewTransactions = ({ route }) => {
     exchangeAmount,
     selectedReceiveAsset,
     receiveAmount,
+    receiveRequestAmount,
+    priorityFeeRate
   } = route.params;
 
   const [receiveFiateValue, setReceiveFiateValue] = useState(0);
   const [sendFiateValue, setSendFiateValue] = useState(0);
 
   const { getReceiveAmount } = useCalculateDotSwap();
-  const { getDotSwapPsbt, loading: dotSwapLoading, error: dotSwapError, response } = useDotSwapPsbt();
+  const { getDotSwapPsbt, loading: dotSwapLoading } = useDotSwapPsbt();
   const { sendSignedSwapPsbt, loading: signedLoading, error: signedError, response: dotSwapSignedPsbt } = useDotSwapSignedPsbt();
 
   const { mutateAsync: getRuneDexPsbt, isPending: runeDexLoading, error: runeDexError } = useGetRuneDexPsbt();
@@ -82,25 +88,28 @@ const ReviewTransactions = ({ route }) => {
         send_amount: btcToSats(new BigNumber(exchangeAmount)),
         send_coin_type: 'btc',
         send_tick: exchangeToken?.ticker,
-        receive_amount: receiveAmount,
+        receive_amount: receiveRequestAmount,
         receive_coin_type: 'runes',
         receive_tick: selectedReceiveAsset?.name,
         slipper: sllipage,
-        fee_rate: liquidiumFee,
+        fee_rate: priorityFeeRate,
         token: result?.token,
-        public_key: accountList[0]?.masterPubKey,
+        //public_key: accountList[0]?.masterPubKey,
+        user_public_key: `${btcPublicKey}:${ordinalsPublicKey}`,
+       // public_key: masterPubKey,
         address: ordinalsAddress,
-        btc_address: ordinalsAddress,
+        btc_address: btcAddress,
       };
 
       console.log('DotSwap Swap Request:', swapRequest);
 
-      await getDotSwapPsbt(swapRequest);
+      const dotSwapResponce = await getDotSwapPsbt(swapRequest); // result is immediate
+ console.log(`getDotSwapPsbt`,`${JSON.stringify(dotSwapResponce)}`)
+  if (!dotSwapResponce?.data?.data) {
+    return Toast.show({ type: 'error', text1: dotSwapResponce?.data?.msg || 'Failed to get PSBT' });
+  }
 
-      if (!response?.data?.data) {
-        return Toast.show({ type: 'error', text1: response?.data?.msg || 'Failed to get PSBT' });
-      }
-
+      console.log(`getDotSwapPsbt`,`${JSON.stringify(dotSwapResponce?.data?.data)}`)
       await sendSignedSwapPsbt({
         order_id: response.data.data.order_id,
         psbt: response.data.data.psbt,
@@ -127,7 +136,7 @@ const ReviewTransactions = ({ route }) => {
       bid_asset: exchangeToken?.ticker,
       fee_address: btcAddress,
       fee_address_pubkey: btcPublicKey,
-      rate: liquidiumFee,
+      rate: priorityFeeRate,
       slippage: String(sllipage),
       slippage_tolerance: true,
     };

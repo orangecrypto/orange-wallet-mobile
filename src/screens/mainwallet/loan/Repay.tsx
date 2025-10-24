@@ -10,14 +10,17 @@ import { Image, Text, TouchableOpacity, View } from "react-native";
 import { useSelector } from "react-redux";
 import { fetchRuneCollateral, getFiateValue } from "./LoanUtils";
 import { styles } from "./styles";
-import { formatDueDate } from "@screens/borrow/BorrowUtils";
+import { formatDueDate, signPsbtWithMnemonic } from "@screens/borrow/BorrowUtils";
 import { getBtcFeeRate, satsToBtc } from "@orangecryptohq/orangeseed";
 import { BigNumber } from "@orangecryptohq/orangeseed/dist/utils/bignumber";
 import { usePrepareRepayment } from "@hooks/borrow/usePrepareRepayment";
 import { useSubmitRepayment } from "@hooks/borrow/useSubmitRepayment";
 import Loader from "@components/Loader";
+import useTransactionContext from "@hooks/useTransactionContext";
 
 const Repay = ({ route }) => {
+
+    const txnContext = useTransactionContext();
     const [runeName, setRuneName] = useState<string>('');
     const [repayData, setRepayData] = useState({});
     const { liquidiumToken, network } = useSelector((state: any) => state.appReducer);
@@ -26,6 +29,7 @@ const Repay = ({ route }) => {
     const { prepareRepaymentAsync, isPending: loadingPreparePayment, error: prepareError } = usePrepareRepayment();
     const { submitRepaymentAsync, isPending: loadingSubmitPayment, error: submitError } = useSubmitRepayment();
 
+    const [loading, setLoading] = useState(false)
     console.log('Repay', `route ${JSON.stringify(route?.params?.loanDetails)}`)
 
     useEffect(() => {
@@ -47,10 +51,15 @@ const Repay = ({ route }) => {
                 offerId: repayData?.id,
                 feeRate: networkFeeRate,
             });
+
+            setLoading(true)
+            const signed_psbt = await signPsbtWithMnemonic(result.base64_psbt, txnContext)
+            setLoading(false)
+            console.log('handleStartLoan', `signPsbtWithMnemonic : ${JSON.stringify(signed_psbt)}`)
             try {
                 const response = await submitRepaymentAsync({
                     offerId: result.offer_id,
-                    signedPsbtBase64: result.base64_psbt,
+                    signedPsbtBase64: signed_psbt,
                 });
                 console.log('Repayment Transaction ID:', response.repayment_transaction_id);
                 resetNavigation(RouteType.WALLETBALANCE)
@@ -64,8 +73,9 @@ const Repay = ({ route }) => {
 
     return (
         <View style={styles.container}>
-              {loadingPreparePayment && <Loader loading={loadingPreparePayment} />}
+            {loadingPreparePayment && <Loader loading={loadingPreparePayment} />}
             {loadingSubmitPayment && <Loader loading={loadingSubmitPayment} />}
+            {loading && <Loader loading={loading} />}
             <View style={styles.contentContainerRepay}>
                 <TouchableOpacity style={styles.button} onPress={() => goBack()}>
                     <Text style={styles.buttonText}>{strings.back}</Text>

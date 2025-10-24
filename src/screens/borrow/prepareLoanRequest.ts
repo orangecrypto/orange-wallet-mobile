@@ -34,6 +34,7 @@ export async function prepareLoanRequest({
         borrower_payment_pubkey: btcPublicKey,
         borrower_ordinal_address: ordinalsAddress,
         borrower_ordinal_pubkey: ordinalsPublicKey,
+        borrower_wallet:'orange'
     };
 
     const headers = {
@@ -59,7 +60,7 @@ export async function prepareLoanRequest({
             error?.message ||
             'An unknown error occurred';
 
-        console.error('❌ Loan Prepare Failed:', errorMessage);
+        console.error('❌ Loan Prepare Failed:', error);
 
         // Throwing the error with a custom message
         throw new Error(errorMessage);

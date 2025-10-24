@@ -20,7 +20,6 @@ import { validateAmountWithRanges } from "./BorrowUtils";
 import { styles } from "./styles";
 
 const Borrow = ({ route }) => {
-
     const hasMounted = useRef(false); // Tracks first render
     const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
     const [selectedCoin, setSelectedCoin] = useState(route?.params?.tokenDetails);
@@ -157,7 +156,8 @@ const Borrow = ({ route }) => {
                         title={strings.next}
                         onPress={() => {
                             push(RouteType.BORROWOFFERS, {
-                                offers: runeOffers?.runeDetails?.offers ?? []
+                                offers: runeOffers?.runeDetails?.offers ?? [],
+                                selectedAmount : amount
                             });
                         }}
                         backgroundColor={Color.orangeButton}

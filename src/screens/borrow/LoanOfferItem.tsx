@@ -13,6 +13,7 @@ const LoanOfferItem = ({ item, index, selected, onSelect }) => {
   useEffect(() => {
     const fetchFiatValue = async () => {
       const btcAmount = satsToBtc(new BigNumber(item?.loan_breakdown?.interest_sats));
+      console.log('LoanOfferItem',item?.loan_breakdown?.interest_sats)
       const value = await getFiateValue(btcAmount);
       setFiatValue(value.toFixed(2));
     };

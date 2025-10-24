@@ -21,7 +21,7 @@ if (typeof global.stream === "undefined") {
   global.stream = require("readable-stream");
 }
 import * as React from "react";
-import { SafeAreaView, View, StyleSheet, Text, AppState, Platform, StatusBar } from "react-native";
+import { SafeAreaView, View, StyleSheet, Text, AppState, Platform, StatusBar, AppStateStatus } from "react-native";
 import { Provider, useSelector } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import AppContainer from "./src/services/app/AppContainer";
@@ -34,12 +34,15 @@ import Toast from "react-native-toast-message";
 import toastConfig from "./src/components/ToastConfig";
 import { useEffect, useState } from 'react';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {useHandleDeepLink} from"./src/hooks/useHandleDeepLink"
 
 const App = () => {
   const [isWalletCreated, setIsWalletCreated] = useState(store.getState().appReducer.isWalletCreated)
+  const appStateRef = React.useRef(AppState.currentState);
   const [network, setNetwork] = useState(store.getState().appReducer.network);
   const [appState, setAppState] = useState(AppState.currentState);
   const { lockVault, isVaultUnlocked } = useSeedVault();
+  useHandleDeepLink();
   const handleLockWallet = async () => {
     try {
       if (await isVaultUnlocked()) {
@@ -61,53 +64,59 @@ const App = () => {
   const backgroundTimeRef = React.useRef(null);
 
   useEffect(() => {
-    const handleAppStateChange = async (nextAppState) => {
-      const value = await AsyncStorage.getItem('isWalletCreated');
-      const isWalletCreated = value === 'true';
-      console.log('isWalletCreated ', isWalletCreated)
-      if (!isWalletCreated) {
-        return
-      }
-      if (appState === "active" && (nextAppState === "background" || nextAppState === "inactive")) {
+  const handleAppStateChange = async (nextAppState: AppStateStatus) => {
+    const value = await AsyncStorage.getItem('isWalletCreated');
+    const isWalletCreated = value === 'true';
+    console.log('isWalletCreated:', isWalletCreated);
 
-        backgroundTimeRef.current = performance.now();
-        console.log(`🔴 App moved to background at ${new Date().toLocaleTimeString()}`);
-      }
+    if (!isWalletCreated) return;
 
-      if (appState !== "active" && nextAppState === "active") {
-        const resumeTime = performance.now();
+    const prevAppState = appStateRef.current;
 
-        if (backgroundTimeRef.current) {
-          const timeSpent = ((resumeTime - backgroundTimeRef.current) / 1000).toFixed(2);
+    if (prevAppState === 'active' && (nextAppState === 'background' || nextAppState === 'inactive')) {
+      backgroundTimeRef.current = performance.now();
+      console.log(`🔴 App moved to background at ${new Date().toLocaleTimeString()}`);
+    }
 
-          if (parseFloat(timeSpent) > 20) {
-            handleLockWallet()
-          }
-          console.log(`🟢 App resumed at ${new Date().toLocaleTimeString()}`);
-          console.log(`⏳ Time spent in background: ${timeSpent} seconds`);
+    if (prevAppState !== 'active' && nextAppState === 'active') {
+      const resumeTime = performance.now();
+      if (backgroundTimeRef.current) {
+        const timeSpent = ((resumeTime - backgroundTimeRef.current) / 1000).toFixed(2);
+
+        if (parseFloat(timeSpent) > 20) {
+          handleLockWallet();
         }
-      }
-      setAppState(nextAppState);
 
-      if (nextAppState === 'active' && appState === 'active') {
-        try {
-          if (await isVaultUnlocked()) {
-            await lockVault();
-          }
-        } catch (error) {
-          console.log("Lock Wallet", error);
+        console.log(`🟢 App resumed at ${new Date().toLocaleTimeString()}`);
+        console.log(`⏳ Time spent in background: ${timeSpent} seconds`);
+      }
+    }
+
+    if (nextAppState === 'active' && prevAppState === 'active') {
+      try {
+        const unlocked = await isVaultUnlocked();
+        if (unlocked) {
+          await lockVault();
+          console.log('🔒 Vault locked while app is active');
         }
+      } catch (error) {
+        console.log("Error in lockVault:", error);
       }
-      console.log('handleAppStateChange : ', Platform.OS + ' nextAppState : ' + nextAppState + ' appState : ' + appState)
-    };
+    }
 
-    Platform.OS === 'ios' && handleAppStateChange(AppState.currentState);
-    const subscription = AppState.addEventListener("change", handleAppStateChange);
-    return () => {
-      subscription.remove();
-    };
+    appStateRef.current = nextAppState;
+    setAppState(nextAppState);
 
-  }, [appState]);
+    console.log(`[AppState] ${Platform.OS} | from: ${prevAppState} -> to: ${nextAppState}`);
+  };
+
+  if (Platform.OS === 'ios') {
+    handleAppStateChange(AppState.currentState);
+  }
+
+  const subscription = AppState.addEventListener('change', handleAppStateChange);
+  return () => subscription.remove();
+}, []);
 
   const queryClient = new QueryClient({
     defaultOptions: {
@@ -158,6 +167,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#000000",
     paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+    
   },
   headerViewTestNet: {
     height: 45,

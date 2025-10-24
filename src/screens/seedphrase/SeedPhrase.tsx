@@ -89,8 +89,9 @@ const SeedPhrase = ({ route }) => {
                 await clearVaultStorage()
             }
             await changePassword(str2buf(''), str2buf(confirmPassword));
-            const activeAccounts = await loadAccount(account.stxAddress, selectedNetwork, account, words, network)
-            await updateWalletState(account, wallet, activeAccounts);
+           // const activeAccounts = await loadAccount(account.stxAddress, selectedNetwork, account, words, network)
+           // console.log('restoreAndStoreWallet', `activeAccounts ${activeAccounts}`)
+            await updateWalletState(account, wallet);
             setIsLoading(false)
         } catch (error) {
             setIsLoading(false)

@@ -1,7 +1,6 @@
 import CommonButton from "@components/CommonButton";
 import Loader from "@components/Loader";
 import useBtcClient from "@hooks/useBtcClient";
-import useSeedVault from "@hooks/useSeedVault";
 import { BtcTransactionBroadcastResponse } from "@orangecryptohq/orangeseed";
 import { appReducerType } from "@redux/slice/appReducer";
 import { goBack, push } from "@routes/Navigator";
@@ -29,7 +28,6 @@ const SendConfirmOrdinlas = ({ route }) => {
         "Edit Nonce",
     ];
 
-    const { getSeed } = useSeedVault();
     const { btcClient } = useBtcClient();
     const {
         isPending: btcLoading,

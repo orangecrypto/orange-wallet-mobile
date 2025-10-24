@@ -23,6 +23,8 @@ const Loan = () => {
         }, [fetchPortfolio])
     );
 
+    console.log('Loan', loanStatusList?.borrower?.runes?.loans)
+
     const sampleList = [
 
         {
@@ -52,7 +54,7 @@ const Loan = () => {
             {isLoading && <Loader loading={isLoading} />}
             <View style={styles.contentContainer}>
                 <FlatList
-                    data={loanStatusList?.offers}
+                    data={loanStatusList?.borrower?.runes?.loans}
                     //data={sampleList}
                     keyExtractor={(item) => item.id}
                     contentContainerStyle={{ flexGrow: 1 }}

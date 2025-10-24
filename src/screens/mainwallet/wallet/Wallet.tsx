@@ -81,7 +81,6 @@ const Wallet = () => {
     };
 
     const onRefresh = async () => {
-
         console.log('onRefresh', 'call')
         setRefreshing(true);
         await getBalance([
@@ -126,13 +125,16 @@ const Wallet = () => {
     };
 
     const updateTokenArray = async (btcBalance, stxBalance, brc20Tokens, runesTokens, stacksTokens, initialTokens) => {
+        
+       console.log("updateTokenArray", 'call', new Date().toLocaleTimeString());
+
         const { newCryptoArray, btcPrice, stxPrice } = await createTokenArray(btcBalance, stxBalance, brc20Tokens, runesTokens, stacksTokens, initialTokens);
+        console.log("updateTokenArray", 'done', new Date().toLocaleTimeString());
+
         setCryptoArray(newCryptoArray);
         setBtcPrice(btcPrice);
         setStxPrice(stxPrice);
-        console.log('updateTokenArray newCryptoArray', newCryptoArray)
-
-        setIsResetting(true); // Set flag before dispatching
+        setIsResetting(true); 
         await dispatch(resetCoinNames());
         dispatch(setTokenList(newCryptoArray));
     };
@@ -141,7 +143,7 @@ const Wallet = () => {
         if (isResetting) {
             addCoinSettings(cryptoArray);
             dispatch(setTokenList(cryptoArray));
-            setIsResetting(false); // Reset flag after execution
+            setIsResetting(false); 
         }
     }, [coinSettings]);
     useEffect(() => {

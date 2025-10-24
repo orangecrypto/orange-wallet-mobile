@@ -1,13 +1,14 @@
 import useSeedVault from '@hooks/useSeedVault';
 import { fetchAuthData, submitAuthData } from '@screens/borrow/authentication/GenerateToken';
-import { useEffect, useState, useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 export const useAuthLiquidium = (shouldRun = true) => {
   const {
     selectedAccount: { ordinalsAddress, btcAddress } = {},
   } = useSelector((state: any) => state.appReducer);
-
+  console.log('useAuthLiquidium',`ordinalsAddress :${ordinalsAddress}`)
+  console.log('useAuthLiquidium',`btcAddress :${btcAddress}`)
   const { getSeed } = useSeedVault();
   const [authLoading, setAuthLoading] = useState(false);
   const [authData, setAuthData] = useState<any>(null);

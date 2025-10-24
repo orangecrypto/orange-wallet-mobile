@@ -66,8 +66,8 @@ const Swap = ({ route }) => {
         setloadReceiveAmount(true)
         try {
             const result = await getReceiveAmount({
-                exchangeToken: selectedCoin?.ticker,
-                receiveToken: selectedReceiveAsset?.name,
+                exchangeToken: selectedCoin,
+                receiveToken: selectedReceiveAsset,
                 exchangeAmount: exchangeAmount,
                 address: ordinalsAddress,
             });

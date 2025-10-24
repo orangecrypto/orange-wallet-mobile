@@ -1,4 +1,4 @@
-import { NetworkType } from "@orangecryptohq/orangeseed";
+import { btcTransaction, NetworkType, satsToBtc } from "@orangecryptohq/orangeseed";
 import { getUTXOs } from "@screens/swap/CreatePSBT";
 
 import * as bitcoin from "bitcoinjs-lib";
@@ -52,7 +52,32 @@ export const validateAmountWithRanges = (ranges, amount) => {
     return 'Invalid input.';
   }
 };
+const sats = (val: any) => satsToBtc(new BigNumber(val || 0));
 
+export const calculateFiatValues = async (breakdown) => {
+  try {
+    const response = await fetch(
+      `https://api.orangemarketcap.com/coins/fiat?symbol=BTC&fiat_currency=USD`
+    );
+    const data = await response.json();
+    const btcPrice = data?.BTC;
+
+    if (!btcPrice) return null;
+
+    const repayment = sats(breakdown.total_repayment_sats) * btcPrice;
+    const loan = sats(breakdown.principal_sats) * btcPrice;
+    const interest = sats(breakdown.interest_sats) * btcPrice;
+
+    return {
+      repayment: Number(repayment.toFixed(0)),
+      loan: Number(loan.toFixed(0)),
+      interest: Number(interest.toFixed(0)),
+    };
+  } catch (err) {
+    console.error('Error calculating fiat values:', err);
+    return null;
+  }
+};
 export const getFiateValue = async (value, symbol = 'BTC') => {
   try {
     const response = await fetch(
@@ -67,6 +92,24 @@ export const getFiateValue = async (value, symbol = 'BTC') => {
   } catch (error) {
     console.error('Error fetching fiat value:', error);
     return null;
+  }
+};
+
+
+
+
+export const getFiateRate = async (symbol = 'BTC') => {
+  try {
+    const response = await fetch(
+      `https://api.orangemarketcap.com/coins/fiat?symbol=${symbol}&fiat_currency=USD`
+    );
+    const data = await response.json();
+    const price = data?.[symbol];
+    console.log('getFiateRate', price)
+    return price;
+  } catch (error) {
+    console.error('Error fetching fiat value:', error);
+    return 0;
   }
 };
 
@@ -157,4 +200,29 @@ async function estimateTxSizeFromUtxos(utxos: any, repayment:any) {
   const vSize = tx.virtualSize();
 
   return vSize;
+}
+
+
+import * as bip39 from 'bip39';
+import { BIP32Factory } from 'bip32';
+import ecc, * as secp256k1 from "@bitcoinerlab/secp256k1";
+import { ECPairFactory } from 'ecpair';
+import { BigNumber } from "@orangecryptohq/orangeseed/dist/utils/bignumber";
+
+const ECPair = ECPairFactory(ecc);
+const bip32 = BIP32Factory(ecc);
+
+export async function signPsbtWithMnemonic(base64Psbt: string,txnContext: any) {
+  let parsedPsbt: btcTransaction.EnhancedPsbt;
+      try {
+        parsedPsbt = new btcTransaction.EnhancedPsbt(txnContext, base64Psbt);
+      } catch (err) {
+        console.error('[useSubmitLoan] Failed to parse PSBT', err);
+        throw new Error('Invalid PSBT');
+      }
+
+      const signedPsbt = await parsedPsbt.getSignedPsbtBase64({
+        finalize: false,
+      });
+  return signedPsbt;
 }

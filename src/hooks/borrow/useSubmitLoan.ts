@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Config } from '@config/Config';
 import Toast from 'react-native-toast-message';
 import AppConfig from 'react-native-config';
+import { useSelector } from 'react-redux';
 
 interface SubmitLoanParams {
   signed_psbt_base_64: string;
@@ -14,6 +15,8 @@ interface SubmitLoanResponse {
 }
 
 export function useSubmitLoan() {
+
+  const { liquidiumToken} = useSelector((state: any) => state.appReducer);
   const mutationFn = async ({
     signed_psbt_base_64,
     prepare_offer_id,
@@ -28,6 +31,7 @@ export function useSubmitLoan() {
     const headers = {
       Authorization: `Bearer ${AppConfig.LIQUIDIUM_API_KEY}`,
       'Content-Type': 'application/json',
+      'x-user-token': liquidiumToken,
     };
 
     try {

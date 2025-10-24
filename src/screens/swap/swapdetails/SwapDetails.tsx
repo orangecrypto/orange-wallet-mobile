@@ -11,7 +11,7 @@ import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { styles } from "../styles";
 import SendSummaryCard from "./SendSummaryCard";
 import SwapProvider from "./SwapProvider";
-import { btcToSats, getBtcFeeRate } from "@orangecryptohq/orangeseed";
+import { btcToSats } from "@orangecryptohq/orangeseed";
 import { useSelector } from "react-redux";
 import { appReducerType } from "@redux/slice/appReducer";
 import { setLiquidiumFee, SwapReducerType } from "@redux/slice/SwapReducer";
@@ -21,6 +21,7 @@ import { useCalculateDotSwap } from "@hooks/swap/useCalculateDotSwap";
 import { Dispatch } from "@reduxjs/toolkit";
 import { useAppDispatch } from "@redux/store";
 import Loader from "@components/Loader";
+import { getRecommendedFees } from "../SwapUtils";
 
 const SwapDetails = ({ route }) => {
 
@@ -39,8 +40,9 @@ const SwapDetails = ({ route }) => {
   const { getReceiveAmount } = useCalculateDotSwap();
   const dispatch: Dispatch = useAppDispatch();
   if (priorityFeeRate === null) {
-    getBtcFeeRate(network?.type)
-      .then(res => setPriorityFeeRate(res.priority))
+    getRecommendedFees()
+      .then(res => {setPriorityFeeRate(res?.fastestFee)
+    console.error("getRecommendedFees", res)})
       .catch(err => console.error("Fee rate error:", err));
   }
 
@@ -55,8 +57,12 @@ const SwapDetails = ({ route }) => {
       exchangeToken: exchangeToken,
       selectedReceiveAsset: selectedReceiveAsset,
       exchangeAmount: exchangeAmount,
-      receiveAmount: finalReceiveAmount
+      receiveAmount: finalReceiveAmount,
+      receiveRequestAmount: selectedProvider?.value,
+      priorityFeeRate:priorityFeeRate
     })
+
+    console.log('handleConfirmTransaction', selectedProvider?.value)
   }
 
   useEffect(() => {
