@@ -136,13 +136,14 @@ const App = () => {
     <Provider store={store}>
       <PersistGate persistor={persistor}>
         <SafeAreaView style={styles.safeArea}>
-
+       
           <QueryClientProvider client={queryClient}>
             {network?.type === 'Testnet' && (
               <View style={styles.headerViewTestNet}>
                 <Text style={styles.testNetText}>{'Testnet'}</Text>
               </View>
             )}
+             <StatusBar translucent backgroundColor="transparent" barStyle="light-content" />
             <AppContainer />
             <Toast config={toastConfig} position="bottom" visibilityTime={2000} />
           </QueryClientProvider>
@@ -156,7 +157,7 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: "#000000",
-   
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
   },
   headerViewTestNet: {
     height: 45,

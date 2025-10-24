@@ -25,7 +25,7 @@ export const styles = StyleSheet.create({
         marginTop: Responsive.size10,
         fontSize: Responsive.size18,
         color: Color.white,
-        fontFamily: Fonts.regular,
+        fontFamily: Fonts.semibold,
         lineHeight: Responsive.size22,
     },
     topIcon: {
@@ -58,7 +58,7 @@ export const styles = StyleSheet.create({
         paddingVertical: Responsive.size12,
         borderRadius: Responsive.size10,
         justifyContent: "space-between",
-        marginVertical: Responsive.size18
+        marginVertical: Responsive.size25,
     },
     stepText: {
         fontSize: Responsive.size16,
@@ -85,6 +85,7 @@ export const styles = StyleSheet.create({
     button: {
         backgroundColor: Color.backbackgroundbg,
         width: Responsive.size70,
+        height: Responsive.size40,
         justifyContent: "center",
         alignItems: "center",
         padding: Responsive.size10,
@@ -92,8 +93,8 @@ export const styles = StyleSheet.create({
     },
     buttonText: {
         color: Color.white,
-        fontSize: Responsive.size16,
-        fontFamily: Fonts.regular
+        fontSize: Responsive.size14,
+        fontFamily: Fonts.semibold
     },
     backImage:{
         height: Responsive.size18,
@@ -124,6 +125,9 @@ export const styles = StyleSheet.create({
         borderRadius: Responsive.size12,
         borderColor: Color.borderLineSeedphrase,
         borderWidth: Responsive.size1,
+        alignContent:'center',
+        alignItems:'center',
+        justifyContent:'center'
         
     },
     itemInput: {
@@ -145,6 +149,7 @@ export const styles = StyleSheet.create({
         fontSize: Responsive.size14,
         fontFamily: Fonts.semibold,
         textAlign: 'center',
+        alignSelf:'center',
         width: '100%',
     },
 

@@ -252,7 +252,7 @@ function decryptECIES(payload: any, privateKeyHex: string) {
     }
 }
 
-function convertToBufferBIP32(raw: BIP32Interface): any {
+export function convertToBufferBIP32(raw: BIP32Interface): any {
     return {
         chainCode: Buffer.from(raw.chainCode),
         network: raw.network,

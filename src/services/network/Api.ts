@@ -10,6 +10,7 @@ const checkInternetConnection = async () => {
 };
 
 export const getApi = async (endpoint: string, params?: Record<string, any>) => {
+  
   const isConnected = await checkInternetConnection();
   if (!isConnected) {
     Toast.show({

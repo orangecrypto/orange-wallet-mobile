@@ -34,6 +34,7 @@ export enum Color {
     blackBorder = '#333333',
   
     viewbutton = '#390E02CC',
+    repaycolorbutton = '#123509',
   
     orangeOpacityBg = '#D2340333',
     selectedCategory = '#D23403',
@@ -44,6 +45,7 @@ export enum Color {
     disableSwitch = '#D2340380',
     unselectedcategory = '#626A8233',
     backgroundbg = '#383C4E3',
+    backgrounddetailborder = '#1F232D',
     backbackgroundbg = '#A8B9F41A',
     seedPhrasePlaceholder = '#8E8E93',
     listBordercolor = '#0D0E1233',
@@ -60,7 +62,21 @@ export enum Color {
     pastegreen='#42BF2333',
     tokenImageDarkBg='#222737',
     tokenImageBg='#F0F0F0',
-    tokenImageDarkText='#A8B9F4'
+    tokenImageDarkText='#A8B9F4',
+    loandetailline='#11141B',
+    editblue='#006DEE',
+    toastSucess='#42BF23',
+    toastSucessImagebg='#42BF2333',
+    toastWarning='#FFF8E1',
+    toastWarningImagebg='#FFC70033',
+    toastError='#FDECEA',
+    toastErrorImagebg='#D2340333',
+    bestImagebg='#503500',
+    sendTextColor='#414965',
+    timerStatusBackground='#00000066',
+    progressRepay='#CF3303',
+    
+
 
   }
   

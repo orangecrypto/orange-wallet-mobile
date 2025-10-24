@@ -29,7 +29,9 @@ export default function TokenImage({
         : Color.selectedCategory;
 
   const displayedTicker = useMemo(() => {
-    const ticker = fungibleToken?.ticker || fungibleToken?.name || fungibleToken?.tick || token || '?';
+    const ticker = fungibleToken?.ticker || fungibleToken?.name  || fungibleToken?.tick || token || '?';
+
+    console.log('displayedTicker', `ticker : ${ticker} : ${ticker.substring(0, 2).toUpperCase()}`)
     return ticker.substring(0, 2).toUpperCase();
   }, [fungibleToken, token]);
 

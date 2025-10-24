@@ -28,14 +28,11 @@ const toastStyles = StyleSheet.create({
         alignItems: 'center',
         alignContent:'center',
         width: '90%',
-        height: Platform.OS === 'ios'?  Responsive.size80 : Responsive.size45,
+        height: Platform.OS === 'ios'?  Responsive.size56 : Responsive.size45,
         padding: Responsive.size12,
-        borderRadius: Responsive.size8,
         position: 'absolute',
         bottom: Responsive.size50,
         alignSelf: 'center',
-        borderWidth: Responsive.size1,
-        borderColor: Color.gray,
        
     },
     errorContainer: {
@@ -57,9 +54,9 @@ const toastStyles = StyleSheet.create({
     },
     text1Success: {
         color: Color.successgreen,
-        fontSize: Responsive.size14,
-        fontFamily: Fonts.regular,
-        marginBottom: Platform.OS === 'ios' ? Responsive.size25: Responsive.size0
+        fontSize: Responsive.size18,
+        fontFamily: Fonts.semibold,
+       
     },
     text2: {
         color: Color.black,
@@ -75,58 +72,71 @@ const toastStyles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         marginRight: Responsive.size10,
-        marginBottom: Platform.OS === 'ios' ? Responsive.size25: Responsive.size0
     },
     imageIcon: {
-        height: Responsive.size10,
-        width: Responsive.size10
+        height: Responsive.size12,
+        width: Responsive.size12
     }
 });
 
 
 const toastConfig = {
-    error: ({ text1, text2 }: CustomToastProps) => (
-        <LinearGradient
-            colors={['#D2340333', '#000000']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            style={toastStyles.container} >
-            <View style={[toastStyles.imageBackground, { backgroundColor: '#D2340333' }]}>
-                <Image style={toastStyles.imageIcon} source={localAssets.whitecross} tintColor={Color.red} />
-            </View>
-            {text1 && <Text style={[toastStyles.text1Success, { color: Color.red }]}>{text1}</Text>}
-            {text2 && <Text style={toastStyles.text2}>{text2}</Text>}
-        </LinearGradient>
-    ),
     success: ({ text1, text2 }: CustomToastProps) => (
-        <View style={toastStyles.blurBackground}>
-            <LinearGradient
-                colors={['#42BF2333', '#000000']}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                style={toastStyles.container} >
-                <View style={[toastStyles.imageBackground, { backgroundColor: '#42BF2333' }]}>
-                    <Image style={toastStyles.imageIcon} source={localAssets.toastright} />
-                </View>
-                {text1 && <Text style={toastStyles.text1Success}>{text1}</Text>}
-                {text2 && <Text style={toastStyles.text2}>{text2}</Text>}
-            </LinearGradient>
-        </View>
-
-    ),
-    warning: ({ text1, text2 }: CustomToastProps) => (
-        <LinearGradient
-            colors={['#FFC70033', '#000000']}
+      <View style={toastStyles.blurBackground}>
+        <View style={toastStyles.container}>
+          <LinearGradient
+            colors={['#267015', '#000000']}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
-            style={toastStyles.container} >
-            <View style={[toastStyles.imageBackground, { backgroundColor: '#FFC70033' }]}>
-                <Image style={toastStyles.imageIcon} source={localAssets.yellowcross} />
-            </View>
-            {text1 && <Text style={[toastStyles.text1Success, { color: Color.erroryellow }]}>{text1}</Text>}
+            style={[StyleSheet.absoluteFill,{borderRadius: Responsive.size8, borderWidth: Responsive.size1, borderColor: Color.borderLineSeedphrase}]}
+          />
+          <View style={[toastStyles.imageBackground, { backgroundColor: '#42BF2333' }]}>
+            <Image style={toastStyles.imageIcon} source={localAssets.toastright} />
+          </View>
+          <View style={{ flex: 1 }}>
+            {text1 && <Text style={toastStyles.text1Success}>{text1}</Text>}
             {text2 && <Text style={toastStyles.text2}>{text2}</Text>}
-        </LinearGradient>
+          </View>
+        </View>
+      </View>
     ),
-};
+  
+    error: ({ text1, text2 }: CustomToastProps) => (
+      <View style={toastStyles.container}>
+        <LinearGradient
+          colors={['#d12c2c', '#000000']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={[StyleSheet.absoluteFill,{borderRadius: Responsive.size8, borderWidth: Responsive.size1, borderColor: Color.borderLineSeedphrase}]}
+        />
+        <View style={[toastStyles.imageBackground, { backgroundColor: '#D2340333' }]}>
+          <Image style={toastStyles.imageIcon} source={localAssets.whitecross} tintColor={Color.red} />
+        </View>
+        <View style={{ flex: 1 }}>
+          {text1 && <Text  style={[toastStyles.text1Success, { color: Color.red }]}>{text1}</Text>}
+          {text2 && <Text style={toastStyles.text2}>{text2}</Text>}
+        </View>
+      </View>
+    ),
+  
+    warning: ({ text1, text2 }: CustomToastProps) => (
+      <View style={toastStyles.container}>
+        <LinearGradient
+          colors={['#d18e21', '#000000']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={[StyleSheet.absoluteFill,{borderRadius: Responsive.size8, borderWidth: Responsive.size1, borderColor: Color.borderLineSeedphrase}]}
+        />
+        <View style={[toastStyles.imageBackground, { backgroundColor: '#FFC70033' }]}>
+          <Image style={toastStyles.imageIcon} source={localAssets.yellowcross} />
+        </View>
+        <View style={{ flex: 1 }}>
+          {text1 && <Text style={[toastStyles.text1Success, { color: Color.erroryellow }]}>{text1}</Text>}
+          {text2 && <Text style={toastStyles.text2}>{text2}</Text>}
+        </View>
+      </View>
+    ),
+  };
+  
 
 export default toastConfig;

@@ -23,6 +23,7 @@ export interface appReducerType {
    network:{},
    currency:{},
    accountList:[],
+   liquidiumToken:string,
 }
 
 const initialState: appReducerType = {
@@ -30,6 +31,7 @@ const initialState: appReducerType = {
     coinSettings:[],
     isWalletCreated:false,
     selectedAccount:{},
+    liquidiumToken:'',
     wallet:{},
     network:{
         address:HIRO_MAINNET_DEFAULT , 
@@ -62,6 +64,9 @@ export const appReducer = createSlice({
         setCurrency: (state, action) => {
             state.currency = action.payload
         },
+        setLiquidiumToken: (state, action) => {
+            state.liquidiumToken = action.payload
+        },
         setAccountList: (state, action) => {
             state.accountList = action.payload
         },
@@ -69,6 +74,6 @@ export const appReducer = createSlice({
     }
 });
 
-export const {setIsWalletCreated, clearAppReducer, setSelectedAccount, setWallet, setNetwork, setCurrency, setAccountList} = appReducer.actions;
+export const {setIsWalletCreated, clearAppReducer, setSelectedAccount, setWallet, setNetwork, setCurrency, setAccountList, setLiquidiumToken} = appReducer.actions;
 
 export default appReducer.reducer;

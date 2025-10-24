@@ -55,7 +55,7 @@ const Success = () => {
     // Update percentage when currentStep changes
     useEffect(() => {
         const progressPercentage =
-    totalSteps > 1 ? ((currentStep - 1) / (totalSteps - 1)) * 100 : 0;
+            totalSteps > 1 ? ((currentStep - 1) / (totalSteps - 1)) * 100 : 0;
         setProgressPercentage(progressPercentage);
     }, [currentStep]);
 
@@ -97,6 +97,7 @@ const Success = () => {
                 pagingEnabled
                 onScroll={handleScroll}
                 showsHorizontalScrollIndicator={false}
+                showsVerticalScrollIndicator={false}
                 scrollEventThrottle={16}
                 contentContainerStyle={styles.scrollViewContainer}
             >
@@ -129,17 +130,22 @@ const Success = () => {
                     />
                 )}
             </View>
-
-            <View style={styles.buttonContainer}>
+            <View style={styles.horizontalButtonContainer}>
+                <CommonButton
+                    title={strings.skip}
+                    onPress={() => resetNavigation(RouteType.WALLETBALANCE)}
+                    backgroundColor={Color.backgroundbg}
+                    textColor={Color.white}
+                    borderColor={Color.blackBorder}
+                    width={"45%"}
+                    height={Responsive.size50} />
                 <CommonButton
                     title={currentStep === totalSteps ? strings.complete : strings.next}
-                    onPress={handleButtonPress}
+                    onPress={() => handleButtonPress()}
                     backgroundColor={Color.orangeButton}
                     textColor={Color.white}
-                    borderColor={Color.orangeBorder}
-                    width={"100%"}
-                    height={Responsive.size50}
-                />
+                    width={"45%"}
+                    height={Responsive.size50} />
             </View>
         </View>
     );

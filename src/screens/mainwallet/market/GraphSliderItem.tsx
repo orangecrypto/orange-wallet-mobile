@@ -6,8 +6,12 @@ import React from 'react';
 import { Text, View, ActivityIndicator } from 'react-native';
 import { LineChart } from 'react-native-gifted-charts';
 import { styles } from './styles';
+import { formatCurrencyWithCommas } from '@utils/cryptoUtils';
 
 const GraphSliderItem = ({ data, loading }) => {
+
+
+  console.log('GraphSliderItem',`data.value ${data.value}` )
   if (loading) {
     return (
       <View style={[styles.Graphcontainer, { justifyContent: 'center', alignItems: 'center' }]}>
@@ -23,6 +27,8 @@ const GraphSliderItem = ({ data, loading }) => {
 
   const minValue = Math.min(...processedData.map((item) => item.value));
 
+
+  
   const filterTimeData = (data) => {
     const timeSet = new Set();
     data.forEach((entry) => {
@@ -83,9 +89,9 @@ const GraphSliderItem = ({ data, loading }) => {
         </View>
 
         <View style={styles.overlayBalanceSection}>
-          <Text style={styles.balanceText}>{data.value}</Text>
+          <Text style={styles.balanceText}>{formatCurrencyWithCommas(data.value)}</Text>
           <View style={styles.changeSection}>
-            <Text style={styles.changeText}>{data.percent + '%'}</Text>
+            <Text style={styles.changeText}>{data.percent}</Text>
           </View>
         </View>
       </View>

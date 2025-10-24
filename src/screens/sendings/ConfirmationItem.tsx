@@ -43,7 +43,6 @@ const ConfirmationItem = ({ item, availableRoutes, type }) => {
     return (
         <View style={styles.itemContiner}>
             <TouchableOpacity style={styles.item} onPress={handlePress}>
-
                 <Text style={styles.text}>{isDropdownOpen ? '' : item?.name}</Text>
                 <View>
                     {type === "runes" && (item?.name === "Inputs & Outputs" || item?.name === "Fees" || item?.name === "Amount") ? (

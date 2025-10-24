@@ -66,7 +66,10 @@ const Login = () => {
         <KeyboardAvoidingView
             style={styles.container}
             behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-            <ScrollView contentContainerStyle={styles.scrollContainer}>
+            <ScrollView 
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.scrollContainer}>
                 <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
                     <View style={styles.contentContainer}>
                         <Image source={localAssets.pill} style={styles.topIcon} />
@@ -152,6 +155,8 @@ const styles = StyleSheet.create({
         color: Color.white,
         marginTop: Responsive.size16,
         textDecorationLine: 'underline',
+        lineHeight: Responsive.size20,
+        textDecorationColor: Color.white,
         alignSelf: 'center'
     },
     passwordError: {

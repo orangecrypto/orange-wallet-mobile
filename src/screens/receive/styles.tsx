@@ -17,16 +17,18 @@ export const styles = StyleSheet.create({
     button: {
         backgroundColor: Color.backbackgroundbg,
         width: Responsive.size70,
+        height: Responsive.size40,
         justifyContent: "center",
         alignItems: "center",
+    
         padding: Responsive.size10,
         borderRadius: Responsive.size8,
         marginTop: Responsive.size50,
     },
     buttonText: {
         color: Color.white,
-        fontSize: Responsive.size16,
-        fontFamily: Fonts.regular,
+        fontSize: Responsive.size14,
+        fontFamily: Fonts.semibold,
     },
     title: {
         color: Color.orangeButton,
@@ -52,11 +54,12 @@ export const styles = StyleSheet.create({
         flexDirection: "row",
         padding: Responsive.size16,
         backgroundColor: Color.listBordercolor,
-        borderRadius: Responsive.size10,
+        borderRadius: Responsive.size12,
         marginTop: Responsive.size18,
         justifyContent: "space-between",
         alignContent: 'center',
-        borderWidth: Responsive.size2,
+        alignItems:'center',
+        borderWidth: Responsive.size1,
         borderColor: Color.borderLineSeedphrase,
     },
     text: {
@@ -64,19 +67,21 @@ export const styles = StyleSheet.create({
         fontFamily: Fonts.regular,
         color: Color.white,
         alignSelf: 'center',
+        justifyContent: 'center',
+        alignContent: 'center',
         width:'70%'
     },
 
     rightItemContainer: {
         flexDirection: "row",
-        justifyContent: 'center',
+       
         alignContent: 'center',
-         width:'30%'
+        alignSelf: 'center',
     },
     rightItemIconContaner: {
         height: Responsive.size24,
         width: Responsive.size24,
-        marginHorizontal: Responsive.size5
+        marginLeft: Responsive.size5
     },
     rightItemIcon: {
         height: Responsive.size18,
@@ -87,12 +92,14 @@ export const styles = StyleSheet.create({
         fontSize: Responsive.size14,
         color: Color.orangeButton,
         margin: Responsive.size18,
-        lineHeight: Responsive.size14
+       
     },
     warningMessage: {
-        fontFamily: Fonts.regular,
+        fontFamily: Fonts.semibold,
         fontSize: Responsive.size14,
-        color: Color.nftcategoryText
+        color: Color.nftcategoryText,
+        lineHeight:Responsive.size20,
+        textAlign:'justify',
     },
     qrcodeContainer:{
         height: Responsive.size130,
@@ -100,14 +107,27 @@ export const styles = StyleSheet.create({
         alignSelf:'center',
         marginTop: Responsive.size18
     },
+    qrcodeAddressTextContainer :{
+    flexDirection:'row',
+    paddingHorizontal:Responsive.size10,
+    alignContent:'center'
+    },
     qrcodeAddressText :{
-        fontFamily: Fonts.semibold,
+        flexDirection: 'row',
+        fontFamily: Fonts.regular,
         fontSize: Responsive.size24,
         textAlign:'center',
+        alignContent:'center',
+        alignItems:'center',
         color:Color.white,
-        marginTop: Responsive.size18,
-        lineHeight: Responsive.size32
+        marginTop: Responsive.size20 
     },
+    rightItemIconContainer: {
+        marginLeft: Responsive.size8,
+        padding: Responsive.size4,
+      },
+      
+     
     qrView:{
         justifyContent:'center',
         alignItems:'center',

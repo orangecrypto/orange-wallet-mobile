@@ -74,7 +74,7 @@ const BackupYourWallet = () => {
                     <Text style={styles.description}>{strings.enterCurrentPassword}</Text>
 
                     <CustomTextInput
-                        placeholder="Enter your password"
+                        placeholder={''}
                         value={password}
                         onChangeText={(text) => {
                             setPassword(text); // Update local password state

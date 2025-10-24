@@ -1,5 +1,6 @@
 import { Responsive } from "@utils/Responsive";
 import { Color } from "@values/color";
+import { Fonts } from "@values/fonts";
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
@@ -25,12 +26,13 @@ export const styles = StyleSheet.create({
         paddingHorizontal: Responsive.size16,
         paddingVertical: Responsive.size16,
         borderRadius: Responsive.size10,
-        marginHorizontal: Responsive.size16,
+        marginHorizontal: Responsive.size10,
     },
     headerText: {
         fontSize: Responsive.size20,
         color: Color.white,
-        width: Responsive.size170
+        width: Responsive.size170,
+        fontFamily: Fonts.regular
     },
     headerClickableText: {
         padding: Responsive.size2
@@ -40,10 +42,17 @@ export const styles = StyleSheet.create({
         height: Responsive.size20,
 
     },
+     headerClickableIcon: {
+        width: Responsive.size28,
+        height: Responsive.size28,
+        padding: Responsive.size5,
+        marginHorizontal: Responsive.size4
+
+    },
     iconsContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        width: '30%',
+        width: '35%',
     },
 });

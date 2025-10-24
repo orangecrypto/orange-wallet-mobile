@@ -43,11 +43,11 @@ const VerifyPassword = () => {
             clearStoreData()
             dispatch(clearAppReducer())
             resetNavigation(RouteType.HOME_SCREEN)
-            AsyncStorage.setItem('isWalletCreated','')
+            AsyncStorage.setItem('isWalletCreated', '')
         } catch (error) {
             Toast.show({ type: 'error', text1: error.message });
         }
-        
+
 
     };
 
@@ -66,41 +66,43 @@ const VerifyPassword = () => {
     return (
 
         <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.container}>
-      
-        <ScrollView
-           contentContainerStyle={{
-            flexGrow: 1,
-            paddingBottom: isKeyboardVisible ? Responsive.size50 : 0,
-          }}
-          keyboardShouldPersistTaps="handled"
-          showsVerticalScrollIndicator={false}>
-            <View style={styles.contentContainer}>
-                <TouchableOpacity style={styles.button} onPress={() => goBack()}>
-                    <Text style={styles.buttonText}>{strings.back}</Text>
-                </TouchableOpacity>
-                <View style={styles.enterPasswordContainer}>
-                    <Image source={localAssets.lock} style={styles.passwordIcon} />
-                    <Text style={styles.enterPasswordtitle}>{strings.resetWalletPassword}</Text>
-                    <Text style={[styles.description, { lineHeight: Responsive.size22 }]}>{strings.enterCurrentPassword}</Text>
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={styles.container}>
 
-                    <CustomTextInput
-                        placeholder=""
-                        value={password}
-                        onChangeText={(text) => {
-                            setPassword(text);
-                            handlePasswordChange(text);
-                        }}
-                        keyboardType={'default'}
-                        secureTextEntry={true}
-                        showPasswordToggle={true}
-                        passwordIconVisible={localAssets.eye}
-                        passwordIconHidden={localAssets.eyeoff}
-                        style={styles.input} />
-                     {error !== strings.strongPassword && <Text style={styles.passwordError}>{strings.passwordValidationMessage}</Text>}
-                    {/* <Text style={styles.passwordError}>{feedback}</Text> */}
-                </View>
+            <ScrollView
+                contentContainerStyle={{
+                    flexGrow: 1,
+                    paddingBottom: isKeyboardVisible ? Responsive.size50 : 0,
+                }}
+                keyboardShouldPersistTaps="handled"
+                showsVerticalScrollIndicator={false}>
+                <View style={styles.contentContainer}>
+                    <TouchableOpacity style={styles.button} onPress={() => goBack()}>
+                        <Text style={styles.buttonText}>{strings.back}</Text>
+                    </TouchableOpacity>
+                    <View style={styles.enterPasswordContainer}>
+                        <Image source={localAssets.lock} style={styles.passwordIcon} />
+                        <Text style={styles.enterPasswordtitle}>{strings.resetWalletPassword}</Text>
+                        <Text style={[styles.description, { lineHeight: Responsive.size22 }]}>{strings.enterCurrentPassword}</Text>
+
+                        <CustomTextInput
+                            placeholder=""
+                            value={password}
+                            onChangeText={(text) => {
+                                setPassword(text);
+                                handlePasswordChange(text);
+                            }}
+                            keyboardType={'default'}
+                            secureTextEntry={true}
+                            showPasswordToggle={true}
+                            passwordIconVisible={localAssets.eye}
+                            passwordIconHidden={localAssets.eyeoff}
+                            style={styles.input} />
+                        {password !== "" && error !== strings.strongPassword && (
+                            <Text style={styles.passwordError}>{strings.passwordValidationMessage}</Text>
+                        )}
+                        {/* <Text style={styles.passwordError}>{feedback}</Text> */}
+                    </View>
                 </View>
             </ScrollView>
 

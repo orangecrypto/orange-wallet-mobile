@@ -21,14 +21,14 @@ const SendingHeader = ({
                     <Text numberOfLines={1} style={styles.headerTitle}>{title}</Text>
                     <View style={styles.tokenContainer}>
                         {ticker && (
-                            <Text style={styles.categoryTextBackground}>
-                                {ticker}
-                            </Text>
+                           <View style={styles.categoryTextBackground}>
+                           <Text style={styles.categoryText}>{ticker}</Text>
+                         </View>
                         )}
                         {type && (
-                            <Text style={styles.categoryTextBackground}>
-                                {type}
-                            </Text>
+                           <View style={styles.categoryTextBackground}>
+                           <Text style={styles.categoryText}>{type}</Text>
+                         </View>
                         )}
                     </View>
                 </View>
@@ -88,18 +88,27 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignContent: 'center',
         backgroundColor: 'transparent',
+        
     },
     categoryTextBackground: {
-        fontFamily: Fonts.regular,
-        fontSize: Responsive.size12,
-        paddingVertical: Responsive.size1,
-        color: 'white',
-        textAlign:'center',
+        height: Responsive.size18,
         borderRadius: Responsive.size10,
         backgroundColor: Color.viewbutton,
-        paddingHorizontal: Responsive.size4,
         marginLeft: Responsive.size8,
-    },
+        paddingHorizontal: Responsive.size6,
+        justifyContent: 'center', 
+        alignItems: 'center',    
+        flexDirection: 'row',
+      },
+      
+      categoryText: {
+        fontFamily: Fonts.semibold,
+        fontSize: Responsive.size12,
+        color: Color.white,
+        textAlign: 'center', 
+       
+      },
+      
     headerIcon: {
         height: Responsive.size36,
         width: Responsive.size36,

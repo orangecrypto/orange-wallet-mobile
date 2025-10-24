@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Responsive } from '@utils/Responsive';
 import { Color } from '@values/color';
 import React, { useEffect } from 'react';
-import { Image, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { Image, StyleSheet, Text, View, TouchableOpacity, Platform } from 'react-native';
 import Assistant from './assistant/Assistant';
 import Market from './market/Market';
 import Nft from './nft/Nft';
@@ -11,13 +11,16 @@ import Wallet from './wallet/Wallet';
 import { push } from '@routes/Navigator';
 import { RouteType } from '@routes/RouteType';
 import { useSelector } from 'react-redux';
-import { setHeaderAddress, walletReducerType } from '@redux/slice/WalletReducer';
+import { setCardIndex, setHeaderAddress, walletReducerType } from '@redux/slice/WalletReducer';
 import { Dispatch } from '@reduxjs/toolkit';
 import { useAppDispatch } from "@redux/store";
 import { store } from '@redux/store';
 import Clipboard from "@react-native-clipboard/clipboard";
 import { truncateAddress } from '@utils/cryptoUtils';
 import { styles } from './styles';
+import Toast from 'react-native-toast-message';
+import { strings } from '@strings/i18n';
+import Loan from './loan/Loan';
 
 const MainWallet = () => {
     const account = store.getState().appReducer.selectedAccount
@@ -25,12 +28,17 @@ const MainWallet = () => {
     const dispatch: Dispatch = useAppDispatch();
     const Tab = createBottomTabNavigator();
 
-    useEffect(()=>{
+    useEffect(() => {
         dispatch(setHeaderAddress(account?.btcAddress))
-    },[])
+    }, [])
 
     const handleCopyPress = () => {
         Clipboard.setString(headerAddress)
+        Platform.OS === 'ios' &&
+            Toast.show({
+                type: 'success',
+                text1: strings.copiedMessage,
+            });
     };
 
     const handleAddAddress = () => {
@@ -55,15 +63,15 @@ const MainWallet = () => {
                 </TouchableOpacity>
                 <View style={styles.iconsContainer}>
 
-                    <TouchableOpacity onPress={handleCopyPress}>
+                    <TouchableOpacity onPress={handleCopyPress} style={styles.headerClickableIcon}>
                         <Image source={localAssets.copy} style={styles.headerIcon} />
                     </TouchableOpacity>
 
-                    <TouchableOpacity onPress={handleQrPress}>
+                    <TouchableOpacity onPress={handleQrPress} style={styles.headerClickableIcon}>
                         <Image source={localAssets.qr} style={styles.headerIcon} />
                     </TouchableOpacity>
 
-                    <TouchableOpacity onPress={handleSettingsPress}>
+                    <TouchableOpacity onPress={handleSettingsPress} style={styles.headerClickableIcon}>
                         <Image source={localAssets.settings} style={styles.headerIcon} />
                     </TouchableOpacity>
                 </View>
@@ -71,14 +79,19 @@ const MainWallet = () => {
 
             <Tab.Navigator
                 screenOptions={({ route }) => ({
+                    
                     tabBarStyle: {
                         backgroundColor: Color.black,
                         borderRadius: Responsive.size10,
                         borderWidth: Responsive.size1,
                         borderColor: Color.gray,
-                        height: Responsive.size62,
+                        height: Responsive.size56   ,
                         justifyContent: 'center',
+                        marginHorizontal: Responsive.size16,
+                        marginBottom:Responsive.size6,
+                        paddingTop: Platform.OS === 'android'? Responsive.size14:0,
                         alignItems: 'center',
+                        alignContent:'center',
                         position: 'absolute',
                         bottom: 0,
                     },
@@ -91,6 +104,9 @@ const MainWallet = () => {
                                 break;
                             case 'Market':
                                 iconSource = localAssets.marketbottom;
+                                break;
+                            case 'Loan':
+                                iconSource = localAssets.bottomloan;
                                 break;
                             case 'NFT':
                                 iconSource = localAssets.bottomnft;
@@ -123,25 +139,35 @@ const MainWallet = () => {
                         alignItems: 'center',
                         padding: 0,
                     },
+        
                 })}>
                 <Tab.Screen name="Wallet" component={Wallet}
-
                     listeners={({ navigation, route }) => ({
                         tabPress: (e) => {
                             dispatch(setHeaderAddress(account?.btcAddress))
+                            dispatch(setCardIndex(0))
                         },
-                    })}
-                />
+                    })}/>
+
+                <Tab.Screen name="NFT" component={Nft}
+                    listeners={({ navigation, route }) => ({
+                        tabPress: (e) => {
+                            dispatch(setHeaderAddress(account?.ordinalsAddress))
+
+                        },
+                    })} />
+
                 <Tab.Screen name="Market" component={Market}
                     listeners={({ navigation, route }) => ({
                         tabPress: (e) => {
                             dispatch(setHeaderAddress(account?.btcAddress))
                         },
                     })} />
-                <Tab.Screen name="NFT" component={Nft}
+
+                <Tab.Screen name="Loan" component={Loan}
                     listeners={({ navigation, route }) => ({
                         tabPress: (e) => {
-                            dispatch(setHeaderAddress(account?.ordinalsAddress))
+                            dispatch(setHeaderAddress(account?.btcAddress))
                         },
                     })} />
                 {/* <Tab.Screen name="Assistant" component={Assistant} /> */}

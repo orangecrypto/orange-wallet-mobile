@@ -16,6 +16,7 @@ export const styles = StyleSheet.create({
     button: {
       backgroundColor: Color.backbackgroundbg,
       width: Responsive.size70,
+      height: Responsive.size40,
       justifyContent: "center",
       alignItems: "center",
       padding: Responsive.size10,
@@ -67,9 +68,11 @@ export const styles = StyleSheet.create({
     },
     item: {
       flexDirection: "row",
+      alignContent:'center',
+      alignItems:'center',
       padding: Responsive.size16,
       backgroundColor: Color.backgroundbg,
-      borderRadius: Responsive.size10,
+      borderRadius: Responsive.size12,
       marginTop: Responsive.size18,
       justifyContent: "space-between",
       borderWidth: Responsive.size1,
@@ -79,6 +82,6 @@ export const styles = StyleSheet.create({
       fontSize: Responsive.size18,
       fontFamily: Fonts.semibold,
       color: Color.white,
-      width: Responsive.size200
+      width: Responsive.size200,
     },
   });

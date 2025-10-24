@@ -9,14 +9,34 @@ interface GraphDataOptions {
   interval?:string
 }
 
-const fetchGraphData = async ({ currency , id, count, interval}: GraphDataOptions) => {
-  return getApi(ApiEndpoints.MARKET_CHART, {
-    currency,
-    id,
-    count,
-    interval
-  });
+const fetchGraphData = async ({ currency, id, count, interval }: GraphDataOptions) => {
+  try {
+    console.log('[fetchGraphData] Request Params:', { currency, id, count, interval });
+
+    const response = await getApi(ApiEndpoints.MARKET_CHART, {
+      currency,
+      id,
+      count,
+      interval,
+    });
+
+    console.log('[fetchGraphData] Response:', response);
+
+    return response;
+  } catch (error) {
+    console.error('[fetchGraphData] Error occurred:', {
+      currency,
+      id,
+      count,
+      interval,
+      error: error?.response?.data || error.message || error,
+    });
+
+    // Optional: rethrow the error if the caller should handle it
+    throw error;
+  }
 };
+
 
 const useGraphData = (options: GraphDataOptions = {}) => {
   const {currency = 'USD', id , count , interval } = options;
@@ -25,6 +45,7 @@ const useGraphData = (options: GraphDataOptions = {}) => {
     queryKey: ['graphData', currency, id, count , interval],
     queryFn: () => fetchGraphData({ currency , id, count , interval}),
     retry: false,
+    staleTime: 1000 * 60,
     });
 
  

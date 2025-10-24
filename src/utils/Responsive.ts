@@ -76,6 +76,7 @@ const Responsive = {
     size150: scale(150),
     size153: scale(153),
     size156: scale(156),
+    size164: scale(164),
     size170: scale(170),
     size180: scale(180),
     size185: scale(185),

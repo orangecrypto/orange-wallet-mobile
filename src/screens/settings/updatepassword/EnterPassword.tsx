@@ -8,7 +8,6 @@ import { validatePasswordStrength } from "@utils/Validations";
 import { useEffect, useState } from "react";
 import { Image, Text, View } from "react-native";
 import { styles } from "../styles";
-import { Responsive } from "@utils/Responsive";
 
 const EnterPassword = ({ type, onPasswordChange, handleError }: { type: "oldPassword" | "newPassword" | "confirmPassword"; onPasswordChange: (password: string) => void, handleError: (errorMessage: string) => void }) => {
     const [password, setPassword] = useState("");
@@ -19,7 +18,7 @@ const EnterPassword = ({ type, onPasswordChange, handleError }: { type: "oldPass
     const handlePasswordChange = (inputPassword: string) => {
         setPassword(inputPassword);
         onPasswordChange(inputPassword);
-        const { strengthMessage, feedback , score} = validatePasswordStrength(inputPassword);
+        const { strengthMessage, feedback, score } = validatePasswordStrength(inputPassword);
         handleError(strengthMessage)
         setError(strengthMessage);
         setFeedback(feedback);
@@ -49,8 +48,10 @@ const EnterPassword = ({ type, onPasswordChange, handleError }: { type: "oldPass
                 passwordIconVisible={localAssets.eye}
                 passwordIconHidden={localAssets.eyeoff}
                 style={styles.input} />
-            {error !== strings.strongPassword && <Text style={styles.passwordError}>{strings.passwordValidationMessage}</Text>}
-            {/* <Text style={styles.passwordError}>{feedback}</Text> */}
+
+            {password !== "" && error !== strings.strongPassword && (
+                <Text style={styles.passwordError}>{strings.passwordValidationMessage}</Text>
+            )}
         </View>
     );
 };

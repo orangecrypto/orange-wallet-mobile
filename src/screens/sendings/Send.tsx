@@ -35,13 +35,13 @@ const Send = ({ route }) => {
     const namesToAlwaysShow = ["Bitcoin", "Orange", "Stacks"];
     const visibleItems = [];
     const seenNames = new Set();
-    
+
     tokenList.forEach(item => {
         if (seenNames.has(item.name)) {
             return; // Skip duplicates
         }
         const coinSetting = coinSettings.find(setting => setting.name === item.name);
-        
+
         if (namesToAlwaysShow.includes(item.name) || (coinSetting ? coinSetting.visible : true)) {
             visibleItems.push(item);
             seenNames.add(item.name); // Track unique names
@@ -66,7 +66,7 @@ const Send = ({ route }) => {
     const { btcClient } = useBtcClient();
     useEffect(() => {
         const handleTransaction = (transactionData, transactionError, type) => {
-            if (transactionData) {
+            if (transactionData) {               
                 push(RouteType.SENDCONFIRMATION, {
                     transactionData,
                     confirmData: {
@@ -80,13 +80,12 @@ const Send = ({ route }) => {
                 console.log(`${type} Transaction Error:`, transactionError);
             }
         };
-
         handleTransaction(transactionData, transactionError, "BTC");
         handleTransaction(stxTransactionData, stxTransactionDataError, "STX");
-
+        console.log('handleTransaction', `transactionData ${transactionData}`)
     }, [transactionData, transactionError, stxTransactionData, stxTransactionDataError]);
 
- useEffect(() => {
+    useEffect(() => {
         const handleKeyboardShow = () => setIsKeyboardVisible(true);
         const handleKeyboardHide = () => setIsKeyboardVisible(false);
         const showSubscription = Keyboard.addListener("keyboardDidShow", handleKeyboardShow);
@@ -117,6 +116,7 @@ const Send = ({ route }) => {
     const getSignedTransaction = async () => {
         if (selectedCoin.protocol === 'btc') {
             generateSignedTransactionBtc(walletAddress, amount);
+            console.log('generateSignedTransactionBtc','call')
         } else if (selectedCoin.protocol === 'stacks') {
             generateUnsignedTransaction({
                 associatedAddress: walletAddress,
@@ -167,7 +167,10 @@ const Send = ({ route }) => {
             {isPending && <Loader loading={isPending} />}
             {stxIsPending && <Loader loading={stxIsPending} />}
             {isRuneLoading && <Loader loading={isRuneLoading} />}
-            <ScrollView contentContainerStyle={styles.scrollContainer}>
+            <ScrollView 
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.scrollContainer}>
                 <SendingHeader
                     title={`${Number(selectedCoin.balance || 0)}`}
                     subtitle={`$${selectedCoin.tokenFiatRate}`}
@@ -186,7 +189,7 @@ const Send = ({ route }) => {
                     <View style={styles.inputContainer}>
                         <Text style={styles.description}>{strings.enterAmount}</Text>
                         <CustomTextInput
-                            placeholder={strings.enterAmount}
+                            placeholder={'0'}
                             value={amount}
                             onChangeText={onAmountChange}
                             dropdownOptions={visibleItems}
@@ -199,7 +202,12 @@ const Send = ({ route }) => {
                         />
                         <View style={styles.errorContainer}>
                             {invalidFund && <Text style={styles.errorMessage}>{invalidFundMessage}</Text>}
-                            {!invalidFund && <Text style={styles.balanceText}>{`$${(sendFiatRate * amount).toFixed(2)} USD`}</Text>}
+                            {/* {!invalidFund && <Text style={styles.balanceText}>{`$${(sendFiatRate * amount).toFixed(2)} USD`}</Text>} */}
+                            {!invalidFund &&  <View style={styles.balanceContainer}>
+                                <Text style={styles.balanceText}>
+                                {`$${(sendFiatRate * amount).toFixed(2)} USD`}
+                                </Text>
+                            </View>}
                             <TouchableOpacity onPress={() => setAmount(selectedCoin.balance)}>
                                 <Text style={[styles.rightText, styles.pasteText]}>Max</Text>
                             </TouchableOpacity>
@@ -209,7 +217,7 @@ const Send = ({ route }) => {
                     <View style={[styles.inputContainer, { marginTop: Responsive.size20 }]}>
                         <Text style={styles.description}>{strings.enterwalletAddress}</Text>
                         <CustomTextInput
-                            placeholder={strings.enterBitcoinAddress}
+                            placeholder={strings.enterwalletAddress}
                             value={walletAddress}
                             onChangeText={setWalletAddress}
                             rightText={strings.paste}
@@ -226,15 +234,15 @@ const Send = ({ route }) => {
 
                 </View>
             </ScrollView>
-            {!isKeyboardVisible &&(<View>
+            {!isKeyboardVisible && (<View>
                 <Text style={styles.warningText}>
-                    {strings.warning}: <Text style={styles.warningMessage}>{strings.warningMessage}</Text>
+                    {strings.warning}: <Text style={styles.warningMessage}>{selectedCoin.protocol === 'brc-20' ? strings.warningMessageForSendBrc20 : strings.warningMessage}</Text>
                 </Text>
                 <View style={styles.horizontalButtonContainer}>
                     <CommonButton
                         title={strings.cancel}
                         onPress={() => goBack()}
-                        backgroundColor={Color.black}
+                        backgroundColor={Color.backgroundbg}
                         textColor={Color.white}
                         borderColor={Color.blackBorder}
                         width={"45%"}

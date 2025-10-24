@@ -37,6 +37,20 @@ export enum RouteType {
     RESETWALLETPASSWORD='ResetWalletPassword',
     SENDORDINALSCONFIRMATION='SendORdinalsConfirmation',
     CONFIRMBRC20='ConfirmBrc20',
-    SENDCONFIRMBRC20='SendConfirmBrc20'
+    SENDCONFIRMBRC20='SendConfirmBrc20',
+    BORROW='Borrow',
+    BORROWOFFERS='BorrowOffers',
+    BORROWCONFIRMATION='BorrowConfirmation',
+    LOANSTATUS='LoanStatus',
+    SWAP='SWAP',
+    SWAPPROVIDERS='SwapProviders',
+    SWAPDETAILS='SwapDetails',
+    REVIEWSWAPTRANSACTION='ReviewSwapTransaction',
+    CONFIRMSWAPTRANSACTION='ConfirmSwapTransaction',
+    REPAY='Repay',
+    EDITSLIPPAGE='EditSlippage',
+    EDITMEDIUM='EditMedium',
+    
+
   }
   

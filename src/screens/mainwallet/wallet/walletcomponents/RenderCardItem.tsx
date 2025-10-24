@@ -2,7 +2,7 @@ import { localAssets } from '@assets/assets';
 import { push } from '@routes/Navigator';
 import { RouteType } from '@routes/RouteType';
 import { strings } from '@strings/i18n';
-import { Image, ImageBackground, Linking, Text, TouchableOpacity, View } from "react-native";
+import { Image, ImageBackground, Linking, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { styles } from '../styles';
 import { Responsive } from '@utils/Responsive';
 import TokenImage from '@components/TokenImage';
@@ -10,8 +10,9 @@ import useBtcClient from '@hooks/useBtcClient';
 import { ApiEndpoints } from '@services/network/ApiEndpoints';
 import { useSelector } from 'react-redux';
 import { appReducerType } from '@redux/slice/appReducer';
-import { Config } from '@config/Config';
+import AppConfig from 'react-native-config';
 import { store } from '@redux/store';
+
 import {
     SkaletonView,
     ANIMATION_TYPE,
@@ -25,11 +26,18 @@ const RenderCardItem = ({ item, selectedItem, loader }) => {
     function formatBalance(balance) {
         let num = parseFloat(balance);
         return num % 1 === 0 ? num.toFixed(0) : num.toString().replace(/(?:\.0+|(\.\d+?)0+)$/, "$1");
+    
     }
+    function formatTotalBalance(balance: number): string {
+        if (balance === 0) return '0';
+        const fixed = balance.toFixed(2); 
+        const num = parseFloat(fixed); 
+        return num % 1 === 0 ? num.toFixed(0) : num.toString();
+      }
     const getTanStackUrl = async () => {
         try {
             const transakUrl = new URL(ApiEndpoints.TRANSAK_URL);
-            transakUrl.searchParams.append('apiKey', Config.TRANSAK_API_KEY);
+            transakUrl.searchParams.append('apiKey', `${AppConfig.TRANSAK_API_KEY}`);
             transakUrl.searchParams.append('cryptoCurrencyList', 'USD');
             transakUrl.searchParams.append('defaultCryptoCurrency', 'USD');
             transakUrl.searchParams.append('walletAddress', bitcoinAddress);
@@ -44,9 +52,11 @@ const RenderCardItem = ({ item, selectedItem, loader }) => {
             console.log('getMoonPayUrl', error)
         }
     };
-
+    
 
     const openSale = async () => {
+
+        console.log('openSale ', item)
         const getWebURL = await getTanStackUrl()
         console.log("Opening Tanstack Gateway", getWebURL);
         try {
@@ -59,24 +69,48 @@ const RenderCardItem = ({ item, selectedItem, loader }) => {
 
     const handleReceive = async (item) => {
         console.log('handleReceive', item);
-
-        const addressMap = {
-            Bitcoin: account?.btcAddress,
-            'brc-20': account?.ordinalsAddress,
-            runes: account?.ordinalsAddress,
-            stacks: account?.stxAddress,
+    
+        let receiveItem = {
+            address: '',
+            name: '',
         };
-
-        const receiveItem = { address: addressMap[item.name] || addressMap[item.protocol] };
-
+    
+        switch (item.protocol) {
+            case 'brc-20':
+            case 'runes':
+                receiveItem = {
+                    address: account?.ordinalsAddress,
+                    name: 'Ordinals, RUNES and BRC20',
+                };
+                break;
+    
+            case 'btc':
+                receiveItem = {
+                    address: account?.btcAddress,
+                    name: 'Bitcoin',
+                };
+                break;
+    
+            case 'stacks':
+                receiveItem = {
+                    address: account?.stxAddress,
+                    name: 'Stacks and SIP-10',
+                };
+                break;
+    
+            default:
+                console.warn('Unknown protocol:', item.protocol);
+                break;
+        }
+    
         push(RouteType.VIEWQR, { item: receiveItem });
     };
+    
     return (
         <View style={styles.walletBackground}>
             <ImageBackground
                 source={localAssets.walletbg}
                 style={styles.walletCardBackground}>
-
 
                 {loader ? (
                     <SkaletonView
@@ -100,8 +134,8 @@ const RenderCardItem = ({ item, selectedItem, loader }) => {
                             />
                         )}
                         <View>
-                            <Text numberOfLines={1} style={[styles.walletText, { width: Responsive.size150 }]}>
-                                {item.name === 'all' ? `$${formatBalance(item.balance)}` : `${formatBalance(item.balance)}`}
+                            <Text numberOfLines={1} style={[styles.walletText, { width: Responsive.size180 }]}>
+                                {item.name === 'all' ? `$${formatTotalBalance(item.balance)}` : `${formatBalance(item.balance)}`}
                             </Text>
                             <View style={styles.walletTextView}>
                                 {item?.name !== 'Bitcoin' && (
@@ -127,6 +161,12 @@ const RenderCardItem = ({ item, selectedItem, loader }) => {
                         <Text style={styles.addCoinText}>{strings.addCoin}</Text>
                     </TouchableOpacity>
                     :
+                    <ScrollView 
+                        showsHorizontalScrollIndicator={false} 
+                        horizontal 
+                        style={styles.horizontalActionsScrol} 
+                        contentContainerStyle={styles.scrollContentContainer}
+                        nestedScrollEnabled>
                     <View style={styles.horizontalActions}>
                         <TouchableOpacity style={styles.actionButtonBg} onPress={() => push(RouteType.SEND, { tokenDetails: selectedItem })}>
                             <Image source={localAssets.send} style={styles.actionButtonIcon} />
@@ -134,8 +174,6 @@ const RenderCardItem = ({ item, selectedItem, loader }) => {
                         <TouchableOpacity style={styles.actionButtonBg} onPress={() => handleReceive(item)}>
                             <Image source={localAssets.receive} style={styles.actionButtonIcon} />
                         </TouchableOpacity>
-
-
                         {item.name === 'Bitcoin' && network.type === 'Mainnet' &&
                             <TouchableOpacity style={styles.actionButtonBg} onPress={() => { push(RouteType.BUY, { isFor: 'Bitcoin' }) }}>
                                 <Image source={localAssets.buy} style={styles.actionButtonIcon} />
@@ -147,11 +185,21 @@ const RenderCardItem = ({ item, selectedItem, loader }) => {
                             </TouchableOpacity>}
 
 
-                        {item.name === 'Bitcoin' && network.type === 'Mainnet' &&
-                            <TouchableOpacity style={styles.actionButtonBg} onPress={() => openSale()} disabled={item.balance === '0'}>
+                        {item.name === 'Bitcoin' && network.type === 'Mainnet' && item.balance !== '0' && (
+                            <TouchableOpacity style={styles.actionButtonBg} onPress={openSale}>
                                 <Image source={localAssets.sell} style={styles.actionButtonIcon} />
+                            </TouchableOpacity>
+                        )}
+                        {item.name === 'Bitcoin' && network.type === 'Mainnet' &&
+                            <TouchableOpacity style={styles.actionButtonBg} onPress={() => push(RouteType.SWAP, { tokenDetails: selectedItem })}>
+                                <Image source={localAssets.swapcard} style={styles.actionButtonIcon} />
+                            </TouchableOpacity>}
+                            {item.name === 'Bitcoin' &&  network.type === 'Mainnet' &&
+                            <TouchableOpacity style={styles.actionButtonBg} onPress={() => push(RouteType.BORROW, { tokenDetails: selectedItem })}>
+                                <Image source={localAssets.borrow} style={styles.actionButtonIcon} />
                             </TouchableOpacity>}
                     </View>
+                    </ScrollView>
                     :
                     <TouchableOpacity style={styles.addCoinView} onPress={() => push(RouteType.ADDCOIN)}>
                         <Image style={styles.addCoinIcon} source={localAssets.addcoin} />
@@ -162,5 +210,4 @@ const RenderCardItem = ({ item, selectedItem, loader }) => {
         </View>
     );
 };
-
 export default RenderCardItem;

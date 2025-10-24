@@ -20,13 +20,21 @@ const useGenerateSignedBtcTransaction = () => {
         SignedBtcTx,
         ResponseError,
         { recipients: Recipient[]; seedPhrase: string } >({
-        mutationFn: async ({ recipients, seedPhrase }) =>
-            signBtcTransaction(recipients, selectedAccount.btcAddress, accountIndex, seedPhrase, btcClient, network.type),
-        onSuccess: (responseData) => {
+        mutationFn: async ({ recipients, seedPhrase }) =>{
+            console.log("🔧 Signing transaction with data:", {
+                recipients,
+                fromAddress: selectedAccount?.btcAddress,
+                accountIndex,
+                network: network?.type
+            });
+            return signBtcTransaction(recipients, selectedAccount.btcAddress, accountIndex, seedPhrase, btcClient, network.type);
+        },   onSuccess: (responseData) => {
+            console.log("✅ Transaction signed successfully:", responseData);
             setTransactionData(responseData);
         },
         onError: (error) => {
             setTransactionError(error);
+            console.error("Seed phrase retrieval failed.", error);
         }
     });
 
@@ -34,7 +42,7 @@ const useGenerateSignedBtcTransaction = () => {
         async (walletAddress: string, amount: number) => {
             setTransactionData(null);
             setTransactionError(null);
-
+            console.log('handleTransaction', `transactionData ${transactionData}`)
             const retrievedSeedPhrase = await getSeed();
             if (!retrievedSeedPhrase) {
                 console.error("Seed phrase retrieval failed.");

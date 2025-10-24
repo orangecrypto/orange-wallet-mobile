@@ -192,3 +192,34 @@ export const formatNumber = (value) => {
 //     </TickerIconContainer>
 //   );
 // }
+
+export const formatCurrencyWithCommas = (
+  value: string | number,
+  options?: {
+    currencySymbol?: string;
+    decimals?: number;
+  }
+): string => {
+
+
+  console.log('formatCurrencyWithCommas', value)
+  const { currencySymbol = '$', decimals = 4 } = options || {}; // Changed default decimals to 4
+
+  // Clean string: remove any non-numeric characters except dot and minus
+  const numericString =
+    typeof value === 'string'
+      ? value.replace(/[^0-9.-]/g, '')
+      : value.toString();
+
+  const amount = parseFloat(numericString);
+
+  if (isNaN(amount)) return `${currencySymbol}0.0000`;
+
+  const fixed = amount.toFixed(2);
+  const [integerPart, decimalPart] = fixed.split('.');
+  const withCommas = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+  return `${currencySymbol}${withCommas}${decimals > 0 ? `.${decimalPart}` : ''}`;
+};
+
+

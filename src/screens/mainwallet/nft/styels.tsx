@@ -21,12 +21,12 @@ export const styles = StyleSheet.create({
     },
 
     walletBackground: {
-        width: Dimensions.get('window').width - 40,
-        marginHorizontal: Responsive.size16,
+        width: Dimensions.get('window').width - 24, 
+        alignSelf:'center',
         padding: Responsive.size24,
     },
     walletText: {
-        fontSize: Responsive.size22,
+        fontSize: Responsive.size32,
         color: Color.white,
         fontFamily: Fonts.semibold,
         textAlign:'right'
@@ -39,10 +39,13 @@ export const styles = StyleSheet.create({
     walletTextCurrencyView: {
         backgroundColor: Color.viewbutton,
         borderRadius: Responsive.size20,
-        fontFamily: Fonts.regular,
-        fontSize: Responsive.size9,
+        fontFamily: Fonts.semibold,
+        fontSize: Responsive.size12,
+        alignContent:'center',
+        textAlign:'center',
         color: Color.white,
-        padding: Responsive.size4,
+        paddingVertical: Responsive.size4,
+        paddingHorizontal: Responsive.size8,
         marginLeft: Responsive.size10,
     },
     balanceView: {

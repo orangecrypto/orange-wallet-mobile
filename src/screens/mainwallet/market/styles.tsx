@@ -34,18 +34,18 @@ export const styles = StyleSheet.create({
       title: {
         color: Color.orangeButton,
         fontSize: Responsive.size18,
-        fontFamily: Fonts.regular,
+        fontFamily: Fonts.semibold,
       },
       infoBadge: {
         backgroundColor: Color.orangeOpacityBg,
         paddingHorizontal: Responsive.size8,
-        paddingVertical: Responsive.size2,
-        borderRadius: Responsive.size8,
+        paddingVertical: Responsive.size6,
+        borderRadius: Responsive.size15,
         marginLeft: Responsive.size8
       },
       infoText: {
         color: Color.white,
-        fontSize: Responsive.size10,
+        fontSize: Responsive.size12,
         fontFamily: Fonts.semibold,
         
       },
@@ -65,8 +65,9 @@ export const styles = StyleSheet.create({
       },
       xAxisLabel: {
         color: Color.white,
-        fontSize: Responsive.size9,
+        fontSize: Responsive.size10,
         textAlign: 'center',
+        fontFamily: Fonts.regular
       },
       overlayBalanceSection: {
         position: 'absolute',
@@ -104,7 +105,7 @@ export const styles = StyleSheet.create({
     },
     selectedCategoryText: {
         color: Color.white,
-        fontFamily: Fonts.semibold
+        fontFamily: Fonts.regular
     },
     listContainer: {
         paddingBottom: Responsive.size100,
@@ -124,7 +125,7 @@ export const styles = StyleSheet.create({
         marginTop: Responsive.size15,
         justifyContent: 'flex-start',
         alignItems: 'center',
-        paddingHorizontal: Responsive.size20,
+        paddingHorizontal: Responsive.size18,
         height: '60%',
         width: '100%',
         paddingTop: Responsive.size16,
@@ -149,7 +150,11 @@ export const styles = StyleSheet.create({
         justifyContent: "space-between",
         alignItems: "center",
         borderWidth: Responsive.size1,
-        borderColor: Color.transactionListBackground
+        borderColor: Color.backbackgroundbg,
+        backgroundColor: Color.black,
+        borderRadius: Responsive.size8,
+        paddingVertical: Responsive.size8, 
+        paddingHorizontal: Responsive.size8
     },
     headerTitle:{
         color: Color.nftcategoryText,
