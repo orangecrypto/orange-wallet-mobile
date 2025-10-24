@@ -1,3 +1,4 @@
+import { Config } from '@config/Config';
 import { useState, useCallback } from 'react';
 
 type SwapItem = {
@@ -20,7 +21,7 @@ export function useDotSwapSignedPsbt() {
     setResponse(null);
 
     try {
-      const res = await fetch('https://api.dotswap.app/brc20swap/send_swap_psbt', {
+      const res = await fetch(`${Config.DOTSWAP_BASE_URL}/brc20swap/send_swap_psbt`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

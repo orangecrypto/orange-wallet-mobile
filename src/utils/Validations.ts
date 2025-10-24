@@ -1,4 +1,3 @@
-// validation.js
 import zxcvbn from 'zxcvbn';
 
 export const validatePasswordStrength = (password) => {

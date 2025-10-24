@@ -10,6 +10,7 @@ import { HIRO_MAINNET_DEFAULT, BTC_BASE_URI_MAINNET } from "@orangecryptohq/oran
  * - wallet: Stores wallet details (to be stored in local storage)
  * - network : Stores current network setting (to be stored in local storage)
  * - currency : Stores currency setting (to be stored in local storage)
+ * - liquidiumToken : Stores Token for liquidium api
  * 
  * The state is updated via reducers and persisted to local storage where necessary.
  */

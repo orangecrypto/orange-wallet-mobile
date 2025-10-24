@@ -1,7 +1,6 @@
 import CommonButton from "@components/CommonButton";
 import Switch from "@components/Switch";
 import useSeedVault from "@hooks/useSeedVault";
-import { str2buf } from "@orangecryptohq/orangeseed";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { clearAppReducer } from "@redux/slice/appReducer";
 import { clearStoreData, useAppDispatch } from "@redux/store";

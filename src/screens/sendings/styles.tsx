@@ -1,7 +1,7 @@
-import { Platform, StyleSheet } from "react-native";
 import { Responsive } from "@utils/Responsive";
 import { Color } from "@values/color";
 import { Fonts } from "@values/fonts";
+import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
     container: {

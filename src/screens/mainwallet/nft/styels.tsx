@@ -2,7 +2,6 @@ import { Responsive } from "@utils/Responsive";
 import { Color } from "@values/color";
 import { Fonts } from "@values/fonts";
 import { Dimensions, StyleSheet } from "react-native";
-import { Colors } from "react-native/Libraries/NewAppScreen";
 const { width } = Dimensions.get('window');
 const numColumns = 2;
 export const styles = StyleSheet.create({

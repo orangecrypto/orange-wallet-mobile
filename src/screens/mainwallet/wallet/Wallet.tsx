@@ -2,7 +2,8 @@ import useBtcClient from '@hooks/useBtcClient';
 import useRunesApi from '@hooks/useRunesApi';
 import useSelectedNetwork from '@hooks/useSelectedNetwork';
 import useStxData from '@hooks/useStxData';
-import { getFtData, getOrdinalsFtBalance, HIRO_MAINNET_DEFAULT, StacksMainnet } from '@orangecryptohq/orangeseed';
+import { getFtData, getOrdinalsFtBalance } from '@orangecryptohq/orangeseed';
+import { useIsFocused } from '@react-navigation/native';
 import { resetCoinNames, setAddCoinSettings } from '@redux/slice/CoinSettings';
 import { setCardIndex, setHeaderAddress, setTokenList, walletReducerType } from '@redux/slice/WalletReducer';
 import { store, useAppDispatch } from "@redux/store";
@@ -22,7 +23,6 @@ import TransactionList from './walletcomponents/TransactionList';
 import WalletSlider from './walletcomponents/WalletSlider';
 import { createTokenArray, getCardItems, updateCoinSettingList } from './walletutils/TokenUtils';
 import { fetchTransactions } from './walletutils/Transactions';
-import { useIsFocused } from '@react-navigation/native';
 
 const Wallet = () => {
     const isFocused = useIsFocused();

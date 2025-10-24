@@ -4,15 +4,15 @@ import { localAssets } from '@assets/assets';
 import Loader from '@components/Loader';
 import useBrc20Inscriptions from '@hooks/useBrc20Inscriptions';
 import useGetCollectionsData from '@hooks/useGetCollectionsData';
+import { store } from '@redux/store';
 import { push } from '@routes/Navigator';
 import { RouteType } from '@routes/RouteType';
 import { strings } from '@strings/i18n';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FlatList, Image, ImageBackground, Text, TouchableOpacity, View } from "react-native";
 import NftItem from './NftItem';
 import { filterIncriptionItems, getCollectionKey } from './NftUtils';
 import { styles } from './styels';
-import { store } from '@redux/store';
 
 const Nft = () => {
     const account = store.getState().appReducer.selectedAccount
@@ -25,13 +25,10 @@ const Nft = () => {
     console.log('Nft useGetCollectionsData', isError)
 
     const setIncriptionData = async (bbrc20TransferData) => {
-
         console.log('setIncriptionData', await filterIncriptionItems(collectionsData?.results, bbrc20TransferData))
         const newItems = await filterIncriptionItems(collectionsData?.results, bbrc20TransferData);
         setincriptionList([...incriptionList, ...newItems]);
     }
-
-
 
     useEffect(() => {
         console.log('NFT tab First call')
@@ -40,7 +37,6 @@ const Nft = () => {
             console.log('Reloading')
             const results = collectionsData?.results || [];
             const ids = results.map((item) => String(getCollectionKey(item)));
-
             console.log('NFT', `collectionsData ${JSON.stringify(results)}`);
             console.log('NFT', `collectionIds ${ids}`);
             const brc20Data = await fetchByIds(ids)
@@ -91,7 +87,6 @@ const Nft = () => {
                             </View>
                         </View>
                     </View>
-
                     <View style={styles.horizontalButtons}>
                         <TouchableOpacity style={styles.addCoinView} onPress={() => push(RouteType.TRANSFER, { transafers: brc20Transfer })}>
                             <Image style={styles.addCoinIcon} source={localAssets.transferarrow} />
@@ -124,7 +119,6 @@ const Nft = () => {
             />
         </View>
     );
-
 };
 
 export default Nft;

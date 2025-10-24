@@ -15,12 +15,6 @@ export const generateTransaction = async (
     amount: bigint,
     feeRate: number,
 ): Promise<TransactionBuildPayload> => {
-    console.log('generateTransaction', 'call');
-    // console.log('transactionContext', transactionContext);
-    // console.log('amount', amount);
-    // console.log('tokenName', tokenName);
-    // console.log('feeRate', feeRate);
-    // console.log('toAddress', toAddress);
 
     let transaction: btcTransaction.EnhancedTransaction | undefined;
     const safeFeeRate = Number(feeRate);

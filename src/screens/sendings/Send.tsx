@@ -202,7 +202,6 @@ const Send = ({ route }) => {
                         />
                         <View style={styles.errorContainer}>
                             {invalidFund && <Text style={styles.errorMessage}>{invalidFundMessage}</Text>}
-                            {/* {!invalidFund && <Text style={styles.balanceText}>{`$${(sendFiatRate * amount).toFixed(2)} USD`}</Text>} */}
                             {!invalidFund &&  <View style={styles.balanceContainer}>
                                 <Text style={styles.balanceText}>
                                 {`$${(sendFiatRate * amount).toFixed(2)} USD`}

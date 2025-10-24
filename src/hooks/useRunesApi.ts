@@ -6,8 +6,8 @@ const useRunesApi = () => {
   
   const ordinalsAddress = store.getState().appReducer.selectedAccount?.ordinalsAddress
   const runesApi = useMemo(() => 
-   // new RunesApi(  store.getState().appReducer.network?.type ), 
-   new RunesApi('Mainnet'), 
+    new RunesApi(  store.getState().appReducer.network?.type ), 
+   //new RunesApi('Mainnet'), 
   []);
 
   return { runesApi, ordinalsAddress };

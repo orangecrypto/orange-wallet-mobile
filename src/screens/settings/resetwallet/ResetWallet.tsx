@@ -1,8 +1,6 @@
 import CommonButton from "@components/CommonButton";
 import Switch from "@components/Switch";
-import { clearStoreData, useAppDispatch } from "@redux/store";
-import { Dispatch } from "@reduxjs/toolkit";
-import { goBack, push, resetNavigation } from "@routes/Navigator";
+import { goBack, push } from "@routes/Navigator";
 import { RouteType } from "@routes/RouteType";
 import { strings } from "@strings/i18n";
 import { Responsive } from "@utils/Responsive";
@@ -17,8 +15,6 @@ const ResetWallet = () => {
     const handleToggle = () => {
         setIsSwitchEnabled((prev) => !prev);
     };
-
-
 
     return (
         <View style={styles.container}>

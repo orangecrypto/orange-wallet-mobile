@@ -18,7 +18,7 @@ const ProgressBar = ({ progressPercentage }) => {
 
     const translateX = animatedValue.interpolate({
         inputRange: [0, 100],
-        outputRange: [0, progressBarWidth - indicatorWidth], // Starts at absolute 0, ensuring no extra space
+        outputRange: [0, progressBarWidth - indicatorWidth], 
     });
 
     return (
@@ -36,7 +36,7 @@ const ProgressBar = ({ progressPercentage }) => {
                         backgroundColor: Color.orangeButton,
                         borderRadius: 5,
                         position: "absolute",
-                        left: 0, // Ensures it starts at 0
+                        left: 0, 
                         transform: [{ translateX }],
                     }}
                 />

@@ -86,15 +86,12 @@
 // };
 
 
-import * as secp from '@noble/secp256k1';
 import ecc, * as secp256k1 from "@bitcoinerlab/secp256k1";
 import { bip39, NetworkType, UTXO } from "@orangecryptohq/orangeseed";
 import BIP32Factory from "bip32";
 import * as bitcoin from "bitcoinjs-lib";
 import { Buffer } from 'buffer';
 import ECPairFactory from 'ecpair';
-import * as btc from '@scure/btc-signer';
-    import { hex, base64 } from '@scure/base';
 bitcoin.initEccLib(ecc);
 const ECPair = ECPairFactory(secp256k1);
 const getBitcoinNetwork = (network: NetworkType | string) =>

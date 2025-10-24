@@ -218,17 +218,6 @@ export const groupBtcTxsByDate = (
   return processedTransactions;
 };
 
-// pas data as responceTX from another type of stx transaction.
-
- //parseStxTransactionData()
- // handle test cases from above method responce
-//  const responseTx = useMemo(() => {
-//   if (!isAddressTransactionWithTransfers(transaction)) {
-//     return transaction;
-//   }
-//   return transaction?.tx;
-// }, [transaction]);
-
 export const groupedTxsByDateMap = (txs: (AddressTransactionWithTransfers | MempoolTransaction)[]) =>
   txs.reduce(
     (

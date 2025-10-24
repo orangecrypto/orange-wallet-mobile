@@ -50,8 +50,6 @@ const useUnsignedStxTransaction = () => {
 
         onSuccess: (responseData) => {
             const unsignedSendStxTx: StacksTransaction =responseData
-            
-            //console.log(unsignedSendStxTx.signBegin)
             setTransactionData(unsignedSendStxTx);
         },
 

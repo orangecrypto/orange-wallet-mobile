@@ -1,3 +1,4 @@
+import { Config } from '@config/Config';
 import axios from 'axios';
 import { useCallback } from 'react';
 import Toast from 'react-native-toast-message';
@@ -27,7 +28,7 @@ export const useCalculateDotSwap = () => {
 
       console.log("getReceiveAmount request", requestData);
 
-      const response = await axios.post("https://api.dotswap.app/brc20swap/swap_info", requestData);
+      const response = await axios.post(`${Config.DOTSWAP_BASE_URL}/brc20swap/swap_info`, requestData);
 
       if (!response.data || !response.data.data) {
         const msg = response.data?.msg || "Unknown error from API";

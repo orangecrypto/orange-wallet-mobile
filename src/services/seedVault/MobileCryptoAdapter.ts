@@ -1,5 +1,4 @@
  import { randomBytes } from 'react-native-randombytes';
-// //import { createHash, Cipheriv, Decipheriv } from 'react-native-crypto';
  import crypto from 'crypto';
  import { generateKeyArgon2id } from './EncryptionUtils';
 
@@ -50,47 +49,3 @@ export const MobileCryptoAdapter = {
         return crypto.randomBytes(length).toString('hex');
     }
 };
-
-
-
-
-// import { decryptSeedPhrase, encryptSeedPhrase } from './mnemonic';
-// import {
-//   decryptMnemonicWithHandler,
-//   encryptMnemonicWithHandler,
-// } from '@orangecryptohq/orangeseed';
-//  import { generateRandomKey } from './aes';
-// import { generateKeyArgon2id } from './EncryptionUtils';
-
-
-// export async function encryptSeedPhraseHandler(seed: string, password: string): Promise<string> {
-//     return encryptMnemonicWithHandler({
-//       seed,
-//       password,
-//       mnemonicEncryptionHandler: encryptSeedPhrase,
-//     });
-//   }
-  
-//   export async function decryptSeedPhraseHandler(
-//     encryptedSeed: string,
-//     password: string,
-//   ): Promise<string> {
-//     try {
-//       const seedPhrase = await decryptMnemonicWithHandler({
-//         encryptedSeed,
-//         password,
-//         mnemonicDecryptionHandler: decryptSeedPhrase,
-//       });
-//       return seedPhrase;
-//     } catch (err) {
-//       throw new Error('Invalid Password');
-//     }
-// }
-
-// export const MobileCryptoAdapter ={
-
-//     encrypt: encryptSeedPhraseHandler,
-//     decrypt: decryptSeedPhraseHandler,
-//     generateRandomBytes: generateRandomKey,
-//     hash: generateKeyArgon2id,
-// }

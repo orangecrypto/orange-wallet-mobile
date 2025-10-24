@@ -9,13 +9,8 @@ export const truncateAddress = (address: string, startLength = 4, endLength = 4)
 
   export const fetchPrice = async (symbol) => {
     try {
-
-
-        //fiat_currency  based on currency settings
         const response = await fetch(`https://api.orangemarketcap.com/coins/fiat?symbol=${symbol}&fiat_currency=USD`);
-       
         const data = await response.json();
-      
         return data[symbol]; 
     } catch (error) {
         console.error(`Error fetching ${symbol} price:`, error);
@@ -40,10 +35,10 @@ export const fetchStxPrice = async () => {
   try {
       const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=blockstack&vs_currencies=usd');
       const data = await response.json();
-      return data.blockstack.usd; // STX price in USD
+      return data.blockstack.usd; 
   } catch (error) {
       console.error('Error fetching STX price:', error);
-      return 0; // Return 0 in case of an error
+      return 0; 
   }
 };
 
@@ -125,14 +120,9 @@ export const getImageSource = async (name: string) => {
 export const getImageSourceOrange = async (name: string) => {
   const formatString = (str: string) => str.replace(/[^a-zA-Z0-9]/g, ''); 
   const formattedName = formatString(name).trim().toUpperCase();
-
-  // Find a key that matches the formatted name + "Orange"
   const matchingKey = Object.keys(localAssets).find(
     (key) => key.trim().toUpperCase() === formattedName + "ORANGE"
   );
-
-  console.log(`Searching for: ${formattedName}ORANGE, Found: ${matchingKey}`);
-
   return matchingKey ? localAssets[matchingKey] : null;
 };
 
@@ -146,53 +136,6 @@ export const formatNumber = (value) => {
   return num < 1 ? num.toString() : num.toFixed(2);
 };
 
-
-// export interface TokenImageProps {
-//   token?: string;
-//   loading?: boolean;
-//   fungibleToken?: FungibleToken;
-//   size?: number;
-//   loaderSize?: LoaderSize;
-//   round?: boolean;
-//   variant?: 'default' | 'dark';
-// }
-
-// export default function TokenImage({
-//   token,
-//   loading,
-//   fungibleToken,
-//   loaderSize = LoaderSize.LARGE,
-//   size,
-//   round,
-//   variant = 'default',
-// }: TokenImageProps) {
-//   const theme = useTheme();
-
-//   const background = variant === 'dark' ? theme.colors.background.brand_dark : theme.colors.white_0;
-
-//   const displayedTicker = useMemo(() => {
-//     const ticker = fungibleToken?.ticker || getTicker(fungibleToken?.name || token);
-//     return ticker.substring(0, 4).toUpperCase();
-//   }, [fungibleToken, token]);
-
-//   if (loading) {
-//     return (
-//       <LoaderImageContainer>
-//         <BarLoader loaderSize={loaderSize} />
-//       </LoaderImageContainer>
-//     );
-//   }
-
-//   const Imgsrc = getImageSourceForFt();
-//   return Imgsrc ? (
-//     <TickerImage src={Imgsrc} size={size} round={round} />
-//   ) : (
-//     <TickerIconContainer size={size} color={background} round={round}>
-//       <TickerIconText variant={variant}>{displayedTicker}</TickerIconText>
-//     </TickerIconContainer>
-//   );
-// }
-
 export const formatCurrencyWithCommas = (
   value: string | number,
   options?: {
@@ -203,9 +146,8 @@ export const formatCurrencyWithCommas = (
 
 
   console.log('formatCurrencyWithCommas', value)
-  const { currencySymbol = '$', decimals = 4 } = options || {}; // Changed default decimals to 4
+  const { currencySymbol = '$', decimals = 4 } = options || {}; 
 
-  // Clean string: remove any non-numeric characters except dot and minus
   const numericString =
     typeof value === 'string'
       ? value.replace(/[^0-9.-]/g, '')

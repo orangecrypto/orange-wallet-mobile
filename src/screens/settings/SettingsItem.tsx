@@ -5,7 +5,6 @@ import { RouteType } from "@routes/RouteType";
 import useSeedVault from "@hooks/useSeedVault";
 import { styles } from "./styles";
 
-
 const availableRoutes = [
     "Network",
     "Currency",

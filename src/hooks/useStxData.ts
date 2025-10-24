@@ -8,7 +8,6 @@ const useStxData = () => {
   const network = useSelectedNetwork();
   const offset = 0;
   const paginationLimit = 10;
-
   const [data, setData] = useState<{ balance: number; availableBalance: number } | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);

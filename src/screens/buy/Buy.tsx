@@ -30,8 +30,6 @@ const Buy = ({ route }) => {
         } catch (error) {
             console.log('getWebURL ', error)
         }
-
-
     };
 
     const openMoonpay = async () => {

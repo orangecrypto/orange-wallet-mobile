@@ -21,10 +21,7 @@ const TransactionList = ({ transaction, isLoading, selectedToken, limit, fetchTr
                     fetchTransactions(selectedToken, walletContext);
                     console.log('OnReachEnd','fetchTransactions')
                 }
-            }}
-           
-        />
+            }}/>
     );
 };
-
 export default TransactionList

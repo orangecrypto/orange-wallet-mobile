@@ -60,7 +60,6 @@ const Repay = ({ route }) => {
         } catch (err) {
             console.error('Repayment error:', err);
         }
-        // resetNavigation(RouteType.WALLETBALANCE)
     }
 
     return (

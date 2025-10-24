@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
     backgroundColor: Color.black,
     borderRadius: Responsive.size10,
     borderColor: Color.gray,
-    borderWidth: 1,
+    borderWidth: Responsive.size1,
     zIndex: 10,
     width: Responsive.size188,
     maxHeight: Responsive.size180, 
@@ -194,13 +194,13 @@ const styles = StyleSheet.create({
   },
   rightTextsContainer: {
     flexDirection: 'column',
-    alignItems: 'flex-end', // Align texts to the right
-    justifyContent: 'center', // Center them vertically within the parent container
+    alignItems: 'flex-end', 
+    justifyContent: 'center', 
   },
   rightText: {
     color: Color.orangeButton,
     fontSize: Responsive.size16,
-    marginVertical: Responsive.size2, // Add spacing between texts
+    marginVertical: Responsive.size2, 
   },
 });
 

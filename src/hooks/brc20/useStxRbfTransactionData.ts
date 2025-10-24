@@ -1,5 +1,4 @@
 import { useQuery } from '@tanstack/react-query';
-
 import { fetchStxRbfData } from './helpers';
 import { AppInfo, SettingsNetwork, StacksNetwork, StxTransactionData } from '@orangecryptohq/orangeseed';
 

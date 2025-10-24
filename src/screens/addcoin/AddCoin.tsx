@@ -13,8 +13,6 @@ import { walletReducerType } from "@redux/slice/WalletReducer";
 const AddCoin = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const categories = ["All", "BRC20", "Runes", "Stacks"];
-
-  const { tokenList } = useSelector((state: { walletReducer: walletReducerType }) => state.walletReducer);
   const coinSettings = useSelector((state) => state.coinSettingsSlice.coinSettings);
   
   const dispatch: Dispatch = useAppDispatch();
@@ -47,8 +45,7 @@ const AddCoin = () => {
         style={[
           styles.categoryText,
           selectedCategory === category && styles.selectedCategoryText,
-        ]}
-      >
+        ]}>
         {category}
       </Text>
     </TouchableOpacity>

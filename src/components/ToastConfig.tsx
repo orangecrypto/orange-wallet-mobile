@@ -6,7 +6,6 @@ import { View, Text, StyleSheet, Image, Modal, Dimensions, Platform } from 'reac
 import { BaseToastProps } from 'react-native-toast-message';
 import LinearGradient from 'react-native-linear-gradient';
 import { localAssets } from '@assets/assets';
-import { styles } from '@screens/sendings/styles';
 
 interface CustomToastProps extends BaseToastProps {
     text1?: string;
@@ -137,6 +136,4 @@ const toastConfig = {
       </View>
     ),
   };
-  
-
 export default toastConfig;

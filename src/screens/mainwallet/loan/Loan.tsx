@@ -1,18 +1,14 @@
-import { FlatList, Text, View } from "react-native";
-import { styles } from './styles';
-import LoanItemView from "./LoanItemView";
-import { useBorrowerPortfolio } from "@hooks/borrow/useBorrowerPortfolio";
-import { useCallback, useEffect } from "react";
 import Loader from "@components/Loader";
+import { useBorrowerPortfolio } from "@hooks/borrow/useBorrowerPortfolio";
 import { useFocusEffect } from "@react-navigation/native";
 import { strings } from "@strings/i18n";
-import axios from "axios";
-import { Config } from "@config/Config";
-import { useSelector } from "react-redux";
+import { useCallback } from "react";
+import { FlatList, Text, View } from "react-native";
+import LoanItemView from "./LoanItemView";
+import { styles } from './styles';
 
 const Loan = () => {
 
-   
     const {
         fetchPortfolio,
         data: loanStatusList,

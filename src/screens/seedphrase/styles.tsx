@@ -8,18 +8,14 @@ export const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: Color.black,
     },
-
     title: {
         fontSize: Responsive.size22,
         color: Color.orangeButton,
         fontFamily: Fonts.semibold,
-
     },
-
     contentContainer: {
         flex: 1,
         justifyContent: 'flex-start'
-
     },
     reviewText: {
         marginTop: Responsive.size10,
@@ -109,7 +105,6 @@ export const styles = StyleSheet.create({
         marginBottom: Responsive.size20,
     },
     flatListContainer: {
-       
         marginTop: Responsive.size20,
         backgroundColor: Color.black,
         borderRadius: Responsive.size10,
@@ -152,7 +147,6 @@ export const styles = StyleSheet.create({
         alignSelf:'center',
         width: '100%',
     },
-
     copyText: {
         fontSize: Responsive.size12,
         fontFamily:Fonts.regular,
@@ -172,13 +166,13 @@ export const styles = StyleSheet.create({
         alignItems: 'center',
     },
     overlayButton: {
-        backgroundColor: Color.primary, // Customize the button style
-        padding: 10,
-        borderRadius: 5,
+        backgroundColor: Color.primary, 
+        padding: Responsive.size10,
+        borderRadius: Responsive.size5,
     },
     overlayButtonText: {
-        color: 'white', // Button text color
-        fontSize: 16,
+        color: 'white',
+        fontSize: Responsive.size16,
     },
 
 });

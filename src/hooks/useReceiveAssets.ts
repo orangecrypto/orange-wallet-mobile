@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { getTicker } from "@utils/cryptoUtils"; // your util
 import { walletReducerType } from "@redux/slice/WalletReducer";
+import { Config } from "@config/Config";
 
 type ReceiveAsset = {
   name: string;
@@ -15,7 +16,7 @@ const getName = (quoteCurrency: string): string => {
 
 const fetchDotswapAssets = async (): Promise<ReceiveAsset[]> => {
   try {
-    const response = await fetch("https://api.dotswap.app/brc20swap/external/tickers");
+    const response = await fetch(`${Config.DOTSWAP_BASE_URL}/brc20swap/external/tickers`);
     if (!response.ok) throw new Error(`Dotswap error: ${response.status}`);
     const data = await response.json();
     return data.map((item: any) => ({
@@ -30,7 +31,7 @@ const fetchDotswapAssets = async (): Promise<ReceiveAsset[]> => {
 
 const fetchRunesdexAssets = async (): Promise<ReceiveAsset[]> => {
   try {
-    const response = await fetch("https://app.runesdex.com/v1/runes");
+    const response = await fetch(`${Config.RUNEDEX_BASE_URL}/v1/runes`);
     if (!response.ok) throw new Error(`Runesdex error: ${response.status}`);
     const { records } = await response.json();
     return records.map((item: any) => ({

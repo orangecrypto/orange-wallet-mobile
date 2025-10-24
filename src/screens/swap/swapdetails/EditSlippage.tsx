@@ -12,8 +12,8 @@ import { useAppDispatch } from "@redux/store";
 import { Dispatch } from "@reduxjs/toolkit";
 import { setSlippage } from "@redux/slice/SwapReducer";
 
-const EditSlippage = ({ route, navigation }) => {
-    const { type, onSlippageChange } = route.params || {};
+const EditSlippage = ({ route }) => {
+    const { type } = route.params || {};
     console.log('EditSlippage', type);
 
     const dispatch: Dispatch = useAppDispatch();

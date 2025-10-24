@@ -1,3 +1,4 @@
+import { Config } from '@config/Config';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 
@@ -13,7 +14,7 @@ export interface PublishTxResponse {
 }
 
 const publishTx = async (body: PublishTxRequestBody): Promise<PublishTxResponse> => {
-  const response = await axios.post('https://app.runesdex.com/v1/publish-tx', body, {
+  const response = await axios.post(`${Config.RUNEDEX_BASE_URL}/v1/publish-tx`, body, {
     headers: {
       'Content-Type': 'application/json',
     },

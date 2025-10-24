@@ -15,7 +15,7 @@ import React, { useEffect, useState } from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import { useSelector } from "react-redux";
 import ConfirmationItem from "./ConfirmationItem";
-import { gnerateDataForBtc, gnerateDataForOrdinals } from "./ConfirmTransactionUtils";
+import { gnerateDataForOrdinals } from "./ConfirmTransactionUtils";
 import { styles } from "./styles";
 
 const SendConfirmOrdinlas = ({ route }) => {

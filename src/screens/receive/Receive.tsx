@@ -1,16 +1,16 @@
+import { localAssets } from "@assets/assets";
 import CommonButton from "@components/CommonButton";
-import { goBack, push, resetNavigation } from "@routes/Navigator";
-import { RouteType} from "@routes/RouteType";
+import Clipboard from "@react-native-clipboard/clipboard";
+import { store } from '@redux/store';
+import { goBack, push } from "@routes/Navigator";
+import { RouteType } from "@routes/RouteType";
 import { strings } from "@strings/i18n";
 import { Responsive } from "@utils/Responsive";
 import { Color } from "@values/color";
 import React, { useState } from "react";
 import { FlatList, Image, Platform, Text, TouchableOpacity, View } from "react-native";
-import { styles } from "./styles";
-import { localAssets } from "@assets/assets";
-import { store } from '@redux/store';
-import Clipboard from "@react-native-clipboard/clipboard";
 import Toast from "react-native-toast-message";
+import { styles } from "./styles";
 
 const Receive = () => {
 
