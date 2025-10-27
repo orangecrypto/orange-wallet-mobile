@@ -4,9 +4,11 @@ import { push } from '@routes/Navigator';
 import { RouteType } from '@routes/RouteType';
 import { styles } from './styels';
 import { Color } from '@values/color';
+import NftPlaceholder from '@components/NftPlaceholder';
 
 const NftItem = ({ item }) => {
     const [imageLoading, setImageLoading] = useState(false);
+    const [imageError, setImageError] = useState(false);
     const loadingTimeoutRef = useRef(null);
 
     const handlePress = () => {
@@ -28,10 +30,12 @@ const NftItem = ({ item }) => {
 
     const handleLoadStart = () => {
         setImageLoading(true);
+        setImageError(false);
         // Set timeout to force hide loader after 10 seconds
         loadingTimeoutRef.current = setTimeout(() => {
             console.log('Image loading timeout - forcing loader to hide');
             setImageLoading(false);
+            setImageError(true);
         }, 10000);
     };
 
@@ -42,8 +46,10 @@ const NftItem = ({ item }) => {
         }
     };
 
-    const handleLoadError = () => {
+    const handleLoadError = (error) => {
+        console.log('NFT image loading error:', error);
         setImageLoading(false);
+        setImageError(true);
         if (loadingTimeoutRef.current) {
             clearTimeout(loadingTimeoutRef.current);
         }
@@ -60,14 +66,19 @@ const NftItem = ({ item }) => {
         if (contentType?.startsWith('image/') || contentType?.startsWith('text/html')) {
             return (
                 <View style={styles.imageContainer}>
-                    <Image
-                        source={{ uri: imageUri }}
-                        style={styles.image}
-                        resizeMode="contain"
-                        onLoadStart={handleLoadStart}
-                        onLoadEnd={handleLoadEnd}
-                        onError={handleLoadError} />
-                    {imageLoading && (
+                    {imageError ? (
+                        <NftPlaceholder style={styles.image} />
+                    ) : (
+                        <Image
+                            source={{ uri: imageUri }}
+                            style={styles.image}
+                            resizeMode="contain"
+                            onLoadStart={handleLoadStart}
+                            onLoadEnd={handleLoadEnd}
+                            onError={handleLoadError}
+                        />
+                    )}
+                    {imageLoading && !imageError && (
                         <View style={styles.imageLoadingContainer}>
                             <ActivityIndicator size="small" color={Color.orangeButton} />
                         </View>

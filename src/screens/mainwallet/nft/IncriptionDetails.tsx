@@ -12,10 +12,12 @@ import useAddressInscription from "@hooks/useAddressInscription";
 import Loader from "@components/Loader";
 import { truncateAddress } from "@utils/cryptoUtils";
 import useOrdinalData from "@hooks/useOrdinalData";
+import NftPlaceholder from "@components/NftPlaceholder";
 
 
 const IncriptionDetails = ({ route }) => {
     const [imageLoading, setImageLoading] = useState(false);
+    const [imageError, setImageError] = useState(false);
     const loadingTimeoutRef = useRef(null);
 
     const { data, isPending , isError} = useAddressInscription(route?.params?.item?.id)
@@ -34,10 +36,12 @@ const IncriptionDetails = ({ route }) => {
 
     const handleLoadStart = () => {
         setImageLoading(true);
+        setImageError(false);
         // Set timeout to force hide loader after 10 seconds
         loadingTimeoutRef.current = setTimeout(() => {
             console.log('Image loading timeout - forcing loader to hide');
             setImageLoading(false);
+            setImageError(true);
         }, 10000);
     };
 
@@ -51,6 +55,7 @@ const IncriptionDetails = ({ route }) => {
     const handleLoadError = (error) => {
         console.log('Image loading error:', error);
         setImageLoading(false);
+        setImageError(true);
         if (loadingTimeoutRef.current) {
             clearTimeout(loadingTimeoutRef.current);
         }
@@ -66,14 +71,19 @@ const IncriptionDetails = ({ route }) => {
         if (contentType?.startsWith('image/') || contentType?.startsWith('text/html')) {
             return (
                 <View style={styles.imageContainer}>
-                    <Image
-                        style={styles.incriptionImage}
-                        source={{ uri: imageUri }}
-                        resizeMode='contain'
-                        onLoadStart={handleLoadStart}
-                        onLoadEnd={handleLoadEnd}
-                        onError={handleLoadError} />
-                    {imageLoading && (
+                    {imageError ? (
+                        <NftPlaceholder style={styles.incriptionImage} />
+                    ) : (
+                        <Image
+                            style={styles.incriptionImage}
+                            source={{ uri: imageUri }}
+                            resizeMode='contain'
+                            onLoadStart={handleLoadStart}
+                            onLoadEnd={handleLoadEnd}
+                            onError={handleLoadError}
+                        />
+                    )}
+                    {imageLoading && !imageError && (
                         <View style={styles.imageLoadingContainer}>
                             <ActivityIndicator size="large" color={Color.orangeButton} />
                         </View>

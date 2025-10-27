@@ -160,7 +160,6 @@ const localAssets = {
   swapcard: require('./images/swapcard.png'),
   runedex: require('./images/runedex.png'),
   dotswap: require('./images/dotswap.png'),
-  
 
 };
 // Exporting IMAGES
