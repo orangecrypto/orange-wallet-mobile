@@ -15,7 +15,6 @@ import { Image, Platform, Text, TouchableOpacity, View } from 'react-native';
 import Toast from 'react-native-toast-message';
 import { useSelector } from 'react-redux';
 // import Loan from './loan/Loan';
-import Market from './market/Market';
 import Nft from './nft/Nft';
 import { styles } from './styles';
 import Wallet from './wallet/Wallet';
@@ -94,9 +93,6 @@ const MainWallet = () => {
                             case 'Wallet':
                                 iconSource = localAssets.bottomwallet;
                                 break;
-                            case 'Market':
-                                iconSource = localAssets.marketbottom;
-                                break;
                             case 'Loan':
                                 iconSource = localAssets.bottomloan;
                                 break;
@@ -145,13 +141,6 @@ const MainWallet = () => {
                         tabPress: (e) => {
                             dispatch(setHeaderAddress(account?.ordinalsAddress))
 
-                        },
-                    })} />
-
-                <Tab.Screen name="Market" component={Market}
-                    listeners={({ navigation, route }) => ({
-                        tabPress: (e) => {
-                            dispatch(setHeaderAddress(account?.btcAddress))
                         },
                     })} />
 

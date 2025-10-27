@@ -1,3 +1,9 @@
+/**
+ * @deprecated This component has been deprecated as the Market tab is no longer used.
+ * The component is kept for reference purposes only. Do not use this component in new code.
+ * @since Deprecated in 2025
+ */
+
 import { strings } from '@strings/i18n';
 import { Responsive } from '@utils/Responsive';
 import { Color } from '@values/color';
@@ -8,6 +14,9 @@ import { LineChart } from 'react-native-gifted-charts';
 import { styles } from './styles';
 import { formatCurrencyWithCommas } from '@utils/cryptoUtils';
 
+/**
+ * @deprecated This component has been deprecated. Do not use in new code.
+ */
 const GraphSliderItem = ({ data, loading }) => {
 
 

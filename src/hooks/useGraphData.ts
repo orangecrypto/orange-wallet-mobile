@@ -1,3 +1,9 @@
+/**
+ * @deprecated This hook has been deprecated as the Market tab is no longer used.
+ * The hook is kept for reference purposes only. Do not use this hook in new code.
+ * @since Deprecated in 2025
+ */
+
 import { useQuery } from '@tanstack/react-query';
 import { getApi } from '@services/network/Api';
 import { ApiEndpoints } from '@services/network/ApiEndpoints';
@@ -9,6 +15,9 @@ interface GraphDataOptions {
   interval?:string
 }
 
+/**
+ * @deprecated This function has been deprecated. Use alternative data fetching methods.
+ */
 const fetchGraphData = async ({ currency, id, count, interval }: GraphDataOptions) => {
   try {
     console.log('[fetchGraphData] Request Params:', { currency, id, count, interval });
@@ -37,7 +46,10 @@ const fetchGraphData = async ({ currency, id, count, interval }: GraphDataOption
   }
 };
 
-
+/**
+ * @deprecated This hook has been deprecated as the Market tab is no longer used.
+ * The hook is kept for reference purposes only. Do not use this hook in new code.
+ */
 const useGraphData = (options: GraphDataOptions = {}) => {
   const {currency = 'USD', id , count , interval } = options;
 

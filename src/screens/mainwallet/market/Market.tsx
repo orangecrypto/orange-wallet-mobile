@@ -1,3 +1,9 @@
+/**
+ * @deprecated This Market tab has been deprecated and is no longer used in the application.
+ * The component is kept for reference purposes only. Do not use this component in new code.
+ * @since Deprecated in 2025
+ */
+
 import Loader from '@components/Loader';
 import { strings } from '@strings/i18n';
 import { Responsive } from '@utils/Responsive';
@@ -11,6 +17,10 @@ import GraphSliderItem from './GraphSliderItem';
 import RenderAssets from './RenderAssets';
 import { styles } from './styles';
 
+/**
+ * @deprecated This Market component has been deprecated and is no longer used in the application.
+ * The component is kept for reference purposes only. Do not use this component in new code.
+ */
 const Market = () => {
   const currency = 'USD';
   const count = '108';

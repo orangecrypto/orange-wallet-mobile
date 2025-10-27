@@ -1,3 +1,9 @@
+/**
+ * @deprecated This component has been deprecated as the Market tab is no longer used.
+ * The component is kept for reference purposes only. Do not use this component in new code.
+ * @since Deprecated in 2025
+ */
+
 import TokenImage from "@components/TokenImage";
 import { formatCurrencyWithCommas, getImageSource } from "@utils/cryptoUtils";
 import { Color } from "@values/color";
@@ -5,6 +11,9 @@ import { useEffect, useState } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import { styles } from './styles';
 
+/**
+ * @deprecated This component has been deprecated. Do not use in new code.
+ */
 const RenderAssets = ({ item, selectedItem, handleItemClick, clickDisable }) => {
     const [imageSource, setImageSource] = useState(null);
     const isSelected = selectedItem?.id === item.id;

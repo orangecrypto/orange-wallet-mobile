@@ -1,12 +1,21 @@
+/**
+ * @deprecated This hook has been deprecated as the Market tab is no longer used.
+ * The hook is kept for reference purposes only. Do not use this hook in new code.
+ * @since Deprecated in 2025
+ */
+
 import { getApi } from '@services/network/Api';
 import { ApiEndpoints } from '@services/network/ApiEndpoints';
 import { useQuery } from '@tanstack/react-query';
 
 interface MarketDataOptions {
   currency?: string;
-  
+
 }
 
+/**
+ * @deprecated This function has been deprecated. Use alternative data fetching methods.
+ */
 const fetchMarketData = async ({ currency }: MarketDataOptions) => {
   const response = await getApi(ApiEndpoints.MARKET_ASSETS, { currency });
 
@@ -20,7 +29,10 @@ const fetchMarketData = async ({ currency }: MarketDataOptions) => {
   return sortedResponse;
 };
 
-
+/**
+ * @deprecated This hook has been deprecated as the Market tab is no longer used.
+ * The hook is kept for reference purposes only. Do not use this hook in new code.
+ */
 const useMarketData = (options: MarketDataOptions = {}) => {
   const {currency= 'USD' } = options;
 
