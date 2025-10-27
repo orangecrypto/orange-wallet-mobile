@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { axiosInstance } from "@utils/axiosInstance";
+import { DEBUG_NETWORK_LOGGING } from "@config/Config";
 
 // Batch requests to avoid overwhelming the API
 const BATCH_SIZE = 5; // Process 5 requests at a time
@@ -21,7 +22,9 @@ const fetchInscriptions = async (ids: string[]) => {
       const batchRequests = batch.map(async (id) => {
         try {
           const url = `https://api.hiro.so/ordinals/v1/inscriptions/${id}/content`;
-          console.log(`Fetching BRC-20 inscription: ${url}`);
+          if (DEBUG_NETWORK_LOGGING) {
+            console.log(`Fetching BRC-20 inscription: ${url}`);
+          }
           const response = await axiosInstance.get(url);
 
           if (!response.data) return null;
@@ -38,10 +41,12 @@ const fetchInscriptions = async (ids: string[]) => {
 
           return null;
         } catch (error: any) {
-          console.error(`Error fetching inscription ${id}:`, error?.message || error);
-          console.error(`URL that failed: https://api.hiro.so/ordinals/v1/inscriptions/${id}/content`);
-          if (error.response) {
-            console.error(`Status: ${error.response.status}, Data:`, error.response.data);
+          if (DEBUG_NETWORK_LOGGING) {
+            console.error(`Error fetching inscription ${id}:`, error?.message || error);
+            console.error(`URL that failed: https://api.hiro.so/ordinals/v1/inscriptions/${id}/content`);
+            if (error.response) {
+              console.error(`Status: ${error.response.status}, Data:`, error.response.data);
+            }
           }
           return null;
         }
