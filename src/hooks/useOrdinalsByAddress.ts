@@ -28,8 +28,12 @@ const useOrdinalsByAddress = () => {
   } = useQuery({
     queryKey: ['ordinals', network.type, selectedAccount?.ordinalsAddress],
     queryFn: fetchOrdinals,
-    enabled: !!selectedAccount?.ordinalsAddress, 
-    
+    enabled: !!selectedAccount?.ordinalsAddress,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // Cache for 10 minutes
+    refetchOnMount: false, // Don't refetch if data is fresh
+    refetchOnWindowFocus: false, // Don't refetch on focus
+    retry: 1, // Reduce retries
   });
 
   return {

@@ -1,32 +1,49 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
+import { axiosInstance } from "@utils/axiosInstance";
+
+// Batch requests to avoid overwhelming the API
+const BATCH_SIZE = 5; // Process 5 requests at a time
 
 const fetchInscriptions = async (ids: string[]) => {
   if (!ids.length) return { data: [], total_inscriptions_brc_20: 0 };
 
   try {
-    const requests = ids.map(async (id) => {
-      const url = `https://api.hiro.so/ordinals/v1/inscriptions/${id}/content`;
-      const response = await axios.get(url);
+    const allResults = [];
 
-      if (!response.data) return null;
+    // Process in batches to avoid too many concurrent requests
+    for (let i = 0; i < ids.length; i += BATCH_SIZE) {
+      const batch = ids.slice(i, i + BATCH_SIZE);
 
-      const contentType = response.headers?.["content-type"] || "";
+      const batchRequests = batch.map(async (id) => {
+        try {
+          const url = `https://api.hiro.so/ordinals/v1/inscriptions/${id}/content`;
+          const response = await axiosInstance.get(url);
 
-      if (response.data.p === "brc-20" && contentType.includes("text/plain")) {
-        return {
-          id,
-          ...response.data,
-          contentType,
-        };
-      }
+          if (!response.data) return null;
 
-      return null;
-    });
+          const contentType = response.headers?.["content-type"] || "";
 
-    const results = await Promise.all(requests);
-    const filteredData = results.filter((item) => item !== null);
+          if (response.data.p === "brc-20" && contentType.includes("text/plain")) {
+            return {
+              id,
+              ...response.data,
+              contentType,
+            };
+          }
+
+          return null;
+        } catch (error) {
+          console.error(`Error fetching inscription ${id}:`, error);
+          return null;
+        }
+      });
+
+      const batchResults = await Promise.all(batchRequests);
+      allResults.push(...batchResults);
+    }
+
+    const filteredData = allResults.filter((item) => item !== null);
 
     return {
       data: filteredData,
@@ -46,7 +63,10 @@ const useBrc20Inscriptions = () => {
     queryFn: () => fetchInscriptions(ids),
     enabled: ids.length > 0, // Prevents execution until IDs are set
     refetchOnWindowFocus: false,
-    staleTime: 60 * 1000,
+    refetchOnMount: false,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // Cache for 10 minutes
+    retry: 1, // Reduce retries
   });
 
   // Method to fetch inscriptions and return data

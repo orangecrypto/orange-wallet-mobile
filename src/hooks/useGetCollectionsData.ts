@@ -34,10 +34,11 @@ const useGetCollectionsData = () => {
     queryKey: ["collections", network?.type, selectedAccount?.ordinalsAddress, offset],
     queryFn: fetchCollectionsByAddress,
     enabled: !!network?.type && !!selectedAccount?.ordinalsAddress,
-    retry: 3,
-    staleTime: 60 * 1000,
-    refetchOnMount: true,
-    refetchOnWindowFocus: true,
+    retry: 1, // Reduce retries from 3 to 1
+    staleTime: 5 * 60 * 1000, // 5 minutes instead of 1 minute
+    gcTime: 10 * 60 * 1000, // Cache for 10 minutes
+    refetchOnMount: false, // Don't refetch if data exists
+    refetchOnWindowFocus: false, // Don't refetch on focus
   });
 
   

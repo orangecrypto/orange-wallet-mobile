@@ -121,10 +121,13 @@ const App = () => {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
-        refetchOnMount: true,
+        refetchOnMount: false, // Don't refetch on mount if data is fresh
         refetchOnReconnect: true,
-        staleTime: 10 * 60 * 1000,
-        refetchInterval: 10 * 60 * 1000,
+        staleTime: 5 * 60 * 1000, // 5 minutes - data stays fresh longer
+        gcTime: 10 * 60 * 1000, // 10 minutes cache (renamed from cacheTime)
+        refetchInterval: false, // Disable auto-refetch to save API calls
+        retry: 2, // Reduce retry attempts from default 3
+        retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000), // Exponential backoff
       },
     },
     queryCache: new QueryCache({
