@@ -6,18 +6,22 @@ import { axiosInstance } from "@utils/axiosInstance";
 const BATCH_SIZE = 5; // Process 5 requests at a time
 
 const fetchInscriptions = async (ids: string[]) => {
-  if (!ids.length) return { data: [], total_inscriptions_brc_20: 0 };
+  // Filter out empty, null, or undefined IDs
+  const validIds = ids.filter(id => id && id.trim() !== '');
+
+  if (!validIds.length) return { data: [], total_inscriptions_brc_20: 0 };
 
   try {
     const allResults = [];
 
     // Process in batches to avoid too many concurrent requests
-    for (let i = 0; i < ids.length; i += BATCH_SIZE) {
-      const batch = ids.slice(i, i + BATCH_SIZE);
+    for (let i = 0; i < validIds.length; i += BATCH_SIZE) {
+      const batch = validIds.slice(i, i + BATCH_SIZE);
 
       const batchRequests = batch.map(async (id) => {
         try {
           const url = `https://api.hiro.so/ordinals/v1/inscriptions/${id}/content`;
+          console.log(`Fetching BRC-20 inscription: ${url}`);
           const response = await axiosInstance.get(url);
 
           if (!response.data) return null;
@@ -33,8 +37,12 @@ const fetchInscriptions = async (ids: string[]) => {
           }
 
           return null;
-        } catch (error) {
-          console.error(`Error fetching inscription ${id}:`, error);
+        } catch (error: any) {
+          console.error(`Error fetching inscription ${id}:`, error?.message || error);
+          console.error(`URL that failed: https://api.hiro.so/ordinals/v1/inscriptions/${id}/content`);
+          if (error.response) {
+            console.error(`Status: ${error.response.status}, Data:`, error.response.data);
+          }
           return null;
         }
       });
