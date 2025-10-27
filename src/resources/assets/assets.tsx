@@ -73,7 +73,7 @@ const localAssets = {
   RSIC: require('./images/RSIC.png'),
   WAM: require('./images/WAM.png'),
   UNCOMMONGOODS: require('./images/UNCOMMON•GOODS.png'),
-  Decentralized: require('./images/Decentralized.png'),
+  Decentralized: require('./images/DecentralizedOrange.png'),
   WrappedUSDC: require('./images/WrappedUSDC.png'),
   ARKADIKO: require('./images/ARKADIKO.png'),
   LEO: require('./images/LEO.png'),
