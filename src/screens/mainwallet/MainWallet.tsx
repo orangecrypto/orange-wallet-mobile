@@ -14,7 +14,7 @@ import React, { useEffect } from 'react';
 import { Image, Platform, Text, TouchableOpacity, View } from 'react-native';
 import Toast from 'react-native-toast-message';
 import { useSelector } from 'react-redux';
-import Loan from './loan/Loan';
+// import Loan from './loan/Loan';
 import Market from './market/Market';
 import Nft from './nft/Nft';
 import { styles } from './styles';

@@ -42,18 +42,18 @@ import React from 'react';
 import SendConfirmOrdinlas from '@screens/sendings/SendConfirmOrdinlas';
 import ConfirmBrc20 from '@screens/sendings/brc20/ConfirmBrc20';
 import SendBrc20Confirmation from '@screens/sendings/brc20/SendBrc20Confirmation';
-import Borrow from '@screens/borrow/Borrow';
-import BorrowOffers from '@screens/borrow/BorrowOffers';
-import BorrowConfirmation from '@screens/borrow/BorrowConfirmation';
-import LoanStatus from '@screens/borrow/LoanStatus';
+// import Borrow from '@screens/borrow/Borrow';
+// import BorrowOffers from '@screens/borrow/BorrowOffers';
+// import BorrowConfirmation from '@screens/borrow/BorrowConfirmation';
+// import LoanStatus from '@screens/borrow/LoanStatus';
 import Swap from '@screens/swap/Swap';
 import ConfirmSwapTransaction from '@screens/swap/ConfirmSwapTransaction';
 import SwapProviders from '@screens/swap/SwapProviders';
 import SwapDetails from '@screens/swap/swapdetails/SwapDetails';
 import ReviewTransactions from '@screens/swap/ReviewTransactions';
-import Repay from '@screens/mainwallet/loan/Repay';
+// import Repay from '@screens/mainwallet/loan/Repay';
 import EditSlippage from '@screens/swap/swapdetails/EditSlippage';
-import EditMedium from '@screens/borrow/EditMedium';
+// import EditMedium from '@screens/borrow/EditMedium';
 
 const Stack = createNativeStackNavigator();
 
@@ -111,18 +111,18 @@ export default () => {
                 <Stack.Screen component={SendConfirmOrdinlas} name={RouteType.SENDORDINALSCONFIRMATION}/>
                 <Stack.Screen component={ConfirmBrc20} name={RouteType.CONFIRMBRC20}/>
                 <Stack.Screen component={SendBrc20Confirmation} name={RouteType.SENDCONFIRMBRC20}/>
-                <Stack.Screen component={Borrow} name={RouteType.BORROW}/>
-                <Stack.Screen component={BorrowOffers} name={RouteType.BORROWOFFERS}/>
-                <Stack.Screen component={BorrowConfirmation} name={RouteType.BORROWCONFIRMATION}/>
-                <Stack.Screen component={LoanStatus} name={RouteType.LOANSTATUS}/>
+                {/* <Stack.Screen component={Borrow} name={RouteType.BORROW}/> */}
+                {/* <Stack.Screen component={BorrowOffers} name={RouteType.BORROWOFFERS}/> */}
+                {/* <Stack.Screen component={BorrowConfirmation} name={RouteType.BORROWCONFIRMATION}/> */}
+                {/* <Stack.Screen component={LoanStatus} name={RouteType.LOANSTATUS}/> */}
                 <Stack.Screen component={Swap} name={RouteType.SWAP}/>
                 <Stack.Screen component={SwapProviders} name={RouteType.SWAPPROVIDERS}/>
                 <Stack.Screen component={SwapDetails} name={RouteType.SWAPDETAILS}/>
                 <Stack.Screen component={ReviewTransactions} name={RouteType.REVIEWSWAPTRANSACTION}/>
                 <Stack.Screen component={ConfirmSwapTransaction} name={RouteType.CONFIRMSWAPTRANSACTION}/>
-                <Stack.Screen component={Repay} name={RouteType.REPAY}/>
+                {/* <Stack.Screen component={Repay} name={RouteType.REPAY}/> */}
                 <Stack.Screen component={EditSlippage} name={RouteType.EDITSLIPPAGE}/>
-                <Stack.Screen component={EditMedium} name={RouteType.EDITMEDIUM}/>
+                {/* <Stack.Screen component={EditMedium} name={RouteType.EDITMEDIUM}/> */}
             </Stack.Navigator>
         </NavigationContainer>
     );
