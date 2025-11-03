@@ -12,8 +12,6 @@
   },
   "dependencies": {
     "@bitcoinerlab/secp256k1": "^1.2.0",
-    "@dynamic-labs/react-native-extension": "^4.14.0",
-    "@dynamic-labs/sdk-react-core": "^4.14.0",
     "@noble/curves": "^1.8.1",
     "@noble/secp256k1": "1.7.1",
     "@orangecryptohq/orangeseed": "^3.1.0",
