@@ -27,7 +27,7 @@ export const getMoonPayUrl = async (address, networkType) => {
         moonPayUrl.searchParams.append('currencyCode', 'USD');
         moonPayUrl.searchParams.append('walletAddress', address);
         moonPayUrl.searchParams.append('colorCode', '#5546FF');
-        const signedUrl = await getMoonPaySignedUrl(networkType, moonPayUrl.href);
+        const signedUrl = await getMoonPaySignedUrl(AppConfig.ORANGESEED_API_KEY, networkType, moonPayUrl.href);
         if (!signedUrl) throw new Error('Failed to get signed MoonPay URL');
         return signedUrl.signedUrl;
        

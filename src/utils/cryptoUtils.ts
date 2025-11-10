@@ -1,6 +1,7 @@
 import { localAssets } from '@assets/assets';
 import { FungibleToken } from '@orangecryptohq/orangeseed';
 import BigNumber from 'bignumber.js';
+import AppConfig from 'react-native-config';
 
 export const truncateAddress = (address: string, startLength = 4, endLength = 4) => {
     if (address.length <= startLength + endLength) return address;
@@ -9,9 +10,13 @@ export const truncateAddress = (address: string, startLength = 4, endLength = 4)
 
   export const fetchPrice = async (symbol) => {
     try {
-        const response = await fetch(`https://api.orangemarketcap.com/coins/fiat?symbol=${symbol}&fiat_currency=USD`);
+        const response = await fetch(`https://api-orange-marketcap.orangewebservices.com/coins/fiat?symbol=${symbol}&fiat_currency=USD`, {
+            headers: {
+                'apikey': AppConfig.ORANGE_MARKETCAP_API_KEY,
+            },
+        });
         const data = await response.json();
-        return data[symbol]; 
+        return data[symbol];
     } catch (error) {
         console.error(`Error fetching ${symbol} price:`, error);
         return null;

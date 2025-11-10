@@ -1,6 +1,7 @@
 import { fetchBtcTransactionsData, getBrc20History } from '@orangecryptohq/orangeseed';
 import { getStxAddressTransactions } from './TransactionUtils';
 import { filterTxs, groupBtcTxsByDate, groupedTxsByDateMap, groupRuneTxsByDate, mapBrc20TransactionList, mapBtcTransactionList, mapRunesTransactionList, mapStxTransactionList } from './WalletUtils';
+import AppConfig from 'react-native-config';
 
 export const fetchTransactions = async (token, walletContext) => {
     const {
@@ -16,7 +17,7 @@ export const fetchTransactions = async (token, walletContext) => {
         limit,
         store
     } = walletContext;
-    
+
     try {
         let newTransactions = [];
 
@@ -44,7 +45,7 @@ export const fetchTransactions = async (token, walletContext) => {
 
         if (token.protocol === 'brc-20') {
             console.log('Fetching BRC-20 transactions...');
-            const brc20Transactions = await getBrc20History(store.getState().appReducer.network?.type, ordinalsAddress, token.name);
+            const brc20Transactions = await getBrc20History(AppConfig.ORANGESEED_API_KEY, store.getState().appReducer.network?.type, ordinalsAddress, token.name);
             const groupedTransactions = await groupBtcTxsByDate(brc20Transactions);
             newTransactions = await mapBrc20TransactionList(groupedTransactions, token.name, token.tokenFiatRate);
         }

@@ -2,6 +2,7 @@ import { getInscription, Inscription } from '@orangecryptohq/orangeseed/dist';
 import { appReducerType } from '@redux/slice/appReducer';
 import { useQuery } from '@tanstack/react-query';
 import { useSelector } from 'react-redux';
+import AppConfig from 'react-native-config';
 
 const useAddressInscription = (ordinalId: string, ordinal?: Inscription | null) => {
   const { selectedAccount: { ordinalsAddress } = {}, network } = useSelector(
@@ -13,7 +14,7 @@ const useAddressInscription = (ordinalId: string, ordinal?: Inscription | null) 
     if (!ordinalsAddress || !ordinalId) {
       throw new Error('ordinalsAddress and ordinalId are required');
     }
-    return await getInscription(network.type, ordinalsAddress, ordinalId);
+    return await getInscription(AppConfig.ORANGESEED_API_KEY, network.type, ordinalsAddress, ordinalId);
   };
 
   return useQuery({

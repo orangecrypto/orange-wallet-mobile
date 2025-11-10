@@ -14,6 +14,7 @@ import { Color } from '@values/color';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Dimensions, RefreshControl, ScrollView, Text, View } from "react-native";
 import { useSelector } from 'react-redux';
+import AppConfig from 'react-native-config';
 import { styles } from './styles';
 import categoryItem from './walletcomponents/CategoryItem';
 import ProgressBar from './walletcomponents/ProgressBar';
@@ -107,8 +108,8 @@ const Wallet = () => {
 
         const [btcRes, brc20Res, runesRes, stacksRes] = await Promise.allSettled([
             btcClient.getBalance(bitcoinAddress),
-            getOrdinalsFtBalance(store.getState().appReducer.network?.type, ordinalsAddress),
-            // getOrdinalsFtBalance(store.getState().appReducer.network?.type, 'bc1pk8g4rztfkxs2q9c40g6keeknjw6aadx3kzu4suzlll0remfw7xxs5x9ctv'),
+            getOrdinalsFtBalance(AppConfig.ORANGESEED_API_KEY, store.getState().appReducer.network?.type, ordinalsAddress),
+            // getOrdinalsFtBalance(AppConfig.ORANGESEED_API_KEY, store.getState().appReducer.network?.type, 'bc1pk8g4rztfkxs2q9c40g6keeknjw6aadx3kzu4suzlll0remfw7xxs5x9ctv'),
             runesApi.getRuneFungibleTokens(ordinalsAddress),
             //  runesApi.getRuneFungibleTokens('bc1pk8g4rztfkxs2q9c40g6keeknjw6aadx3kzu4suzlll0remfw7xxs5x9ctv'),
             getFtData(stxAddress, stackNetwork),

@@ -16,6 +16,7 @@ import Toast from "react-native-toast-message";
 import { useSelector } from "react-redux";
 import { appReducerType } from "@redux/slice/appReducer";
 import { getInscription } from "@orangecryptohq/orangeseed";
+import AppConfig from 'react-native-config';
 
 const RestoreDetails = () => {
     const { selectedAccount, network } = useSelector(
@@ -32,7 +33,7 @@ const RestoreDetails = () => {
         isPending,
         generateSignedOrdinalTransaction,
     } = useGenerateSignedOrdinalTransaction();
-    
+
     const handleSelection = (selectedItem) => {
         setSelectedAsset(selectedItem)
         setSelectedAssetId(selectedItem.id === selectedAssetId ? null : selectedItem.id);
@@ -42,7 +43,7 @@ const RestoreDetails = () => {
         const newArray = [];
         setIsFetching(true)
         for (const item of filteredData) {
-            const result = await getInscription(network.type, selectedAccount.ordinalsAddress, item.id);
+            const result = await getInscription(AppConfig.ORANGESEED_API_KEY, network.type, selectedAccount.ordinalsAddress, item.id);
             newArray.push(result);
         }
         setIsFetching(false)

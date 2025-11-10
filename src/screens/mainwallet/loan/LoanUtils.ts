@@ -7,7 +7,12 @@ export const getFiateValue = async (value: string | number, symbol = 'BTC'): Pro
   try {
     const finalValue: any = satsToBtc(new BigNumber(value));
     const response = await fetch(
-      `https://api.orangemarketcap.com/coins/fiat?symbol=${symbol}&fiat_currency=USD`
+      `https://api-orange-marketcap.orangewebservices.com/coins/fiat?symbol=${symbol}&fiat_currency=USD`,
+      {
+        headers: {
+          'apikey': AppConfig.ORANGE_MARKETCAP_API_KEY,
+        },
+      }
     );
     const data = await response.json();
     const price = data?.[symbol];

@@ -2,6 +2,7 @@ import { CollectionMarketDataResponse, getCollectionMarketData } from "@orangecr
 import { appReducerType } from "@redux/slice/appReducer";
 import { useQuery } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
+import AppConfig from 'react-native-config';
 
 //For showing details if colelction data is there
 const useInscriptionCollectionMarketData = (collectionId?: string | null) => {
@@ -12,7 +13,7 @@ const useInscriptionCollectionMarketData = (collectionId?: string | null) => {
       if (!collectionId) {
         throw ('collectionId is required');
       }
-      return getCollectionMarketData(network.type, collectionId);
+      return getCollectionMarketData(AppConfig.ORANGESEED_API_KEY, network.type, collectionId);
     };
     return useQuery({
       enabled: !!collectionId,

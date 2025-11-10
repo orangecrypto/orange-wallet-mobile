@@ -3,6 +3,7 @@ import { Config } from "@config/Config";
 import { BigNumber } from "@orangecryptohq/orangeseed/dist/utils/bignumber";
 import axios from "axios";
 import Toast from 'react-native-toast-message';
+import AppConfig from 'react-native-config';
 export const filterVisibleTokens = (
   tokenList: any[],
   coinSettings: any[],
@@ -99,7 +100,12 @@ export const getReceiveAmount = async ({
 export const getFiateValue = async (symbol) => {
   try {
     const response = await fetch(
-      `https://api.orangemarketcap.com/coins/fiat?symbol=${symbol}&fiat_currency=USD`
+      `https://api-orange-marketcap.orangewebservices.com/coins/fiat?symbol=${symbol}&fiat_currency=USD`,
+      {
+        headers: {
+          'apikey': AppConfig.ORANGE_MARKETCAP_API_KEY,
+        },
+      }
     );
     const data = await response.json();
     return data?.[symbol] ?? null;

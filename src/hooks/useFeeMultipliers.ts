@@ -3,12 +3,13 @@ import { fetchAppInfo } from '@orangecryptohq/orangeseed/dist';
 import { appReducerType } from '@redux/slice/appReducer';
 import { useQuery } from '@tanstack/react-query';
 import { useSelector } from 'react-redux';
+import AppConfig from 'react-native-config';
 
 export const useFeeMultipliers = () => {
   const { network } = useSelector((state: appReducerType) => state.appReducer);
 
   const fetchFeeMultiplierData = async (): Promise<AppInfo> => {
-    const response = await fetchAppInfo(network.type);
+    const response = await fetchAppInfo(AppConfig.ORANGESEED_API_KEY, network.type);
     if (!response) throw new Error('Failed to fetch fee multipliers');
     return response;
   };

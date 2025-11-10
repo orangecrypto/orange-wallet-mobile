@@ -7,5 +7,5 @@ export enum ApiEndpoints {
     COINBASE_BASE_URL = 'https://pay.coinbase.com',
     MOONPAY_BUY_URL = 'https://buy.moonpay.com',
 
-    CDPTOKEN='https://seed.orangecrypto.com/v1/cdp-generate-token'
+    CDPTOKEN='https://seed.orangewebservices.com/v1/cdp-generate-token'
 }  

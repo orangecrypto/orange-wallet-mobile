@@ -1,7 +1,8 @@
 import NetInfo from '@react-native-community/netinfo';
 import Toast from 'react-native-toast-message';
+import AppConfig from 'react-native-config';
 
-const API_ORANGE_MARKET = 'https://api.orangemarketcap.com/';
+const API_ORANGE_MARKET = 'https://api-orange-marketcap.orangewebservices.com/';
 
 // Use native fetch with AbortController for timeout
 const fetchWithTimeout = async (url: string, options: RequestInit = {}, timeout = 30000) => {
@@ -68,6 +69,7 @@ export const getApi = async (endpoint: string, params?: Record<string, any>) => 
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
+        'apikey': AppConfig.ORANGE_MARKETCAP_API_KEY,
       },
     });
 
@@ -108,6 +110,7 @@ export const postApi = async (endpoint: string, data: any) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'apikey': AppConfig.ORANGE_MARKETCAP_API_KEY,
       },
       body: JSON.stringify(data),
     });

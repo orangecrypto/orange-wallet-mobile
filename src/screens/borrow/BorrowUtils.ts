@@ -1,6 +1,6 @@
 import { btcTransaction, NetworkType, satsToBtc } from "@orangecryptohq/orangeseed";
 import { getUTXOs } from "@screens/swap/CreatePSBT";
-
+import AppConfig from 'react-native-config';
 import * as bitcoin from "bitcoinjs-lib";
 /**
  * Validates if the amount falls within any of the valid ranges.
@@ -57,7 +57,12 @@ const sats = (val: any) => satsToBtc(new BigNumber(val || 0));
 export const calculateFiatValues = async (breakdown) => {
   try {
     const response = await fetch(
-      `https://api.orangemarketcap.com/coins/fiat?symbol=BTC&fiat_currency=USD`
+      `https://api-orange-marketcap.orangewebservices.com/coins/fiat?symbol=BTC&fiat_currency=USD`,
+      {
+        headers: {
+          'apikey': AppConfig.ORANGE_MARKETCAP_API_KEY,
+        },
+      }
     );
     const data = await response.json();
     const btcPrice = data?.BTC;
@@ -81,7 +86,12 @@ export const calculateFiatValues = async (breakdown) => {
 export const getFiateValue = async (value, symbol = 'BTC') => {
   try {
     const response = await fetch(
-      `https://api.orangemarketcap.com/coins/fiat?symbol=${symbol}&fiat_currency=USD`
+      `https://api-orange-marketcap.orangewebservices.com/coins/fiat?symbol=${symbol}&fiat_currency=USD`,
+      {
+        headers: {
+          'apikey': AppConfig.ORANGE_MARKETCAP_API_KEY,
+        },
+      }
     );
     const data = await response.json();
     const price = data?.[symbol];
@@ -101,7 +111,12 @@ export const getFiateValue = async (value, symbol = 'BTC') => {
 export const getFiateRate = async (symbol = 'BTC') => {
   try {
     const response = await fetch(
-      `https://api.orangemarketcap.com/coins/fiat?symbol=${symbol}&fiat_currency=USD`
+      `https://api-orange-marketcap.orangewebservices.com/coins/fiat?symbol=${symbol}&fiat_currency=USD`,
+      {
+        headers: {
+          'apikey': AppConfig.ORANGE_MARKETCAP_API_KEY,
+        },
+      }
     );
     const data = await response.json();
     const price = data?.[symbol];
