@@ -2,20 +2,22 @@ import { satsToBtc } from '@orangecryptohq/orangeseed';
 import BigNumber from 'bignumber.js';
 import AppConfig from 'react-native-config';
 import { Config } from '@config/Config';
+import { fetchPrice } from '@utils/cryptoUtils';
 
-export const getFiateValue = async (value: string | number, symbol = 'BTC'): Promise<string > => {
+/**
+ * Get fiat value for a given amount in satoshis
+ * Uses CoinGecko with fallback to Orange Market Cap (via fetchPrice utility)
+ *
+ * @param value - Amount in satoshis
+ * @param symbol - Crypto symbol (e.g., 'BTC', 'STX')
+ * @returns Value in USD as string with 2 decimal places
+ */
+export const getFiateValue = async (value: string | number, symbol: string = 'BTC'): Promise<string> => {
   try {
     const finalValue: any = satsToBtc(new BigNumber(value));
-    const response = await fetch(
-      `https://api-orange-marketcap.orangewebservices.com/coins/fiat?symbol=${symbol}&fiat_currency=USD`,
-      {
-        headers: {
-          'apikey': AppConfig.ORANGE_MARKETCAP_API_KEY,
-        },
-      }
-    );
-    const data = await response.json();
-    const price = data?.[symbol];
+
+    // Use centralized fetchPrice utility with CoinGecko + fallback
+    const price = await fetchPrice(symbol);
 
     if (price) {
       const fiatValue = finalValue * price;
@@ -24,7 +26,7 @@ export const getFiateValue = async (value: string | number, symbol = 'BTC'): Pro
 
     return '0';
   } catch (error) {
-    console.error('Error fetching fiat value:', error);
+    console.error(`[LoanUtils] Error fetching fiat value for ${symbol}:`, error);
     return '0';
   }
 };

@@ -4,6 +4,7 @@ import { BigNumber } from "@orangecryptohq/orangeseed/dist/utils/bignumber";
 import axios from "axios";
 import Toast from 'react-native-toast-message';
 import AppConfig from 'react-native-config';
+import { fetchPrice } from '@utils/cryptoUtils';
 export const filterVisibleTokens = (
   tokenList: any[],
   coinSettings: any[],
@@ -97,20 +98,21 @@ export const getReceiveAmount = async ({
   }
 };
 
-export const getFiateValue = async (symbol) => {
+/**
+ * Get fiat (USD) value for a crypto symbol
+ * Uses CoinGecko with fallback to Orange Market Cap (via fetchPrice utility)
+ *
+ * @param symbol - Crypto symbol (e.g., 'BTC', 'STX', 'ORDI')
+ * @returns Price in USD or null if unavailable
+ */
+export const getFiateValue = async (symbol: string): Promise<number | null> => {
   try {
-    const response = await fetch(
-      `https://api-orange-marketcap.orangewebservices.com/coins/fiat?symbol=${symbol}&fiat_currency=USD`,
-      {
-        headers: {
-          'apikey': AppConfig.ORANGE_MARKETCAP_API_KEY,
-        },
-      }
-    );
-    const data = await response.json();
-    return data?.[symbol] ?? null;
+    // Use the centralized fetchPrice utility from cryptoUtils
+    // This includes CoinGecko integration, caching, rate limiting, and Orange Market Cap fallback
+    const price = await fetchPrice(symbol);
+    return price;
   } catch (error) {
-    console.error('Error fetching fiat value:', error);
+    console.error(`[SwapUtils] Error fetching fiat value for ${symbol}:`, error);
     return null;
   }
 };

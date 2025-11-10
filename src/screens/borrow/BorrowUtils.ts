@@ -2,6 +2,7 @@ import { btcTransaction, NetworkType, satsToBtc } from "@orangecryptohq/orangese
 import { getUTXOs } from "@screens/swap/CreatePSBT";
 import AppConfig from 'react-native-config';
 import * as bitcoin from "bitcoinjs-lib";
+import { fetchPrice } from '@utils/cryptoUtils';
 /**
  * Validates if the amount falls within any of the valid ranges.
  * Returns true if valid, or an error message string if not.
@@ -54,18 +55,17 @@ export const validateAmountWithRanges = (ranges, amount) => {
 };
 const sats = (val: any) => satsToBtc(new BigNumber(val || 0));
 
+/**
+ * Calculate fiat values for loan breakdown
+ * Uses CoinGecko with fallback to Orange Market Cap (via fetchPrice utility)
+ *
+ * @param breakdown - Loan breakdown with sats values
+ * @returns Fiat values in USD or null if unavailable
+ */
 export const calculateFiatValues = async (breakdown) => {
   try {
-    const response = await fetch(
-      `https://api-orange-marketcap.orangewebservices.com/coins/fiat?symbol=BTC&fiat_currency=USD`,
-      {
-        headers: {
-          'apikey': AppConfig.ORANGE_MARKETCAP_API_KEY,
-        },
-      }
-    );
-    const data = await response.json();
-    const btcPrice = data?.BTC;
+    // Use centralized fetchPrice utility with CoinGecko + fallback
+    const btcPrice = await fetchPrice('BTC');
 
     if (!btcPrice) return null;
 
@@ -79,28 +79,28 @@ export const calculateFiatValues = async (breakdown) => {
       interest: Number(interest.toFixed(0)),
     };
   } catch (err) {
-    console.error('Error calculating fiat values:', err);
+    console.error('[BorrowUtils] Error calculating fiat values:', err);
     return null;
   }
 };
-export const getFiateValue = async (value, symbol = 'BTC') => {
+/**
+ * Get fiat value for a given crypto amount
+ * Uses CoinGecko with fallback to Orange Market Cap (via fetchPrice utility)
+ *
+ * @param value - Amount in crypto
+ * @param symbol - Crypto symbol (e.g., 'BTC', 'STX')
+ * @returns Value in USD or null if unavailable
+ */
+export const getFiateValue = async (value: number, symbol: string = 'BTC'): Promise<number | null> => {
   try {
-    const response = await fetch(
-      `https://api-orange-marketcap.orangewebservices.com/coins/fiat?symbol=${symbol}&fiat_currency=USD`,
-      {
-        headers: {
-          'apikey': AppConfig.ORANGE_MARKETCAP_API_KEY,
-        },
-      }
-    );
-    const data = await response.json();
-    const price = data?.[symbol];
+    // Use centralized fetchPrice utility with CoinGecko + fallback
+    const price = await fetchPrice(symbol);
     if (price) {
       return value * price;
     }
     return null;
   } catch (error) {
-    console.error('Error fetching fiat value:', error);
+    console.error(`[BorrowUtils] Error fetching fiat value for ${symbol}:`, error);
     return null;
   }
 };
@@ -108,22 +108,21 @@ export const getFiateValue = async (value, symbol = 'BTC') => {
 
 
 
-export const getFiateRate = async (symbol = 'BTC') => {
+/**
+ * Get fiat exchange rate for a crypto symbol
+ * Uses CoinGecko with fallback to Orange Market Cap (via fetchPrice utility)
+ *
+ * @param symbol - Crypto symbol (e.g., 'BTC', 'STX')
+ * @returns Exchange rate in USD or 0 if unavailable
+ */
+export const getFiateRate = async (symbol: string = 'BTC'): Promise<number> => {
   try {
-    const response = await fetch(
-      `https://api-orange-marketcap.orangewebservices.com/coins/fiat?symbol=${symbol}&fiat_currency=USD`,
-      {
-        headers: {
-          'apikey': AppConfig.ORANGE_MARKETCAP_API_KEY,
-        },
-      }
-    );
-    const data = await response.json();
-    const price = data?.[symbol];
-    console.log('getFiateRate', price)
-    return price;
+    // Use centralized fetchPrice utility with CoinGecko + fallback
+    const price = await fetchPrice(symbol);
+    console.log('[BorrowUtils] getFiateRate', symbol, price);
+    return price ?? 0;
   } catch (error) {
-    console.error('Error fetching fiat value:', error);
+    console.error(`[BorrowUtils] Error fetching fiat rate for ${symbol}:`, error);
     return 0;
   }
 };

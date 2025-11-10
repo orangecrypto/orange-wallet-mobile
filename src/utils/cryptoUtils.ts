@@ -8,17 +8,201 @@ export const truncateAddress = (address: string, startLength = 4, endLength = 4)
     return `${address.slice(0, startLength)}...${address.slice(-endLength)}`;
   };
 
-  export const fetchPrice = async (symbol) => {
+// ============================================
+// CoinGecko Price Fetching with Caching & Fallback
+// ============================================
+
+/**
+ * Symbol to CoinGecko ID mapping
+ * Based on CoinGecko API v3: https://api.coingecko.com/api/v3/coins/list
+ */
+const SYMBOL_TO_COINGECKO_ID: Record<string, string> = {
+    // Major cryptocurrencies
+    'BTC': 'bitcoin',
+    'STX': 'blockstack',
+    'ETH': 'ethereum',
+    'DOGE': 'dogecoin',
+    'LTC': 'litecoin',
+    'BCH': 'bitcoin-cash',
+
+    // BRC-20 Tokens (Bitcoin Ordinals)
+    'ORDI': 'ordi',
+    'SATS': 'sats-ordinals',
+    'RATS': 'rats',
+    'PUPS': 'bitcoin-puppets',
+    'WZRD': 'wzrd',
+    'MUBI': 'mubi',
+    '.COM': 'com-token',
+
+    // Stacks Ecosystem
+    'ALEX': 'alex-lab',
+    'ARKADIKO': 'arkadiko-token',
+    'WELSH': 'welsh-corgi-coin',
+    'LEO': 'leo-token',
+    'USDT': 'tether',
+    'USDC': 'usd-coin',
+    'WBTC': 'wrapped-bitcoin',
+
+    // Runes (Bitcoin native fungible tokens)
+    'UNCOMMON•GOODS': 'uncommon-goods',
+    'DECENTRALIZED': 'decentralized',
+    'SATOSHI•NAKAMOTO': 'satoshi-nakamoto',
+    'WANKO•MANKO•RUNES': 'wanko-manko-runes',
+    'RSIC•GENESIS•RUNES': 'rsic-genesis-runes',
+};
+
+/**
+ * Price cache with TTL
+ * Caches prices for 2 minutes to reduce API calls
+ */
+interface PriceCache {
+    price: number;
+    timestamp: number;
+}
+
+const priceCache: Map<string, PriceCache> = new Map();
+const CACHE_TTL = 2 * 60 * 1000; // 2 minutes
+
+/**
+ * Rate limiting state
+ * CoinGecko free tier: 50 calls/minute
+ */
+let requestCount = 0;
+let requestWindowStart = Date.now();
+const MAX_REQUESTS_PER_MINUTE = 45; // Leave buffer for safety
+const RATE_LIMIT_WINDOW = 60 * 1000; // 1 minute
+
+/**
+ * Check if rate limit is exceeded
+ */
+const isRateLimited = (): boolean => {
+    const now = Date.now();
+
+    // Reset counter if window has passed
+    if (now - requestWindowStart > RATE_LIMIT_WINDOW) {
+        requestCount = 0;
+        requestWindowStart = now;
+        return false;
+    }
+
+    return requestCount >= MAX_REQUESTS_PER_MINUTE;
+};
+
+/**
+ * Increment request counter
+ */
+const incrementRequestCount = () => {
+    requestCount++;
+};
+
+/**
+ * Fetch price from CoinGecko with fallback to Orange Market Cap
+ * Includes caching and rate limiting
+ *
+ * @param symbol - Crypto symbol (e.g., 'BTC', 'STX', 'ORDI')
+ * @returns Price in USD or null if unavailable
+ */
+export const fetchPrice = async (symbol: string): Promise<number | null> => {
     try {
-        const response = await fetch(`https://api-orange-marketcap.orangewebservices.com/coins/fiat?symbol=${symbol}&fiat_currency=USD`, {
-            headers: {
-                'apikey': AppConfig.ORANGE_MARKETCAP_API_KEY,
-            },
-        });
-        const data = await response.json();
-        return data[symbol];
+        // Check cache first
+        const cached = priceCache.get(symbol);
+        if (cached && (Date.now() - cached.timestamp) < CACHE_TTL) {
+            console.log(`[fetchPrice] Using cached price for ${symbol}: $${cached.price}`);
+            return cached.price;
+        }
+
+        // Try CoinGecko first if not rate limited
+        if (!isRateLimited()) {
+            try {
+                const coinGeckoId = SYMBOL_TO_COINGECKO_ID[symbol];
+
+                if (coinGeckoId) {
+                    incrementRequestCount();
+                    console.log(`[fetchPrice] Fetching ${symbol} from CoinGecko (${coinGeckoId})`);
+
+                    // Build headers with API key if available
+                    const headers: Record<string, string> = {
+                        'Accept': 'application/json',
+                    };
+
+                    // Add CoinGecko API key if configured (free tier key provides better rate limits)
+                    if (AppConfig.COINGECKO_API_KEY) {
+                        headers['x-cg-demo-api-key'] = AppConfig.COINGECKO_API_KEY;
+                    }
+
+                    const response = await fetch(
+                        `https://api.coingecko.com/api/v3/simple/price?ids=${coinGeckoId}&vs_currencies=usd`,
+                        {
+                            headers,
+                            // 10 second timeout
+                            signal: AbortSignal.timeout ? AbortSignal.timeout(10000) : undefined,
+                        }
+                    );
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        const price = data[coinGeckoId]?.usd;
+
+                        if (price !== undefined && price !== null) {
+                            // Cache the price
+                            priceCache.set(symbol, { price, timestamp: Date.now() });
+                            console.log(`[fetchPrice] CoinGecko price for ${symbol}: $${price}`);
+                            return price;
+                        }
+                    } else if (response.status === 429) {
+                        console.warn(`[fetchPrice] CoinGecko rate limit hit for ${symbol}`);
+                        // Force rate limit for remaining window
+                        requestCount = MAX_REQUESTS_PER_MINUTE;
+                    }
+                } else {
+                    console.warn(`[fetchPrice] No CoinGecko ID mapping for ${symbol}`);
+                }
+            } catch (coinGeckoError) {
+                console.warn(`[fetchPrice] CoinGecko error for ${symbol}:`, coinGeckoError.message);
+                // Continue to fallback
+            }
+        } else {
+            console.warn(`[fetchPrice] CoinGecko rate limited, using fallback for ${symbol}`);
+        }
+
+        // Fallback to Orange Market Cap API
+        console.log(`[fetchPrice] Falling back to Orange Market Cap for ${symbol}`);
+        const response = await fetch(
+            `https://api-orange-marketcap.orangewebservices.com/coins/fiat?symbol=${symbol}&fiat_currency=USD`,
+            {
+                headers: {
+                    'apikey': AppConfig.ORANGE_MARKETCAP_API_KEY,
+                },
+                // 10 second timeout
+                signal: AbortSignal.timeout ? AbortSignal.timeout(10000) : undefined,
+            }
+        );
+
+        if (response.ok) {
+            const data = await response.json();
+            const price = data[symbol];
+
+            if (price !== undefined && price !== null) {
+                // Cache the price
+                priceCache.set(symbol, { price, timestamp: Date.now() });
+                console.log(`[fetchPrice] Orange Market Cap price for ${symbol}: $${price}`);
+                return price;
+            }
+        }
+
+        console.error(`[fetchPrice] No price data available for ${symbol}`);
+        return null;
+
     } catch (error) {
-        console.error(`Error fetching ${symbol} price:`, error);
+        console.error(`[fetchPrice] Error fetching ${symbol} price:`, error);
+
+        // Return cached price if available, even if expired
+        const cached = priceCache.get(symbol);
+        if (cached) {
+            console.log(`[fetchPrice] Using stale cached price for ${symbol}: $${cached.price}`);
+            return cached.price;
+        }
+
         return null;
     }
 };
