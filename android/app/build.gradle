@@ -77,6 +77,13 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
+    // ✅ CRITICAL: Add this block for 16KB support
+    packagingOptions {
+        jniLibs {
+            useLegacyPackaging = true
+        }
+    }
+
     namespace "com.orangewallet"
     defaultConfig {
         applicationId "com.orangewallet"
@@ -103,6 +110,15 @@ android {
             signingConfig signingConfigs.debug
             minifyEnabled false
            // proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+        }
+    }
+
+    // ✅ CRITICAL: Add this block to force 16KB alignment
+    externalNativeBuild {
+        cmake {
+            arguments "-DCMAKE_SHARED_LINKER_FLAGS=-Wl,-z,max-page-size=16384",
+                      "-DCMAKE_MODULE_LINKER_FLAGS=-Wl,-z,max-page-size=16384",
+                      "-DCMAKE_EXE_LINKER_FLAGS=-Wl,-z,max-page-size=16384"
         }
     }
 }
