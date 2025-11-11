@@ -96,6 +96,121 @@ const incrementRequestCount = () => {
 };
 
 /**
+ * Batch fetch multiple token prices from CoinGecko in a single API call
+ * This significantly reduces API calls and improves performance
+ *
+ * @param symbols - Array of crypto symbols (e.g., ['BTC', 'STX', 'ORDI'])
+ * @returns Map of symbol to price in USD
+ */
+export const fetchPricesBatch = async (symbols: string[]): Promise<Map<string, number>> => {
+    const priceMap = new Map<string, number>();
+
+    if (symbols.length === 0) {
+        return priceMap;
+    }
+
+    try {
+        // Filter out symbols we already have cached
+        const symbolsToFetch = symbols.filter(symbol => {
+            const cached = priceCache.get(symbol);
+            if (cached && (Date.now() - cached.timestamp) < CACHE_TTL) {
+                priceMap.set(symbol, cached.price);
+                console.log(`[fetchPricesBatch] Using cached price for ${symbol}: $${cached.price}`);
+                return false; // Don't fetch
+            }
+            return true; // Fetch this one
+        });
+
+        if (symbolsToFetch.length === 0) {
+            console.log('[fetchPricesBatch] All prices from cache');
+            return priceMap;
+        }
+
+        // Map symbols to CoinGecko IDs
+        const coinGeckoIds = symbolsToFetch
+            .map(symbol => SYMBOL_TO_COINGECKO_ID[symbol])
+            .filter(id => id !== undefined);
+
+        if (coinGeckoIds.length === 0) {
+            console.warn('[fetchPricesBatch] No CoinGecko ID mappings found for symbols:', symbolsToFetch);
+            // Fallback to individual fetches for unmapped symbols
+            for (const symbol of symbolsToFetch) {
+                const price = await fetchPrice(symbol);
+                if (price !== null) {
+                    priceMap.set(symbol, price);
+                }
+            }
+            return priceMap;
+        }
+
+        // Try CoinGecko batch API if not rate limited
+        if (!isRateLimited()) {
+            try {
+                incrementRequestCount();
+                const idsParam = coinGeckoIds.join(',');
+                console.log(`[fetchPricesBatch] Fetching ${coinGeckoIds.length} tokens from CoinGecko: ${idsParam}`);
+
+                const headers: Record<string, string> = {
+                    'Accept': 'application/json',
+                };
+
+                if (AppConfig.COINGECKO_API_KEY) {
+                    headers['x-cg-demo-api-key'] = AppConfig.COINGECKO_API_KEY;
+                }
+
+                const response = await fetch(
+                    `https://api.coingecko.com/api/v3/simple/price?ids=${idsParam}&vs_currencies=usd`,
+                    {
+                        headers,
+                        signal: AbortSignal.timeout ? AbortSignal.timeout(15000) : undefined,
+                    }
+                );
+
+                if (response.ok) {
+                    const data = await response.json();
+
+                    // Map CoinGecko IDs back to symbols and cache
+                    symbolsToFetch.forEach(symbol => {
+                        const coinGeckoId = SYMBOL_TO_COINGECKO_ID[symbol];
+                        if (coinGeckoId && data[coinGeckoId]?.usd !== undefined) {
+                            const price = data[coinGeckoId].usd;
+                            priceMap.set(symbol, price);
+                            priceCache.set(symbol, { price, timestamp: Date.now() });
+                            console.log(`[fetchPricesBatch] ${symbol}: $${price}`);
+                        }
+                    });
+
+                    console.log(`[fetchPricesBatch] Successfully fetched ${priceMap.size - (symbols.length - symbolsToFetch.length)} prices`);
+                    return priceMap;
+                } else if (response.status === 429) {
+                    console.warn('[fetchPricesBatch] CoinGecko rate limit hit');
+                    requestCount = MAX_REQUESTS_PER_MINUTE;
+                }
+            } catch (error) {
+                console.warn('[fetchPricesBatch] CoinGecko batch error:', error.message);
+            }
+        }
+
+        // Fallback: fetch individually (but still more efficient than Promise.all with individual fetches)
+        console.log('[fetchPricesBatch] Using fallback for remaining tokens');
+        for (const symbol of symbolsToFetch) {
+            if (!priceMap.has(symbol)) {
+                const price = await fetchPrice(symbol);
+                if (price !== null) {
+                    priceMap.set(symbol, price);
+                }
+            }
+        }
+
+        return priceMap;
+
+    } catch (error) {
+        console.error('[fetchPricesBatch] Error:', error);
+        return priceMap;
+    }
+};
+
+/**
  * Fetch price from CoinGecko with fallback to Orange Market Cap
  * Includes caching and rate limiting
  *
@@ -293,25 +408,43 @@ export function getTicker(name: string) {
   return name;
 }
 
-export const getImageSource = async (name: string) => {
+// Image cache to avoid repeated lookups
+const imageCache: Map<string, any> = new Map();
+const imageOrangeCache: Map<string, any> = new Map();
 
-  const formatString = (str) => str.replace(/[^a-zA-Z0-9]/g, ''); 
+export const getImageSource = (name: string) => {
+  // Check cache first
+  if (imageCache.has(name)) {
+    return imageCache.get(name);
+  }
+
+  const formatString = (str) => str.replace(/[^a-zA-Z0-9]/g, '');
   const result = formatString(name);
   const lowerCaseName = result.trim().toUpperCase(); // Trim and convert to uppercase
   const matchingKey = Object.keys(localAssets).find(
       (key) => key.trim().toUpperCase() === lowerCaseName
   );
 
-  return matchingKey ? localAssets[matchingKey] : null;
+  const image = matchingKey ? localAssets[matchingKey] : null;
+  imageCache.set(name, image); // Cache the result
+  return image;
 };
 
-export const getImageSourceOrange = async (name: string) => {
-  const formatString = (str: string) => str.replace(/[^a-zA-Z0-9]/g, ''); 
+export const getImageSourceOrange = (name: string) => {
+  // Check cache first
+  if (imageOrangeCache.has(name)) {
+    return imageOrangeCache.get(name);
+  }
+
+  const formatString = (str: string) => str.replace(/[^a-zA-Z0-9]/g, '');
   const formattedName = formatString(name).trim().toUpperCase();
   const matchingKey = Object.keys(localAssets).find(
     (key) => key.trim().toUpperCase() === formattedName + "ORANGE"
   );
-  return matchingKey ? localAssets[matchingKey] : null;
+
+  const image = matchingKey ? localAssets[matchingKey] : null;
+  imageOrangeCache.set(name, image); // Cache the result
+  return image;
 };
 
 export const formatNumber = (value) => {

@@ -2,6 +2,7 @@ import useBtcClient from '@hooks/useBtcClient';
 import useRunesApi from '@hooks/useRunesApi';
 import useSelectedNetwork from '@hooks/useSelectedNetwork';
 import useStxData from '@hooks/useStxData';
+import { useBalanceData } from '@hooks/useBalanceData';
 import { getFtData, getOrdinalsFtBalance } from '@orangecryptohq/orangeseed';
 import { useIsFocused } from '@react-navigation/native';
 import { resetCoinNames, setAddCoinSettings } from '@redux/slice/CoinSettings';
@@ -53,19 +54,39 @@ const Wallet = () => {
         { id: 4, category: "Stacks", name: "Stacks" },
     ])
     const namesToAlwaysShow = ["Bitcoin", "Orange", "Stacks"];
-    const visibleItems = cryptoArray.filter(item => {
-        if (namesToAlwaysShow.includes(item.name)) {
-            return true;
-        }
-        const coinSetting = coinSettings.find(setting => setting.name === item.name);
-        return coinSetting ? coinSetting.visible : false;
-    });
+
+    // Memoize visible items to avoid recomputation on every render
+    const visibleItems = useMemo(() => {
+        return cryptoArray.filter(item => {
+            if (namesToAlwaysShow.includes(item.name)) {
+                return true;
+            }
+            const coinSetting = coinSettings.find(setting => setting.name === item.name);
+            return coinSetting ? coinSetting.visible : false;
+        });
+    }, [cryptoArray, coinSettings]);
 
     const [transactionProtocol, setTransactionProtocol] = useState('all')
     const [transaction, setTransaction] = useState([])
     const { btcClient, bitcoinAddress } = useBtcClient();
     const { runesApi, ordinalsAddress } = useRunesApi();
     const { data, loading, stxAddress } = useStxData();
+
+    // Use React Query for balance data with caching
+    const {
+        data: balanceData,
+        isLoading: isBalanceLoading,
+        refetch: refetchBalance,
+        isFetching: isBalanceFetching
+    } = useBalanceData(
+        btcClient,
+        runesApi,
+        bitcoinAddress,
+        ordinalsAddress,
+        stxAddress,
+        stackNetwork,
+        !!data // Only enable when STX data is ready
+    );
 
     const walletContext = {
         bitcoinAddress,
@@ -81,14 +102,12 @@ const Wallet = () => {
         store
     };
 
-    const onRefresh = async () => {
+    const onRefresh = useCallback(async () => {
         console.log('onRefresh', 'call')
         setRefreshing(true);
-        await getBalance([
-            { id: 2, category: "BTC", name: "Bitcoin" },
-            { id: 3, category: "BRC20", name: "Orange", ticker: 'ORNJ' },
-            { id: 4, category: "Stacks", name: "Stacks" },
-        ]);
+
+        // Use React Query refetch - it will use cache if fresh, or fetch if stale
+        await refetchBalance();
 
         if (transactionProtocol !== 'all') {
             setPageNumber(0)
@@ -101,32 +120,43 @@ const Wallet = () => {
 
         }
         setRefreshing(false);
-    };
+    }, [refetchBalance, transactionProtocol, selectedToken]);
 
     const getBalance = async (initialTokens = cryptoArray) => {
         setIsLoading(true);
 
-        const [btcRes, brc20Res, runesRes, stacksRes] = await Promise.allSettled([
-            btcClient.getBalance(bitcoinAddress),
-            getOrdinalsFtBalance(AppConfig.ORANGESEED_API_KEY, store.getState().appReducer.network?.type, ordinalsAddress),
-            // getOrdinalsFtBalance(AppConfig.ORANGESEED_API_KEY, store.getState().appReducer.network?.type, 'bc1pk8g4rztfkxs2q9c40g6keeknjw6aadx3kzu4suzlll0remfw7xxs5x9ctv'),
-            runesApi.getRuneFungibleTokens(ordinalsAddress),
-            //  runesApi.getRuneFungibleTokens('bc1pk8g4rztfkxs2q9c40g6keeknjw6aadx3kzu4suzlll0remfw7xxs5x9ctv'),
-            getFtData(stxAddress, stackNetwork),
-        ]);
+        // Use cached balance data from React Query if available
+        let btcBalance, brc20Tokens, runesTokens, stacksTokens;
 
-        console.log('getBalance btcRes', btcRes)
-        const btcBalance = btcRes.status === 'fulfilled' ? btcRes.value : 0;
-        const brc20Tokens = brc20Res.status === 'fulfilled' ? brc20Res.value : [];
-        const runesTokens = runesRes.status === 'fulfilled' ? runesRes.value : [];
-        const stacksTokens = stacksRes.status === 'fulfilled' ? stacksRes.value : [];
+        if (balanceData) {
+            console.log('[getBalance] Using cached balance data from React Query');
+            btcBalance = balanceData.btcBalance;
+            brc20Tokens = balanceData.brc20Tokens;
+            runesTokens = balanceData.runesTokens;
+            stacksTokens = balanceData.stacksTokens;
+        } else {
+            // Fallback to direct API calls if React Query data not available yet
+            console.log('[getBalance] Fetching balance data directly (React Query not ready)');
+            const [btcRes, brc20Res, runesRes, stacksRes] = await Promise.allSettled([
+                btcClient.getBalance(bitcoinAddress),
+                getOrdinalsFtBalance(AppConfig.ORANGESEED_API_KEY, store.getState().appReducer.network?.type, ordinalsAddress),
+                runesApi.getRuneFungibleTokens(ordinalsAddress),
+                getFtData(stxAddress, stackNetwork),
+            ]);
+
+            console.log('getBalance btcRes', btcRes)
+            btcBalance = btcRes.status === 'fulfilled' ? btcRes.value : 0;
+            brc20Tokens = brc20Res.status === 'fulfilled' ? brc20Res.value : [];
+            runesTokens = runesRes.status === 'fulfilled' ? runesRes.value : [];
+            stacksTokens = stacksRes.status === 'fulfilled' ? stacksRes.value : [];
+        }
 
         await updateTokenArray(btcBalance, data, brc20Tokens, runesTokens, stacksTokens, initialTokens);
         setIsLoading(false);
     };
 
-    const updateTokenArray = async (btcBalance, stxBalance, brc20Tokens, runesTokens, stacksTokens, initialTokens) => {
-        
+    const updateTokenArray = useCallback(async (btcBalance, stxBalance, brc20Tokens, runesTokens, stacksTokens, initialTokens) => {
+
        console.log("updateTokenArray", 'call', new Date().toLocaleTimeString());
 
         const { newCryptoArray, btcPrice, stxPrice } = await createTokenArray(btcBalance, stxBalance, brc20Tokens, runesTokens, stacksTokens, initialTokens);
@@ -135,10 +165,10 @@ const Wallet = () => {
         setCryptoArray(newCryptoArray);
         setBtcPrice(btcPrice);
         setStxPrice(stxPrice);
-        setIsResetting(true); 
+        setIsResetting(true);
         await dispatch(resetCoinNames());
         dispatch(setTokenList(newCryptoArray));
-    };
+    }, [dispatch]);
 
     useEffect(() => {
         if (isResetting) {
@@ -173,6 +203,21 @@ const Wallet = () => {
             console.log('useEffect ', JSON.stringify(data) + 'stx data')
         }
     }, [data])
+
+    // Auto-update when React Query balance data changes
+    useEffect(() => {
+        if (balanceData && data) {
+            console.log('[useEffect] Balance data from React Query updated, processing tokens...');
+            updateTokenArray(
+                balanceData.btcBalance,
+                data,
+                balanceData.brc20Tokens,
+                balanceData.runesTokens,
+                balanceData.stacksTokens,
+                cryptoArray
+            );
+        }
+    }, [balanceData])
 
     const categories = ["All", "BRC20", "Runes", "Stacks"];
 

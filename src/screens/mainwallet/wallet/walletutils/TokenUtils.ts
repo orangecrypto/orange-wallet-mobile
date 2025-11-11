@@ -1,7 +1,7 @@
 import { localAssets } from '@assets/assets';
 import { microstacksToStx, satsToBtc } from '@orangecryptohq/orangeseed';
 import { store } from '@redux/store';
-import { convertBtcToUsd, convertStxToUsd, fetchPrice, getFtBalance, getFtTicker, getImageSource, getImageSourceOrange, getTicker, microStxToStx } from '@utils/cryptoUtils';
+import { convertBtcToUsd, convertStxToUsd, fetchPrice, fetchPricesBatch, getFtBalance, getFtTicker, getImageSource, getImageSourceOrange, getTicker, microStxToStx } from '@utils/cryptoUtils';
 import BigNumber from 'bignumber.js';
 
 const coinSettings = [
@@ -184,21 +184,39 @@ export const createTokenArray = async (
 
     let finalCryptoArray = [...updatedCryptoArray,...userTokens,...addParnterTokens];
    // console.log('createTokenArray', `finalCryptoArray ${JSON.stringify(finalCryptoArray)}`)
-    // Fetch missing token fiat rates & icons in parallel
-    const newCryptoArray = await Promise.all(
-        finalCryptoArray.map(async (item) => {
-            const updates = { ...item };
 
-            if (item.tokenFiatRate === "0.00") {
-                let price = await fetchPrice(item.ticker.trim());
-                updates.tokenFiatRate = ((price && !isNaN(price)) ? parseFloat(item.balance) * price : 0).toFixed(2);
-            }
+    // ========== PERFORMANCE OPTIMIZATION ==========
+    // Collect all symbols that need price fetching
+    const symbolsToFetch = finalCryptoArray
+        .filter(item => item.tokenFiatRate === "0.00" && item.ticker)
+        .map(item => item.ticker.trim());
 
-            updates.image = await getImageSourceOrange(item.name);
-            updates.icon = await getImageSource(item.name);
-            return updates;
-        })
-    );
+    console.log(`[createTokenArray] Batch fetching prices for ${symbolsToFetch.length} tokens`);
+    const startTime = Date.now();
+
+    // Fetch all prices in ONE batch API call
+    const priceMap = await fetchPricesBatch(symbolsToFetch);
+
+    console.log(`[createTokenArray] Batch fetch completed in ${Date.now() - startTime}ms`);
+
+    // Update fiat rates and assign cached images (now synchronous)
+    const newCryptoArray = finalCryptoArray.map((item) => {
+        const updates = { ...item };
+
+        // Use pre-fetched price from batch
+        if (item.tokenFiatRate === "0.00" && item.ticker) {
+            const price = priceMap.get(item.ticker.trim());
+            updates.tokenFiatRate = ((price && !isNaN(price)) ? parseFloat(item.balance) * price : 0).toFixed(2);
+        }
+
+        // Get images synchronously from cache (no await needed)
+        updates.image = getImageSourceOrange(item.name);
+        updates.icon = getImageSource(item.name);
+
+        return updates;
+    });
+
+    console.log(`[createTokenArray] Total processing time: ${Date.now() - startTime}ms`);
     return { newCryptoArray, totalBalance, btcPrice, stxPrice };
 };
 
