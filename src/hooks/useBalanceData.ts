@@ -27,18 +27,43 @@ export const useBalanceData = (
     return useQuery({
         queryKey: ['balance-data', bitcoinAddress, ordinalsAddress, stxAddress],
         queryFn: async () => {
-            console.log('[useBalanceData] Fetching balance data from blockchain APIs...');
+            console.log('⏱️ [BALANCE API] Starting balance fetch at:', new Date().toLocaleTimeString());
             const startTime = Date.now();
 
+            // Fetch with individual timing
+            const btcStart = Date.now();
+            const btcPromise = btcClient.getBalance(bitcoinAddress).then(res => {
+                console.log(`⏱️ [BALANCE API] BTC took ${Date.now() - btcStart}ms`);
+                return res;
+            });
+
+            const brc20Start = Date.now();
+            const brc20Promise = getOrdinalsFtBalance(
+                AppConfig.ORANGESEED_API_KEY,
+                store.getState().appReducer.network?.type,
+                ordinalsAddress
+            ).then(res => {
+                console.log(`⏱️ [BALANCE API] BRC-20 took ${Date.now() - brc20Start}ms`);
+                return res;
+            });
+
+            const runesStart = Date.now();
+            const runesPromise = runesApi.getRuneFungibleTokens(ordinalsAddress).then(res => {
+                console.log(`⏱️ [BALANCE API] Runes took ${Date.now() - runesStart}ms`);
+                return res;
+            });
+
+            const stxStart = Date.now();
+            const stxPromise = getFtData(stxAddress, stackNetwork).then(res => {
+                console.log(`⏱️ [BALANCE API] Stacks took ${Date.now() - stxStart}ms`);
+                return res;
+            });
+
             const [btcRes, brc20Res, runesRes, stacksRes] = await Promise.allSettled([
-                btcClient.getBalance(bitcoinAddress),
-                getOrdinalsFtBalance(
-                    AppConfig.ORANGESEED_API_KEY,
-                    store.getState().appReducer.network?.type,
-                    ordinalsAddress
-                ),
-                runesApi.getRuneFungibleTokens(ordinalsAddress),
-                getFtData(stxAddress, stackNetwork),
+                btcPromise,
+                brc20Promise,
+                runesPromise,
+                stxPromise,
             ]);
 
             const btcBalance = btcRes.status === 'fulfilled' ? btcRes.value : 0;
@@ -46,7 +71,7 @@ export const useBalanceData = (
             const runesTokens = runesRes.status === 'fulfilled' ? runesRes.value : [];
             const stacksTokens = stacksRes.status === 'fulfilled' ? stacksRes.value : [];
 
-            console.log(`[useBalanceData] Balance data fetched in ${Date.now() - startTime}ms`);
+            console.log(`⏱️ [BALANCE API] TOTAL: ${Date.now() - startTime}ms`);
 
             return {
                 btcBalance,

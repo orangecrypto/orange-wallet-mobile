@@ -37,16 +37,29 @@ const Nft = () => {
     }, [collectionsData?.results?.length, collectionsData?.total_inscriptions]);
 
     useEffect(() => {
-        console.log('NFT tab First call')
+        console.log('⏱️ [NFT TIMING] useEffect triggered at:', new Date().toLocaleTimeString());
+        console.log('⏱️ [NFT TIMING] collectionsData:', !!collectionsData, 'collectionIds.length:', collectionIds.length);
+
+        // OPTIMIZATION: If no NFTs, set state immediately and return
+        if (collectionsData && collectionsData.total_inscriptions === 0) {
+            console.log('⏱️ [NFT TIMING] No NFTs found, setting empty state at:', new Date().toLocaleTimeString());
+            setbrc20Transfer([]);
+            setincriptionList([]);
+            setTotalAssets(0);
+            return;
+        }
+
         if (!collectionsData || collectionIds.length === 0) return;
 
         const fetchData = async () => {
-            console.log('Reloading NFT data for', collectionIds.length, 'collections');
+            console.log('⏱️ [NFT TIMING] Reloading NFT data for', collectionIds.length, 'collections at:', new Date().toLocaleTimeString());
             const results = collectionsData?.results || [];
             console.log('NFT', `collectionsData ${JSON.stringify(results)}`);
             console.log('NFT', `collectionIds ${collectionIds}`);
 
+            console.log('⏱️ [NFT TIMING] Calling fetchByIds at:', new Date().toLocaleTimeString());
             const brc20Data = await fetchByIds(collectionIds)
+            console.log('⏱️ [NFT TIMING] fetchByIds DONE at:', new Date().toLocaleTimeString());
             console.log('NFT', `fetchByIds `, brc20Data);
 
             const totalInscriptions = collectionsData?.total_inscriptions || 0;

@@ -213,21 +213,34 @@ const Wallet = () => {
     }, [data])
 
     // Auto-update when React Query balance data changes
+    // FIX: Use useRef to prevent multiple calls with same data
+    const balanceDataProcessed = useRef(false);
+
     useEffect(() => {
         console.log('⏱️ [TIMING] useEffect [balanceData] triggered at:', new Date().toLocaleTimeString());
-        if (balanceData && data) {
-            console.log('[useEffect] Balance data from React Query updated, processing tokens...');
-            console.log('⏱️ [TIMING] Calling updateTokenArray() at:', new Date().toLocaleTimeString());
-            updateTokenArray(
-                balanceData.btcBalance,
-                data,
-                balanceData.brc20Tokens,
-                balanceData.runesTokens,
-                balanceData.stacksTokens,
-                cryptoArray
-            );
+
+        if (!balanceData || !data) return;
+
+        // CRITICAL FIX: Prevent processing same data multiple times
+        if (balanceDataProcessed.current) {
+            console.log('⏱️ [TIMING] SKIPPING - Already processed this balance data');
+            return;
         }
-    }, [balanceData])
+
+        console.log('[useEffect] Balance data from React Query updated, processing tokens...');
+        console.log('⏱️ [TIMING] Calling updateTokenArray() at:', new Date().toLocaleTimeString());
+
+        balanceDataProcessed.current = true;
+
+        updateTokenArray(
+            balanceData.btcBalance,
+            data,
+            balanceData.brc20Tokens,
+            balanceData.runesTokens,
+            balanceData.stacksTokens,
+            cryptoArray
+        );
+    }, [balanceData, data])
 
     const categories = ["All", "BRC20", "Runes", "Stacks"];
 
