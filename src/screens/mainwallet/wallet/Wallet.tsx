@@ -123,33 +123,24 @@ const Wallet = () => {
     }, [refetchBalance, transactionProtocol, selectedToken]);
 
     const getBalance = async (initialTokens = cryptoArray) => {
+        console.log('⏱️ [TIMING] getBalance called - balanceData exists?', !!balanceData);
+
+        // CRITICAL FIX: Don't fetch if React Query is already fetching
+        if (!balanceData) {
+            console.log('⏱️ [TIMING] getBalance - waiting for React Query to fetch data...');
+            // React Query useBalanceData hook is already fetching
+            // Just wait for it - don't duplicate the API calls!
+            return;
+        }
+
+        console.log('⏱️ [TIMING] getBalance - using React Query data');
         setIsLoading(true);
 
-        // Use cached balance data from React Query if available
-        let btcBalance, brc20Tokens, runesTokens, stacksTokens;
-
-        if (balanceData) {
-            console.log('[getBalance] Using cached balance data from React Query');
-            btcBalance = balanceData.btcBalance;
-            brc20Tokens = balanceData.brc20Tokens;
-            runesTokens = balanceData.runesTokens;
-            stacksTokens = balanceData.stacksTokens;
-        } else {
-            // Fallback to direct API calls if React Query data not available yet
-            console.log('[getBalance] Fetching balance data directly (React Query not ready)');
-            const [btcRes, brc20Res, runesRes, stacksRes] = await Promise.allSettled([
-                btcClient.getBalance(bitcoinAddress),
-                getOrdinalsFtBalance(AppConfig.ORANGESEED_API_KEY, store.getState().appReducer.network?.type, ordinalsAddress),
-                runesApi.getRuneFungibleTokens(ordinalsAddress),
-                getFtData(stxAddress, stackNetwork),
-            ]);
-
-            console.log('getBalance btcRes', btcRes)
-            btcBalance = btcRes.status === 'fulfilled' ? btcRes.value : 0;
-            brc20Tokens = brc20Res.status === 'fulfilled' ? brc20Res.value : [];
-            runesTokens = runesRes.status === 'fulfilled' ? runesRes.value : [];
-            stacksTokens = stacksRes.status === 'fulfilled' ? stacksRes.value : [];
-        }
+        // Use data from React Query (already fetched)
+        const btcBalance = balanceData.btcBalance;
+        const brc20Tokens = balanceData.brc20Tokens;
+        const runesTokens = balanceData.runesTokens;
+        const stacksTokens = balanceData.stacksTokens;
 
         await updateTokenArray(btcBalance, data, brc20Tokens, runesTokens, stacksTokens, initialTokens);
         setIsLoading(false);
@@ -202,13 +193,16 @@ const Wallet = () => {
 
     };
 
+    // REMOVED: This useEffect was causing duplicate API calls!
+    // React Query useBalanceData hook handles fetching automatically
+    // The useEffect [balanceData] below handles processing when data arrives
+
     useEffect(() => {
         console.log('⏱️ [TIMING] useEffect [data] triggered at:', new Date().toLocaleTimeString());
-        setIsLoading(true)
+        // Just set loading state - React Query is fetching in parallel
         if (data) {
-            console.log('⏱️ [TIMING] Calling getBalance() at:', new Date().toLocaleTimeString());
-            getBalance()
-            console.log('useEffect ', JSON.stringify(data) + 'stx data')
+            console.log('⏱️ [TIMING] STX data ready, React Query will fetch balance...');
+            setIsLoading(true);
         }
     }, [data])
 
@@ -219,7 +213,10 @@ const Wallet = () => {
     useEffect(() => {
         console.log('⏱️ [TIMING] useEffect [balanceData] triggered at:', new Date().toLocaleTimeString());
 
-        if (!balanceData || !data) return;
+        if (!balanceData || !data) {
+            console.log('⏱️ [TIMING] Waiting for balance data or STX data...');
+            return;
+        }
 
         // CRITICAL FIX: Prevent processing same data multiple times
         if (balanceDataProcessed.current) {
@@ -239,7 +236,10 @@ const Wallet = () => {
             balanceData.runesTokens,
             balanceData.stacksTokens,
             cryptoArray
-        );
+        ).then(() => {
+            console.log('⏱️ [TIMING] updateTokenArray complete, setting isLoading false');
+            setIsLoading(false);
+        });
     }, [balanceData, data])
 
     const categories = ["All", "BRC20", "Runes", "Stacks"];

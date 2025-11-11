@@ -21,18 +21,38 @@ const useGetCollectionsData = () => {
 
     console.log(`⏱️ [NFT TIMING] Fetching collections with Offset: ${offset} at:`, new Date().toLocaleTimeString());
 
-    const result = await getCollections(
-      AppConfig.ORANGESEED_API_KEY,
-      network?.type || "Mainnet",
-     //'bc1psgkjsnvc5dq2eete2q98qnmt3qsdp23wxdff6qvp9mumve9vh09smxlnuq',
-    //'bc1pzcswdh4g7ye823ryxnpmn9w8053m4ghy5n4p2eheg60xrs5pf7gse9w8ma',
-    selectedAccount?.ordinalsAddress,
-      offset, // ✅ Pass the manual offset
-      PAGE_SIZE
-    );
+    try {
+      // CRITICAL FIX: Add timeout to prevent 76-second hangs
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => reject(new Error('Collections API timeout after 15 seconds')), 15000);
+      });
 
-    console.log(`⏱️ [NFT TIMING] getCollections DONE at:`, new Date().toLocaleTimeString(), 'total:', result?.total_inscriptions);
-    return result;
+      const fetchPromise = getCollections(
+        AppConfig.ORANGESEED_API_KEY,
+        network?.type || "Mainnet",
+        selectedAccount?.ordinalsAddress,
+        offset,
+        PAGE_SIZE
+      );
+
+      // Race between API call and timeout
+      const result = await Promise.race([fetchPromise, timeoutPromise]);
+
+      console.log(`⏱️ [NFT TIMING] getCollections DONE at:`, new Date().toLocaleTimeString(), 'total:', result?.total_inscriptions);
+      return result;
+
+    } catch (error) {
+      console.error(`⏱️ [NFT TIMING] getCollections FAILED at:`, new Date().toLocaleTimeString(), error.message);
+
+      // CRITICAL: Return empty result instead of throwing
+      // This prevents the loader from spinning forever on network errors
+      return {
+        results: [],
+        total_inscriptions: 0,
+        offset: 0,
+        limit: PAGE_SIZE,
+      };
+    }
   };
 
   const { data, isLoading, isError, refetch } = useQuery({

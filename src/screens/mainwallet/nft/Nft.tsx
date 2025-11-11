@@ -8,7 +8,7 @@ import { store } from '@redux/store';
 import { push } from '@routes/Navigator';
 import { RouteType } from '@routes/RouteType';
 import { strings } from '@strings/i18n';
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, useRef } from 'react';
 import { FlatList, Image, ImageBackground, Text, TouchableOpacity, View } from "react-native";
 import NftItem from './NftItem';
 import { filterIncriptionItems, getCollectionKey } from './NftUtils';
@@ -36,6 +36,10 @@ const Nft = () => {
         return collectionsData.results.map((item) => String(getCollectionKey(item)));
     }, [collectionsData?.results?.length, collectionsData?.total_inscriptions]);
 
+    // CRITICAL FIX: Prevent duplicate processing of same NFT data
+    const nftDataProcessed = useRef(false);
+    const lastProcessedCount = useRef(0);
+
     useEffect(() => {
         console.log('⏱️ [NFT TIMING] useEffect triggered at:', new Date().toLocaleTimeString());
         console.log('⏱️ [NFT TIMING] collectionsData:', !!collectionsData, 'collectionIds.length:', collectionIds.length);
@@ -49,10 +53,19 @@ const Nft = () => {
             return;
         }
 
-        if (!collectionsData || collectionIds.length === 0) return;
+        if (!collectionsData || collectionIds.length === 0) {
+            console.log('⏱️ [NFT TIMING] Waiting for collections data...');
+            return;
+        }
+
+        // CRITICAL FIX: Skip if already processed this exact data
+        if (nftDataProcessed.current && lastProcessedCount.current === collectionIds.length) {
+            console.log('⏱️ [NFT TIMING] SKIPPING - Already processed', collectionIds.length, 'collections');
+            return;
+        }
 
         const fetchData = async () => {
-            console.log('⏱️ [NFT TIMING] Reloading NFT data for', collectionIds.length, 'collections at:', new Date().toLocaleTimeString());
+            console.log('⏱️ [NFT TIMING] Processing NFT data for', collectionIds.length, 'collections at:', new Date().toLocaleTimeString());
             const results = collectionsData?.results || [];
             console.log('NFT', `collectionsData ${JSON.stringify(results)}`);
             console.log('NFT', `collectionIds ${collectionIds}`);
@@ -63,7 +76,7 @@ const Nft = () => {
             console.log('NFT', `fetchByIds `, brc20Data);
 
             const totalInscriptions = collectionsData?.total_inscriptions || 0;
-            const totalInscriptionsBrc20 = brc20Data?.total_inscriptions_brc_20 + brc20Transfer.length || 0;
+            const totalInscriptionsBrc20 = brc20Data?.total_inscriptions_brc_20 || 0; // FIXED: Don't add brc20Transfer.length
             const totalInscriptionsNonBrc20 = totalInscriptions - totalInscriptionsBrc20;
 
             console.log('NFT', `totalInscriptions ${totalInscriptions}`);
@@ -71,24 +84,32 @@ const Nft = () => {
             console.log('NFT', `totalInscriptionsNonBrc20 ${totalInscriptionsNonBrc20}`);
             console.log('NFT', `brc20InscriptionData ${JSON.stringify(brc20Data?.data)}`);
 
-            setbrc20Transfer([...brc20Transfer, ...brc20Data.data]);
+            // CRITICAL FIX: REPLACE arrays instead of APPENDING
+            setbrc20Transfer(brc20Data.data || []); // Don't append - replace!
 
             if (totalInscriptionsNonBrc20 > 0) {
                 console.log('setIncriptionData', 'call');
-                await setIncriptionData(brc20Data.data);
+                const newItems = await filterIncriptionItems(collectionsData?.results, brc20Data.data);
+                setincriptionList(newItems); // Don't append - replace!
             }
             else {
                 setincriptionList([])
             }
+
             setTotalAssets(
                 totalInscriptionsBrc20 === 0 && totalInscriptionsNonBrc20 === totalInscriptions
                     ? 0
                     : totalInscriptionsNonBrc20
             );
+
+            // Mark as processed
+            nftDataProcessed.current = true;
+            lastProcessedCount.current = collectionIds.length;
         };
+
         fetchData();
 
-    }, [collectionIds.length]) // FIX: Only re-run when number of collections changes
+    }, [collectionIds.length]) // Only re-run when collection count changes
 
     return (
         <View style={styles.container}>
