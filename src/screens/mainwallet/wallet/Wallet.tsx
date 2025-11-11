@@ -157,24 +157,30 @@ const Wallet = () => {
 
     const updateTokenArray = useCallback(async (btcBalance, stxBalance, brc20Tokens, runesTokens, stacksTokens, initialTokens) => {
 
-       console.log("updateTokenArray", 'call', new Date().toLocaleTimeString());
+       console.log("⏱️ [TIMING] updateTokenArray START at:", new Date().toLocaleTimeString());
 
         const { newCryptoArray, btcPrice, stxPrice } = await createTokenArray(btcBalance, stxBalance, brc20Tokens, runesTokens, stacksTokens, initialTokens);
-        console.log("updateTokenArray", 'done', new Date().toLocaleTimeString());
+        console.log("⏱️ [TIMING] createTokenArray DONE at:", new Date().toLocaleTimeString());
 
+        console.log("⏱️ [TIMING] Setting state... at:", new Date().toLocaleTimeString());
         setCryptoArray(newCryptoArray);
         setBtcPrice(btcPrice);
         setStxPrice(stxPrice);
         setIsResetting(true);
+        console.log("⏱️ [TIMING] Dispatching Redux actions at:", new Date().toLocaleTimeString());
         dispatch(resetCoinNames()); // FIX #1: Remove await - Redux dispatch is synchronous
         dispatch(setTokenList(newCryptoArray));
+        console.log("⏱️ [TIMING] updateTokenArray END at:", new Date().toLocaleTimeString());
     }, [dispatch]);
 
     useEffect(() => {
+        console.log("⏱️ [TIMING] useEffect [isResetting] triggered:", isResetting, 'at:', new Date().toLocaleTimeString());
         if (isResetting) {
+            console.log("⏱️ [TIMING] addCoinSettings START at:", new Date().toLocaleTimeString());
             addCoinSettings(cryptoArray);
             dispatch(setTokenList(cryptoArray));
             setIsResetting(false);
+            console.log("⏱️ [TIMING] addCoinSettings END at:", new Date().toLocaleTimeString());
         }
     }, [isResetting]); // FIX #2: Depend on isResetting, not coinSettings
     useEffect(() => {
@@ -197,8 +203,10 @@ const Wallet = () => {
     };
 
     useEffect(() => {
+        console.log('⏱️ [TIMING] useEffect [data] triggered at:', new Date().toLocaleTimeString());
         setIsLoading(true)
         if (data) {
+            console.log('⏱️ [TIMING] Calling getBalance() at:', new Date().toLocaleTimeString());
             getBalance()
             console.log('useEffect ', JSON.stringify(data) + 'stx data')
         }
@@ -206,8 +214,10 @@ const Wallet = () => {
 
     // Auto-update when React Query balance data changes
     useEffect(() => {
+        console.log('⏱️ [TIMING] useEffect [balanceData] triggered at:', new Date().toLocaleTimeString());
         if (balanceData && data) {
             console.log('[useEffect] Balance data from React Query updated, processing tokens...');
+            console.log('⏱️ [TIMING] Calling updateTokenArray() at:', new Date().toLocaleTimeString());
             updateTokenArray(
                 balanceData.btcBalance,
                 data,

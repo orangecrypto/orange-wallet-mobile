@@ -52,15 +52,25 @@ export const coinSettingsSlice = createSlice({
         state.coinSettings = [...state.coinSettings, ...action.payload];
       },
       resetCoinNames: (state) => {
+        console.log('⏱️ [TIMING] resetCoinNames START at:', new Date().toLocaleTimeString());
+
+        // OPTIMIZATION: Convert to Map for O(n) instead of O(n²)
+        // Before: .map() with .find() inside = 20×20+ = 400+ comparisons
+        // After: Map lookup = 20 operations total
+        const existingMap = new Map(
+          state.coinSettings.map(item => [item.name, item.visible])
+        );
+
         state.coinSettings = initialState.coinSettings.map((initialItem) => {
-          // Find existing item in current state
-          const existingItem = state.coinSettings.find(item => item.name === initialItem.name);
-          
+          const existingVisible = existingMap.get(initialItem.name);
+
           return {
             ...initialItem,
-            visible: existingItem ? existingItem.visible : initialItem.visible, // Preserve visibility setting
+            visible: existingVisible !== undefined ? existingVisible : initialItem.visible,
           };
         });
+
+        console.log('⏱️ [TIMING] resetCoinNames END at:', new Date().toLocaleTimeString());
       },
      
       clearCoinSettings: () => initialState,
