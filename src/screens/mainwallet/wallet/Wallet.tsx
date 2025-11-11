@@ -166,7 +166,7 @@ const Wallet = () => {
         setBtcPrice(btcPrice);
         setStxPrice(stxPrice);
         setIsResetting(true);
-        await dispatch(resetCoinNames());
+        dispatch(resetCoinNames()); // FIX #1: Remove await - Redux dispatch is synchronous
         dispatch(setTokenList(newCryptoArray));
     }, [dispatch]);
 
@@ -174,9 +174,9 @@ const Wallet = () => {
         if (isResetting) {
             addCoinSettings(cryptoArray);
             dispatch(setTokenList(cryptoArray));
-            setIsResetting(false); 
+            setIsResetting(false);
         }
-    }, [coinSettings]);
+    }, [isResetting]); // FIX #2: Depend on isResetting, not coinSettings
     useEffect(() => {
         if (flatListRef?.current && cardIndex !== -1 ) {
             setCurrentStep(1);

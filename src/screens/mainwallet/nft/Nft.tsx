@@ -8,7 +8,7 @@ import { store } from '@redux/store';
 import { push } from '@routes/Navigator';
 import { RouteType } from '@routes/RouteType';
 import { strings } from '@strings/i18n';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { FlatList, Image, ImageBackground, Text, TouchableOpacity, View } from "react-native";
 import NftItem from './NftItem';
 import { filterIncriptionItems, getCollectionKey } from './NftUtils';
@@ -30,16 +30,23 @@ const Nft = () => {
         setincriptionList([...incriptionList, ...newItems]);
     }
 
+    // FIX: Memoize collection IDs to prevent re-runs when collectionsData object reference changes
+    const collectionIds = useMemo(() => {
+        if (!collectionsData?.results) return [];
+        return collectionsData.results.map((item) => String(getCollectionKey(item)));
+    }, [collectionsData?.results?.length, collectionsData?.total_inscriptions]);
+
     useEffect(() => {
         console.log('NFT tab First call')
-        if (!collectionsData) return;
+        if (!collectionsData || collectionIds.length === 0) return;
+
         const fetchData = async () => {
-            console.log('Reloading')
+            console.log('Reloading NFT data for', collectionIds.length, 'collections');
             const results = collectionsData?.results || [];
-            const ids = results.map((item) => String(getCollectionKey(item)));
             console.log('NFT', `collectionsData ${JSON.stringify(results)}`);
-            console.log('NFT', `collectionIds ${ids}`);
-            const brc20Data = await fetchByIds(ids)
+            console.log('NFT', `collectionIds ${collectionIds}`);
+
+            const brc20Data = await fetchByIds(collectionIds)
             console.log('NFT', `fetchByIds `, brc20Data);
 
             const totalInscriptions = collectionsData?.total_inscriptions || 0;
@@ -50,7 +57,6 @@ const Nft = () => {
             console.log('NFT', `totalInscriptionsBrc20 ${totalInscriptionsBrc20}`);
             console.log('NFT', `totalInscriptionsNonBrc20 ${totalInscriptionsNonBrc20}`);
             console.log('NFT', `brc20InscriptionData ${JSON.stringify(brc20Data?.data)}`);
-
 
             setbrc20Transfer([...brc20Transfer, ...brc20Data.data]);
 
@@ -69,7 +75,7 @@ const Nft = () => {
         };
         fetchData();
 
-    }, [collectionsData])
+    }, [collectionIds.length]) // FIX: Only re-run when number of collections changes
 
     return (
         <View style={styles.container}>

@@ -4,7 +4,7 @@ import { axiosInstance } from "@utils/axiosInstance";
 import { DEBUG_NETWORK_LOGGING } from "@config/Config";
 
 // Batch requests to avoid overwhelming the API
-const BATCH_SIZE = 5; // Process 5 requests at a time
+const BATCH_SIZE = 20; // FIX: Increased from 5 to 20 for faster parallel processing
 
 const fetchInscriptions = async (ids: string[]) => {
   // Filter out empty, null, or undefined IDs
@@ -84,10 +84,9 @@ const useBrc20Inscriptions = () => {
 
   // Method to fetch inscriptions and return data
   const fetchByIds = async (newIds: string[]) => {
-    setIds(newIds);
-    const response = await fetchInscriptions(newIds); // Fetch data immediately
-    refetch(); // Trigger React Query refetch
-    return response; // Return the fetched data
+    // FIX: Don't double-fetch! Either use direct fetch OR React Query, not both
+    const response = await fetchInscriptions(newIds);
+    return response; // Return the fetched data directly (React Query handles caching)
   };
 
   return { data, isPending, error, fetchByIds };
