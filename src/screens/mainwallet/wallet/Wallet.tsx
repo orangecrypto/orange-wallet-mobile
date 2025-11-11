@@ -2,7 +2,7 @@ import useBtcClient from '@hooks/useBtcClient';
 import useRunesApi from '@hooks/useRunesApi';
 import useSelectedNetwork from '@hooks/useSelectedNetwork';
 import useStxData from '@hooks/useStxData';
-import { useBalanceData } from '@hooks/useBalanceData';
+import { useBalanceData, useBrc20Data } from '@hooks/useBalanceData';
 import { getFtData, getOrdinalsFtBalance } from '@orangecryptohq/orangeseed';
 import { useIsFocused } from '@react-navigation/native';
 import { resetCoinNames, setAddCoinSettings } from '@redux/slice/CoinSettings';
@@ -72,7 +72,7 @@ const Wallet = () => {
     const { runesApi, ordinalsAddress } = useRunesApi();
     const { data, loading, stxAddress } = useStxData();
 
-    // Use React Query for balance data with caching
+    // Use React Query for FAST balance data (BTC, Runes, Stacks) - renders immediately
     const {
         data: balanceData,
         isLoading: isBalanceLoading,
@@ -85,6 +85,16 @@ const Wallet = () => {
         ordinalsAddress,
         stxAddress,
         stackNetwork,
+        !!data // Only enable when STX data is ready
+    );
+
+    // Use separate React Query for SLOW BRC-20 data - loads in background
+    const {
+        data: brc20Data,
+        isLoading: isBrc20Loading,
+        refetch: refetchBrc20
+    } = useBrc20Data(
+        ordinalsAddress,
         !!data // Only enable when STX data is ready
     );
 
@@ -102,12 +112,20 @@ const Wallet = () => {
         store
     };
 
+    // Processing flags for preventing duplicate data processing
+    const balanceDataProcessed = useRef(false);
+    const brc20DataProcessed = useRef(false);
+
     const onRefresh = useCallback(async () => {
         console.log('onRefresh', 'call')
         setRefreshing(true);
 
+        // Reset processing flags to allow re-processing
+        balanceDataProcessed.current = false;
+        brc20DataProcessed.current = false;
+
         // Use React Query refetch - it will use cache if fresh, or fetch if stale
-        await refetchBalance();
+        await Promise.all([refetchBalance(), refetchBrc20()]);
 
         if (transactionProtocol !== 'all') {
             setPageNumber(0)
@@ -120,31 +138,10 @@ const Wallet = () => {
 
         }
         setRefreshing(false);
-    }, [refetchBalance, transactionProtocol, selectedToken]);
+    }, [refetchBalance, refetchBrc20, transactionProtocol, selectedToken]);
 
-    const getBalance = async (initialTokens = cryptoArray) => {
-        console.log('⏱️ [TIMING] getBalance called - balanceData exists?', !!balanceData);
-
-        // CRITICAL FIX: Don't fetch if React Query is already fetching
-        if (!balanceData) {
-            console.log('⏱️ [TIMING] getBalance - waiting for React Query to fetch data...');
-            // React Query useBalanceData hook is already fetching
-            // Just wait for it - don't duplicate the API calls!
-            return;
-        }
-
-        console.log('⏱️ [TIMING] getBalance - using React Query data');
-        setIsLoading(true);
-
-        // Use data from React Query (already fetched)
-        const btcBalance = balanceData.btcBalance;
-        const brc20Tokens = balanceData.brc20Tokens;
-        const runesTokens = balanceData.runesTokens;
-        const stacksTokens = balanceData.stacksTokens;
-
-        await updateTokenArray(btcBalance, data, brc20Tokens, runesTokens, stacksTokens, initialTokens);
-        setIsLoading(false);
-    };
+    // Not needed anymore - we'll use useEffect to process data when it arrives
+    // Keeping for backward compatibility but it's now essentially a no-op
 
     const updateTokenArray = useCallback(async (btcBalance, stxBalance, brc20Tokens, runesTokens, stacksTokens, initialTokens) => {
 
@@ -206,15 +203,12 @@ const Wallet = () => {
         }
     }, [data])
 
-    // Auto-update when React Query balance data changes
-    // FIX: Use useRef to prevent multiple calls with same data
-    const balanceDataProcessed = useRef(false);
-
+    // PHASE 1: Render immediately when FAST data arrives (BTC, Runes, Stacks)
     useEffect(() => {
-        console.log('⏱️ [TIMING] useEffect [balanceData] triggered at:', new Date().toLocaleTimeString());
+        console.log('⏱️ [TIMING] useEffect [balanceData - FAST] triggered at:', new Date().toLocaleTimeString());
 
         if (!balanceData || !data) {
-            console.log('⏱️ [TIMING] Waiting for balance data or STX data...');
+            console.log('⏱️ [TIMING] Waiting for fast balance data or STX data...');
             return;
         }
 
@@ -224,23 +218,56 @@ const Wallet = () => {
             return;
         }
 
-        console.log('[useEffect] Balance data from React Query updated, processing tokens...');
-        console.log('⏱️ [TIMING] Calling updateTokenArray() at:', new Date().toLocaleTimeString());
+        console.log('⏱️ [TIMING] PHASE 1: Fast data ready (BTC, Runes, Stacks), rendering immediately');
+        console.log('⏱️ [TIMING] Calling updateTokenArray() with empty BRC-20 at:', new Date().toLocaleTimeString());
 
         balanceDataProcessed.current = true;
 
+        // Render with empty BRC-20 array first (fast render!)
         updateTokenArray(
             balanceData.btcBalance,
             data,
-            balanceData.brc20Tokens,
+            [], // Empty BRC-20 initially - will update in Phase 2
             balanceData.runesTokens,
             balanceData.stacksTokens,
             cryptoArray
         ).then(() => {
-            console.log('⏱️ [TIMING] updateTokenArray complete, setting isLoading false');
+            console.log('⏱️ [TIMING] PHASE 1 RENDER complete');
             setIsLoading(false);
         });
-    }, [balanceData, data])
+    }, [balanceData, data]);
+
+    // PHASE 2: Update with BRC-20 data when it arrives (background update)
+    useEffect(() => {
+        console.log('⏱️ [TIMING] useEffect [brc20Data - SLOW] triggered at:', new Date().toLocaleTimeString());
+
+        if (!brc20Data || !balanceData || !data) {
+            console.log('⏱️ [TIMING] Waiting for BRC-20 data (or fast data not ready yet)...');
+            return;
+        }
+
+        // CRITICAL FIX: Prevent processing same data multiple times
+        if (brc20DataProcessed.current) {
+            console.log('⏱️ [TIMING] SKIPPING - Already processed BRC-20 data');
+            return;
+        }
+
+        console.log('⏱️ [TIMING] PHASE 2: BRC-20 data ready, updating wallet');
+
+        brc20DataProcessed.current = true;
+
+        // Update with BRC-20 data (background update - UI already rendered!)
+        updateTokenArray(
+            balanceData.btcBalance,
+            data,
+            brc20Data, // Now include BRC-20 tokens
+            balanceData.runesTokens,
+            balanceData.stacksTokens,
+            cryptoArray
+        ).then(() => {
+            console.log('⏱️ [TIMING] PHASE 2 UPDATE complete (BRC-20 tokens added)');
+        });
+    }, [brc20Data, balanceData, data]);
 
     const categories = ["All", "BRC20", "Runes", "Stacks"];
 

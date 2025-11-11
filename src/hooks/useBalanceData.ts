@@ -4,8 +4,50 @@ import { store } from '@redux/store';
 import AppConfig from 'react-native-config';
 
 /**
- * React Query hook for fetching all balance data with caching
- * Reduces redundant API calls and improves performance
+ * React Query hook for fetching BRC-20 data separately (slow API)
+ * This allows fast APIs to render immediately without waiting for BRC-20
+ */
+export const useBrc20Data = (
+    ordinalsAddress: string,
+    enabled: boolean = true
+) => {
+    return useQuery({
+        queryKey: ['brc20-data', ordinalsAddress],
+        queryFn: async () => {
+            console.log('⏱️ [BRC20 API] Starting BRC-20 fetch at:', new Date().toLocaleTimeString());
+            const startTime = Date.now();
+
+            try {
+                const data = await Promise.race([
+                    getOrdinalsFtBalance(
+                        AppConfig.ORANGESEED_API_KEY,
+                        store.getState().appReducer.network?.type,
+                        ordinalsAddress
+                    ),
+                    new Promise((_, reject) => {
+                        setTimeout(() => reject(new Error('BRC-20 API timeout after 5 seconds')), 5000);
+                    })
+                ]);
+
+                console.log(`⏱️ [BRC20 API] BRC-20 took ${Date.now() - startTime}ms`);
+                return data;
+            } catch (error) {
+                console.warn(`⏱️ [BRC20 API] BRC-20 failed/timeout after ${Date.now() - startTime}ms`);
+                return []; // Return empty array on timeout/error
+            }
+        },
+        staleTime: 2 * 60 * 1000,
+        gcTime: 5 * 60 * 1000,
+        refetchOnMount: false,
+        refetchOnWindowFocus: false,
+        refetchOnReconnect: true,
+        enabled: enabled && !!ordinalsAddress,
+    });
+};
+
+/**
+ * React Query hook for fetching fast balance data (BTC, Runes, Stacks)
+ * This hook fetches only the fast APIs to allow immediate rendering
  *
  * @param btcClient - Bitcoin client instance
  * @param runesApi - Runes API instance
@@ -27,23 +69,13 @@ export const useBalanceData = (
     return useQuery({
         queryKey: ['balance-data', bitcoinAddress, ordinalsAddress, stxAddress],
         queryFn: async () => {
-            console.log('⏱️ [BALANCE API] Starting balance fetch at:', new Date().toLocaleTimeString());
+            console.log('⏱️ [BALANCE API] Starting FAST balance fetch (BTC, Runes, Stacks) at:', new Date().toLocaleTimeString());
             const startTime = Date.now();
 
-            // Fetch with individual timing
+            // Fetch only FAST APIs (BTC, Runes, Stacks) - ~1 second total
             const btcStart = Date.now();
             const btcPromise = btcClient.getBalance(bitcoinAddress).then(res => {
                 console.log(`⏱️ [BALANCE API] BTC took ${Date.now() - btcStart}ms`);
-                return res;
-            });
-
-            const brc20Start = Date.now();
-            const brc20Promise = getOrdinalsFtBalance(
-                AppConfig.ORANGESEED_API_KEY,
-                store.getState().appReducer.network?.type,
-                ordinalsAddress
-            ).then(res => {
-                console.log(`⏱️ [BALANCE API] BRC-20 took ${Date.now() - brc20Start}ms`);
                 return res;
             });
 
@@ -59,23 +91,25 @@ export const useBalanceData = (
                 return res;
             });
 
-            const [btcRes, brc20Res, runesRes, stacksRes] = await Promise.allSettled([
+            const [btcRes, runesRes, stacksRes] = await Promise.allSettled([
                 btcPromise,
-                brc20Promise,
                 runesPromise,
                 stxPromise,
             ]);
 
             const btcBalance = btcRes.status === 'fulfilled' ? btcRes.value : 0;
-            const brc20Tokens = brc20Res.status === 'fulfilled' ? brc20Res.value : [];
             const runesTokens = runesRes.status === 'fulfilled' ? runesRes.value : [];
             const stacksTokens = stacksRes.status === 'fulfilled' ? stacksRes.value : [];
 
-            console.log(`⏱️ [BALANCE API] TOTAL: ${Date.now() - startTime}ms`);
+            console.log(`⏱️ [BALANCE API] FAST APIs COMPLETE: ${Date.now() - startTime}ms`);
+
+            // Log any failures
+            if (btcRes.status === 'rejected') console.error('⏱️ [BALANCE API] BTC failed:', btcRes.reason?.message);
+            if (runesRes.status === 'rejected') console.error('⏱️ [BALANCE API] Runes failed:', runesRes.reason?.message);
+            if (stacksRes.status === 'rejected') console.error('⏱️ [BALANCE API] Stacks failed:', stacksRes.reason?.message);
 
             return {
                 btcBalance,
-                brc20Tokens,
                 runesTokens,
                 stacksTokens,
             };
