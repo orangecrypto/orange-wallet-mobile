@@ -71,7 +71,7 @@ const fetchInscriptions = async (ids: string[]) => {
 const useBrc20Inscriptions = () => {
   const [ids, setIds] = useState<string[]>([]);
 
-  const { data, isPending, error, refetch } = useQuery({
+  const { data, isPending, isLoading, error, refetch } = useQuery({
     queryKey: ["inscriptions", ids],
     queryFn: () => fetchInscriptions(ids),
     enabled: ids.length > 0, // Prevents execution until IDs are set
@@ -89,7 +89,7 @@ const useBrc20Inscriptions = () => {
     return response; // Return the fetched data directly (React Query handles caching)
   };
 
-  return { data, isPending, error, fetchByIds };
+  return { data, isPending, error, isLoading, fetchByIds };
 };
 
 export default useBrc20Inscriptions;
